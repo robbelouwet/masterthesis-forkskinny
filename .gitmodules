@@ -1,0 +1,6 @@
+[submodule "externalmodules/forkskinny-c"]
+	path = externalmodules/erik-forkskinny-c
+	url = git@github.com:ErikP0/forkskinny-c.git
+[submodule "external-repositories/rweather-skinny-c"]
+	path = external-repositories/rweather-skinny-c
+	url = git@github.com:rweather/skinny-c.git
