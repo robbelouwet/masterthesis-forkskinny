@@ -1,4 +1,3 @@
-# TODO
 ## Speedup possibilities
 * SIMD instructions
 * Tweakey schedule seperation -> Erik
