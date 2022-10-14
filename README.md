@@ -1,6 +1,7 @@
 ## Speedup possibilities
 * SIMD instructions
 * Tweakey schedule seperation -> Erik
+* Caching
 * Threading
 
 ## Analyzing
