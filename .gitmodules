@@ -1,6 +1,11 @@
 [submodule "forkskinny-c"]
 	path = external-repositories/forkskinny-c
 	url = https://github.com/ErikP0/forkskinny-c.git
+
 [submodule "skinny-c"]
 	path = external-repositories/skinny-c
 	url = https://github.com/rweather/skinny-c.git
+
+[submodule "lwc-finalists"]
+    path = external-repositories/lwc-finalists
+    url = https://github.com/rweather/lwc-finalists.git
