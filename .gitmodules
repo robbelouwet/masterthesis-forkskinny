@@ -6,6 +6,7 @@
 	path = external-repositories/skinny-c
 	url = https://github.com/rweather/skinny-c.git
 
+
 [submodule "lwc-finalists"]
-    path = external-repositories/lwc-finalists
-    url = https://github.com/rweather/lwc-finalists.git
+	path = external-repositories/lwc-finalists
+	url = https://github.com/rweather/lwc-finalists.git
