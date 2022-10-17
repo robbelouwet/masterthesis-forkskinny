@@ -1,8 +1,11 @@
 # Created by https://www.toptal.com/developers/gitignore/api/c,c++,clion,jetbrains,jetbrains+all,jetbrains+iml
 # Edit at https://www.toptal.com/developers/gitignore?templates=c,c++,clion,jetbrains,jetbrains+all,jetbrains+iml
 
-external-repositories/*
-!external-repositories/.gitkeep
+external-repositories/erik-forkskinny-c/*
+!external-repositories/erik-forkskinny-c/.gitkeep
+
+external-repositories/rweather-skinny-c/*
+!external-repositories/rweather-skinny-c/.gitkeep
 
 ### C ###
 # Prerequisites
