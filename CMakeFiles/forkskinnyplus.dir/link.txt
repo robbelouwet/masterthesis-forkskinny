@@ -1,1 +1,0 @@
-/usr/bin/c++ -g CMakeFiles/forkskinnyplus.dir/src/main.cpp.o CMakeFiles/forkskinnyplus.dir/contrib/forkskinny-c/forkskinny128-cipher.c.o CMakeFiles/forkskinnyplus.dir/contrib/forkskinny-c/forkskinny64-cipher.c.o -o forkskinnyplus  -Wl,-rpath,/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus contrib/skinny-plus/libskinny-plus.so 
