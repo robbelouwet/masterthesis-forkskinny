@@ -1,5 +1,5 @@
-#include "forkskinny128-cipher.h"
-#include "forkskinny-internal.h"
+#include "headers/forkskinny128-cipher.h"
+#include "headers/forkskinny-internal.h"
 
 #if SKINNY_64BIT
 

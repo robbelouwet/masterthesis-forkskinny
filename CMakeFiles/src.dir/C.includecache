@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/forkskinny-c/forkskinny128-cipher.c
+headers/forkskinny128-cipher.h
+/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/forkskinny-c/headers/forkskinny128-cipher.h
+headers/forkskinny-internal.h
+/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/forkskinny-c/headers/forkskinny-internal.h
+
+/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/forkskinny-c/forkskinny64-cipher.c
+headers/forkskinny64-cipher.h
+/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/forkskinny-c/headers/forkskinny64-cipher.h
+headers/forkskinny-internal.h
+/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/forkskinny-c/headers/forkskinny-internal.h
+
+/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/forkskinny-c/headers/forkskinny-internal.h
+stdint.h
+-
+string.h
+-
+
+/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/forkskinny-c/headers/forkskinny128-cipher.h
+stdint.h
+-
+stddef.h
+-
+
+/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/forkskinny-c/headers/forkskinny64-cipher.h
+stdint.h
+-
+stddef.h
+-
+

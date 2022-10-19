@@ -9,8 +9,8 @@ OBJS = \
 	forkskinny128-cipher.o \
 	forkskinny64-cipher.o
 
-forkskinny64-cipher.o: forkskinny-internal.h forkskinny64-cipher.h forkskinny64-cipher.c
-forkskinny128-cipher.o: forkskinny-internal.h forkskinny128-cipher.h forkskinny128-cipher.c
+forkskinny64-cipher.o: headers/forkskinny-internal.h headers/forkskinny64-cipher.h forkskinny64-cipher.c
+forkskinny128-cipher.o: headers/forkskinny-internal.h headers/forkskinny128-cipher.h forkskinny128-cipher.c
 
 demo.x: demo.o libforkskinnyc.a
 	$(CC) $(CFLAGS) -o demo.x demo.o libforkskinnyc.a

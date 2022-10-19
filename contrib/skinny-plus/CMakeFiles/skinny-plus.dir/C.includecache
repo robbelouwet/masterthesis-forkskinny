@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/headers/internal-skinny-plus-config.h
+
+/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/headers/internal-skinny-plus.h
+stddef.h
+-
+stdint.h
+-
+internal-skinny-plus-config.h
+/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/headers/internal-skinny-plus-config.h
+
+/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/headers/internal-util.h
+stddef.h
+-
+stdint.h
+-
+
+/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/internal-skinny-plus.c
+headers/internal-skinny-plus.h
+/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/headers/internal-skinny-plus.h
+headers/internal-util.h
+/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/headers/internal-util.h
+string.h
+-
+stdio.h
+-
+
+/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/internal-util.c
+headers/internal-util.h
+/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/headers/internal-util.h
+

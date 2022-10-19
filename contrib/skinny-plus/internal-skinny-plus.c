@@ -20,8 +20,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "internal-skinny-plus.h"
-#include "internal-util.h"
+#include "headers/internal-skinny-plus.h"
+#include "headers/internal-util.h"
 #include <string.h>
 #include <stdio.h>
 

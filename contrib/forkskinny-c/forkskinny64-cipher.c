@@ -20,8 +20,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-#include "forkskinny64-cipher.h"
-#include "forkskinny-internal.h"
+#include "headers/forkskinny64-cipher.h"
+#include "headers/forkskinny-internal.h"
 
 STATIC_INLINE uint32_t skinny64_LFSR2(uint32_t x)
 {

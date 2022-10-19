@@ -1,5 +1,5 @@
-#include "forkskinny64-cipher.h"
-#include "forkskinny128-cipher.h"
+#include "headers/forkskinny64-cipher.h"
+#include "headers/forkskinny128-cipher.h"
 
 #include <stdio.h>
 #include <stdlib.h>

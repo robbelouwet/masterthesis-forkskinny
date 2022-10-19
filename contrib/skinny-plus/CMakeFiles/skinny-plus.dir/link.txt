@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC -g -shared -Wl,-soname,libskinny-plus.so -o libskinny-plus.so CMakeFiles/skinny-plus.dir/internal-skinny-plus.c.o CMakeFiles/skinny-plus.dir/internal-util.c.o 

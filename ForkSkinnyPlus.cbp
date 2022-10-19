@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="ForkSkinnyPlus"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\contrib\;CMake Files\contrib\skinny-plus\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/robbe/Desktop/master-thesis-robbe-louwet"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/robbe/Desktop/master-thesis-robbe-louwet"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/robbe/Desktop/master-thesis-robbe-louwet"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="forkskinnyplus">
+				<Option output="/home/robbe/Desktop/master-thesis-robbe-louwet/forkskinnyplus" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/robbe/Desktop/master-thesis-robbe-louwet"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/robbe/Desktop/master-thesis-robbe-louwet"/>
+					<Add directory="/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 forkskinnyplus"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="forkskinnyplus/fast">
+				<Option output="/home/robbe/Desktop/master-thesis-robbe-louwet/forkskinnyplus" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/robbe/Desktop/master-thesis-robbe-louwet"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/robbe/Desktop/master-thesis-robbe-louwet"/>
+					<Add directory="/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 forkskinnyplus/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="skinny-plus">
+				<Option output="/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/libskinny-plus.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/Makefile&quot;  VERBOSE=1 skinny-plus"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="skinny-plus/fast">
+				<Option output="/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/libskinny-plus.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/Makefile&quot;  VERBOSE=1 skinny-plus/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/forkskinny-c/forkskinny128-cipher.c">
+			<Option target="forkskinnyplus"/>
+		</Unit>
+		<Unit filename="/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/forkskinny-c/forkskinny64-cipher.c">
+			<Option target="forkskinnyplus"/>
+		</Unit>
+		<Unit filename="/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/forkskinny-c/headers/forkskinny-internal.h">
+			<Option target="forkskinnyplus"/>
+		</Unit>
+		<Unit filename="/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/forkskinny-c/headers/forkskinny128-cipher.h">
+			<Option target="forkskinnyplus"/>
+		</Unit>
+		<Unit filename="/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/forkskinny-c/headers/forkskinny64-cipher.h">
+			<Option target="forkskinnyplus"/>
+		</Unit>
+		<Unit filename="/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/headers/internal-skinny-plus-config.h">
+			<Option target="skinny-plus"/>
+		</Unit>
+		<Unit filename="/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/headers/internal-skinny-plus.h">
+			<Option target="skinny-plus"/>
+		</Unit>
+		<Unit filename="/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/headers/internal-util.h">
+			<Option target="skinny-plus"/>
+		</Unit>
+		<Unit filename="/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/internal-skinny-plus.c">
+			<Option target="skinny-plus"/>
+		</Unit>
+		<Unit filename="/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/internal-util.c">
+			<Option target="skinny-plus"/>
+		</Unit>
+		<Unit filename="/home/robbe/Desktop/master-thesis-robbe-louwet/src/headers/main.h">
+			<Option target="forkskinnyplus"/>
+		</Unit>
+		<Unit filename="/home/robbe/Desktop/master-thesis-robbe-louwet/src/main.cpp">
+			<Option target="forkskinnyplus"/>
+		</Unit>
+		<Unit filename="/home/robbe/Desktop/master-thesis-robbe-louwet/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/robbe/Desktop/master-thesis-robbe-louwet/contrib/skinny-plus/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\contrib\skinny-plus\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
