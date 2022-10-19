@@ -1,4 +1,4 @@
-## Weekly report 03 - 09 october
+## Weekly report 10 - 16 october
 * Read 'TWEAKEY Framework' paper.
 * Read the 'SKINNY: Family of Blockciphers' paper, studying its round funtion indetail.
 * Meeting with Amit, went over the scope and existing implementations
