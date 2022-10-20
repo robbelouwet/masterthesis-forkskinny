@@ -3,8 +3,17 @@ project(contrib)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_library(contrib STATIC
+# standalone demo of forksinny-c
+add_executable(forkskinny-demo
+        forkskinny-c/demo.c
+        forkskinny-c/forkskinny64-cipher.c
+        forkskinny-c/forkskinny128-cipher.c
+        forkskinny-c/headers/forkskinny-internal.h
+        forkskinny-c/headers/forkskinny64-cipher.h
+        forkskinny-c/headers/forkskinny128-cipher.h)
 
+
+add_library(contrib STATIC
         skinny-plus/internal-skinny-plus.c
         skinny-plus/internal-util.c
         skinny-plus/headers/internal-util.h

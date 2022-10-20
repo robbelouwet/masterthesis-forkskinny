@@ -14,6 +14,10 @@ changes to that code. This works now, skinny-plus is succesfully included as lib
 src code, so we can plug and play both libraries (etc. use SKINNY+ primitive from Romulus in Erik's ForkSKINNY
 implementation?)
 
+# Thursday
+How can we make sure that CMake targets a 64-bit architecture?
+https://cmake.org/pipermail/cmake/2007-February/012789.html
+
 ### What was on my mind
 
 - Can we migrate the SKINNY+ implementation from rweather's Romelus cipher into Erik's ForkSkinny implementation to get
