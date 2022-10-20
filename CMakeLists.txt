@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(ForkSkinnyPlus)
+project(forkskinnyplus)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -17,9 +17,11 @@ add_executable(forkskinnyplus
         contrib/forkskinny-c/headers/forkskinny64-cipher.h
         contrib/forkskinny-c/headers/forkskinny-internal.h)
 
-add_subdirectory(contrib/skinny-plus)
-target_link_libraries(forkskinnyplus PUBLIC skinny-plus)
+
+add_subdirectory(contrib)
+
+target_link_libraries(forkskinnyplus PUBLIC contrib)
 target_include_directories(forkskinnyplus PUBLIC
         "${PROJECT_BINARY_DIR}"
-        "${PROJECT_SOURCE_DIR}/contrib/skinny-plus"
+        "${PROJECT_SOURCE_DIR}/contrib"
         )
