@@ -13,7 +13,7 @@
 #endif
 
 
-void print_block(uint8_t* block, unsigned int n) {
+void print_block(uint8_t *block, unsigned int n) {
     for (unsigned int i = 0; i < n; i++)
         printf("%02x", block[i]);
 }

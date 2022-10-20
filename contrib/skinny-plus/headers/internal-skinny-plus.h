@@ -52,8 +52,7 @@ extern "C" {
 /**
  * \brief Structure of the key schedule for SKINNY-128-384+.
  */
-typedef struct
-{
+typedef struct {
     /** TK1 for the tweakable part of the key schedule */
     uint8_t TK1[16];
 
@@ -80,7 +79,7 @@ typedef struct
  * \param key Points to the key data.
  */
 void skinny_plus_init
-    (skinny_plus_key_schedule_t *ks, const unsigned char key[48]);
+        (skinny_plus_key_schedule_t *ks, const unsigned char key[48]);
 
 /**
  * \brief Initializes the key schedule for SKINNY-128-384+ without TK1.
@@ -90,8 +89,8 @@ void skinny_plus_init
  * \param tk3 Points to the 16 bytes of key data for TK3.
  */
 void skinny_plus_init_without_tk1
-    (skinny_plus_key_schedule_t *ks, const unsigned char *tk2,
-     const unsigned char *tk3);
+        (skinny_plus_key_schedule_t *ks, const unsigned char *tk2,
+         const unsigned char *tk3);
 
 /**
  * \brief Encrypts a 128-bit block with SKINNY-128-384+.
@@ -104,8 +103,8 @@ void skinny_plus_init_without_tk1
  * in-place encryption.
  */
 void skinny_plus_encrypt
-    (const skinny_plus_key_schedule_t *ks, unsigned char *output,
-     const unsigned char *input);
+        (const skinny_plus_key_schedule_t *ks, unsigned char *output,
+         const unsigned char *input);
 
 /**
  * \brief Decrypts a 128-bit block with SKINNY-128-384+.
@@ -118,8 +117,8 @@ void skinny_plus_encrypt
  * in-place decryption.
  */
 void skinny_plus_decrypt
-    (const skinny_plus_key_schedule_t *ks, unsigned char *output,
-     const unsigned char *input);
+        (const skinny_plus_key_schedule_t *ks, unsigned char *output,
+         const unsigned char *input);
 
 /**
  * \brief Encrypts a 128-bit block with SKINNY-128-384+ and a
@@ -137,8 +136,8 @@ void skinny_plus_decrypt
  * more memory-efficient.
  */
 void skinny_plus_encrypt_tk_full
-    (const unsigned char key[48], unsigned char *output,
-     const unsigned char *input);
+        (const unsigned char key[48], unsigned char *output,
+         const unsigned char *input);
 
 /**
  * \brief Decrypts a 128-bit block with SKINNY-128-384+ and a
@@ -156,8 +155,8 @@ void skinny_plus_encrypt_tk_full
  * more memory-efficient.
  */
 void skinny_plus_decrypt_tk_full
-    (const unsigned char key[48], unsigned char *output,
-     const unsigned char *input);
+        (const unsigned char key[48], unsigned char *output,
+         const unsigned char *input);
 
 #ifdef __cplusplus
 }

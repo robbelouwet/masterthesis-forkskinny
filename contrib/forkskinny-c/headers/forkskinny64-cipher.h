@@ -71,7 +71,7 @@ void forkskinny_c_64_192_init_tk2_tk3(ForkSkinny64Key_t *ks, const uint8_t *key,
  * input:         pointer to FORKSKINNY64_BLOCK_SIZE byte; input to the forkcipher
  */
 void forkskinny_c_64_192_encrypt(const ForkSkinny64Key_t *tks1, const ForkSkinny64Key_t *tks2,
-  uint8_t *output_left, uint8_t *output_right, const uint8_t *input_right);
+  uint8_t *output_left, uint8_t *output_right, const uint8_t *input_right, unsigned long *cycles_spent);
 
 /**
  * Computes the inverse direction of Forkskinny-64-192.
