@@ -1,5 +1,5 @@
 #include "headers/main.h"
-#include "contrib/skinny-plus/headers/internal-skinny-plus.h"
+#include "skinny-plus/headers/internal-skinny-plus.h"
 
 int main() {
     unsigned char key[48] = {};
