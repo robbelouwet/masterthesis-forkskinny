@@ -15,8 +15,10 @@ src code, so we can plug and play both libraries (etc. use SKINNY+ primitive fro
 implementation?)
 
 # Thursday
+
 How can we make sure that CMake targets a 64-bit architecture?
-https://cmake.org/pipermail/cmake/2007-February/012789.html
+https://cmake.org/pipermail/cmake/2007-February/012789.html.
+Timed Erik's implementation using RDTSC innstruction
 
 ### What was on my mind
 

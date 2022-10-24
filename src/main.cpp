@@ -28,5 +28,5 @@ static_assert(sizeof(void*) ==8, "Not running on 64-bit!");
 //</editor-fold>
 
 int main() {
-    test_forkskinny();
+    test_benchmark();
 }

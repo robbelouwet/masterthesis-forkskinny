@@ -24,7 +24,7 @@ void demo_forkskinny_64_192() {
     uint8_t message[FORKSKINNY64_BLOCK_SIZE] = {0x67, 0xc6, 0x69, 0x73, 0x51, 0xff, 0x4a, 0xec};
 
     // Pre-compute key schedule
-    ForkSkinny64Key_t tk1, tk23;
+    KeySchedule64_t tk1, tk23;
     forkskinny_c_64_192_init_tk1(&tk1, key, FORKSKINNY64_MAX_ROUNDS);
     forkskinny_c_64_192_init_tk2_tk3(&tk23, key + FORKSKINNY64_BLOCK_SIZE, FORKSKINNY64_MAX_ROUNDS);
 

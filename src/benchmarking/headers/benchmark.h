@@ -1,5 +1,4 @@
 #ifndef FORKSKINNYPLUS_BENCHMARK_H
 #define FORKSKINNYPLUS_BENCHMARK_H
-void test_forkskinny();
-void test_skinnyplus();
+void test_benchmark();
 #endif //FORKSKINNYPLUS_BENCHMARK_H

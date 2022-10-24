@@ -7,7 +7,10 @@ set(CMAKE_CXX_STANDARD 14)
 # Thesis project code:
 add_executable(forkskinnyplus
         src/main.cpp
-        src/main.h src/benchmarking/benchmark.cpp src/benchmarking/headers/benchmark.h src/forkskinny_plus/forkskinnyplus.cpp src/forkskinny_plus/headers/forkskinnyplus.h)
+        src/main.h src/benchmarking/benchmark.cpp
+        src/benchmarking/headers/benchmark.h
+        src/benchmarking/test-fixslicing.cpp
+        src/benchmarking/headers/test-fixslicing.h)
 
 
 add_subdirectory(contrib)
