@@ -10,7 +10,7 @@ add_executable(forkskinnyplus
         src/main.h src/benchmarking/benchmark.cpp
         src/benchmarking/headers/benchmark.h
         src/benchmarking/test-fixslicing.cpp
-        src/benchmarking/headers/test-fixslicing.h)
+        src/benchmarking/headers/test-fixslicing.h src/utils.h)
 
 
 add_subdirectory(contrib)

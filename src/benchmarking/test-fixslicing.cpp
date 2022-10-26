@@ -16,5 +16,5 @@ void test_slicing() {
                                                0x28, 0x2a, 0xf5, 0x6b, 0x3e, 0x7e, 0xfd, 0xd4, 0x99, 0xe9, 0x45, 0xcc,
                                                0x92, 0xd4, 0x16, 0xd7};
 
-    execute_round(message, flattened_tweakey, 3);
+    //execute_round(message, flattened_tweakey, 3);
 }

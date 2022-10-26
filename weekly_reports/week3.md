@@ -5,12 +5,19 @@ Read a paper on bit slicing and implementing fixed slicing in [AES](https://epri
 Started going in depth on Erik's code and did some refactoring to make it more readable in order to be able to transform it into using
 fixed slicing later on (but first understanding his code). 
 
+### Wednesday
+Bit slicing (fixed slicing) and SIMD instructions appear to go hand-in-hand, so I looked at SIMD instructions first.
+there appear to be multiple intrinsic libraries (?). A limited but broadly adopted gcc vector extensions intrinsic library of GCC,
+and an intel-specific but highly performant intrinsic 'xmmintrin.h'. Both these libraries facilitate SIMD instructions.
+I'm starting to conceptually understand how bit slicing works and how this goes hand-in-hand with SIMD, but it's far from evident.
+Looked at how Fixed Slicing was first done with the [GIFT cipher paper](https://eprint.iacr.org/2020/412.pdf).
+
 
 ### What was on my mind
 - How can I efficiently understand and play around with this bit slicing? Immediately implementing it into the cipher 
 (that's not my code) might get cumbersome and I might not see the woods for the trees anymore. Maybe I can implement a
 simple standalone s-box, time the cycles, implement bit slicing and compare?
-- Too many approaches, I want to try too many things at once.
+- It often happens that I don't know which trail to follow first or which path is a dead-end rabbit hole.
 - Erik's code has a lot of conditional #if macro's for checking if we're running on a 32 or 64 bit platform. 
 Thinking about splitting everything up to 2 seperate x32 and x64 files and remove all those checks to improve readability
 In other words, check the macro once, if we're running on x32, inject the x32 source file, else the x64 source file. Other than that, the 2 files should be identical
