@@ -12,6 +12,15 @@ add_executable(forkskinnyplus
         src/benchmarking/test-fixslicing.cpp
         src/benchmarking/headers/test-fixslicing.h src/utils.h)
 
+# standalone demo of forksinny-c
+add_executable(forkskinny-demo
+        contrib/forkskinny-c/demo.c
+        contrib/forkskinny-c/forkskinny64-cipher.c
+        contrib/forkskinny-c/forkskinny128-cipher.c
+        contrib/forkskinny-c/headers/forkskinny-internal.h
+        contrib/forkskinny-c/headers/forkskinny64-cipher.h
+        contrib/forkskinny-c/headers/forkskinny128-cipher.h)
+
 
 add_subdirectory(contrib)
 
