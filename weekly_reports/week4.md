@@ -4,7 +4,8 @@
 
 Took a step back and went over
 the [FixSlicing SKINNY](https://csrc.nist.gov/CSRC/media/Events/lightweight-cryptography-workshop-2020/documents/papers/fixslicing-lwc2020.pdf)
-paper again. Researched on how to tell the compiler to use data parallelization/SIMD, and not do it ourselves. Made a CMakePresets.json file
+paper again. Researched on how to tell the compiler to use data parallelization/SIMD, and not do it ourselves. Made a CMakePresets.json file.
+researched and tested out gcc compiler flags to suggest SIMD and vectorization optimalisations to the compiler
 
 ### What was on my mind
 
