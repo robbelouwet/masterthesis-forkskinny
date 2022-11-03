@@ -2,6 +2,10 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++,c,clion,jetbrains,cmake
 
 FILE.asm
+*.s
+*.o
+
+*.asm
 
 forkskinnyplus
 *.cbp

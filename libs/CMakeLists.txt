@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.20)
-project(contrib)
+project(libs)
 
 set(CMAKE_CXX_STANDARD 14)
 
 
-add_library(contrib STATIC
+add_library(libs STATIC
         skinny-plus/internal-skinny-plus.c
         skinny-plus/internal-util.c
         skinny-plus/headers/internal-util.h

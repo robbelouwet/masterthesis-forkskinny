@@ -9,7 +9,16 @@ CMakePresets.json file.
 researched and tested out gcc compiler flags to suggest SIMD and vectorization optimisations to the compiler.
 
 ## Thursday
-Continued working on the bash script to verify if the compiler used SIMD instructions.
+
+Continued working on making the compiler use vectorization. Trying to find tutorial examples that should make it use
+vectorization and tell me when compiling, no success so far.
+I found the correct compiler flag, I already found the flag `-fopt-info` to show this info, but apparantly this changed
+and the vectorization info is now shown through `-fopt-info-internals`. Also found where this info is displayed in my
+IDE.
+I'm starting to think that auto-vectorization isn't a good idea, because you're basically hoping the compiler is smart
+enough to recognize the fixed-slice representation and vectorizes it. Intel and AMD both support the AVX and AVX2
+intrinsics, so thinking about implementing it directly. This shouldn't be too hard because the LSFR's and permutation
+both can be described with logical gates, which goes very well with the provided intrinsic library's instructions.
 
 ### What was on my mind
 
