@@ -1,6 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/c++,c,clion,jetbrains,cmake
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++,c,clion,jetbrains,cmake
 
+FILE.asm
+
 forkskinnyplus
 *.cbp
 

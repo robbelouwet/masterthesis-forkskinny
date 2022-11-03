@@ -14,18 +14,18 @@ add_executable(forkskinnyplus
 
 # standalone demo of forksinny-c
 add_executable(forkskinny-demo
-        contrib/forkskinny-c/demo.c
-        contrib/forkskinny-c/forkskinny64-cipher.c
-        contrib/forkskinny-c/forkskinny128-cipher.c
-        contrib/forkskinny-c/headers/forkskinny-internal.h
-        contrib/forkskinny-c/headers/forkskinny64-cipher.h
-        contrib/forkskinny-c/headers/forkskinny128-cipher.h)
+        libs/forkskinny-c/demo.c
+        libs/forkskinny-c/forkskinny64-cipher.c
+        libs/forkskinny-c/forkskinny128-cipher.c
+        libs/forkskinny-c/headers/forkskinny-internal.h
+        libs/forkskinny-c/headers/forkskinny64-cipher.h
+        libs/forkskinny-c/headers/forkskinny128-cipher.h)
 
 
-add_subdirectory(contrib)
+add_subdirectory(libs)
 
-target_link_libraries(forkskinnyplus PUBLIC contrib)
+target_link_libraries(forkskinnyplus PUBLIC libs)
 target_include_directories(forkskinnyplus PUBLIC
         "${PROJECT_BINARY_DIR}"
-        "${PROJECT_SOURCE_DIR}/contrib")
+        "${PROJECT_SOURCE_DIR}/libs")
 

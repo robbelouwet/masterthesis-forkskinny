@@ -1,0 +1,40 @@
+    115b:	0f 28 05 be 1e 00 00 	movaps xmm0,XMMWORD PTR [rip+0x1ebe]        # 3020 <_IO_stdin_used+0x20>
+    1169:	0f 29 04 24          	movaps XMMWORD PTR [rsp],xmm0
+    1344:	0f 10 07             	movups xmm0,XMMWORD PTR [rdi]
+    1347:	0f 10 16             	movups xmm2,XMMWORD PTR [rsi]
+    134a:	0f 10 5e 10          	movups xmm3,XMMWORD PTR [rsi+0x10]
+    134e:	0f 10 66 20          	movups xmm4,XMMWORD PTR [rsi+0x20]
+    1352:	0f 59 c2             	mulps  xmm0,xmm2
+    1355:	0f 10 4f 30          	movups xmm1,XMMWORD PTR [rdi+0x30]
+    1359:	0f 11 02             	movups XMMWORD PTR [rdx],xmm0
+    135c:	0f 10 47 10          	movups xmm0,XMMWORD PTR [rdi+0x10]
+    1360:	0f 59 c3             	mulps  xmm0,xmm3
+    1363:	0f 11 42 10          	movups XMMWORD PTR [rdx+0x10],xmm0
+    1367:	0f 10 47 20          	movups xmm0,XMMWORD PTR [rdi+0x20]
+    136b:	0f 59 c4             	mulps  xmm0,xmm4
+    136e:	0f 11 42 20          	movups XMMWORD PTR [rdx+0x20],xmm0
+    1372:	0f 10 46 30          	movups xmm0,XMMWORD PTR [rsi+0x30]
+    1376:	0f 59 c1             	mulps  xmm0,xmm1
+    1379:	0f 11 42 30          	movups XMMWORD PTR [rdx+0x30],xmm0
+    15b8:	0f 29 44 24 10       	movaps XMMWORD PTR [rsp+0x10],xmm0
+    115b:	0f 28 05 be 1e 00 00 	movaps xmm0,XMMWORD PTR [rip+0x1ebe]        # 3020 <_IO_stdin_used+0x20>
+    1169:	0f 29 04 24          	movaps XMMWORD PTR [rsp],xmm0
+    1344:	0f 10 07             	movups xmm0,XMMWORD PTR [rdi]
+    1347:	0f 10 16             	movups xmm2,XMMWORD PTR [rsi]
+    134a:	0f 10 5e 10          	movups xmm3,XMMWORD PTR [rsi+0x10]
+    134e:	0f 10 66 20          	movups xmm4,XMMWORD PTR [rsi+0x20]
+    1352:	0f 59 c2             	mulps  xmm0,xmm2
+    1355:	0f 10 4f 30          	movups xmm1,XMMWORD PTR [rdi+0x30]
+    1359:	0f 11 02             	movups XMMWORD PTR [rdx],xmm0
+    135c:	0f 10 47 10          	movups xmm0,XMMWORD PTR [rdi+0x10]
+    1360:	0f 59 c3             	mulps  xmm0,xmm3
+    1363:	0f 11 42 10          	movups XMMWORD PTR [rdx+0x10],xmm0
+    1367:	0f 10 47 20          	movups xmm0,XMMWORD PTR [rdi+0x20]
+    136b:	0f 59 c4             	mulps  xmm0,xmm4
+    136e:	0f 11 42 20          	movups XMMWORD PTR [rdx+0x20],xmm0
+    1372:	0f 10 46 30          	movups xmm0,XMMWORD PTR [rsi+0x30]
+    1376:	0f 59 c1             	mulps  xmm0,xmm1
+    1379:	0f 11 42 30          	movups XMMWORD PTR [rdx+0x30],xmm0
+    15b8:	0f 29 44 24 10       	movaps XMMWORD PTR [rsp+0x10],xmm0
+    11a9:	f3 0f 5a 04 24       	cvtss2sd xmm0,DWORD PTR [rsp]
+    1578:	66 0f 6f 05 f0 1a 00 	movdqa xmm0,XMMWORD PTR [rip+0x1af0]        # 3070 <_IO_stdin_used+0x70>
