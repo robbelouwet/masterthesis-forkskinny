@@ -8,6 +8,9 @@ paper again. Researched on how to tell the compiler to use data parallelization/
 CMakePresets.json file.
 researched and tested out gcc compiler flags to suggest SIMD and vectorization optimisations to the compiler.
 
+## Wednesday
+Sick
+
 ## Thursday
 
 Continued working on making the compiler use vectorization. Trying to find tutorial examples that should make it use

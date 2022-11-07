@@ -8,10 +8,10 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 # Thesis project code:
 add_executable(forkskinnyplus
         src/main.cpp
-        src/main.h src/benchmarking/benchmark.cpp
-        src/benchmarking/headers/benchmark.h
-        src/benchmarking/test-fixslicing.cpp
-        src/benchmarking/headers/test-fixslicing.h src/utils.h)
+        src/headers/main.h
+        src/utils.h
+        src/avx2/tweakey-schedule/LSFR.cpp
+        src/headers/LSFR.h)
 
 # standalone demo of forksinny-c
 add_executable(forkskinny-demo
