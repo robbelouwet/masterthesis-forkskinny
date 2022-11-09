@@ -1,23 +1,43 @@
+#include <iostream>
 #include "../../headers/LSFR.h"
 #include "../../headers/forkskinny64-cipher.h"
-#include "x86intrin.h"
+#include "immintrin.h"
+#include "tuple"
 #include "cmath"
 
+/*
+ *
+ * lrotl // rotl a long
+ *
+ * rotating a byte within an AVX register
+ * https://stackoverflow.com/a/36989455
+ */
 
-vec lsfr_64_tk2(State64_t state) {
-	State64_expanded_t expanded_state = State64_expanded_t ();
+
+std::tuple<ulong, ulong> lsfr_64_tk2(State64Sliced_t state) {
+	auto *results = new ulong();
 	
-	// split and expand bytes into an array of padded nibbles
-	for (int i = 0; i < 7; i++) {
-		// yyyy xxxx & 0000 1111
-		expanded_state.cells[2*i] = state.pairs[i] & 15; // = 0000 xxxx
-		
-		// yyyy xxxx & 1111 0000 = yyyy 0000;
-		expanded_state.cells[(2*i)+1] = (state.pairs[i] & 240) >> 4; // yyyy 0000 >> 4 = 0000 yyyy
+	// perform through SIMD
+	ulong before = _rdtsc();
+	
+	// SHL: 0000 0000 0000 abcd -> 0000 0000 000a bcd0
+	auto sleft = _mm256_slli_epi16(state.vec, 1);
+	
+	// blend according to control mask
+	//auto mask = _mm256_set1_epi16(1); // broadcast value to every value in the lane
+	//auto blended = _mm256_blend_epi16(sleft, state.vec, 8);
+	ulong after = _rdtsc();
+	results[0] = after - before;
+	
+	// perform through sequential loop
+	ulong before2 = _rdtsc();
+	for (int i = 0; i < 15; ++i) {
+		state.cells[i] <<= 1;
 	}
+	ulong after2 = _rdtsc();
+	results[1] = after2 - before2;
+	std::cout << "SIMD: " << after - before;
+	std::cout << "\nSEQ: " << after2 - before2 << "\n##################\n";
 	
-	int appel = 1;
-	
-	// __m256i param, vector van 16x16bit integers, shift left by count
-	//_mm256_sll_epi16()
+	return {after - before, after2 - before2}; // [ simd, seq ]
 }

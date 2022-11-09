@@ -33,11 +33,17 @@ typedef union {
 	
 } State64_t;
 
+
+/**
+ * Represents a 16 x 16 state in a bitsliced fashion
+ * i.e.:
+ * 		000x¹⁵ | 000x¹⁴ | 000x¹³ | 000x¹² ... 000x¹ | 000x⁰ (little-endian)
+ */
 typedef union {
 	uint16_t cells[16];
-	__m256i vec;
+	__m256i vec; // __m256i is the actual AVX2 bit sliced representation
 	
-} State64_expanded_t;
+} State64Sliced_t;
 
 /**
  * Union that describes a 32-bit 2x4 array of cells.
