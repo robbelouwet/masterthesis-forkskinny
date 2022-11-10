@@ -1216,9 +1216,9 @@ void skinny_plus_init_without_tk1
         s1 ^= schedule[offset * 2 + 1] ^ TK1[half * 2 + 1]; \
         s2 ^= 0x02; \
         \
-        /* Shift the cells in the rows right, which moves the cell \
+        /* Shift the cells16 in the rows right, which moves the cell \
          * values up closer to the MSB.  That is, we do a left rotate \
-         * on the word to rotate the cells in the word right */ \
+         * on the word to rotate the cells16 in the word right */ \
         s1 = leftRotate8(s1); \
         s2 = leftRotate16(s2); \
         s3 = leftRotate24(s3); \
@@ -1259,9 +1259,9 @@ void skinny_plus_init_without_tk1
               (rc >> 4); \
         s2 ^= 0x02; \
         \
-        /* Shift the cells in the rows right, which moves the cell \
+        /* Shift the cells16 in the rows right, which moves the cell \
          * values up closer to the MSB.  That is, we do a left rotate \
-         * on the word to rotate the cells in the word right */ \
+         * on the word to rotate the cells16 in the word right */ \
         s1 = leftRotate8(s1); \
         s2 = leftRotate16(s2); \
         s3 = leftRotate24(s3); \

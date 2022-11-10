@@ -17,7 +17,7 @@ extern "C" {
 #define FORKSKINNY64_MAX_ROUNDS (FORKSKINNY_64_192_ROUNDS_BEFORE + 2*FORKSKINNY_64_192_ROUNDS_AFTER)
 
 /**
- * Union that describes a 64-bit 4x4 array of cells.
+ * Union that describes a 64-bit 4x4 array of cells16.
  */
 typedef union
 {
@@ -28,7 +28,7 @@ typedef union
 } State64_t;
 
 /**
- * Union that describes a 32-bit 2x4 array of cells.
+ * Union that describes a 32-bit 2x4 array of cells16.
  */
 typedef union
 {

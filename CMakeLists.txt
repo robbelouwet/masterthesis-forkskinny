@@ -4,8 +4,7 @@ project(forkskinnyplus)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=nehalem")
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1 -msse4.2")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 

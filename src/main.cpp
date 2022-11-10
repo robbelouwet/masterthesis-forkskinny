@@ -1,5 +1,5 @@
 #include <iostream>
-#include "x86intrin.h"
+#include "immintrin.h"
 #include "headers/LSFR.h"
 #include "cmath"
 #include <functional> // for std::greater, std::less
@@ -9,18 +9,34 @@
 
 // https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=sl&ig_expand=6523,6501,6501&techs=AVX,AVX2
 int main() {
+	auto state = State64v_t();
+	for (int j = 0; j <= 15; ++j) {
+		state.cells16[j] = 65535;
+	}
+	
+	ulong before = _rdtsc();
+	lsfr_64_tk2_4bit_simd(&state);
+	ulong after = _rdtsc();
+	
+	std::cout << "semi-SIMD: " << after - before << " cycles";
+	
+	
+
+}
+
+void shl_benchmark() {
 	uint iterations = 1000;
 	
 	auto simd_results = std::vector<ulong>();
 	auto seq_results = std::vector<ulong>();
 	
 	for (uint i = 0; i < iterations; ++i) {
-		auto state = State64Sliced_t();
+		auto state = State64v_t();
 		for (int j = 0; j <= 15; ++j) {
-			state.cells[j] = 15;
+			state.cells16[j] = 15;
 		}
 		
-		auto[simd, seq] = lsfr_64_tk2(state);
+		auto[simd, seq] = benchmark(state);
 		simd_results.push_back(simd);
 		seq_results.push_back(seq);
 		

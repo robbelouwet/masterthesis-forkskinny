@@ -18,7 +18,7 @@ extern "C" {
 #define FORKSKINNY64_MAX_ROUNDS (FORKSKINNY_64_192_ROUNDS_BEFORE + 2*FORKSKINNY_64_192_ROUNDS_AFTER)
 
 /**
- * Union that describes a 64-bit 4x4 array of cells.
+ * Union that describes a 64-bit 4x4 array of cells16.
  */
 typedef union {
 	uint8_t pairs[8];     /// Stored as 8x 8-bit uint partitions  (cc cc cc cc cc cc cc cc) to hold a nibble in the high and low end
@@ -35,18 +35,17 @@ typedef union {
 
 
 /**
- * Represents a 16 x 16 state in a bitsliced fashion
- * i.e.:
- * 		000x¹⁵ | 000x¹⁴ | 000x¹³ | 000x¹² ... 000x¹ | 000x⁰ (little-endian)
+ * Represents a normal State64, but vectorized for SIMD.
  */
 typedef union {
-	uint16_t cells[16];
+	uint16_t cells16[16];
+	uint64_t rows[4]; // 000c¹⁵000c¹⁴ | 000c¹²000c¹¹ | ... | 000c¹000c⁰
 	__m256i vec; // __m256i is the actual AVX2 bit sliced representation
 	
-} State64Sliced_t;
+} State64v_t;
 
 /**
- * Union that describes a 32-bit 2x4 array of cells.
+ * Union that describes a 32-bit 2x4 array of cells16.
  */
 typedef union {
 	uint8_t pairs[4];      /// Stored as 4x 8-bit  uint partitions (cc cc cc cc)

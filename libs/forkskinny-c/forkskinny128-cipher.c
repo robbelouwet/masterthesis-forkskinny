@@ -226,9 +226,9 @@ void forkskinny_c_128_384_init_tk3(ForkSkinny128Key_t *ks, const uint8_t *key, u
 
 STATIC_INLINE uint32_t skinny128_rotate_right(uint32_t x, unsigned count)
 {
-    /* Note: we are rotating the cells right, which actually moves
+    /* Note: we are rotating the cells16 right, which actually moves
        the values up closer to the MSB.  That is, we do a left shift
-       on the word to rotate the cells in the word right */
+       on the word to rotate the cells16 in the word right */
     return (x << count) | (x >> (32 - count));
 }
 
