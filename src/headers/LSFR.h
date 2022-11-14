@@ -6,7 +6,9 @@
 
 std::tuple<ulong, ulong> benchmark(State64v_t state);
 
-void lsfr_64_tk2_4bit_simd(State64v_t *state);
+State64v_t lsfr_64_tk2_4bit_simd(State64v_t state);
+
+uint32_t lsfr_64_tk2_4bit_sequential(uint32_t state);
 
 void lsfr_64_tk2_4bit(State64v_t *state);
 

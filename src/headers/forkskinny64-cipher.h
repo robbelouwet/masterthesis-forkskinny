@@ -21,14 +21,9 @@ extern "C" {
  * Union that describes a 64-bit 4x4 array of cells16.
  */
 typedef union {
-	uint8_t pairs[8];     /// Stored as 8x 8-bit uint partitions  (cc cc cc cc cc cc cc cc) to hold a nibble in the high and low end
-	uint16_t row[4];      /// Stored as 4x 16-bit uint partitions (cccc cccc cccc cccc) [c = 4-bit state cell]
-	
-	uint32_t lrow[2];        /// Stored as 2x 32-bit uint partitions  (cccccccc cccccccc)
-	float flrow[2];        /// Stored as 2x 32-bit uint partitions  (cccccccc cccccccc)
-	
-	uint64_t llrow;         /// Stored as 1x 64-bit uint 			    (cccccccccccccccc)
-	double dllrow;         /// Stored as 1x 64-bit uint 			    (cccccccccccccccc)
+	uint16_t row[4];		/// Stored as 4x 16-bit uint partitions (cccc cccc cccc cccc) [c = 4-bit state cell]
+	uint32_t lrow[2];		/// Stored as 2x 32-bit uint partitions  (cccccccc cccccccc)
+	uint64_t llrow;			/// Stored as 1x 64-bit uint 			  (cccccccccccccccc)
 	
 	
 } State64_t;
@@ -36,11 +31,15 @@ typedef union {
 
 /**
  * Represents a normal State64, but vectorized for SIMD.
+ * i.e.: 4-bit cells are expanded to smallest SIMD type, 16 bits
  */
 typedef union {
-	uint16_t cells16[16];
-	uint64_t rows[4]; // 000c¹⁵000c¹⁴ | 000c¹²000c¹¹ | ... | 000c¹000c⁰
-	__m256i vec; // __m256i is the actual AVX2 bit sliced representation
+	uint16_t cells16[16];   ///  000c¹⁵ | 000c¹⁴ | ... | 000c¹ | 000c⁰ (c = 4-bit cell)
+	uint32_t rows[4];       /// 000c¹⁵000c¹⁴ | 000c¹²000c¹¹ | ... | 000c¹000c⁰
+	
+	// __m128i and __m256i are SIMD lane datatypes
+	__m128i hvec[2];
+	__m256i vec;
 	
 } State64v_t;
 

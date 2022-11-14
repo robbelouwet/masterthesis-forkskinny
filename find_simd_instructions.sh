@@ -1,7 +1,7 @@
 #!/bin/bash
 
 run(){
-  rm -rf cmake-build-debug-simd
+  rm -rf cmake-build-debug
   # cmake the preset that uses compiler optimization flags for auto-vectorization
   cmake --preset "$2" 1>/dev/null
 
@@ -33,4 +33,3 @@ run(){
 }
 
 run "cmake-build-debug" "debug"
-run "cmake-build-debug-simd" "debug-simd-flags"

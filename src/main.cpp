@@ -15,12 +15,25 @@ int main() {
 	}
 	
 	ulong before = _rdtsc();
-	lsfr_64_tk2_4bit_simd(&state);
+	lsfr_64_tk2_4bit_simd(state);
 	ulong after = _rdtsc();
 	
 	std::cout << "semi-SIMD: " << after - before << " cycles";
 	
+	auto state2 = State64_t ();
+	state2.llrow = 18446744073709551615;
 	
+	ulong before1 = _rdtsc();
+	lsfr_64_tk2_4bit_sequential(state2.lrow[0]);
+	ulong after1 = _rdtsc();
+	std::cout << "Sequential: " << after1 - before1 << " cycles";
+	
+//	auto stat1 = HalfState64_t();
+//	for (int j = 0; j <= 15; ++j) {
+//		state.cells16[j] = 65535;
+//	}
+//	ulong before1 = _rdtsc();
+//	lsfr_64_tk2_4bit_sequential()
 
 }
 
