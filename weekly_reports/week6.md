@@ -7,6 +7,13 @@ cycles, while a SIMD-less sequential implementation only needs around 50. I thou
 having to load the state after evey single SIMD instruction, but after debugging the register, I concluded the SIMD
 values never leave the SIMD register after an instruction.
 
+
+## Wednesday
+1) look into a simple example of what bit slicing is
+2) try to use romulus skinny-128-384 and construct forkskinny-128-384
+   1) How to extend the LSFR to 7 bits at the AddConstants step?
+   2) after this works, maybe look at how to extend implementation to forkskinny-64-128?
+
 ### What was on my mind
 
 - Starting to think that SIMD on its own is not going to give any speedups. The fact that state cells are only 4-bit

@@ -20,7 +20,7 @@ void print_block(uint8_t *block, unsigned int n) {
 
 void demo_forkskinny_64_192() {
 	
-	ulong *c_buff = calloc(sizeof(unsigned long), 1);
+	unsigned long *c_buff = calloc(sizeof(unsigned long), 1);
 	
 	uint8_t key[3 * FORKSKINNY64_BLOCK_SIZE] = {0x29, 0xcd, 0xba, 0xab, 0xf2, 0xfb, 0xe3, 0x46, 0x7c, 0xc2, 0x54, 0xf8,
 	                                            0x1b, 0xe8, 0xe7, 0x8d, 0x76, 0x5a, 0x2e, 0x63, 0x33, 0x9f, 0xc9, 0x9a};
@@ -227,9 +227,9 @@ void demo_forkskinny_128_384() {
 }
 
 int main() {
-	demo_forkskinny_64_192();
+	//demo_forkskinny_64_192();
 	
-	demo_forkskinny_128_256();
+	//demo_forkskinny_128_256();
 	
 	demo_forkskinny_128_384();
 }
