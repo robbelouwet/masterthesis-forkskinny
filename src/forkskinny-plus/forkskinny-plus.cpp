@@ -17,7 +17,9 @@ void test() {
 	forkskinny_c_128_384_init_tk3(&tk23, key + FORKSKINNY128_BLOCK_SIZE, FORKSKINNY128_MAX_ROUNDS);
 	
 	// encrypt a 128-bit block using forkskinny-c-128-384
-	forkskinny_c_128_384_encrypt();
+	forkskinny_128_384_encrypt_round(
+			
+			);
 	
 	// encrypt a 128-bit block with skinny-128-384+
 	skinny_plus_encrypt();
