@@ -24,7 +24,8 @@ int main() {
 	state2.llrow = 18446744073709551615;
 	
 	ulong before1 = _rdtsc();
-	lsfr_64_tk2_4bit_sequential(state2.lrow[0]);
+	auto res = _mm_shuffle_epi8({}, {});
+	//lsfr_64_tk2_4bit_sequential(state2.lrow[0]);
 	ulong after1 = _rdtsc();
 	std::cout << "Sequential: " << after1 - before1 << " cycles";
 	

@@ -443,6 +443,47 @@ static ForkSkinny128Cells_t forkskinny_128_encrypt_rounds
     return state;
 }
 
+ForkSkinny128Cells_t forkskinny_128_384_encrypt_round(
+		ForkSkinny128Cells_t state, const ForkSkinny128HalfCells_t *schedule1,
+		const ForkSkinny128HalfCells_t *schedule2, const ForkSkinny128HalfCells_t *schedule3,
+		unsigned index, unsigned *temp){
+	/* Apply the S-box to all bytes in the state */
+	#if SKINNY_64BIT
+	state.lrow[0] = skinny128_sbox(state.lrow[0]);
+	state.lrow[1] = skinny128_sbox(state.lrow[1]);
+	#else
+	state.row[0] = skinny128_sbox(state.row[0]);
+          state.row[1] = skinny128_sbox(state.row[1]);
+          state.row[2] = skinny128_sbox(state.row[2]);
+          state.row[3] = skinny128_sbox(state.row[3]);
+	#endif
+	
+	/* Apply the subkey for this round */
+	#if SKINNY_64BIT
+	state.lrow[0] ^= schedule1->lrow ^ schedule2->lrow ^ schedule3->lrow;
+	state.lrow[1] ^= 0x02;
+	#else
+	state.row[0] ^= schedule1->row[0] ^ schedule2->row[0] ^ schedule3->row[0];
+          state.row[1] ^= schedule1->row[1] ^ schedule2->row[1] ^ schedule3->row[1];
+          state.row[2] ^= 0x02;
+	#endif
+	
+	/* Shift the rows */
+	state.row[1] = skinny128_rotate_right(state.row[1], 8);
+	state.row[2] = skinny128_rotate_right(state.row[2], 16);
+	state.row[3] = skinny128_rotate_right(state.row[3], 24);
+	
+	/* Mix the columns */
+	state.row[1] ^= state.row[2];
+	state.row[2] ^= state.row[0];
+	*temp = state.row[3] ^ state.row[2];
+	state.row[3] = state.row[2];
+	state.row[2] = state.row[1];
+	state.row[1] = state.row[0];
+	state.row[0] = *temp;
+	return state;
+}
+
 static ForkSkinny128Cells_t forkskinny_128_384_encrypt_rounds
     (ForkSkinny128Cells_t state, const ForkSkinny128Key_t *ks1, const ForkSkinny128Key_t *ks2, const ForkSkinny128Key_t *ks3, unsigned from, unsigned to)
 {
@@ -456,43 +497,49 @@ static ForkSkinny128Cells_t forkskinny_128_384_encrypt_rounds
     schedule2 = ks2->schedule + from;
     schedule3 = ks3->schedule + from;
     for (index = from; index < to; ++index, ++schedule1, ++schedule2, ++schedule3) {
-        /* Apply the S-box to all bytes in the state */
-        #if SKINNY_64BIT
-          state.lrow[0] = skinny128_sbox(state.lrow[0]);
-          state.lrow[1] = skinny128_sbox(state.lrow[1]);
-        #else
-          state.row[0] = skinny128_sbox(state.row[0]);
-          state.row[1] = skinny128_sbox(state.row[1]);
-          state.row[2] = skinny128_sbox(state.row[2]);
-          state.row[3] = skinny128_sbox(state.row[3]);
-        #endif
-
-        /* Apply the subkey for this round */
-        #if SKINNY_64BIT
-          state.lrow[0] ^= schedule1->lrow ^ schedule2->lrow ^ schedule3->lrow;
-          state.lrow[1] ^= 0x02;
-        #else
-          state.row[0] ^= schedule1->row[0] ^ schedule2->row[0] ^ schedule3->row[0];
-          state.row[1] ^= schedule1->row[1] ^ schedule2->row[1] ^ schedule3->row[1];
-          state.row[2] ^= 0x02;
-        #endif
-
-        /* Shift the rows */
-        state.row[1] = skinny128_rotate_right(state.row[1], 8);
-        state.row[2] = skinny128_rotate_right(state.row[2], 16);
-        state.row[3] = skinny128_rotate_right(state.row[3], 24);
-
-        /* Mix the columns */
-        state.row[1] ^= state.row[2];
-        state.row[2] ^= state.row[0];
-        temp = state.row[3] ^ state.row[2];
-        state.row[3] = state.row[2];
-        state.row[2] = state.row[1];
-        state.row[1] = state.row[0];
-        state.row[0] = temp;
+		//<editor-fold>
+//        /* Apply the S-box to all bytes in the state */
+//        #if SKINNY_64BIT
+//          state.lrow[0] = skinny128_sbox(state.lrow[0]);
+//          state.lrow[1] = skinny128_sbox(state.lrow[1]);
+//        #else
+//          state.row[0] = skinny128_sbox(state.row[0]);
+//          state.row[1] = skinny128_sbox(state.row[1]);
+//          state.row[2] = skinny128_sbox(state.row[2]);
+//          state.row[3] = skinny128_sbox(state.row[3]);
+//        #endif
+//
+//        /* Apply the subkey for this round */
+//        #if SKINNY_64BIT
+//          state.lrow[0] ^= schedule1->lrow ^ schedule2->lrow ^ schedule3->lrow;
+//          state.lrow[1] ^= 0x02;
+//        #else
+//          state.row[0] ^= schedule1->row[0] ^ schedule2->row[0] ^ schedule3->row[0];
+//          state.row[1] ^= schedule1->row[1] ^ schedule2->row[1] ^ schedule3->row[1];
+//          state.row[2] ^= 0x02;
+//        #endif
+//
+//        /* Shift the rows */
+//        state.row[1] = skinny128_rotate_right(state.row[1], 8);
+//        state.row[2] = skinny128_rotate_right(state.row[2], 16);
+//        state.row[3] = skinny128_rotate_right(state.row[3], 24);
+//
+//        /* Mix the columns */
+//        state.row[1] ^= state.row[2];
+//        state.row[2] ^= state.row[0];
+//        temp = state.row[3] ^ state.row[2];
+//        state.row[3] = state.row[2];
+//        state.row[2] = state.row[1];
+//        state.row[1] = state.row[0];
+//        state.row[0] = temp;
+	    //</editor-fold>
+		
+		state = forkskinny_128_384_encrypt_round(state, schedule1, schedule2, schedule3, index, &temp);
     }
     return state;
 }
+
+
 
 void forkskinny_c_128_256_encrypt
       (const ForkSkinny128Key_t *tks1,

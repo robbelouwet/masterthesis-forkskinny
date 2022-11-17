@@ -51,6 +51,11 @@ typedef struct
 
 } ForkSkinny128Key_t;
 
+ForkSkinny128Cells_t forkskinny_128_384_encrypt_round(
+		ForkSkinny128Cells_t state, const ForkSkinny128HalfCells_t *schedule1,
+		const ForkSkinny128HalfCells_t *schedule2, const ForkSkinny128HalfCells_t *schedule3,
+		unsigned index, unsigned *temp);
+
 /**
  * Pre-computes the key schedule for Forkskinny-128-256 for TK1
  * ks:

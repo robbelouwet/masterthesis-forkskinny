@@ -7,12 +7,14 @@ cycles, while a SIMD-less sequential implementation only needs around 50. I thou
 having to load the state after evey single SIMD instruction, but after debugging the register, I concluded the SIMD
 values never leave the SIMD register after an instruction.
 
-
 ## Wednesday
-1) look into a simple example of what bit slicing is
-2) try to use romulus skinny-128-384 and construct forkskinny-128-384
-   1) How to extend the LSFR to 7 bits at the AddConstants step?
-   2) after this works, maybe look at how to extend implementation to forkskinny-64-128?
+
+Look into a simple example of what bit slicing is, and looked at comparing a single round in forkskinny and skinny+, but
+stopped. Came up with an idea to bit-slice the tweakey in order to perform the same LSFR on all cells in parallel,
+trying this out (on paper first).
+
+## Thursday
+
 
 ### What was on my mind
 
@@ -22,3 +24,4 @@ values never leave the SIMD register after an instruction.
   register. But the fact that the state is only 16x 4-bit values, and because the LSFR and PT can be described in simple
   logical gates, already makes the tweakey schedule super cheap without SIMD.
 - Thinking about leaving SIMD for what it is, and looking at bit slicing and then the fixed-slicing technique.
+- Looking at bit-slicing the key-schedule

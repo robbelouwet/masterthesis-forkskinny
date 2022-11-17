@@ -14,7 +14,7 @@ add_executable(forkskinnyplus
         src/headers/main.h
         src/utils.h
         src/avx2/tweakey-schedule/LSFR.cpp
-        src/headers/LSFR.h "src/forkskinny-plus/ forkskinny-plus.cpp" "src/forkskinny-plus/ forkskinny-plus.h")
+        src/headers/LSFR.h "src/forkskinny-plus/forkskinny-plus.cpp" "src/forkskinny-plus/forkskinny-plus.h")
 
 # standalone demo of forksinny-c
 add_executable(forkskinny-demo
