@@ -21,12 +21,30 @@ extern "C" {
  * Union that describes a 64-bit 4x4 array of cells16.
  */
 typedef union {
-	uint16_t row[4];		/// Stored as 4x 16-bit uint partitions (cccc cccc cccc cccc) [c = 4-bit state cell]
-	uint32_t lrow[2];		/// Stored as 2x 32-bit uint partitions  (cccccccc cccccccc)
-	uint64_t llrow;			/// Stored as 1x 64-bit uint 			  (cccccccccccccccc)
-	
-	
+	uint16_t row[4];        /// Stored as 4x 16-bit uint partitions (cccc cccc cccc cccc) [c = 4-bit internal_state cell]
+	uint32_t lrow[2];        /// Stored as 2x 32-bit uint partitions  (cccccccc cccccccc)
+	uint64_t llrow;            /// Stored as 1x 64-bit uint 			  (cccccccccccccccc)
 } State64_t;
+
+typedef union {
+	uint16_t slices[4];  // [p³o³...b³a³, ... , p⁰o⁰...b⁰a⁰], where there are 16 4-bit cells named a through p
+	uint64_t internal_state;
+	__m64 m64state;
+} State64SlicedInternal_t;
+
+/**
+ * Represents a 64-bit bit-sliced internal_state
+ *
+ * a bit sliced representation of 2 4-bit cells would be: [x³, y³], [x², y²], [x¹, y¹], [x⁰, y⁰].
+ */
+typedef struct {
+	State64SlicedInternal_t state;
+	
+	uint16_t *slice3;   // p³o³...b³a³
+	uint16_t *slice2;
+	uint16_t *slice1;
+	uint16_t *slice0;
+} State64Sliced_t;
 
 
 /**

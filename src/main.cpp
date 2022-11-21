@@ -9,33 +9,10 @@
 
 // https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=sl&ig_expand=6523,6501,6501&techs=AVX,AVX2
 int main() {
-	auto state = State64v_t();
-	for (int j = 0; j <= 15; ++j) {
-		state.cells16[j] = 65535;
-	}
+	auto state = State64_t();
+	state.llrow = 0xEEEEEEEEEEEEEEEE;
 	
-	ulong before = _rdtsc();
-	lsfr_64_tk2_4bit_simd(state);
-	ulong after = _rdtsc();
-	
-	std::cout << "semi-SIMD: " << after - before << " cycles";
-	
-	auto state2 = State64_t ();
-	state2.llrow = 18446744073709551615;
-	
-	ulong before1 = _rdtsc();
-	auto res = _mm_shuffle_epi8({}, {});
-	//lsfr_64_tk2_4bit_sequential(state2.lrow[0]);
-	ulong after1 = _rdtsc();
-	std::cout << "Sequential: " << after1 - before1 << " cycles";
-	
-//	auto stat1 = HalfState64_t();
-//	for (int j = 0; j <= 15; ++j) {
-//		state.cells16[j] = 65535;
-//	}
-//	ulong before1 = _rdtsc();
-//	lsfr_64_tk2_4bit_sequential()
-
+	slice(state);
 }
 
 void shl_benchmark() {

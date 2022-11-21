@@ -405,15 +405,15 @@ static ForkSkinny128Cells_t forkskinny_128_encrypt_rounds
     schedule1 = ks1->schedule + from;
     schedule2 = ks2->schedule + from;
     for (index = from; index < to; ++index, ++schedule1, ++schedule2) {
-        /* Apply the S-box to all bytes in the state */
+        /* Apply the S-box to all bytes in the internal_state */
         #if SKINNY_64BIT
           state.lrow[0] = skinny128_sbox(state.lrow[0]);
           state.lrow[1] = skinny128_sbox(state.lrow[1]);
         #else
-          state.row[0] = skinny128_sbox(state.row[0]);
-          state.row[1] = skinny128_sbox(state.row[1]);
-          state.row[2] = skinny128_sbox(state.row[2]);
-          state.row[3] = skinny128_sbox(state.row[3]);
+          internal_state.row[0] = skinny128_sbox(internal_state.row[0]);
+          internal_state.row[1] = skinny128_sbox(internal_state.row[1]);
+          internal_state.row[2] = skinny128_sbox(internal_state.row[2]);
+          internal_state.row[3] = skinny128_sbox(internal_state.row[3]);
         #endif
 
         /* Apply the subkey for this round */
@@ -421,9 +421,9 @@ static ForkSkinny128Cells_t forkskinny_128_encrypt_rounds
           state.lrow[0] ^= schedule1->lrow ^ schedule2->lrow;
           state.lrow[1] ^= 0x02;
         #else
-          state.row[0] ^= schedule1->row[0] ^ schedule2->row[0];
-          state.row[1] ^= schedule1->row[1] ^ schedule2->row[1];
-          state.row[2] ^= 0x02;
+          internal_state.row[0] ^= schedule1->row[0] ^ schedule2->row[0];
+          internal_state.row[1] ^= schedule1->row[1] ^ schedule2->row[1];
+          internal_state.row[2] ^= 0x02;
         #endif
 
         /* Shift the rows */
@@ -447,15 +447,15 @@ ForkSkinny128Cells_t forkskinny_128_384_encrypt_round(
 		ForkSkinny128Cells_t state, const ForkSkinny128HalfCells_t *schedule1,
 		const ForkSkinny128HalfCells_t *schedule2, const ForkSkinny128HalfCells_t *schedule3,
 		unsigned index, unsigned *temp){
-	/* Apply the S-box to all bytes in the state */
+	/* Apply the S-box to all bytes in the internal_state */
 	#if SKINNY_64BIT
 	state.lrow[0] = skinny128_sbox(state.lrow[0]);
 	state.lrow[1] = skinny128_sbox(state.lrow[1]);
 	#else
-	state.row[0] = skinny128_sbox(state.row[0]);
-          state.row[1] = skinny128_sbox(state.row[1]);
-          state.row[2] = skinny128_sbox(state.row[2]);
-          state.row[3] = skinny128_sbox(state.row[3]);
+	internal_state.row[0] = skinny128_sbox(internal_state.row[0]);
+          internal_state.row[1] = skinny128_sbox(internal_state.row[1]);
+          internal_state.row[2] = skinny128_sbox(internal_state.row[2]);
+          internal_state.row[3] = skinny128_sbox(internal_state.row[3]);
 	#endif
 	
 	/* Apply the subkey for this round */
@@ -463,9 +463,9 @@ ForkSkinny128Cells_t forkskinny_128_384_encrypt_round(
 	state.lrow[0] ^= schedule1->lrow ^ schedule2->lrow ^ schedule3->lrow;
 	state.lrow[1] ^= 0x02;
 	#else
-	state.row[0] ^= schedule1->row[0] ^ schedule2->row[0] ^ schedule3->row[0];
-          state.row[1] ^= schedule1->row[1] ^ schedule2->row[1] ^ schedule3->row[1];
-          state.row[2] ^= 0x02;
+	internal_state.row[0] ^= schedule1->row[0] ^ schedule2->row[0] ^ schedule3->row[0];
+          internal_state.row[1] ^= schedule1->row[1] ^ schedule2->row[1] ^ schedule3->row[1];
+          internal_state.row[2] ^= 0x02;
 	#endif
 	
 	/* Shift the rows */
@@ -498,40 +498,40 @@ static ForkSkinny128Cells_t forkskinny_128_384_encrypt_rounds
     schedule3 = ks3->schedule + from;
     for (index = from; index < to; ++index, ++schedule1, ++schedule2, ++schedule3) {
 		//<editor-fold>
-//        /* Apply the S-box to all bytes in the state */
+//        /* Apply the S-box to all bytes in the internal_state */
 //        #if SKINNY_64BIT
-//          state.lrow[0] = skinny128_sbox(state.lrow[0]);
-//          state.lrow[1] = skinny128_sbox(state.lrow[1]);
+//          internal_state.lrow[0] = skinny128_sbox(internal_state.lrow[0]);
+//          internal_state.lrow[1] = skinny128_sbox(internal_state.lrow[1]);
 //        #else
-//          state.row[0] = skinny128_sbox(state.row[0]);
-//          state.row[1] = skinny128_sbox(state.row[1]);
-//          state.row[2] = skinny128_sbox(state.row[2]);
-//          state.row[3] = skinny128_sbox(state.row[3]);
+//          internal_state.row[0] = skinny128_sbox(internal_state.row[0]);
+//          internal_state.row[1] = skinny128_sbox(internal_state.row[1]);
+//          internal_state.row[2] = skinny128_sbox(internal_state.row[2]);
+//          internal_state.row[3] = skinny128_sbox(internal_state.row[3]);
 //        #endif
 //
 //        /* Apply the subkey for this round */
 //        #if SKINNY_64BIT
-//          state.lrow[0] ^= schedule1->lrow ^ schedule2->lrow ^ schedule3->lrow;
-//          state.lrow[1] ^= 0x02;
+//          internal_state.lrow[0] ^= schedule1->lrow ^ schedule2->lrow ^ schedule3->lrow;
+//          internal_state.lrow[1] ^= 0x02;
 //        #else
-//          state.row[0] ^= schedule1->row[0] ^ schedule2->row[0] ^ schedule3->row[0];
-//          state.row[1] ^= schedule1->row[1] ^ schedule2->row[1] ^ schedule3->row[1];
-//          state.row[2] ^= 0x02;
+//          internal_state.row[0] ^= schedule1->row[0] ^ schedule2->row[0] ^ schedule3->row[0];
+//          internal_state.row[1] ^= schedule1->row[1] ^ schedule2->row[1] ^ schedule3->row[1];
+//          internal_state.row[2] ^= 0x02;
 //        #endif
 //
 //        /* Shift the rows */
-//        state.row[1] = skinny128_rotate_right(state.row[1], 8);
-//        state.row[2] = skinny128_rotate_right(state.row[2], 16);
-//        state.row[3] = skinny128_rotate_right(state.row[3], 24);
+//        internal_state.row[1] = skinny128_rotate_right(internal_state.row[1], 8);
+//        internal_state.row[2] = skinny128_rotate_right(internal_state.row[2], 16);
+//        internal_state.row[3] = skinny128_rotate_right(internal_state.row[3], 24);
 //
 //        /* Mix the columns */
-//        state.row[1] ^= state.row[2];
-//        state.row[2] ^= state.row[0];
-//        temp = state.row[3] ^ state.row[2];
-//        state.row[3] = state.row[2];
-//        state.row[2] = state.row[1];
-//        state.row[1] = state.row[0];
-//        state.row[0] = temp;
+//        internal_state.row[1] ^= internal_state.row[2];
+//        internal_state.row[2] ^= internal_state.row[0];
+//        temp = internal_state.row[3] ^ internal_state.row[2];
+//        internal_state.row[3] = internal_state.row[2];
+//        internal_state.row[2] = internal_state.row[1];
+//        internal_state.row[1] = internal_state.row[0];
+//        internal_state.row[0] = temp;
 	    //</editor-fold>
 		
 		state = forkskinny_128_384_encrypt_round(state, schedule1, schedule2, schedule3, index, &temp);
@@ -578,10 +578,10 @@ void forkskinny_c_128_256_encrypt
           state.lrow[0] ^= 0x8241201008040201U;
           state.lrow[1] ^= 0x8844a25128140a05U;
         #else
-          state.row[0] ^= 0x08040201U; /* Branching constant */
-          state.row[1] ^= 0x82412010U;
-          state.row[2] ^= 0x28140a05U;
-          state.row[3] ^= 0x8844a251U;
+          internal_state.row[0] ^= 0x08040201U; /* Branching constant */
+          internal_state.row[1] ^= 0x82412010U;
+          internal_state.row[2] ^= 0x28140a05U;
+          internal_state.row[3] ^= 0x8844a251U;
         #endif
         state = forkskinny_128_encrypt_rounds
             (state, tks1, tks2, FORKSKINNY_128_256_ROUNDS_BEFORE +
@@ -637,20 +637,20 @@ static ForkSkinny128Cells_t forkskinny_128_decrypt_rounds
         #if SKINNY_64BIT
           state.lrow[0] ^= schedule1->lrow ^ schedule2->lrow;
         #else
-          state.row[0] ^= schedule1->row[0] ^ schedule2->row[0];
-          state.row[1] ^= schedule1->row[1] ^ schedule2->row[1];
+          internal_state.row[0] ^= schedule1->row[0] ^ schedule2->row[0];
+          internal_state.row[1] ^= schedule1->row[1] ^ schedule2->row[1];
         #endif
         state.row[2] ^= 0x02;
 
-        /* Apply the inverse of the S-box to all bytes in the state */
+        /* Apply the inverse of the S-box to all bytes in the internal_state */
         #if SKINNY_64BIT
           state.lrow[0] = skinny128_inv_sbox(state.lrow[0]);
           state.lrow[1] = skinny128_inv_sbox(state.lrow[1]);
         #else
-          state.row[0] = skinny128_inv_sbox(state.row[0]);
-          state.row[1] = skinny128_inv_sbox(state.row[1]);
-          state.row[2] = skinny128_inv_sbox(state.row[2]);
-          state.row[3] = skinny128_inv_sbox(state.row[3]);
+          internal_state.row[0] = skinny128_inv_sbox(internal_state.row[0]);
+          internal_state.row[1] = skinny128_inv_sbox(internal_state.row[1]);
+          internal_state.row[2] = skinny128_inv_sbox(internal_state.row[2]);
+          internal_state.row[3] = skinny128_inv_sbox(internal_state.row[3]);
         #endif
     }
     return state;
@@ -686,20 +686,20 @@ static ForkSkinny128Cells_t forkskinny_128_384_decrypt_rounds
         #if SKINNY_64BIT
           state.lrow[0] ^= schedule1->lrow ^ schedule2->lrow ^ schedule3->lrow;
         #else
-          state.row[0] ^= schedule1->row[0] ^ schedule2->row[0] ^ schedule3->row[0];
-          state.row[1] ^= schedule1->row[1] ^ schedule2->row[1] ^ schedule3->row[1];
+          internal_state.row[0] ^= schedule1->row[0] ^ schedule2->row[0] ^ schedule3->row[0];
+          internal_state.row[1] ^= schedule1->row[1] ^ schedule2->row[1] ^ schedule3->row[1];
         #endif
         state.row[2] ^= 0x02;
 
-        /* Apply the inverse of the S-box to all bytes in the state */
+        /* Apply the inverse of the S-box to all bytes in the internal_state */
         #if SKINNY_64BIT
           state.lrow[0] = skinny128_inv_sbox(state.lrow[0]);
           state.lrow[1] = skinny128_inv_sbox(state.lrow[1]);
         #else
-          state.row[0] = skinny128_inv_sbox(state.row[0]);
-          state.row[1] = skinny128_inv_sbox(state.row[1]);
-          state.row[2] = skinny128_inv_sbox(state.row[2]);
-          state.row[3] = skinny128_inv_sbox(state.row[3]);
+          internal_state.row[0] = skinny128_inv_sbox(internal_state.row[0]);
+          internal_state.row[1] = skinny128_inv_sbox(internal_state.row[1]);
+          internal_state.row[2] = skinny128_inv_sbox(internal_state.row[2]);
+          internal_state.row[3] = skinny128_inv_sbox(internal_state.row[3]);
         #endif
     }
     return state;
@@ -801,10 +801,10 @@ void forkskinny_c_128_384_encrypt
           state.lrow[0] ^= 0x8241201008040201U;
           state.lrow[1] ^= 0x8844a25128140a05U;
         #else
-          state.row[0] ^= 0x08040201U; /* Branching constant */
-          state.row[1] ^= 0x82412010U;
-          state.row[2] ^= 0x28140a05U;
-          state.row[3] ^= 0x8844a251U;
+          internal_state.row[0] ^= 0x08040201U; /* Branching constant */
+          internal_state.row[1] ^= 0x82412010U;
+          internal_state.row[2] ^= 0x28140a05U;
+          internal_state.row[3] ^= 0x8844a251U;
         #endif
         state = forkskinny_128_384_encrypt_rounds
             (state, tks1, tks2, tks3, FORKSKINNY_128_384_ROUNDS_BEFORE +
