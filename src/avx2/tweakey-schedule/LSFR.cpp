@@ -25,7 +25,7 @@ std::tuple<ulong, ulong> benchmark(State64v_t state) {
 	
 	// blend according to control mask
 	//auto mask = _mm256_set1_epi16(1); // broadcast value to every value in the lane
-	//auto blended = _mm256_blend_epi16(sleft, internal_state.vec, 8);
+	//auto blended = _mm256_blend_epi16(sleft, state.vec, 8);
 	ulong after = _rdtsc();
 	results[0] = after - before;
 	

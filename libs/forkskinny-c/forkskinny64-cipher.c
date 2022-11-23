@@ -261,12 +261,12 @@ static State64_t forkskinny64_encrypt_rounds(
 	for (index = from; index < to; ++index, ++schedule1, ++schedule2) {
 		
 		/// SubCells
-		/* Apply the S-box to all bytes in the internal_state */
+		/* Apply the S-box to all bytes in the state */
 		#if SKINNY_64BIT
 		state.llrow = skinny64_sbox(state.llrow);
 		#else
-		internal_state.lrow[0] = skinny64_sbox(internal_state.lrow[0]);
-		internal_state.lrow[1] = skinny64_sbox(internal_state.lrow[1]);
+		state.lrow[0] = skinny64_sbox(state.lrow[0]);
+		state.lrow[1] = skinny64_sbox(state.lrow[1]);
 		#endif
 		
 		/// AddConstants
@@ -274,8 +274,8 @@ static State64_t forkskinny64_encrypt_rounds(
 		#if SKINNY_64BIT && SKINNY_LITTLE_ENDIAN
 		state.llrow ^= (schedule1->lrow ^ schedule2->lrow) | 0x2000000000ULL;
 		#else
-		internal_state.lrow[0] ^= schedule1->lrow ^ schedule2->lrow;
-		internal_state.row[2] ^= 0x20;
+		state.lrow[0] ^= schedule1->lrow ^ schedule2->lrow;
+		state.row[2] ^= 0x20;
 		#endif
 		
 		/* Shift the rows */
@@ -305,13 +305,13 @@ void forkskinny_c_64_192_encrypt(const KeySchedule64_t *tks1, const KeySchedule6
 	#if SKINNY_64BIT && SKINNY_LITTLE_ENDIAN
 	state.llrow = READ_WORD64(input_right, 0);
 	#elif SKINNY_LITTLE_ENDIAN
-	internal_state.lrow[0] = READ_WORD32(input_right, 0);
-	internal_state.lrow[1] = READ_WORD32(input_right, 4);
+	state.lrow[0] = READ_WORD32(input_right, 0);
+	state.lrow[1] = READ_WORD32(input_right, 4);
 	#else
-	internal_state.row[0] = READ_WORD16(input_right, 0);
-	internal_state.row[1] = READ_WORD16(input_right, 2);
-	internal_state.row[2] = READ_WORD16(input_right, 4);
-	internal_state.row[3] = READ_WORD16(input_right, 6);
+	state.row[0] = READ_WORD16(input_right, 0);
+	state.row[1] = READ_WORD16(input_right, 2);
+	state.row[2] = READ_WORD16(input_right, 4);
+	state.row[3] = READ_WORD16(input_right, 6);
 	#endif
 	
 	/* Run all of the rounds before the forking point */
@@ -344,10 +344,10 @@ void forkskinny_c_64_192_encrypt(const KeySchedule64_t *tks1, const KeySchedule6
 		#if SKINNY_64BIT
 		state.llrow ^= 0x81ec7f5bda364912U;
 		#else
-		internal_state.row[0] ^= 0x4912U;  /* Branching constant */
-		internal_state.row[1] ^= 0xda36U;
-		internal_state.row[2] ^= 0x7f5bU;
-		internal_state.row[3] ^= 0x81ecU;
+		state.row[0] ^= 0x4912U;  /* Branching constant */
+		state.row[1] ^= 0xda36U;
+		state.row[2] ^= 0x7f5bU;
+		state.row[3] ^= 0x81ecU;
 		#endif
 		
 		state = forkskinny64_encrypt_rounds(state, tks1, tks2,
@@ -359,13 +359,13 @@ void forkskinny_c_64_192_encrypt(const KeySchedule64_t *tks1, const KeySchedule6
 		WRITE_WORD64(output_left, 0, state.llrow);
 		
 		#elif SKINNY_LITTLE_ENDIAN
-		WRITE_WORD32(output_left, 0, internal_state.lrow[0]);
-		WRITE_WORD32(output_left, 4, internal_state.lrow[1]);
+		WRITE_WORD32(output_left, 0, state.lrow[0]);
+		WRITE_WORD32(output_left, 4, state.lrow[1]);
 		#else
-		WRITE_WORD16(output_left, 0, internal_state.row[0]);
-		WRITE_WORD16(output_left, 2, internal_state.row[1]);
-		WRITE_WORD16(output_left, 4, internal_state.row[2]);
-		WRITE_WORD16(output_left, 6, internal_state.row[3]);
+		WRITE_WORD16(output_left, 0, state.row[0]);
+		WRITE_WORD16(output_left, 2, state.row[1]);
+		WRITE_WORD16(output_left, 4, state.row[2]);
+		WRITE_WORD16(output_left, 6, state.row[3]);
 		#endif
 	} else {
 		/* We only need the right output block */
@@ -378,13 +378,13 @@ void forkskinny_c_64_192_encrypt(const KeySchedule64_t *tks1, const KeySchedule6
 		#if SKINNY_64BIT && SKINNY_LITTLE_ENDIAN
 		WRITE_WORD64(output_right, 0, state.llrow);
 		#elif SKINNY_LITTLE_ENDIAN
-		WRITE_WORD32(output_right, 0, internal_state.lrow[0]);
-		WRITE_WORD32(output_right, 4, internal_state.lrow[1]);
+		WRITE_WORD32(output_right, 0, state.lrow[0]);
+		WRITE_WORD32(output_right, 4, state.lrow[1]);
 		#else
-		WRITE_WORD16(output_right, 0, internal_state.row[0]);
-		WRITE_WORD16(output_right, 2, internal_state.row[1]);
-		WRITE_WORD16(output_right, 4, internal_state.row[2]);
-		WRITE_WORD16(output_right, 6, internal_state.row[3]);
+		WRITE_WORD16(output_right, 0, state.row[0]);
+		WRITE_WORD16(output_right, 2, state.row[1]);
+		WRITE_WORD16(output_right, 4, state.row[2]);
+		WRITE_WORD16(output_right, 6, state.row[3]);
 		#endif
 	}
 	
@@ -422,16 +422,16 @@ static State64_t forkskinny64_decrypt_rounds(
 		#if SKINNY_64BIT && SKINNY_LITTLE_ENDIAN
 		state.llrow ^= (schedule1->lrow ^ schedule2->lrow) | 0x2000000000ULL;
 		#else
-		internal_state.lrow[0] ^= schedule1->lrow ^ schedule2->lrow;
-		internal_state.row[2] ^= 0x20;
+		state.lrow[0] ^= schedule1->lrow ^ schedule2->lrow;
+		state.row[2] ^= 0x20;
 		#endif
 		
-		/* Apply the inverse of the S-box to all bytes in the internal_state */
+		/* Apply the inverse of the S-box to all bytes in the state */
 		#if SKINNY_64BIT
 		state.llrow = skinny64_inv_sbox(state.llrow);
 		#else
-		internal_state.lrow[0] = skinny64_inv_sbox(internal_state.lrow[0]);
-		internal_state.lrow[1] = skinny64_inv_sbox(internal_state.lrow[1]);
+		state.lrow[0] = skinny64_inv_sbox(state.lrow[0]);
+		state.lrow[1] = skinny64_inv_sbox(state.lrow[1]);
 		#endif
 	}
 	return state;
@@ -446,13 +446,13 @@ void forkskinny_c_64_192_decrypt(const KeySchedule64_t *tks1, const KeySchedule6
 	#if SKINNY_64BIT && SKINNY_LITTLE_ENDIAN
 	state.llrow = READ_WORD64(input_right, 0);
 	#elif SKINNY_LITTLE_ENDIAN
-	internal_state.lrow[0] = READ_WORD32(input_right, 0);
-	internal_state.lrow[1] = READ_WORD32(input_right, 4);
+	state.lrow[0] = READ_WORD32(input_right, 0);
+	state.lrow[1] = READ_WORD32(input_right, 4);
 	#else
-	internal_state.row[0] = READ_WORD16(input_right, 0);
-	internal_state.row[1] = READ_WORD16(input_right, 2);
-	internal_state.row[2] = READ_WORD16(input_right, 4);
-	internal_state.row[3] = READ_WORD16(input_right, 6);
+	state.row[0] = READ_WORD16(input_right, 0);
+	state.row[1] = READ_WORD16(input_right, 2);
+	state.row[2] = READ_WORD16(input_right, 4);
+	state.row[3] = READ_WORD16(input_right, 6);
 	#endif
 	
 	/* Perform the "after" rounds on the input to get back
@@ -503,12 +503,12 @@ void forkskinny_c_64_192_decrypt(const KeySchedule64_t *tks1, const KeySchedule6
 	#if SKINNY_64BIT && SKINNY_LITTLE_ENDIAN
 	WRITE_WORD64(output_right, 0, state.llrow);
 	#elif SKINNY_LITTLE_ENDIAN
-	WRITE_WORD32(output_right, 0, internal_state.lrow[0]);
-	WRITE_WORD32(output_right, 4, internal_state.lrow[1]);
+	WRITE_WORD32(output_right, 0, state.lrow[0]);
+	WRITE_WORD32(output_right, 4, state.lrow[1]);
 	#else
-	WRITE_WORD16(output_right, 0, internal_state.row[0]);
-	WRITE_WORD16(output_right, 2, internal_state.row[1]);
-	WRITE_WORD16(output_right, 4, internal_state.row[2]);
-	WRITE_WORD16(output_right, 6, internal_state.row[3]);
+	WRITE_WORD16(output_right, 0, state.row[0]);
+	WRITE_WORD16(output_right, 2, state.row[1]);
+	WRITE_WORD16(output_right, 4, state.row[2]);
+	WRITE_WORD16(output_right, 6, state.row[3]);
 	#endif
 }

@@ -3,8 +3,8 @@
 ## Monday
 
 Started actually implementing the LSFR for TK2 in the tweakey schedule. More specifically, I was trying to figure out
-how to get a State64_t (whch is the 4x4 tweakey internal_state) into a __mm256 datatype. In other words, trying to bit slice the
-4x4 TK2 tweakey internal_state, such that I can apply the LSFR and PT in a SIMD manner later on, but first things first. When
+how to get a State64_t (whch is the 4x4 tweakey state) into a __mm256 datatype. In other words, trying to bit slice the
+4x4 TK2 tweakey state, such that I can apply the LSFR and PT in a SIMD manner later on, but first things first. When
 this works, it's time to try
 out [the SIMD instruction for a shift left](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#ig_expand=5264,4235,67,0,5523,5224,5264,5264,6531,6501&text=sl&techs=AVX,AVX2)
 which will be used inside the LSFR.
@@ -18,8 +18,8 @@ working in parallel on every 16-bit int in a 256 SIMD lane, it's 2-3x faster tha
 
 Looked at possible SIMD instructions for performing a 'rotate' instruction on a byte, but it seems there's only a few
 instructions that do rotation, but they are in a poorly supported library (only intel processors since 2013).
-Managed to implement the full LSFR for TK2. It uses 9 SIMD instructions for a full 64-bit internal_state in about 800 cycles. I
-forgot it's only applied on the top 2 rows. I applied it on the entire internal_state. I need to change that, so I can compare
+Managed to implement the full LSFR for TK2. It uses 9 SIMD instructions for a full 64-bit state in about 800 cycles. I
+forgot it's only applied on the top 2 rows. I applied it on the entire state. I need to change that, so I can compare
 it to Erik's sequential boolean expression (skinny64_LFSR2()) that computes LSFR for TK2.
 
 ### What was on my mind

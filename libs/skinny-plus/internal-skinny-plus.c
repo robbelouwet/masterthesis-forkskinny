@@ -142,12 +142,12 @@ static uint32_t const skinny_fixsliced_rc[SKINNY_PLUS_ROUNDS * 4] = {
     } while (0)
 
 /**
- * \brief Applies the first S-box to the fix-sliced internal_state.
+ * \brief Applies the first S-box to the fix-sliced state.
  *
- * \param s0 First 32-bit word of the internal_state.
- * \param s1 Second 32-bit word of the internal_state.
- * \param s2 Third 32-bit word of the internal_state.
- * \param s3 Fourth 32-bit word of the internal_state.
+ * \param s0 First 32-bit word of the state.
+ * \param s1 Second 32-bit word of the state.
+ * \param s2 Third 32-bit word of the state.
+ * \param s3 Fourth 32-bit word of the state.
  */
 #define skinny_fixsliced_sbox_1(s0, s1, s2, s3) \
     do { \
@@ -165,12 +165,12 @@ static uint32_t const skinny_fixsliced_rc[SKINNY_PLUS_ROUNDS * 4] = {
     } while (0)
 
 /**
- * \brief Applies the inverse of the first S-box to the fix-sliced internal_state.
+ * \brief Applies the inverse of the first S-box to the fix-sliced state.
  *
- * \param s0 First 32-bit word of the internal_state.
- * \param s1 Second 32-bit word of the internal_state.
- * \param s2 Third 32-bit word of the internal_state.
- * \param s3 Fourth 32-bit word of the internal_state.
+ * \param s0 First 32-bit word of the state.
+ * \param s1 Second 32-bit word of the state.
+ * \param s2 Third 32-bit word of the state.
+ * \param s3 Fourth 32-bit word of the state.
  */
 #define skinny_inv_fixsliced_sbox_1(s0, s1, s2, s3) \
     do { \
@@ -188,12 +188,12 @@ static uint32_t const skinny_fixsliced_rc[SKINNY_PLUS_ROUNDS * 4] = {
     } while (0)
 
 /**
- * \brief Applies the second S-box to the fix-sliced internal_state.
+ * \brief Applies the second S-box to the fix-sliced state.
  *
- * \param s0 First 32-bit word of the internal_state.
- * \param s1 Second 32-bit word of the internal_state.
- * \param s2 Third 32-bit word of the internal_state.
- * \param s3 Fourth 32-bit word of the internal_state.
+ * \param s0 First 32-bit word of the state.
+ * \param s1 Second 32-bit word of the state.
+ * \param s2 Third 32-bit word of the state.
+ * \param s3 Fourth 32-bit word of the state.
  */
 #define skinny_fixsliced_sbox_2(s0, s1, s2, s3) \
     do { \
@@ -211,12 +211,12 @@ static uint32_t const skinny_fixsliced_rc[SKINNY_PLUS_ROUNDS * 4] = {
     } while (0)
 
 /**
- * \brief Applies the inverse of the second S-box to the fix-sliced internal_state.
+ * \brief Applies the inverse of the second S-box to the fix-sliced state.
  *
- * \param s0 First 32-bit word of the internal_state.
- * \param s1 Second 32-bit word of the internal_state.
- * \param s2 Third 32-bit word of the internal_state.
- * \param s3 Fourth 32-bit word of the internal_state.
+ * \param s0 First 32-bit word of the state.
+ * \param s1 Second 32-bit word of the state.
+ * \param s2 Third 32-bit word of the state.
+ * \param s3 Fourth 32-bit word of the state.
  */
 #define skinny_inv_fixsliced_sbox_2(s0, s1, s2, s3) \
     do { \
@@ -234,7 +234,7 @@ static uint32_t const skinny_fixsliced_rc[SKINNY_PLUS_ROUNDS * 4] = {
     } while (0)
 
 /**
- * \brief Mixes the columns for the first round of 4 in the fix-sliced internal_state.
+ * \brief Mixes the columns for the first round of 4 in the fix-sliced state.
  *
  * \param s State word to be mixed.
  */
@@ -250,7 +250,7 @@ static uint32_t const skinny_fixsliced_rc[SKINNY_PLUS_ROUNDS * 4] = {
 
 /**
  * \brief Inverse mix of the columns for the first round of 4 in
- * the fix-sliced internal_state.
+ * the fix-sliced state.
  *
  * \param s State word to be mixed.
  */
@@ -265,7 +265,7 @@ static uint32_t const skinny_fixsliced_rc[SKINNY_PLUS_ROUNDS * 4] = {
     } while (0)
 
 /**
- * \brief Mixes the columns for the second round of 4 in the fix-sliced internal_state.
+ * \brief Mixes the columns for the second round of 4 in the fix-sliced state.
  *
  * \param s State word to be mixed.
  */
@@ -281,7 +281,7 @@ static uint32_t const skinny_fixsliced_rc[SKINNY_PLUS_ROUNDS * 4] = {
 
 /**
  * \brief Inverse mix of the columns for the second round of 4
- * in the fix-sliced internal_state.
+ * in the fix-sliced state.
  *
  * \param s State word to be mixed.
  */
@@ -296,7 +296,7 @@ static uint32_t const skinny_fixsliced_rc[SKINNY_PLUS_ROUNDS * 4] = {
     } while (0)
 
 /**
- * \brief Mixes the columns for the third round of 4 in the fix-sliced internal_state.
+ * \brief Mixes the columns for the third round of 4 in the fix-sliced state.
  *
  * \param s State word to be mixed.
  */
@@ -312,7 +312,7 @@ static uint32_t const skinny_fixsliced_rc[SKINNY_PLUS_ROUNDS * 4] = {
 
 /**
  * \brief Inverse mix of the columns for the third round of 4
- * in the fix-sliced internal_state.
+ * in the fix-sliced state.
  *
  * \param s State word to be mixed.
  */
@@ -327,7 +327,7 @@ static uint32_t const skinny_fixsliced_rc[SKINNY_PLUS_ROUNDS * 4] = {
     } while (0)
 
 /**
- * \brief Mixes the columns for the fourth round of 4 in the fix-sliced internal_state.
+ * \brief Mixes the columns for the fourth round of 4 in the fix-sliced state.
  *
  * \param s State word to be mixed.
  */
@@ -343,7 +343,7 @@ static uint32_t const skinny_fixsliced_rc[SKINNY_PLUS_ROUNDS * 4] = {
 
 /**
  * \brief Inverse mix of the columns for the fourth round of 4
- * in the fix-sliced internal_state.
+ * in the fix-sliced state.
  *
  * \param s State word to be mixed.
  */
@@ -360,10 +360,10 @@ static uint32_t const skinny_fixsliced_rc[SKINNY_PLUS_ROUNDS * 4] = {
 /**
  * \brief Performs four fixsliced encryption rounds using 16 round keys.
  *
- * \param s0 First 32-bit word of the internal_state to encrypt.
- * \param s1 Second 32-bit word of the internal_state to encrypt.
- * \param s2 Third 32-bit word of the internal_state to encrypt.
- * \param s3 Fourth 32-bit word of the internal_state to encrypt.
+ * \param s0 First 32-bit word of the state to encrypt.
+ * \param s1 Second 32-bit word of the state to encrypt.
+ * \param s2 Third 32-bit word of the state to encrypt.
+ * \param s3 Fourth 32-bit word of the state to encrypt.
  * \param tk1 Points to the 16 round keys for the TK1 part of the schedule.
  * \param tk23 Points to the 16 round keys for the TK2/3 part of the schedule.
  */
@@ -433,10 +433,10 @@ static uint32_t const skinny_fixsliced_rc[SKINNY_PLUS_ROUNDS * 4] = {
 /**
  * \brief Performs four fixsliced decryption rounds using 16 round keys.
  *
- * \param s0 First 32-bit word of the internal_state to decrypt.
- * \param s1 Second 32-bit word of the internal_state to decrypt.
- * \param s2 Third 32-bit word of the internal_state to decrypt.
- * \param s3 Fourth 32-bit word of the internal_state to decrypt.
+ * \param s0 First 32-bit word of the state to decrypt.
+ * \param s1 Second 32-bit word of the state to decrypt.
+ * \param s2 Third 32-bit word of the state to decrypt.
+ * \param s3 Fourth 32-bit word of the state to decrypt.
  * \param tk1 Points to the 16 round keys for the TK1 part of the schedule.
  * \param tk23 Points to the 16 round keys for the TK2/3 part of the schedule.
  */
@@ -945,7 +945,7 @@ void skinny_plus_decrypt_tk_full
 
 #define skinny128_permute_tk_half(tk2, tk3) \
     do { \
-        /* Permute the bottom half of the tweakey internal_state in place, no swap */ \
+        /* Permute the bottom half of the tweakey state in place, no swap */ \
         uint32_t row2 = tk2; \
         uint32_t row3 = tk3; \
         row3 = (row3 << 16) | (row3 >> 16); \
@@ -960,7 +960,7 @@ void skinny_plus_decrypt_tk_full
 
 #define skinny128_inv_permute_tk_half(tk0, tk1) \
     do { \
-        /* Permute the top half of the tweakey internal_state in place, no swap */ \
+        /* Permute the top half of the tweakey state in place, no swap */ \
         uint32_t row0 = tk0; \
         uint32_t row1 = tk1; \
         tk0 = ((row0 >> 16) & 0x000000FFU) | \
@@ -1196,16 +1196,16 @@ void skinny_plus_init_without_tk1
  * \brief Performs an unrolled round for Skinny-128-384+ when only TK1 is
  * computed on the fly.
  *
- * \param s0 First word of the internal_state.
- * \param s1 Second word of the internal_state.
- * \param s2 Third word of the internal_state.
- * \param s3 Fourth word of the internal_state.
+ * \param s0 First word of the state.
+ * \param s1 Second word of the state.
+ * \param s2 Third word of the state.
+ * \param s3 Fourth word of the state.
  * \param half 0 for the bottom half and 1 for the top half of the TK values.
  * \param offset Offset between 0 and 3 of the current unrolled round.
  */
 #define skinny_plus_round(s0, s1, s2, s3, half, offset) \
     do { \
-        /* Apply the S-box to all bytes in the internal_state */ \
+        /* Apply the S-box to all bytes in the state */ \
         skinny128_sbox(s0); \
         skinny128_sbox(s1); \
         skinny128_sbox(s2); \
@@ -1237,15 +1237,15 @@ void skinny_plus_init_without_tk1
  * \brief Performs an unrolled round for Skinny-128-384+ when the entire
  * tweakey schedule is computed on the fly.
  *
- * \param s0 First word of the internal_state.
- * \param s1 Second word of the internal_state.
- * \param s2 Third word of the internal_state.
- * \param s3 Fourth word of the internal_state.
+ * \param s0 First word of the state.
+ * \param s1 Second word of the state.
+ * \param s2 Third word of the state.
+ * \param s3 Fourth word of the state.
  * \param half 0 for the bottom half and 1 for the top half of the TK values.
  */
 #define skinny_plus_round_tk_full(s0, s1, s2, s3, half) \
     do { \
-        /* Apply the S-box to all bytes in the internal_state */ \
+        /* Apply the S-box to all bytes in the state */ \
         skinny128_sbox(s0); \
         skinny128_sbox(s1); \
         skinny128_sbox(s2); \
@@ -1288,10 +1288,10 @@ void skinny_plus_init_without_tk1
  * \brief Performs an unrolled inverse round for Skinny-128-384+ when
  * only TK1 is computed on the fly.
  *
- * \param s0 First word of the internal_state.
- * \param s1 Second word of the internal_state.
- * \param s2 Third word of the internal_state.
- * \param s3 Fourth word of the internal_state.
+ * \param s0 First word of the state.
+ * \param s1 Second word of the state.
+ * \param s2 Third word of the state.
+ * \param s3 Fourth word of the state.
  * \param half 0 for the bottom half and 1 for the top half of the TK values.
  * \param offset Offset between 0 and 3 of the current unrolled round.
  */
@@ -1316,7 +1316,7 @@ void skinny_plus_init_without_tk1
         s2 ^= schedule[offset * 2 + 1] ^ TK1[half * 2 + 1]; \
         s3 ^= 0x02; \
         \
-        /* Apply the inverse of the S-box to all bytes in the internal_state */ \
+        /* Apply the inverse of the S-box to all bytes in the state */ \
         skinny128_inv_sbox(s0); \
         skinny128_inv_sbox(s1); \
         skinny128_inv_sbox(s2); \
@@ -1327,10 +1327,10 @@ void skinny_plus_init_without_tk1
  * \brief Performs an unrolled inverse round for Skinny-128-384+ when the
  * entire tweakey schedule is computed on the fly.
  *
- * \param s0 First word of the internal_state.
- * \param s1 Second word of the internal_state.
- * \param s2 Third word of the internal_state.
- * \param s3 Fourth word of the internal_state.
+ * \param s0 First word of the state.
+ * \param s1 Second word of the state.
+ * \param s2 Third word of the state.
+ * \param s3 Fourth word of the state.
  * \param half 0 for the bottom half and 1 for the top half of the TK values.
  */
 #define skinny_plus_inv_round_tk_full(s0, s1, s2, s3, half) \
@@ -1364,7 +1364,7 @@ void skinny_plus_init_without_tk1
               (rc >> 4); \
         s3 ^= 0x02; \
         \
-        /* Apply the inverse of the S-box to all bytes in the internal_state */ \
+        /* Apply the inverse of the S-box to all bytes in the state */ \
         skinny128_inv_sbox(s0); \
         skinny128_inv_sbox(s1); \
         skinny128_inv_sbox(s2); \
@@ -1386,13 +1386,13 @@ void skinny_plus_encrypt
 #endif
     unsigned round;
 
-    /* Unpack the input block into the internal_state array */
+    /* Unpack the input block into the state array */
     s0 = le_load_word32(input);
     s1 = le_load_word32(input + 4);
     s2 = le_load_word32(input + 8);
     s3 = le_load_word32(input + 12);
 
-    /* Make a local copy of the tweakable part of the internal_state */
+    /* Make a local copy of the tweakable part of the state */
     TK1[0] = le_load_word32(ks->TK1);
     TK1[1] = le_load_word32(ks->TK1 + 4);
     TK1[2] = le_load_word32(ks->TK1 + 8);
@@ -1446,13 +1446,13 @@ void skinny_plus_decrypt
 #endif
     unsigned round;
 
-    /* Unpack the input block into the internal_state array */
+    /* Unpack the input block into the state array */
     s0 = le_load_word32(input);
     s1 = le_load_word32(input + 4);
     s2 = le_load_word32(input + 8);
     s3 = le_load_word32(input + 12);
 
-    /* Make a local copy of the tweakable part of the internal_state, TK1 */
+    /* Make a local copy of the tweakable part of the state, TK1 */
     TK1[0] = le_load_word32(ks->TK1);
     TK1[1] = le_load_word32(ks->TK1 + 4);
     TK1[2] = le_load_word32(ks->TK1 + 8);
@@ -1520,7 +1520,7 @@ void skinny_plus_encrypt_tk_full
     unsigned round;
     uint8_t rc = 0;
 
-    /* Unpack the input block into the internal_state array */
+    /* Unpack the input block into the state array */
     s0 = le_load_word32(input);
     s1 = le_load_word32(input + 4);
     s2 = le_load_word32(input + 8);
@@ -1566,7 +1566,7 @@ void skinny_plus_decrypt_tk_full
     uint8_t rc = 0x34;
     unsigned round;
 
-    /* Unpack the input block into the internal_state array */
+    /* Unpack the input block into the state array */
     s0 = le_load_word32(input);
     s1 = le_load_word32(input + 4);
     s2 = le_load_word32(input + 8);

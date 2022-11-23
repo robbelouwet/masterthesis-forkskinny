@@ -6,13 +6,77 @@
 #include <algorithm>
 #include <vector>
 #include "tuple"
+#include "slicing/full-state-slicing.h"
+#include <chrono>
 
-// https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=sl&ig_expand=6523,6501,6501&techs=AVX,AVX2
+using namespace std::chrono;
+
+static inline uint32_t skinny64_LFSR2(uint32_t x) {
+	return ((x << 1) & 0xEEEEEEEEU) ^ (((x >> 3) ^ (x >> 2)) & 0x11111111U);
+}
+
+static inline uint64_t skinny64_LFSR2_full(uint64_t x) {
+	return ((x << 1) & 0xEEEEEEEEEEEEEEEEU) ^ (((x >> 3) ^ (x >> 2)) & 0x1111111111111111U);
+}
+
 int main() {
 	auto state = State64_t();
 	state.llrow = 0xEEEEEEEEEEEEEEEE;
 	
-	slice(state);
+	auto t = slice(state.llrow);
+	auto sliced = State64Sliced_8_t();
+	sliced.state = t;
+	auto before = _rdtsc();
+	auto temp = sliced.slices[0];
+	sliced.slices[0] = sliced.slices[3];
+	sliced.slices[3] = sliced.slices[2];
+	sliced.slices[2] = sliced.slices[1];
+	sliced.slices[1] = temp;
+	sliced.slices[0] ^= sliced.slices[3];
+	
+	temp = sliced.slices[0];
+	sliced.slices[0] = sliced.slices[3];
+	sliced.slices[3] = sliced.slices[2];
+	sliced.slices[2] = sliced.slices[1];
+	sliced.slices[1] = temp;
+	sliced.slices[0] ^= sliced.slices[3];
+	
+	temp = sliced.slices[0];
+	sliced.slices[0] = sliced.slices[3];
+	sliced.slices[3] = sliced.slices[2];
+	sliced.slices[2] = sliced.slices[1];
+	sliced.slices[1] = temp;
+	sliced.slices[0] ^= sliced.slices[3];
+	
+	temp = sliced.slices[0];
+	sliced.slices[0] = sliced.slices[3];
+	sliced.slices[3] = sliced.slices[2];
+	sliced.slices[2] = sliced.slices[1];
+	sliced.slices[1] = temp;
+	sliced.slices[0] ^= sliced.slices[3];
+	
+	temp = sliced.slices[0];
+	sliced.slices[0] = sliced.slices[3];
+	sliced.slices[3] = sliced.slices[2];
+	sliced.slices[2] = sliced.slices[1];
+	sliced.slices[1] = temp;
+	sliced.slices[0] ^= sliced.slices[3];
+	auto after = _rdtsc();
+	
+	auto before1 = _rdtsc();
+	skinny64_LFSR2_full(state.llrow);
+	skinny64_LFSR2_full(state.llrow);
+	skinny64_LFSR2_full(state.llrow);
+	skinny64_LFSR2_full(state.llrow);
+	skinny64_LFSR2_full(state.llrow);
+	auto after1 = _rdtsc();
+	
+	std::cout << "Bit sliced LSFR on 8 cells: " << after - before << " cycles, " << "\n";
+	std::cout << "Sequential LSFR on 8 cells: " << after1 - before1 << " cycles, ";
+	
+	auto unsliced = unslice(t);
+	//assert(unsliced == state.lrow[0]);
+	auto appel = 1;
 }
 
 void shl_benchmark() {
@@ -36,6 +100,6 @@ void shl_benchmark() {
 	std::sort(simd_results.begin(), simd_results.end());
 	std::sort(seq_results.begin(), seq_results.end());
 	
-	std::cout << "SIMD: on median " << simd_results[simd_results.size()/2] << " cycles spent";
-	std::cout << "\nSEQ: on median " << seq_results[seq_results.size()/2] << " cycles spent";
+	std::cout << "SIMD: on median " << simd_results[simd_results.size() / 2] << " cycles spent";
+	std::cout << "\nSEQ: on median " << seq_results[seq_results.size() / 2] << " cycles spent";
 }
