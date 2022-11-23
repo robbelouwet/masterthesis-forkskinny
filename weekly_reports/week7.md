@@ -11,7 +11,7 @@ cheap.
 
 ## Wednesday
 
-implemented the reverse operation unslice() and benchmarked a bit sliced LSFR with the sequential one. The bit sliced
+Implemented the reverse operation unslice() and benchmarked a bit sliced LSFR with the sequential one. The bit sliced
 one seems faster. when executing the bitsliced LSFR 5 times it takes about 25 cycles for all 5 runs. TIf I execute the
 sequential LSFR 5 times, it takes about 50 cycles.
 
@@ -22,3 +22,8 @@ sequential LSFR 5 times, it takes about 50 cycles.
 - How will my bitsliced State64Sliced_16_t data structure translate to the fixed slicing technique as shown in the
   paper?
 - Before continuing with all this, compare a bit-sliced LSFR on State64Sliced_16_t with the original LSFR.
+- Regarding the report on wednesday: when I try to execute both LSFRs in a loop of 1000 iterations, the results are
+  really mixed, there is no clear speedup. But when I run both LSFRs 5 times after each other (so no for loop), the bit
+  sliced one is clearly faster, I wonder why. Maybe it has to do with caching the loop iterator and incrementing it etc.
+  Maybe that's why a loop iteration brings overhead in addition to the LSFR call and thus brings noise in the cycle
+  count?
