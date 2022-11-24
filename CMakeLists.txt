@@ -4,17 +4,17 @@ project(forkskinnyplus)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1 -msse4.2")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
-
 # Thesis project code:
 add_executable(forkskinnyplus
         src/main.cpp
         src/headers/main.h
         src/utils.h
         src/avx2/tweakey-schedule/LSFR.cpp
-        src/headers/LSFR.h "src/forkskinny-plus/forkskinny-plus.cpp" "src/forkskinny-plus/forkskinny-plus.h" src/slicing/full-state-slicing.h src/slicing/half-state-slicing.h)
+        src/headers/LSFR.h
+        src/forkskinny-plus/forkskinny-plus.cpp
+        src/forkskinny-plus/forkskinny-plus.h
+        src/slicing/full-state-slicing.h
+        src/slicing/half-state-slicing.h)
 
 # standalone demo of forksinny-c
 add_executable(forkskinny-demo

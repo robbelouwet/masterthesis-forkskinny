@@ -4,18 +4,51 @@
 #include "../utils.h"
 #include "forkskinny64-cipher.h"
 
-std::tuple<ulong, ulong> benchmark(State64v_t state);
+static inline State64Sliced_8_t lsfr_64_tk2_4bit(State64Sliced_8_t state) {
+	auto x0 = state.slices[0];
+	
+	state.slices[0] = state.slices[3];
+	state.slices[3] = state.slices[2];
+	state.slices[2] = state.slices[1];
+	state.slices[1] = x0;
+	state.slices[0] ^= state.slices[3];
+	
+	return state;
+}
 
-State64v_t lsfr_64_tk2_4bit_simd(State64v_t state);
+static inline State64Sliced_8_t lsfr_64_tk2_4bit_inverse(State64Sliced_8_t state) {
+	auto prev_x3 =state.slices[0] ^ state.slices[3];
+	
+	state.slices[0] = state.slices[1];
+	state.slices[1] = state.slices[2];
+	state.slices[2] = state.slices[3];
+	state.slices[3] = prev_x3;
+	
+	return state;
+}
 
-uint32_t lsfr_64_tk2_4bit_sequential(uint32_t state);
+static inline State64Sliced_16_t lsfr_64_tk2_4bit(State64Sliced_16_t state) {
+	auto x0 = state.slices[0];
+	
+	state.slices[0] = state.slices[3];
+	state.slices[3] = state.slices[2];
+	state.slices[2] = state.slices[1];
+	state.slices[1] = x0;
+	state.slices[0] ^= state.slices[3];
+	
+	return state;
+}
 
-void lsfr_64_tk2_4bit(State64v_t *state);
+static inline State64Sliced_16_t lsfr_64_tk2_4bit_inverse(State64Sliced_16_t state) {
+	auto prev_x3 =state.slices[0] ^ state.slices[3];
+	
+	state.slices[0] = state.slices[1];
+	state.slices[1] = state.slices[2];
+	state.slices[2] = state.slices[3];
+	state.slices[3] = prev_x3;
+	
+	return state;
+}
 
-void lsfr_64_tk2_inverse(State64_t *state);
-
-void lsfr_64_tk3(State64_t *state);
-
-void lsfr_64_tk3_inverse(State64_t *state);
 
 #endif //FORKSKINNYPLUS_LSFR_H

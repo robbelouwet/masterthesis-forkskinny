@@ -17,6 +17,12 @@ sequential LSFR 5 times, it takes about 50 cycles.
 
 ## Thursday
 
+Ran the benchmark again and noticed the results were again about the same. Spent a lot of time, but in the end I found
+out that my IDE had problems caching and every time I clicked 'run' it used an old executable. It wasn't recompiling
+every time. Now I solved it, I literally looked at the assembly code, saw that indeed first 5 bit sliced LSFR's were
+being run, and then 5 sequential LSFR's. the bit sliced runs in +- 50 instructions, the sequential ones need +-100
+instructions (or whatever unit the RDTSC instruction represents, probably the amount of instructions, not cycles).
+
 ### What was on my mind
 
 - How will my bitsliced State64Sliced_16_t data structure translate to the fixed slicing technique as shown in the
@@ -27,3 +33,6 @@ sequential LSFR 5 times, it takes about 50 cycles.
   sliced one is clearly faster, I wonder why. Maybe it has to do with caching the loop iterator and incrementing it etc.
   Maybe that's why a loop iteration brings overhead in addition to the LSFR call and thus brings noise in the cycle
   count?
+- There is a lot of variance in speed when comparing the sequential and bit-sliced LSFR. I'm going to have to make a
+  habit of inspecting the assembly before concluding benchmarking results, because I can't trust my IDE to be
+  deterministic in recompiling every time I click 'run'.
