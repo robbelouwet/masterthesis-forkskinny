@@ -4,7 +4,7 @@ project(forkskinnyplus)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
 
 # Thesis project code:
 add_executable(forkskinnyplus
@@ -13,8 +13,8 @@ add_executable(forkskinnyplus
         src/utils.h
         src/forkskinny-plus/forkskinny-plus.cpp
         src/forkskinny-plus/headers/forkskinny-plus.h
-        src/forkskinny-plus/headers/full-state-slicing.h
-        src/forkskinny-plus/headers/half-state-slicing.h)
+        src/headers/full-state-slicing.h
+        src/headers/half-state-slicing.h src/lsfr_benchmark.cpp)
 
 # standalone demo of forksinny-c
 add_executable(forkskinny-demo
