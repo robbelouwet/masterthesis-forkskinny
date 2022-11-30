@@ -1,5 +1,8 @@
 #ifndef FORKSKINNYPLUS_FULL_STATE_SLICING_H
 #define FORKSKINNYPLUS_FULL_STATE_SLICING_H
+
+#include <cstdint>
+
 /**
  * For every nibble, take the ith significant bit and pack those all together.
  *
@@ -87,10 +90,12 @@ static inline uint64_t slice(uint64_t state) {
 }
 
 static inline uint64_t unslice(uint64_t state) {
-	return unslice_index((state & 0x000000000000FFFF), 0)
-	       | unslice_index(((state & 0x00000000FFFF0000) >> 16), 1)
-	       | unslice_index(((state & 0x0000FFFF00000000) >> 32), 2)
-	       | unslice_index(((state & 0xFFFF000000000000) >> 48), 3);
+	auto s0 = unslice_index((state & 0x000000000000FFFF), 0);
+	auto s1 = unslice_index(((state & 0x00000000FFFF0000) >> 16), 1);
+	auto s2 = unslice_index(((state & 0x0000FFFF00000000) >> 32), 2);
+	auto s3 = unslice_index(((state & 0xFFFF000000000000) >> 48), 3);
+	
+	return s0 | s1 | s2 | s3;
 }
 
 #endif //FORKSKINNYPLUS_FULL_STATE_SLICING_H
