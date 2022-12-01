@@ -85,11 +85,11 @@ std::vector<uint64_t> benchmark_lsfr(uint64_t state) {
 //</editor-fold>
 
 int main(int argc, char **argv) {
-//	if (argc == 0) return benchmark_lsfr(0xABCDABCDABCDABCD).size();
-//	if (argc == 1) return benchmark_lsfr(0xEFFEEFFEEFFEEFFE).size();
+	if (argc == 0) return benchmark_lsfr(0xABCDABCDABCDABCD).size();
+	if (argc == 1) return benchmark_lsfr(0xEFFEEFFEEFFEEFFE).size();
 	
-	auto res = unslice(0x1111000011110000);
-	int appel = 1;
+//	auto res = unslice(0x1111000011110000);
+//	int appel = 1;
 
 //	std::vector<ulong> bitsliced_simd = std::vector<ulong>();
 //	std::vector<ulong> bitsliced = std::vector<ulong>();

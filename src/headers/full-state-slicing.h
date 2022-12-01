@@ -63,7 +63,7 @@ static inline uint64_t unslice_index(uint16_t value, uint64_t i) {
 	
 	uint64_t x = value;
 	
-	return (x & 0x1 << i)
+	return ((x & 0x1) << i)
 	       | ((x & 0x2) << i << 3)
 	       | ((x & 0x4) << i << 6)
 	       | ((x & 0x8) << i << 9)

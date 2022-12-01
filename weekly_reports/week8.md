@@ -1,6 +1,6 @@
 ## Weekly report 28 nov - 4 dec
 
-### Monday
+## Monday
 
 The bitsliced LSFR performed its rotation using 4 move instructions, but I changed it so that it performs the
 rotate-left in 1 instruction using SIMD. Then I tried to benchmark again, but sort of hit a wall on this benchmarking.
