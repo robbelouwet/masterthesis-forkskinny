@@ -200,7 +200,7 @@ STATIC_INLINE uint32_t skinny64_sbox(uint32_t x)
 	 * This reduces the number of required shift operations from 14 to 10.
 	 *
 	 * It is possible to reduce the number of shifts and AND's even further
-	 * as shown in the 64-bit version of skinny64_sbox() above.  However on
+	 * as shown in the 64-bit version of old_sbox() above.  However on
 	 * 32-bit platforms this causes extra register spills which slows down
 	 * the implementation more than the improvement gained by reducing the
 	 * number of bit operations.
@@ -266,7 +266,7 @@ static State64_t forkskinny64_encrypt_rounds(
 		state.llrow = skinny64_sbox(state.llrow);
 		#else
 		state.lrow[0] = skinny64_sbox(state.lrow[0]);
-		state.lrow[1] = skinny64_sbox(state.lrow[1]);
+		state.lrow[1] = old_sbox(state.lrow[1]);
 		#endif
 		
 		/// AddConstants

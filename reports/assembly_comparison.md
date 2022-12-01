@@ -10,11 +10,6 @@ are now packed in the same 16-bit value. So now we only need to perform 1 rol an
 gain can primarily be seen in the second row's implementation, where we need only 4 dependant instructions, instead of
 10!
 
-#### Reproduce
-
-To reproduce these results, please check out commit $$$$. Make sure you are building with the -O3 compiler flag (line 8
-in CMakeLists.txt). After building, run the dump.sh script to find an objdump 'dump.asm' in the /extern folder.
-
 <table>
 
 <tr>

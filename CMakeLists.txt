@@ -15,7 +15,8 @@ add_executable(forkskinnyplus
         src/forkskinny-plus/forkskinny-plus.cpp
         src/forkskinny-plus/headers/forkskinny-plus.h
         src/headers/full-state-slicing.h
-        src/headers/half-state-slicing.h src/lsfr_benchmark.cpp)
+        src/headers/half-state-slicing.h
+        )
 
 # standalone demo of forksinny-c
 add_executable(forkskinny-demo
@@ -26,11 +27,11 @@ add_executable(forkskinny-demo
         libs/forkskinny-c/headers/forkskinny64-cipher.h
         libs/forkskinny-c/headers/forkskinny128-cipher.h)
 
+# benchmarking the LSFR for TK2
+add_executable(benchmarking_lsfr
+        src/benchmarking/lsfr_tk2_benchmarking.cpp)
 
-#[[add_subdirectory(libs)
-
-target_link_libraries(forkskinnyplus PUBLIC libs)
-target_include_directories(forkskinnyplus PUBLIC
-        "${PROJECT_BINARY_DIR}"
-        "${PROJECT_SOURCE_DIR}/libs")]]
+# benchmarking the sbox
+add_executable(benchmarking_sbox
+        src/benchmarking/sbox_benchmarking.cpp)
 
