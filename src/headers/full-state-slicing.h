@@ -2,6 +2,7 @@
 #define FORKSKINNYPLUS_FULL_STATE_SLICING_H
 
 #include <cstdint>
+#include <cassert>
 
 /**
  * For every nibble, take the ith significant bit and pack those all together.
@@ -14,7 +15,7 @@
  *
  * @param x: the input to slice
  * @param m: 0 <= m <= 3; the 0-based index that masks the relevant significant bit of every cell.
- * @return the input in a bit sliced manner
+ * @return the input in a bit sliced_fghi manner
  */
 static inline uint64_t slice_index(uint64_t x, uint64_t i) {
 	// because uint4_t doesn't exist
@@ -53,7 +54,7 @@ static inline uint64_t slice_index(uint64_t x, uint64_t i) {
  * 	output: 0000 (0000)¹¹ 0010 0010 0010 0010
  * 		-> the 4 ones of *value* each get projected to the second-LSD in a separate nibble
  *
- * @param value: the one of the 4 packed input rows of 16 bits in bit sliced representation
+ * @param value: the one of the 4 packed input rows of 16 bits in bit sliced_fghi representation
  * @param i: 0-based index to identify to which significant bit of every nibble needs to be projected.
  * @return
  */

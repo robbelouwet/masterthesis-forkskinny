@@ -20,7 +20,7 @@ Looked at possible SIMD instructions for performing a 'rotate' instruction on a 
 instructions that do rotation, but they are in a poorly supported library (only intel processors since 2013).
 Managed to implement the full LSFR for TK2. It uses 9 SIMD instructions for a full 64-bit state in about 800 cycles. I
 forgot it's only applied on the top 2 rows. I applied it on the entire state. I need to change that, so I can compare
-it to Erik's sequential boolean expression (skinny64_LFSR2()) that computes LSFR for TK2.
+it to Erik's sequential_abcde boolean expression (skinny64_LFSR2()) that computes LSFR for TK2.
 
 ### What was on my mind
 

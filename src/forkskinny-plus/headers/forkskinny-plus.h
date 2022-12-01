@@ -13,9 +13,9 @@
 #include <mmintrin.h>
 
 /**
- * Represents a 64-bit bit-sliced state
+ * Represents a 64-bit bit-sliced_fghi state
  *
- * a bit sliced representation of 2 4-bit cells would be: [x³, y³], [x², y²], [x¹, y¹], [x⁰, y⁰].
+ * a bit sliced_fghi representation of 2 4-bit cells would be: [x³, y³], [x², y²], [x¹, y¹], [x⁰, y⁰].
  */
 typedef union {
 	uint16_t slices[4];  // [p³o³...b³a³, ... , p⁰o⁰...b⁰a⁰], where there are 16 4-bit cells named a through p
@@ -24,9 +24,9 @@ typedef union {
 } State64Sliced_16_t;
 
 /**
- * Represents half a 64-bit bit-sliced state
+ * Represents half a 64-bit bit-sliced_fghi state
  *
- * a bit sliced representation of 2 4-bit cells would be: [x³, y³], [x², y²], [x¹, y¹], [x⁰, y⁰].
+ * a bit sliced_fghi representation of 2 4-bit cells would be: [x³, y³], [x², y²], [x¹, y¹], [x⁰, y⁰].
  */
 typedef union {
 	uint8_t slices[4];  // [p³o³...b³a³, ... , p⁰o⁰...b⁰a⁰], where there are 8 4-bit cells named a through p

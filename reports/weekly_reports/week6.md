@@ -3,7 +3,7 @@
 ### Monday
 
 Fixed the LSFR SIMD implementation to now only apply on the top 2 rows. Still, this implementation needs 500 - 3000
-cycles, while a SIMD-less sequential implementation only needs around 50. I thought maybe the problem was with the CPU
+cycles, while a SIMD-less sequential_abcde implementation only needs around 50. I thought maybe the problem was with the CPU
 having to load the state after evey single SIMD instruction, but after debugging the register, I concluded the SIMD
 values never leave the SIMD register after an instruction.
 

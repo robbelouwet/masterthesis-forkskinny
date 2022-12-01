@@ -33,7 +33,7 @@ both can be described with logical gates, which goes very well with the provided
 - Thinking about how to force SIMD instructions. Using the intrinsic libraries directly might get cumbersome and most
   likely will cause problems on machines that work with slightly different SIMD instructions (e.g. not every cpu
   supports the AVX extensions). I'm thinking about *only*
-  vectorizing the code into a bit-sliced representation, and not enforcing anything further, but let the compiler decide
+  vectorizing the code into a bit-sliced_fghi representation, and not enforcing anything further, but let the compiler decide
   on the low-level SIMD data parallelization. We can suggest to the compiler to use SIMD with compiler flags, so this
   should work. This is a much better approach I think, because we decouple the code from the platform by letting the
   compiler decide.

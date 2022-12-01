@@ -1,10 +1,9 @@
 #include <x86intrin.h>
-#include <cassert>
-#include <vector>
 #include "headers/full-state-slicing.h"
 #include "forkskinny-plus/headers/forkskinny-plus.h"
 #include <immintrin.h>
-#include <iostream>
+#include <cassert>
+#include <vector>
 
 static inline uint32_t skinny64_LFSR2(uint32_t x) {
 	return ((x << 1) & 0xEEEEEEEEU) ^ (((x >> 3) ^ (x >> 2)) & 0x11111111U);
@@ -14,102 +13,61 @@ static inline uint64_t skinny64_LFSR2_full(uint64_t x) {
 	return ((x << 1) & 0xEEEEEEEEEEEEEEEEU) ^ (((x >> 3) ^ (x >> 2)) & 0x1111111111111111U);
 }
 
-// <editor-fold desc="lsfr-benchmark">
-std::vector<uint64_t> benchmark_lsfr(uint64_t state) {
-	auto t = slice(state);
-	auto sliced = State64Sliced_16_t();
-	sliced.state = t;
+uint64_t sequential_abcde(uint64_t state) {
+	state = ((state << 1) & 0xEEEEEEEEEEEEEEEE)
+	        ^
+	        (((state >> 3) ^ (state >> 2)) & 0x1111111111111111);
+	return state;
+}
 
-//	std::cout << "Version 3\n";
-	//
-	asm("nop");
-	asm("nop");
-	sliced.m64state = _mm_shuffle_pi16(sliced.m64state,
-	                                   0b10010011);  //indices 3210 go to 2103; 2103 is 10 01 00 11 in binary
-	sliced.slices[0] ^= sliced.slices[3];
-	asm("nop");
-	asm("nop");
+uint64_t sliced_fghi(uint64_t state) {
 	
-	
-	// Bit sliced LSFR, only the 3rd and 2nd significant slices are XOR'd
-	auto sliced2 = State64Sliced_16_t();
-	sliced2.state = t;
-	asm("nop");
-	asm("nop");
-	asm("nop");
-	sliced2.state = _lrotl(sliced2.state, 0x10);
-	sliced2.state ^= (sliced2.state & 0xFFFF000000000000) >> 0x30;
+	state = _lrotl(state, 0x10);
+	state ^= (state & 0xFFFF000000000000) >> 0x30;
 //	sliced2.slices[0] ^= sliced2.slices[3];
-	asm("nop");
-	asm("nop");
-	asm("nop");
 	
-	
-	// Sequential LSFR (no bit slicing or simd)
-	auto x = state;
-	asm("nop");
-	asm("nop");
-	asm("nop");
-	asm("nop");
-	x = (
-			    (x << 1)
-			    &
-			    (uint64_t) 0xEEEEEEEEEEEEEEEE)
-	    ^
-	    (
-			    (
-					    (x >> 3) ^ (x >> 2))
-			    & (uint64_t) 0x1111111111111111);
-	asm("nop");
-	asm("nop");
-	asm("nop");
-	asm("nop");
-	
-	
-	auto unsliced = unslice(sliced.state);
-	auto unsliced2 = unslice(sliced2.state);
-	assert(unsliced2 != 0 || unsliced != 0);
-	assert(unsliced2 == unsliced);
-	assert(unsliced2 == x);
-	
-	// instead of 'return null' or something, make it difficult for the compiler to optimize out the previous code due to
-	// dead-code or unused variables optimizations
-	// otherwise, the previous code won't be present in the binary
-	auto res = std::vector<uint64_t>();
-	if (sliced2.state != 0) res.push_back(unsliced);
-	if (sliced.state != 0) res.push_back(unsliced2);
-	if (x != 0) res.push_back(x);
-	
-	return res;
+	return state;
+}
+
+// <editor-fold desc="lsfr-benchmark">
+State64Sliced_16_t sliced_simd_jklm(State64Sliced_16_t state) {
+	// to make the shuffle perform a rol, indices 3210 go to 2103; 2103 is 10 01 00 11 in binary
+	state.m64state = _mm_shuffle_pi16(state.m64state, 0b10010011);
+	state.slices[0] ^= state.slices[3];
+	return state;
 }
 //</editor-fold>
 
 int main(int argc, char **argv) {
-	if (argc == 0) return benchmark_lsfr(0xABCDABCDABCDABCD).size();
-	if (argc == 1) return benchmark_lsfr(0xEFFEEFFEEFFEEFFE).size();
+	// create state stochastically to prevent compiler optimizing the state to a constant
+	uint64_t state;
+	if (argc == 0) state = 0xFFEEFFEEFFEEFF;
+	else state = 0xABCDABCDABCDABCD;
 	
-//	auto res = unslice(0x1111000011110000);
-//	int appel = 1;
-
-//	std::vector<ulong> bitsliced_simd = std::vector<ulong>();
-//	std::vector<ulong> bitsliced = std::vector<ulong>();
-//	std::vector<ulong> sequential = std::vector<ulong>();
-//
-//	for (int i = 0; i < 10; ++i) {
-//		auto res = benchmark_lsfr();
-//
-//		bitsliced_simd.push_back(res.at(0));
-//		bitsliced.push_back(res.at(1));
-//		sequential.push_back(res.at(2));
-//	}
-//
-//	std::sort(bitsliced.begin(), bitsliced.end());
-//	std::sort(bitsliced_simd.begin(), bitsliced_simd.end());
-//	std::sort(sequential.begin(), sequential.end());
-//
-//	std::cout << "Bit sliced + SIMD LSFR:   " << bitsliced_simd.at(bitsliced_simd.size() / 2) << " cycles\n";
-//	std::cout << "Bit sliced only LSFR:     " << bitsliced.at(bitsliced.size() / 2) << " cycles\n";
-//	std::cout << "Sequential LSFR:          " << sequential.at(sequential.size() / 2) << " cycles";
+	// slice the state
+	auto sliced_state = State64Sliced_16_t();
+	sliced_state.state = slice(state);
 	
-	return 0;
+	// perform LSFRs
+	auto sliced_simd_res = sliced_simd_jklm(sliced_state);
+	auto sliced_res = sliced_fghi(sliced_state.state);
+	auto sequential_res = sequential_abcde(state);
+	
+	// unslice
+	auto unsliced_simd_res = unslice(sliced_simd_res.state);
+	auto unsliced_res = unslice(sliced_res);
+	
+	// double check LSFRs were computed correctly
+	assert(unsliced_res == unsliced_simd_res);
+	assert(unsliced_res == sequential_res);
+	
+	
+	// unimportant
+	// prevent compiler from optimizing previous function calls due to dead code or unused function output
+	auto rres = std::vector<uint64_t>();
+	if (unsliced_res != 0) rres.push_back(unsliced_res);
+	if (unsliced_simd_res != 0) rres.push_back(unsliced_simd_res);
+	if (sequential_res != 0) rres.push_back(sequential_res);
+	
+	return rres.size();
 }
