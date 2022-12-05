@@ -52,7 +52,6 @@ promising that bit slicing will offer speedups.
   development environment). Since the functions we
   want to measure are ridiculously simple and small, I found it best to just inspect the amount and the sort of
   instructions generated. Later on, we can move to 32-bit or even 8-bit microcontrollers. SIMD also doesn't appear to
-  offer and extra speedup at the moment, the problem is not that it's slow, it's that the vanilla bit sliced_fghi lsfr
-  is
-  ridiculously fast (6 instructions for up to 64 cells!).
+  offer and extra speedup at the moment, the problem is not that it's slow, it's that the vanilla bit sliced lsfr
+  is ridiculously fast (6 instructions for up to 64 cells!).
 

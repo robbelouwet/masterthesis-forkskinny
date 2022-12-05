@@ -5,45 +5,50 @@
 #include "../forkskinny-plus/headers/forkskinny-plus.h"
 #include "../headers/full-state-slicing.h"
 
-State64Sliced_16_t  sliced_rol_sbox(State64Sliced_16_t x) {
-
+// 3*9 + 8
+State64Sliced_16_t sliced_sbox(State64Sliced_16_t x) {
+	x.slices[0] ^= ~(x.slices[3] | x.slices[2]);
+	x.state = _lrotl(x.state, 16);
 	
+	x.slices[0] ^= ~(x.slices[3] | x.slices[2]);
+	x.state = _lrotl(x.state, 16);
+	
+	x.slices[0] ^= ~(x.slices[3] | x.slices[2]);
+	x.state = _lrotl(x.state, 16);
+	
+	x.slices[0] ^= ~(x.slices[3] | x.slices[2]);
+	
+	return x;
 }
 
-uint64_t sliced_circuit_sbox(uint64_t x) {
-	asm("nop");
-	asm("nop");
-	asm("nop");
-	uint16_t x3 = (x & 0xffff000000000000) >> 48;
-	uint16_t x2 = (x & 0x0000ffff00000000) >> 32;
-	uint16_t x1 = (x & 0x00000000ffff0000) >> 16;
-	uint16_t x0 = (x & 0x000000000000ffff);
-	
-	
+// 24
+auto sliced_circuit_sbox(const uint16_t slices[4]) {
 	/// because our state is bit sliced, we can apply the logical operations from
 	/// the S box's circuit in the paper directly on the slices themselves
-	/// cfr.: fig. 2: https://eprint.iacr.org/2016/660.pdf
-	uint16_t y3 = x0 ^ ~(x3 | x2);
-	uint16_t y2 = x3 ^ ~(x2 | x1);
-	uint16_t y1 = x2 ^ ~(x1 | y3);
-	uint16_t y0 = x1 ^ ~(y3 | y2);
+	/// cfr. fig. 2: https://eprint.iacr.org/2016/660.pdf
+	asm("nop");
+	asm("nop");
+	asm("nop");
 	
-	auto res = (uint64_t) y0 | ((uint64_t) y1 << 16) | ((uint64_t) y2 << 32) | ((uint64_t) y3 << 48);
+	uint16_t y3 = slices[0] ^ ~(slices[3] | slices[2]);
+	uint16_t y2 = slices[3] ^ ~(slices[2] | slices[1]);
+	uint16_t y1 = slices[2] ^ ~(slices[1] | y3);
+	uint16_t y0 = slices[1] ^ ~(y3 | y2);
 	
+	auto res = {y0, y1, y2, y3};
 	asm("nop");
 	asm("nop");
 	asm("nop");
+	
 	return res;
 }
 
+// +- 34
 uint64_t old_sbox(uint64_t x) {
 	/* Splitting the bits out individually gives better performance on
 	   64-bit platforms because we have more spare registers to work with.
 	   This doesn't work as well on 32-bit platforms because register
 	   spills start to impact performance.  See below. */
-	asm("nop");
-	asm("nop");
-	asm("nop");
 	uint64_t bit0 = ~x;
 	uint64_t bit1 = bit0 >> 1;
 	uint64_t bit2 = bit0 >> 2;
@@ -57,10 +62,6 @@ uint64_t old_sbox(uint64_t x) {
 	    ((bit2 << 1) & 0x2222222222222222ULL) |
 	    ((bit3 << 2) & 0x4444444444444444ULL);
 	auto res = ~x;
-	asm("nop");
-	asm("nop");
-	asm("nop");
-	
 	return res;
 }
 
@@ -76,12 +77,16 @@ int main(int argc, char **argv) {
 	
 	// perform SBOXs
 	auto old_sbox_res = old_sbox(state);
-	auto sliced_sbox_res = sliced_circuit_sbox(sliced_state.state);
+	auto sliced_circuit_sbox_res = State64Sliced_16_t();
+	sliced_circuit_sbox_res.slices = sliced_circuit_sbox(sliced_state.slices);
+	auto sliced_sbox_res = sliced_sbox(sliced_state).state;
 	
 	// unslice
+	auto unsliced_circuit_sbox_res = unslice(sliced_circuit_sbox_res.state);
 	auto unsliced_sbox_res = unslice(sliced_sbox_res);
 	
 	// double check LSFRs were computed correctly
+	assert(old_sbox_res == unsliced_circuit_sbox_res);
 	assert(old_sbox_res == unsliced_sbox_res);
 	
 	
@@ -90,6 +95,7 @@ int main(int argc, char **argv) {
 	auto rres = std::vector<uint64_t>();
 	if (old_sbox_res != 0) rres.push_back(old_sbox_res);
 	if (unsliced_sbox_res != 0) rres.push_back(unsliced_sbox_res);
+	if (unsliced_circuit_sbox_res != 0) rres.push_back(unsliced_circuit_sbox_res);
 	
 	return rres.size();
 }
