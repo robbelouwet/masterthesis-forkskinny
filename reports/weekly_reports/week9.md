@@ -7,9 +7,8 @@ advantage again, this is good because we could later on maybe calculate both bra
 at the shiftrows and TK permutation. Starting to think that bit slicing's disadvantage is going to show in the
 permutations.
 
-## Wednesday
-
-## Thursday
+I needed some time to work on deadlines since the end of the semester is approaching, so I stopped working on the theses
+for about a week.
 
 ### What was on my mind
 
