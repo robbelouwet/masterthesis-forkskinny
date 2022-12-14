@@ -8,8 +8,10 @@ at the shiftrows and TK permutation. Starting to think that bit slicing's disadv
 permutations.
 
 ## Wednesday
+Worked on other deadlines.
 
 ## Thursday
+Worked on other deadlines.
 
 ### What was on my mind
 

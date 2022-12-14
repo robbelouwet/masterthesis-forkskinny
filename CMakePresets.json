@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "configurePresets": [
+    {
+      "name": "arduino",
+      "displayName": "Arduino",
+      "binaryDir": "${sourceDir}/cmake-build-debug-arduino",
+      "generator": "Unix Makefiles",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_CXX_FLAGS_INIT": "",
+        "PROJECT_NAME": "forkskinny-plus-embedded",
+        "forkskinny"
+      }
+    }
+  ]
+}
