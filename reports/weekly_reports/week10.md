@@ -12,8 +12,7 @@ integration into Jetbrains CLion.
 
 ## Thursday
 
-Started implementing the 4-bit sbox. Again it relies on a logical circuit which needs a rotate instruction, so it seems
-promising that bit slicing will offer speedups.
+Worked on other deadlines, but I did manage to get my hands on a 32-bit Cortex M4 arduino!
 
 ### What was on my mind
 
