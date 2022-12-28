@@ -56,7 +56,7 @@ static inline uint32_t unslice_index(uint8_t value, uint8_t i) {
 	
 	uint64_t x = value;
 	
-	return (x & 0x1 << i)
+	return ((x & 0x1) << i)
 	       | ((x & 0x2) << i << 3)
 	       | ((x & 0x4) << i << 6)
 	       | ((x & 0x8) << i << 9)
@@ -78,7 +78,6 @@ static inline uint32_t unslice(uint32_t state) {
 	       | unslice_index(((state & 0x0000FF00) >> 8), 1)
 	       | unslice_index(((state & 0x00FF0000) >> 16), 2)
 	       | unslice_index(((state & 0xFF000000) >> 24), 3);
-	
 }
 
 #endif //FORKSKINNYPLUS_HALF_STATE_SLICING_H
