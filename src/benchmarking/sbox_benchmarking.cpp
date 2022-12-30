@@ -2,7 +2,7 @@
 #include <x86intrin.h>
 #include <valarray>
 #include <vector>
-#include "../forkskinny-plus/headers/forkskinny-plus.h"
+#include "../forkskinny-plus/headers/forkskinny64-plus.h"
 #include "../headers/full-state-slicing.h"
 
 // 3*9 + 8

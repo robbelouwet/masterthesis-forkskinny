@@ -1,5 +1,5 @@
-#ifndef FORKSKINNYPLUS_FORKSKINNY_PLUS_H
-#define FORKSKINNYPLUS_FORKSKINNY_PLUS_H
+#ifndef FORKSKINNYPLUS_FORKSKINNY64_PLUS_H
+#define FORKSKINNYPLUS_FORKSKINNY64_PLUS_H
 
 #define FORKSKINNY64_BLOCK_SIZE 8
 
@@ -9,8 +9,28 @@
 
 #define FORKSKINNY64_MAX_ROUNDS (FORKSKINNY_64_192_ROUNDS_BEFORE + 2*FORKSKINNY_64_192_ROUNDS_AFTER)
 
-#include <cstdint>
 #include <mmintrin.h>
+#include <immintrin.h>
+#include <cstdint>
+
+/**
+ * Union that describes a 64-bit 4x4 array of cells16.
+ */
+typedef union {
+	uint16_t row[4];        /// Stored as 4x 16-bit uint partitions (cccc cccc cccc cccc) [c = 4-bit state cell]
+	uint32_t lrow[2];        /// Stored as 2x 32-bit uint partitions  (cccccccc cccccccc)
+	uint64_t llrow;            /// Stored as 1x 64-bit uint 			  (cccccccccccccccc)
+} State64_t;
+
+/**
+ * Union that describes a 32-bit 2x4 array of cells16.
+ */
+typedef union {
+	uint8_t pairs[4];      /// Stored as 4x 8-bit  uint partitions (cc cc cc cc)
+	uint16_t row[2];       /// Stored as 2x 16-bit uint partitions (cccc cccc)
+	uint32_t lrow;            /// Stored as 1x 32-bit uint			    (cccccccc)
+	
+} HalfState64_t;
 
 /**
  * Represents a 64-bit bit-sliced_fghi state
@@ -126,4 +146,4 @@ void forkskinny_c_64_192_encrypt(const KeySchedule64_t *tks1, const KeySchedule6
 void forkskinny_c_64_192_decrypt(const KeySchedule64_t *tks1, const KeySchedule64_t *tks2,
                                  uint8_t *output_left, uint8_t *output_right, const uint8_t *input_right);
 
-#endif //FORKSKINNYPLUS_FORKSKINNY_PLUS_H
+#endif //FORKSKINNYPLUS_FORKSKINNY64_PLUS_H

@@ -14,7 +14,7 @@ add_executable(forkskinnyplus
         src/headers/main.h
         src/utils.h
         src/forkskinny-plus/forkskinny-plus.cpp
-        src/forkskinny-plus/headers/forkskinny-plus.h
+        src/forkskinny-plus/headers/forkskinny64-plus.h
         src/headers/full-state-slicing.h
         src/headers/half-state-slicing.h
         )
@@ -35,4 +35,6 @@ add_executable(benchmarking_lsfr
 # benchmarking the sbox
 add_executable(benchmarking_sbox
         src/benchmarking/sbox_benchmarking.cpp)
+
+add_executable(benchmarking_perms src/benchmarking/permutations_benchmark.cpp)
 
