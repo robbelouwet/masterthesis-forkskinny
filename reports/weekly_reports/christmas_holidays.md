@@ -23,9 +23,25 @@ they can do 64 blocks in parallel, which is ridiculously fast. I was excited to 
 alone 64... Although I haven't really looked at combining SIMD with bit slicing, this is for the next semester (when I
 get to the modes).
 
+### Saturday 31 dec
+
+I implemented the TK permutation in a bit sliced manner. Erik's old permutation takes about 42 cycles, new bit sliced
+permutation takes 82 cycles when permuting every slice separately. This was expected since we actually do 4x the work
+that Erik's previous implementation
+needed, so this is no surprise. Although I think I can speed this up with a factor of 2 if I pack 2 slices in 1 32-bit
+variable. Then we only do 2 of these 'slice-permutations' instead of 4.
+
 ## What's on my mind
 
 - Now that I finally have results that allow me to sleep at night, I'll be able to start writing the end-to-end
   bit-sliced implementation next week, although I'll probably not be able to finish it before the next semester starts.
 - 64 blocks in parallel is really, *really* fast. I can't imagine how they do this, even if you could combine bit
-  slicing with SIMD. Looking at their code raises more questions than answers, I really wish they documented their code. 
+  slicing with SIMD. Looking at their code raises more questions than answers, I really wish they documented their code.
+- It turns out that Cortex M4 chips also
+  have [SIMD intrinsics](https://www.keil.com/pack/doc/CMSIS/Core/html/group__intrinsic__SIMD__gr.html) built on 32-bit
+  SIMD registers, so definitely taking a look at that. Maybe we can use this to speed up the permutation or speed up the
+  slice() and unslice() operations. If we can make the slicing operations much faster, then it might become more
+  lucrative to first unslice, permute in 1 cycle through SIMD, and slice again. Because the permutation is ridiculously
+  fast with 64 bit SIMD (e.g. this
+  intel [SIMD intrinsic](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=shuffle&techs=MMX,SSE_ALL&ig_expand=6562,5660)
+  that performs a constant permutation in 1 instruction).
