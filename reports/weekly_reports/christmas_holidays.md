@@ -31,6 +31,21 @@ that Erik's previous implementation
 needed, so this is no surprise. Although I think I can speed this up with a factor of 2 if I pack 2 slices in 1 32-bit
 variable. Then we only do 2 of these 'slice-permutations' instead of 4.
 
+### Sunday 01 jan
+
+I implemented my idea of packing 2 or all 4 slices in 1 value, and performing the permutation on this packed value.
+
+- old non-bitsliced permutation: 56 cycles (using 2x 32 bit registers)
+- 4 times 1 permutation per slice: 131 cycles (using 4x 8 bit registers)
+- 2 times 1 permutation per 2 slices: 77 cycles (using 2x 16 bit registers)
+- 1 permutation across all 4 slices: 35 cycles (using 1 32 bit register)
+
+This is good news, we can follow the last option with the least amount of cycles, but then we need a 32 bit register
+which we don't want if we want to parallelize multiple primitive calls in the same register (will form a bottleneck). So
+we're going to follow the 3rd bullet which needs 77 cycles. Even though this is a slowdown, this option only needs
+16-bit registers and will allow us to parallelize multiple primitive calls in the same register, which will compensate
+for this slowdown.
+
 ## What's on my mind
 
 - Now that I finally have results that allow me to sleep at night, I'll be able to start writing the end-to-end
