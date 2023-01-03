@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
 	// perform SBOXs
 	auto old_sbox_res = old_sbox(state);
 	auto sliced_circuit_sbox_res = State64Sliced_16_t();
-	sliced_circuit_sbox_res.slices = sliced_circuit_sbox(sliced_state.slices);
+	// BROKEN sliced_circuit_sbox_res.slices = sliced_circuit_sbox(sliced_state.slices);
 	auto sliced_sbox_res = sliced_sbox(sliced_state).state;
 	
 	// unslice

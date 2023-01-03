@@ -46,6 +46,17 @@ we're going to follow the 3rd bullet which needs 77 cycles. Even though this is 
 16-bit registers and will allow us to parallelize multiple primitive calls in the same register, which will compensate
 for this slowdown.
 
+### Tuesday 03 jan
+
+Implemented the shift rows operation, benchmarked it on arduino. We hit a real roadblock, a bitsliced shift row
+operation is 4-5 times as slow as before. The problem is again we have to perform the shiftrow on every slice, which is
+again, evidently, 4 times the amount of work that was done before.
+I'm thinking of a way to make this faster: what if we use lookup tables? If every row is just a bit rotation, what if we
+just wake a 4-bit lookup table that just maps a nibble to its bit rotated value? Then we can swap a rotate instruction
+with a single lookup. Since the lookup table is only 4-bit, we only need 2^4 values, which well fits in the arduino's
+cache. If we could simplify bit rotations like this, I believe we could achieve a tremendous speedup, as a bit rotation
+is multiple instructions, replacing it with a single lookup could speed this up drastically. I'll try this tomorrow.
+
 ## What's on my mind
 
 - Now that I finally have results that allow me to sleep at night, I'll be able to start writing the end-to-end

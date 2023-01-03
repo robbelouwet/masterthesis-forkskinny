@@ -38,3 +38,5 @@ add_executable(benchmarking_sbox
 
 add_executable(benchmarking_perms src/benchmarking/permutations_benchmark.cpp)
 
+add_executable(benchmarking_shiftrows src/benchmarking/shiftrows_benchmarking.cpp)
+
