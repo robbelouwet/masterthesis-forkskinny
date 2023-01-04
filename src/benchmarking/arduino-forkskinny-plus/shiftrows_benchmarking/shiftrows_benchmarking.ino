@@ -123,6 +123,84 @@ uint32_t unslice(uint32_t state) {
          | unslice_index(((state & 0xFF000000) >> 24), 3);
 }
 
+/// f(x) = rotate_right(x, 1) << 8
+inline uint16_t ror_row1_4bit_aligned(uint8_t input) __attribute__((always_inline));
+uint16_t ror_row1_4bit_aligned(uint8_t input) {
+	uint16_t values[] = {0x000, 0x800, 0x100, 0x900,
+	                     0x200, 0xa00, 0x300, 0xb00,
+	                     0x400, 0xc00, 0x500, 0xd00,
+	                     0x600, 0xe00, 0x700, 0xf00,
+	};
+	return values[input];
+}
+
+/// f(x) = rotate_right(x, 2) << 4
+inline uint16_t ror_row2_4bit_aligned(uint8_t input) __attribute__((always_inline));
+uint16_t ror_row2_4bit_aligned(uint8_t input) {
+	uint16_t values[] = {0x00, 0x40, 0x80, 0xc0,
+	                     0x10, 0x50, 0x90, 0xd0,
+	                     0x20, 0x60, 0xa0, 0xe0,
+	                     0x30, 0x70, 0xb0, 0xf0,
+	};
+	return values[input];
+}
+
+/// f(x) = rotate_right(x, 3)
+inline uint16_t ror_row3_4bit_aligned(uint8_t input) __attribute__((always_inline));
+uint16_t ror_row3_4bit_aligned(uint8_t input) {
+	uint16_t values[] = {0x0, 0x2, 0x4, 0x6,
+	                     0x8, 0xa, 0xc, 0xe,
+	                     0x1, 0x3, 0x5, 0x7,
+	                     0x9, 0xb, 0xd, 0xf,
+	};
+	return values[input];
+}
+inline void shift_rows_sliced_lookup(State64Sliced_16_t *state) __attribute__((always_inline));
+void shift_rows_sliced_lookup(State64Sliced_16_t *state) {
+auto slice0 = state->slices[0];
+	auto slice1 = state->slices[1];
+	auto slice2 = state->slices[2];
+	auto slice3 = state->slices[3];
+	
+	uint16_t values_row1[] = {0x000, 0x800, 0x100, 0x900,
+	                          0x200, 0xa00, 0x300, 0xb00,
+	                          0x400, 0xc00, 0x500, 0xd00,
+	                          0x600, 0xe00, 0x700, 0xf00,
+	};
+	
+	uint16_t values_row2[] = {0x00, 0x40, 0x80, 0xc0,
+	                          0x10, 0x50, 0x90, 0xd0,
+	                          0x20, 0x60, 0xa0, 0xe0,
+	                          0x30, 0x70, 0xb0, 0xf0,
+	};
+	
+	uint16_t values_row3[] = {0x0, 0x2, 0x4, 0x6,
+	                          0x8, 0xa, 0xc, 0xe,
+	                          0x1, 0x3, 0x5, 0x7,
+	                          0x9, 0xb, 0xd, 0xf,
+	};
+	
+	state->slices[0] = (slice0 & 0xF000)
+	                   | values_row1[(slice0 & 0x0F00) >> 8]
+	                   | values_row2[(slice0 & 0x00F0) >> 4]
+	                   | values_row3[slice0 & 0x000F];
+	
+	state->slices[1] = (slice1 & 0xF000)
+	                   | values_row1[(slice1 & 0x0F00) >> 8]
+	                   | values_row2[(slice1 & 0x00F0) >> 4]
+	                   | values_row3[slice1 & 0x000F];
+	
+	state->slices[2] = (slice2 & 0xF000)
+	                   | values_row1[(slice2 & 0x0F00) >> 8]
+	                   | values_row2[(slice2 & 0x00F0) >> 4]
+	                   | values_row3[slice2 & 0x000F];
+	
+	state->slices[3] = (slice3 & 0xF000)
+	                   | values_row1[(slice3 & 0x0F00) >> 8]
+	                   | values_row2[(slice3 & 0x00F0) >> 4]
+	                   | values_row3[slice3 & 0x000F];
+}
+
 inline void shift_rows_sliced_packed_state(State64Sliced_16_t *state) __attribute__((always_inline));
 void shift_rows_sliced_packed_state(State64Sliced_16_t *state) {
 	auto slice0 = state->slices[0];
@@ -209,6 +287,8 @@ void run(){
 	sliced_packed_rows.state = slice(state);
 	auto sliced_packed_state = State64Sliced_16_t();
 	sliced_packed_state.state = slice(state);
+  auto sliced_lookup = State64Sliced_16_t();
+	sliced_lookup.state = slice(state);
 	
 	// shift rows
   KIN1_ResetCycleCounter();
@@ -225,9 +305,15 @@ void run(){
   KIN1_EnableCycleCounter(); /* start counting */
 	shift_rows_sliced_packed_state(&sliced_packed_state);
   auto cycles_packed_state = KIN1_GetCycleCounter();
+
+  KIN1_ResetCycleCounter();
+  KIN1_EnableCycleCounter(); /* start counting */
+	shift_rows_sliced_lookup(&sliced_lookup);
+  auto cycles_lookup = KIN1_GetCycleCounter();
 	
 	auto unsliced_packed_rows = unslice(sliced_packed_rows.state);
-	auto unsliced_packed_state = unslice(sliced_packed_state.state);
+	auto unsliced_lookup = unslice(sliced_lookup.state);
+  
 
   Serial.print("Old shift rows: ");
   Serial.print(vanilla.llrow);
@@ -235,14 +321,14 @@ void run(){
   Serial.println(cycles_vanilla);
 
   Serial.print("bit sliced, packed rows: ");
-  Serial.print(sliced_packed_rows.state);
+  Serial.print(unsliced_packed_rows);
   Serial.print(", cycles: ");
   Serial.println(cycles_packed_rows);
 
-  Serial.print("bit sliced, packed state: ");
-  Serial.print(sliced_packed_state.state);
+  Serial.print("bit sliced, 4-bit lookups: ");
+  Serial.print(unsliced_lookup);
   Serial.print(", cycles: ");
-  Serial.println(cycles_packed_state);
+  Serial.println(cycles_lookup);
 }
 
 void setup(){

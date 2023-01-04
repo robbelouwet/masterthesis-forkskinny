@@ -57,6 +57,18 @@ with a single lookup. Since the lookup table is only 4-bit, we only need 2^4 val
 cache. If we could simplify bit rotations like this, I believe we could achieve a tremendous speedup, as a bit rotation
 is multiple instructions, replacing it with a single lookup could speed this up drastically. I'll try this tomorrow.
 
+## Wednesday 04 jan
+
+Implemented the substitution tables. I made 4 lookup tables, 3 of the map to a nibble's rotated value, rotating 1,2 or 3
+bits (for the 2nd, 3rd and 4th row in shiftrows). I then also made a 8-bit lookup table that maps row3||row4 to its
+corresponding value where row3 is rotated 2 bits and row4 3 bits (as 1 8-bit value).
+When benchmarking individually, the 4-bit lookup tables seem faster, even 2 4-bit lookups are faster than 1 8-bit lookup
+for a combined row2||row3, for some reason.
+a 4-bit lookup takes 6-8 cycles, this is a speedup compared to manually calculating a rotation (13 cycles). This sin't
+good enough though, as we still need to do everything 4 times, and 4*6 is still way more than 13.
+When actually using these lookups in the full shift row operation, it's even slower than everything else I've tried,
+even though the lookups individually are 2x faster than a bit rotation calculation, for some reason (?)
+
 ## What's on my mind
 
 - Now that I finally have results that allow me to sleep at night, I'll be able to start writing the end-to-end
@@ -71,3 +83,6 @@ is multiple instructions, replacing it with a single lookup could speed this up 
   fast with 64 bit SIMD (e.g. this
   intel [SIMD intrinsic](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=shuffle&techs=MMX,SSE_ALL&ig_expand=6562,5660)
   that performs a constant permutation in 1 instruction).
+- The shift row operation is really difficult to optimize, as it's a function that doesn't change the value of every
+  individual cell by a logical operation, rather it moves cells around within their state. And bit slicing is not really
+  optimized for that. I fear the same reasoning will hold for mix cols, but I haven't looked at mix cols yet. 
