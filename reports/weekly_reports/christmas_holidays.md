@@ -59,12 +59,12 @@ is multiple instructions, replacing it with a single lookup could speed this up 
 
 ## Wednesday 04 jan
 
-Implemented the substitution tables. I made 4 lookup tables, 3 of the map to a nibble's rotated value, rotating 1,2 or 3
+Implemented the substitution tables. I made 4 lookup tables, 3 of them map to a nibble's rotated value, rotating 1,2 or 3
 bits (for the 2nd, 3rd and 4th row in shiftrows). I then also made a 8-bit lookup table that maps row3||row4 to its
 corresponding value where row3 is rotated 2 bits and row4 3 bits (as 1 8-bit value).
 When benchmarking individually, the 4-bit lookup tables seem faster, even 2 4-bit lookups are faster than 1 8-bit lookup
 for a combined row2||row3, for some reason.
-a 4-bit lookup takes 6-8 cycles, this is a speedup compared to manually calculating a rotation (13 cycles). This sin't
+a 4-bit lookup takes 6-8 cycles, this is a speedup compared to manually calculating a rotation (13 cycles). This isn't
 good enough though, as we still need to do everything 4 times, and 4*6 is still way more than 13.
 When actually using these lookups in the full shift row operation, it's even slower than everything else I've tried,
 even though the lookups individually are 2x faster than a bit rotation calculation, for some reason (?)
