@@ -43,6 +43,22 @@ typedef union {
 	__m64 m64state;  // SIMD 64-bit register
 } State64Sliced_16_t;
 
+typedef union{
+	uint8_t halves[2];
+	uint16_t value;
+} Slice_t;
+
+/**
+ * Represents a 64-bit bit-sliced_fghi state
+ *
+ * a bit sliced_fghi representation of 2 4-bit cells would be: [x³, y³], [x², y²], [x¹, y¹], [x⁰, y⁰].
+ */
+typedef union {
+	Slice_t slices[4];  // [p³o³...b³a³, ... , p⁰o⁰...b⁰a⁰], where there are 16 4-bit cells named a through p
+	uint64_t state;
+	//__m64 m64state;  // SIMD 64-bit register
+} State64Sliced2_16_t;
+
 /**
  * Represents half a 64-bit bit-sliced_fghi state
  *

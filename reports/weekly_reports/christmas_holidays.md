@@ -59,7 +59,8 @@ is multiple instructions, replacing it with a single lookup could speed this up 
 
 ## Wednesday 04 jan
 
-Implemented the substitution tables. I made 4 lookup tables, 3 of them map to a nibble's rotated value, rotating 1,2 or 3
+Implemented the substitution tables. I made 4 lookup tables, 3 of them map to a nibble's rotated value, rotating 1,2 or
+3
 bits (for the 2nd, 3rd and 4th row in shiftrows). I then also made a 8-bit lookup table that maps row3||row4 to its
 corresponding value where row3 is rotated 2 bits and row4 3 bits (as 1 8-bit value).
 When benchmarking individually, the 4-bit lookup tables seem faster, even 2 4-bit lookups are faster than 1 8-bit lookup
@@ -68,6 +69,15 @@ a 4-bit lookup takes 6-8 cycles, this is a speedup compared to manually calculat
 good enough though, as we still need to do everything 4 times, and 4*6 is still way more than 13.
 When actually using these lookups in the full shift row operation, it's even slower than everything else I've tried,
 even though the lookups individually are 2x faster than a bit rotation calculation, for some reason (?)
+
+## Saturday 07 jan
+
+Continued working on the shift rows. I fear we're going to have to let go of our goal to have every operation use online
+a 16 bit register. We can make the shift rows (and probably mixcols as well) equally fast as before, if we pack the
+whole state in a 64 bit register (or repeat 2 times in 32 bit register). This way we can still parallelize the other
+operations that use only 16 bit registers, we can still use bit slicing and thus also use fixed slicing key schedule.
+Only the shift rows and mix cols will be performed using larger registers. Either we use larger registers or we have a
+slowdown with shift rows and mix cols, it's one or the other.
 
 ## What's on my mind
 
