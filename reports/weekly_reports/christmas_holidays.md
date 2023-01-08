@@ -79,6 +79,14 @@ operations that use only 16 bit registers, we can still use bit slicing and thus
 Only the shift rows and mix cols will be performed using larger registers. Either we use larger registers or we have a
 slowdown with shift rows and mix cols, it's one or the other.
 
+## Sunday 08 jan
+
+Some very good news: I tried some tricks with lookup tables and union structs to speed up the shift rows operation, and
+it looks like my latest idea only needs 30 cycles to perform the whole shift row operation in a bitsliced manner, where
+the previous non-bitsliced implementation needed 24. This is a slowdown of a few cycles, but becomes negligible once we factor in the
+speedups from the other round function operations and when we consider parallelizing multiple round functions in the same
+register.
+
 ## What's on my mind
 
 - Now that I finally have results that allow me to sleep at night, I'll be able to start writing the end-to-end
