@@ -161,10 +161,7 @@ uint64_t old_sbox(uint64_t x) {
 	return res;
 }
 
-void setup() {
-  Serial.begin(9600);
-  while (!Serial){}
-
+void run(){
   KIN1_InitCycleCounter(); /* enable DWT hardware */
 
   uint32_t state = random();
@@ -204,5 +201,12 @@ void setup() {
   // -----------------------
 }
 
+void setup() {
+  Serial.begin(9600);
+  while (!Serial){}
+}
+
 void loop() {
+  run();
+  delay(1000);
 }
