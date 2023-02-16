@@ -7,6 +7,11 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
+add_executable(forkskinny-plus2
+        src/forkskinny-plus2/forkskinny-plus2.cpp
+        src/forkskinny-plus2/forkskinny64-plus.h
+        src/forkskinny-plus2/slicing.h)
+
 
 # Thesis project code:
 add_executable(forkskinnyplus

@@ -12,6 +12,12 @@
 #include <cstdint>
 #include <immintrin.h>
 
+// wrapper so we can return arrays from unslice()
+// represent 64 unsliced states
+typedef union {
+	uint64_t values[64];
+} Blocks;
+
 typedef union {
 	uint8_t pairs[4];
 	uint16_t row[2];
@@ -21,7 +27,7 @@ typedef union {
 
 
 typedef union {
-	uint64_t cells[4][16];
+	uint64_t cells[16][4];
 	uint64_t raw[64];
 	__m256 simd_cells[16];
 } State64Sliced_t;
