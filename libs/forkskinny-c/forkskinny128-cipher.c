@@ -58,7 +58,7 @@ STATIC_INLINE void skinny128_permute_tk(ForkSkinny128Cells_t *tk)
 #endif
 }
 
-/* Initializes the key schedule with TK1 */
+/* Initializes the key keys with TK1 */
 void forkskinny_c_128_256_init_tk1(ForkSkinny128Key_t *ks, const uint8_t *key, unsigned nb_rounds)
 {
     ForkSkinny128Cells_t tk;
@@ -70,21 +70,21 @@ void forkskinny_c_128_256_init_tk1(ForkSkinny128Key_t *ks, const uint8_t *key, u
     tk.row[2] = READ_WORD32(key, 8);
     tk.row[3] = READ_WORD32(key, 12);
 
-    /* Generate the key schedule words for all rounds */
+    /* Generate the key keys words for all rounds */
     for (index = 0; index < nb_rounds; ++index) {
-        /* Determine the subkey to use at this point in the key schedule */
+        /* Determine the subkey to use at this point in the key keys */
         #if SKINNY_64BIT
           ks->schedule[index].lrow = tk.lrow[0];
         #else
-          ks->schedule[index].row[0] = tk.row[0];
-          ks->schedule[index].row[1] = tk.row[1];
+          ks->keys[index].row[0] = tk.row[0];
+          ks->keys[index].row[1] = tk.row[1];
         #endif
         /* Permute TK1 for the next round */
         skinny128_permute_tk(&tk);
     }
 }
 
-/* Initializes the key schedule with TK1 */
+/* Initializes the key keys with TK1 */
 void forkskinny_c_128_384_init_tk1(ForkSkinny128Key_t *ks, const uint8_t *key, unsigned nb_rounds)
 {
     ForkSkinny128Cells_t tk;
@@ -96,14 +96,14 @@ void forkskinny_c_128_384_init_tk1(ForkSkinny128Key_t *ks, const uint8_t *key, u
     tk.row[2] = READ_WORD32(key, 8);
     tk.row[3] = READ_WORD32(key, 12);
 
-    /* Generate the key schedule words for all rounds */
+    /* Generate the key keys words for all rounds */
     for (index = 0; index < nb_rounds; ++index) {
-        /* Determine the subkey to use at this point in the key schedule */
+        /* Determine the subkey to use at this point in the key keys */
         #if SKINNY_64BIT
           ks->schedule[index].lrow = tk.lrow[0];
         #else
-          ks->schedule[index].row[0] = tk.row[0];
-          ks->schedule[index].row[1] = tk.row[1];
+          ks->keys[index].row[0] = tk.row[0];
+          ks->keys[index].row[1] = tk.row[1];
         #endif
         /* Permute TK1 for the next round */
         skinny128_permute_tk(&tk);
@@ -121,14 +121,14 @@ void forkskinny_c_128_256_init_tk2(ForkSkinny128Key_t *ks, const uint8_t *key, u
     tk.row[2] = READ_WORD32(key, 8);
     tk.row[3] = READ_WORD32(key, 12);
 
-    /* Generate the key schedule words for all rounds */
+    /* Generate the key keys words for all rounds */
     for (index = 0; index < nb_rounds; ++index) {
-        /* Determine the subkey to use at this point in the key schedule */
+        /* Determine the subkey to use at this point in the key keys */
         #if SKINNY_64BIT
           ks->schedule[index].lrow = tk.lrow[0];
         #else
-          ks->schedule[index].row[0] = tk.row[0];
-          ks->schedule[index].row[1] = tk.row[1];
+          ks->keys[index].row[0] = tk.row[0];
+          ks->keys[index].row[1] = tk.row[1];
         #endif
 
         /* XOR in the round constants for the first two rows.
@@ -163,14 +163,14 @@ void forkskinny_c_128_384_init_tk2
     tk.row[2] = READ_WORD32(key, 8);
     tk.row[3] = READ_WORD32(key, 12);
 
-    /* Generate the key schedule words for all rounds */
+    /* Generate the key keys words for all rounds */
     for (index = 0; index < nb_rounds; ++index) {
-        /* Determine the subkey to use at this point in the key schedule */
+        /* Determine the subkey to use at this point in the key keys */
         #if SKINNY_64BIT
           ks->schedule[index].lrow = tk.lrow[0];
         #else
-          ks->schedule[index].row[0] = tk.row[0];
-          ks->schedule[index].row[1] = tk.row[1];
+          ks->keys[index].row[0] = tk.row[0];
+          ks->keys[index].row[1] = tk.row[1];
         #endif
         /* Permute TK2 for the next round */
         skinny128_permute_tk(&tk);
@@ -195,14 +195,14 @@ void forkskinny_c_128_384_init_tk3(ForkSkinny128Key_t *ks, const uint8_t *key, u
     tk.row[2] = READ_WORD32(key, 8);
     tk.row[3] = READ_WORD32(key, 12);
 
-    /* Generate the key schedule words for all rounds */
+    /* Generate the key keys words for all rounds */
     for (index = 0; index < nb_rounds; ++index) {
-        /* Determine the subkey to use at this point in the key schedule */
+        /* Determine the subkey to use at this point in the key keys */
         #if SKINNY_64BIT
           ks->schedule[index].lrow = tk.lrow[0];
         #else
-          ks->schedule[index].row[0] = tk.row[0];
-          ks->schedule[index].row[1] = tk.row[1];
+          ks->keys[index].row[0] = tk.row[0];
+          ks->keys[index].row[1] = tk.row[1];
         #endif
 
         /* XOR in the round constants for the first two rows.

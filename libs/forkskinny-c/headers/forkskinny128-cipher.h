@@ -42,11 +42,11 @@ typedef union
 } ForkSkinny128HalfCells_t;
 
 /**
- * Key schedule for Forkskinny-128-256 and Forkskinny-128-384
+ * Key keys for Forkskinny-128-256 and Forkskinny-128-384
  */
 typedef struct
 {
-    /** All words of the key schedule */
+    /** All words of the key keys */
     ForkSkinny128HalfCells_t schedule[FORKSKINNY128_MAX_ROUNDS];
 
 } ForkSkinny128Key_t;
@@ -57,46 +57,46 @@ ForkSkinny128Cells_t forkskinny_128_384_encrypt_round(
 		unsigned index, unsigned *temp);
 
 /**
- * Pre-computes the key schedule for Forkskinny-128-256 for TK1
+ * Pre-computes the key keys for Forkskinny-128-256 for TK1
  * ks:
  * key:       pointer to key bytes; reads FORKSKINNY128_BLOCK_SIZE bytes from the key
- * nb_rounds: the number of rounds of the key schedule
+ * nb_rounds: the number of rounds of the key keys
  */
 void forkskinny_c_128_256_init_tk1(ForkSkinny128Key_t *ks, const uint8_t *key, unsigned nb_rounds);
 /**
- * Pre-computes the key schedule for Forkskinny-128-256 for TK2
+ * Pre-computes the key keys for Forkskinny-128-256 for TK2
  * ks:
  * key:       pointer to key bytes; reads FORKSKINNY128_BLOCK_SIZE bytes from the key
- * nb_rounds: the number of rounds of the key schedule
+ * nb_rounds: the number of rounds of the key keys
  */
 void forkskinny_c_128_256_init_tk2(ForkSkinny128Key_t *ks, const uint8_t *key, unsigned nb_rounds);
 
 /**
- * Pre-computes the key schedule for Forkskinny-128-384 for TK1
+ * Pre-computes the key keys for Forkskinny-128-384 for TK1
  * ks:
  * key:       pointer to key bytes; reads FORKSKINNY128_BLOCK_SIZE bytes from the key
- * nb_rounds: the number of rounds of the key schedule
+ * nb_rounds: the number of rounds of the key keys
  */
 void forkskinny_c_128_384_init_tk1(ForkSkinny128Key_t *ks, const uint8_t *key, unsigned nb_rounds);
 /**
- * Pre-computes the key schedule for Forkskinny-128-384 for TK2
+ * Pre-computes the key keys for Forkskinny-128-384 for TK2
  * ks:
  * key:       pointer to key bytes; reads FORKSKINNY128_BLOCK_SIZE bytes from the key
- * nb_rounds: the number of rounds of the key schedule
+ * nb_rounds: the number of rounds of the key keys
  */
 void forkskinny_c_128_384_init_tk2(ForkSkinny128Key_t *ks, const uint8_t *key, unsigned nb_rounds);
 /**
- * Pre-computes the key schedule for Forkskinny-128-384 for TK3
+ * Pre-computes the key keys for Forkskinny-128-384 for TK3
  * ks:
  * key:       pointer to key bytes; reads FORKSKINNY128_BLOCK_SIZE bytes from the key
- * nb_rounds: the number of rounds of the key schedule
+ * nb_rounds: the number of rounds of the key keys
  */
 void forkskinny_c_128_384_init_tk3(ForkSkinny128Key_t *ks, const uint8_t *key, unsigned nb_rounds);
 
 /**
  * Computes the forward direction of Forkskinny-128-256.
- * ks1:           key schedule for TK1 (see forkskinny_c_128_256_init_tk1)
- * ks2:           key schedule for TK2 (see forkskinny_c_128_256_init_tk2)
+ * ks1:           key keys for TK1 (see forkskinny_c_128_256_init_tk1)
+ * ks2:           key keys for TK2 (see forkskinny_c_128_256_init_tk2)
  * output_left:   if NULL, the left leg is not computed, else pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the left output leg of the forkcipher
  * output_right:  pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the right output leg of the forkcipher
  * input:         pointer to FORKSKINNY128_BLOCK_SIZE byte; input to the forkcipher
@@ -105,8 +105,8 @@ void forkskinny_c_128_256_encrypt(const ForkSkinny128Key_t *ks1, const ForkSkinn
 
 /**
  * Computes the inverse direction of Forkskinny-128-256.
- * ks1:           key schedule for TK1 (see forkskinny_c_128_256_init_tk1)
- * ks2:           key schedule for TK2 (see forkskinny_c_128_256_init_tk2)
+ * ks1:           key keys for TK1 (see forkskinny_c_128_256_init_tk1)
+ * ks2:           key keys for TK2 (see forkskinny_c_128_256_init_tk2)
  * output_left:   if NULL, the left leg is not computed, else pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the left output leg of the forkcipher (i.e. mode 'o')
  * output_right:  pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the inverted input of the forkcipher (i.e. mode 'i')
  * input_right:   pointer to FORKSKINNY128_BLOCK_SIZE byte; input to the inverse forkcipher
@@ -115,9 +115,9 @@ void forkskinny_c_128_256_decrypt(const ForkSkinny128Key_t *ks1, const ForkSkinn
 
 /**
  * Computes the forward direction of Forkskinny-128-384.
- * ks1:           key schedule for TK1 (see forkskinny_c_128_384_init_tk1)
- * ks2:           key schedule for TK2 (see forkskinny_c_128_384_init_tk2)
- * ks3:           key schedule for TK3 (see forkskinny_c_128_384_init_tk3)
+ * ks1:           key keys for TK1 (see forkskinny_c_128_384_init_tk1)
+ * ks2:           key keys for TK2 (see forkskinny_c_128_384_init_tk2)
+ * ks3:           key keys for TK3 (see forkskinny_c_128_384_init_tk3)
  * output_left:   if NULL, the left leg is not computed, else pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the left output leg of the forkcipher
  * output_right:  pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the right output leg of the forkcipher
  * input:         pointer to FORKSKINNY128_BLOCK_SIZE byte; input to the forkcipher
@@ -126,9 +126,9 @@ void forkskinny_c_128_384_encrypt(const ForkSkinny128Key_t *ks1, const ForkSkinn
 
 /**
  * Computes the inverse direction of Forkskinny-128-384.
- * ks1:           key schedule for TK1 (see forkskinny_c_128_384_init_tk1)
- * ks2:           key schedule for TK2 (see forkskinny_c_128_384_init_tk2)
- * ks3:           key schedule for TK3 (see forkskinny_c_128_384_init_tk3)
+ * ks1:           key keys for TK1 (see forkskinny_c_128_384_init_tk1)
+ * ks2:           key keys for TK2 (see forkskinny_c_128_384_init_tk2)
+ * ks3:           key keys for TK3 (see forkskinny_c_128_384_init_tk3)
  * output_left:   if NULL, the left leg is not computed, else pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the left output leg of the forkcipher (i.e. mode 'o')
  * output_right:  pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the inverted input of the forkcipher (i.e. mode 'i')
  * input_right:   pointer to FORKSKINNY128_BLOCK_SIZE byte; input to the inverse forkcipher

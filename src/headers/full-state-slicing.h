@@ -14,7 +14,7 @@
  * output: 010
  *
  * @param x: the input to slice
- * @param m: 0 <= m <= 3; the 0-based index that masks the relevant significant bit of every cell.
+ * @param m: 0 <= m <= 3; the 0-based index that masks the relevant significant bit of every slices.
  * @return the input in a bit sliced_fghi manner
  */
 static inline uint64_t slice_index(uint64_t x, uint64_t i) {

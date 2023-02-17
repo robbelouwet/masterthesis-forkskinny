@@ -2,7 +2,7 @@
 
 ## Monday
 
-Started actually implementing the LSFR for TK2 in the tweakey schedule. More specifically, I was trying to figure out
+Started actually implementing the LSFR for TK2 in the tweakey keys. More specifically, I was trying to figure out
 how to get a State64_t (whch is the 4x4 tweakey state) into a __mm256 datatype. In other words, trying to bit slice the
 4x4 TK2 tweakey state, such that I can apply the LSFR and PT in a SIMD manner later on, but first things first. When
 this works, it's time to try
@@ -25,8 +25,8 @@ it to Erik's sequential_abcde boolean expression (skinny64_LFSR2()) that compute
 ### What was on my mind
 
 - Met with Amit and Erik wednesday, we talked about the bottleneck really being in the non-linear part of the round
-  function. And that actually the tweakey schedule already is really fast. We agreed that I'd continue transforming the
-  tweakey schedule into a SIMD implementation, and then I'd look at the round function and the fixed slicing bit slicing
+  function. And that actually the tweakey keys already is really fast. We agreed that I'd continue transforming the
+  tweakey keys into a SIMD implementation, and then I'd look at the round function and the fixed slicing bit slicing
   technique. Later, I'd look at using skinnyplus-128-384 (from romulus) to construct a forkskinny-128-384 implementation
   and compare both.
 - If both bit slicing and SIMD seem to really give a speedup, we were thinking about how we could maybe combine bit

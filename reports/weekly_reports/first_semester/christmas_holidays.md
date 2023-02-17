@@ -75,7 +75,7 @@ even though the lookups individually are 2x faster than a bit rotation calculati
 Continued working on the shift rows. I fear we're going to have to let go of our goal to have every operation use online
 a 16 bit register. We can make the shift rows (and probably mixcols as well) equally fast as before, if we pack the
 whole state in a 64 bit register (or repeat 2 times in 32 bit register). This way we can still parallelize the other
-operations that use only 16 bit registers, we can still use bit slicing and thus also use fixed slicing key schedule.
+operations that use only 16 bit registers, we can still use bit slicing and thus also use fixed slicing key keys.
 Only the shift rows and mix cols will be performed using larger registers. Either we use larger registers or we have a
 slowdown with shift rows and mix cols, it's one or the other.
 
@@ -102,5 +102,5 @@ register.
   intel [SIMD intrinsic](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=shuffle&techs=MMX,SSE_ALL&ig_expand=6562,5660)
   that performs a constant permutation in 1 instruction).
 - The shift row operation is really difficult to optimize, as it's a function that doesn't change the value of every
-  individual cell by a logical operation, rather it moves cells around within their state. And bit slicing is not really
+  individual slices by a logical operation, rather it moves cells around within their state. And bit slicing is not really
   optimized for that. I fear the same reasoning will hold for mix cols, but I haven't looked at mix cols yet. 

@@ -21,6 +21,6 @@ trying this out (on paper first).
   and there are only 16 cells gives us too little data to fully use the parallelization that 256-bit registers offer.
   For example, if the tweakey state consisted of 16 cells of 16 bits each, then this would nicely fit in a simd
   register. But the fact that the state is only 16x 4-bit values, and because the LSFR and PT can be described in simple
-  logical gates, already makes the tweakey schedule super cheap without SIMD.
+  logical gates, already makes the tweakey keys super cheap without SIMD.
 - Thinking about leaving SIMD for what it is, and looking at bit slicing and then the fixed-slicing technique.
-- Looking at bit-slicing the key-schedule
+- Looking at bit-slicing the key-keys

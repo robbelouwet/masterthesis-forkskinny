@@ -60,7 +60,7 @@ STATIC_INLINE void skinny64_permute_tk(State64_t *tk) {
 	#endif
 }
 
-/* Initializes the key schedule with TK1 */
+/* Initializes the key keys with TK1 */
 void forkskinny_c_64_192_init_tk1(KeySchedule64_t *ks, const uint8_t *key, unsigned nb_rounds) {
 	State64_t tk;
 	unsigned index;
@@ -78,9 +78,9 @@ void forkskinny_c_64_192_init_tk1(KeySchedule64_t *ks, const uint8_t *key, unsig
 	tk.row[3] = READ_WORD16(key, 6);
 	#endif
 	
-	/* Generate the key schedule words for all rounds */
+	/* Generate the key keys words for all rounds */
 	for (index = 0; index < nb_rounds; ++index) {
-		/* Determine the subkey to use at this point in the key schedule */
+		/* Determine the subkey to use at this point in the key keys */
 		ks->schedule[index].lrow = tk.lrow[0];
 		
 		/* Permute TK1 for the next round */
@@ -112,9 +112,9 @@ void forkskinny_c_64_192_init_tk2_tk3(KeySchedule64_t *ks, const uint8_t *key, u
 	tk3.row[3] = READ_WORD16(key + FORKSKINNY64_BLOCK_SIZE, 6);
 	#endif
 	
-	/* Generate the key schedule words for all rounds */
+	/* Generate the key keys words for all rounds */
 	for (index = 0; index < nb_rounds; ++index) {
-		/* Determine the subkey to use at this point in the key schedule */
+		/* Determine the subkey to use at this point in the key keys */
 		ks->schedule[index].lrow = tk2.lrow[0] ^ tk3.lrow[0];
 		
 		/* XOR in the round constants for the first two rows.

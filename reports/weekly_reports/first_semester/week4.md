@@ -26,7 +26,7 @@ both can be described with logical gates, which goes very well with the provided
 ### What was on my mind
 
 - For the moment, I'm setting my mind on [Erik's code](/libs/forkskinny-c) and thinking about implementing
-  fixed slicing with SIMD in the key schedule.
+  fixed slicing with SIMD in the key keys.
   I don't want to spend too much time on trying to analyze what the romulus skinny+ implementation has done to get those
   speedups, that rabbit hole is just too deep, I don't have time for that because I still need to look into
   parallelizing the 2 branches after splitting. And I still need to do the modes.

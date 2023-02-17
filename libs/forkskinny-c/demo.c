@@ -26,7 +26,7 @@ void demo_forkskinny_64_192() {
 	                                            0x1b, 0xe8, 0xe7, 0x8d, 0x76, 0x5a, 0x2e, 0x63, 0x33, 0x9f, 0xc9, 0x9a};
 	uint8_t message[FORKSKINNY64_BLOCK_SIZE] = {0x67, 0xc6, 0x69, 0x73, 0x51, 0xff, 0x4a, 0xec};
 	
-	// Pre-compute key schedule
+	// Pre-compute key keys
 	KeySchedule64_t tk1, tk23;
 	forkskinny_c_64_192_init_tk1(&tk1, key, FORKSKINNY64_MAX_ROUNDS);
 	forkskinny_c_64_192_init_tk2_tk3(&tk23, key + FORKSKINNY64_BLOCK_SIZE, FORKSKINNY64_MAX_ROUNDS);
@@ -94,7 +94,7 @@ void demo_forkskinny_128_256() {
 	uint8_t message[FORKSKINNY128_BLOCK_SIZE] = {0x67, 0xc6, 0x69, 0x73, 0x51, 0xff, 0x4a, 0xec, 0x80, 0x00, 0x00, 0x00,
 	                                             0x00, 0x00, 0x00, 0x00};
 	
-	// Pre-compute key schedule
+	// Pre-compute key keys
 	ForkSkinny128Key_t tk1, tk2;
 	forkskinny_c_128_256_init_tk1(&tk1, key, FORKSKINNY128_MAX_ROUNDS);
 	forkskinny_c_128_256_init_tk2(&tk2, key + FORKSKINNY128_BLOCK_SIZE, FORKSKINNY128_MAX_ROUNDS);
@@ -164,7 +164,7 @@ void demo_forkskinny_128_384() {
 	uint8_t message[FORKSKINNY128_BLOCK_SIZE] = {0x67, 0xc6, 0x69, 0x73, 0x51, 0xff, 0x4a, 0xec, 0x80, 0x00, 0x00, 0x00,
 	                                             0x00, 0x00, 0x00, 0x00};
 	
-	// Pre-compute key schedule
+	// Pre-compute key keys
 	ForkSkinny128Key_t tk1, tk2, tk3;
 	forkskinny_c_128_384_init_tk1(&tk1, key, FORKSKINNY128_MAX_ROUNDS);
 	forkskinny_c_128_384_init_tk2(&tk2, key + FORKSKINNY128_BLOCK_SIZE, FORKSKINNY128_MAX_ROUNDS);

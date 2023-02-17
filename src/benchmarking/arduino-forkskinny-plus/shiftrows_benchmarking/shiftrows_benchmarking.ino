@@ -56,7 +56,7 @@ typedef union {
  * Union that describes a 64-bit 4x4 array of cells16.
  */
 typedef union {
-  uint16_t row[4];   /// Stored as 4x 16-bit uint partitions (cccc cccc cccc cccc) [c = 4-bit state cell]
+  uint16_t row[4];   /// Stored as 4x 16-bit uint partitions (cccc cccc cccc cccc) [c = 4-bit state slices]
   uint32_t lrow[2];  /// Stored as 2x 32-bit uint partitions  (cccccccc cccccccc)
   uint64_t llrow;    /// Stored as 1x 64-bit uint 			  (cccccccccccccccc)
 } State64_t;
@@ -71,7 +71,7 @@ typedef union {
  * output: 010
  *
  * @param x: the input to slice
- * @param m: 0 <= m <= 3; the 0-based index that masks the relevant significant bit of every cell.
+ * @param m: 0 <= m <= 3; the 0-based index that masks the relevant significant bit of every slices.
  * @return the input in a bit sliced_fghi manner
  */
 inline uint32_t slice_index(uint32_t x, uint8_t i) __attribute__((always_inline));

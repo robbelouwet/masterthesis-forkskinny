@@ -14,8 +14,8 @@ Run `make`
 See `demo.c` for examples how to use the code.
 
 ## Implementation details
-- The tweakey schedule computation is separate for each tweakey TK1, TK2, TK3. This requires more memory but speeds up the primitive when used in a mode where only parts of the tweakey change.
-- Round constants are integrated into the key schedule
+- The tweakey keys computation is separate for each tweakey TK1, TK2, TK3. This requires more memory but speeds up the primitive when used in a mode where only parts of the tweakey change.
+- Round constants are integrated into the key keys
 - In the implementation, the forkcipher legs are swapped with respect to the formal definition in the paper, i.e. the left leg in the paper corresponds to the right leg in the code, etc.
 
 ## License

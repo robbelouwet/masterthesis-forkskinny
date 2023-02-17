@@ -25,8 +25,8 @@ representation. This is made possible with the `SWAPMOVE` technique, described
 in [this paper, section 3](https://eprint.iacr.org/2020/412.pdf). Trying to figure out how to apply this to forkskinny.
 Section 2.3
 of [this paper](https://csrc.nist.gov/CSRC/media/Events/lightweight-cryptography-workshop-2020/documents/papers/fixslicing-lwc2020.pdf)
-describes how the tweakey schedule of SKINNY could be greatly optimized with fixed slicing, but they switch up the order
-of the LFSR and PT steps when updating the key schedule in the AddRoundKey step, so not sure if this impacts security.
+describes how the tweakey keys of SKINNY could be greatly optimized with fixed slicing, but they switch up the order
+of the LFSR and PT steps when updating the key keys in the AddRoundKey step, so not sure if this impacts security.
 Although they don't mention it. This issue basically comes down to whether or not `LSFR(PT(x))`
 and `PT(LSFR(x))` offer equivalent security, whether it's ok to switch up their order.
 Created an access token for elena to clone the repo as a workaround for not having an @kuleuven.be email address (this

@@ -5,7 +5,7 @@
 The LSFR for TK2 was implemented in 3 ways. The first one is the most logical one, it expresses the LSFR on 16 4-bit
 cells placed one after another packed in a uint64. The result is then the LSFR applied to all packed 4-bit cells. The
 second and third one perform the LSFR where the TK2 state is bit sliced. This removes the need for dependent logical
-operations that need to wait until the previous 'gate' is completed, because all equally-significant bits of every cell
+operations that need to wait until the previous 'gate' is completed, because all equally-significant bits of every slices
 are now packed in the same 16-bit value. So now we only need to perform 1 rol and 1 xor instruction. This significant
 gain can primarily be seen in the second row's implementation, where we need only 4 dependant instructions, instead of
 10!

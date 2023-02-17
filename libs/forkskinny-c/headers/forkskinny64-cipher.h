@@ -21,7 +21,7 @@ extern "C" {
  */
 typedef union
 {
-    uint16_t row[4];        /// Stored as 4x 16-bit uint partitions (cccc cccc cccc cccc) [c = 4-bit state cell]
+    uint16_t row[4];        /// Stored as 4x 16-bit uint partitions (cccc cccc cccc cccc) [c = 4-bit state slices]
     uint32_t lrow[2];       /// Stored as 2x 32-bit uint partitions  (cccccccc cccccccc)
     uint64_t llrow;         /// Stored as 1x 64-bit uint 			  (cccccccccccccccc)
 
@@ -38,34 +38,34 @@ typedef union
 } HalfState64_t;
 
 /**
- * Key schedule for Forkskinny-64-192
+ * Key keys for Forkskinny-64-192
  */
 typedef struct
 {
-    /** All words of the key schedule */
+    /** All words of the key keys */
     HalfState64_t schedule[FORKSKINNY64_MAX_ROUNDS];
 
 } KeySchedule64_t; /// because the 'key' part of
 
 /**
- * Pre-computes the key schedule for Forkskinny-64-192 for TK1
+ * Pre-computes the key keys for Forkskinny-64-192 for TK1
  * ks:
  * key:       pointer to key bytes; reads FORKSKINNY64_BLOCK_SIZE bytes from the key
- * nb_rounds: the number of rounds of the key schedule
+ * nb_rounds: the number of rounds of the key keys
  */
 void forkskinny_c_64_192_init_tk1(KeySchedule64_t *ks, const uint8_t *key, unsigned nb_rounds);
 /**
- * Pre-computes the key schedule for Forkskinny-64-192 for TK2 AND TK3
+ * Pre-computes the key keys for Forkskinny-64-192 for TK2 AND TK3
  * ks:
  * key:       pointer to key bytes; reads 2*FORKSKINNY64_BLOCK_SIZE bytes from the key
- * nb_rounds: the number of rounds of the key schedule
+ * nb_rounds: the number of rounds of the key keys
  */
 void forkskinny_c_64_192_init_tk2_tk3(KeySchedule64_t *ks, const uint8_t *key, unsigned nb_rounds);
 
 /**
  * Computes the forward direction of Forkskinny-64-192.
- * tks1:           key schedule for TK1 (see forkskinny_c_64_192_init_tk1)
- * tks2:           key schedule for TK2 and TK3 (see forkskinny_c_64_192_init_tk2_tk3)
+ * tks1:           key keys for TK1 (see forkskinny_c_64_192_init_tk1)
+ * tks2:           key keys for TK2 and TK3 (see forkskinny_c_64_192_init_tk2_tk3)
  * output_left:   if NULL, the left leg is not computed, else pointer to FORKSKINNY64_BLOCK_SIZE byte; will contain the left output leg of the forkcipher
  * output_right:  pointer to FORKSKINNY64_BLOCK_SIZE byte; will contain the right output leg of the forkcipher
  * input:         pointer to FORKSKINNY64_BLOCK_SIZE byte; input to the forkcipher
@@ -75,8 +75,8 @@ void forkskinny_c_64_192_encrypt(const KeySchedule64_t *tks1, const KeySchedule6
 
 /**
  * Computes the inverse direction of Forkskinny-64-192.
- * tks1:           key schedule for TK1 (see forkskinny_c_64_192_init_tk1)
- * tks2:           key schedule for TK2 and TK3 (see forkskinny_c_64_192_init_tk2_tk3)
+ * tks1:           key keys for TK1 (see forkskinny_c_64_192_init_tk1)
+ * tks2:           key keys for TK2 and TK3 (see forkskinny_c_64_192_init_tk2_tk3)
  * output_left:   if NULL, the left leg is not computed, else pointer to FORKSKINNY64_BLOCK_SIZE byte; will contain the left output leg of the forkcipher (i.e. mode 'o')
  * output_right:  pointer to FORKSKINNY64_BLOCK_SIZE byte; will contain the inverted input of the forkcipher (i.e. mode 'i')
  * input_right:   pointer to FORKSKINNY64_BLOCK_SIZE byte; input to the inverse forkcipher

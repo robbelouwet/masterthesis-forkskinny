@@ -4,13 +4,15 @@ project(forkskinnyplus)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx2")
 
-add_executable(forkskinny-plus2
-        src/forkskinny-plus2/forkskinny-plus2.cpp
-        src/forkskinny-plus2/forkskinny64-plus.h
-        src/forkskinny-plus2/slicing.h)
+add_executable(forkskinny-plus
+        src/forkskinny-plus/64bit/forkskinny-plus2.cpp
+        src/forkskinny-plus/64bit/forkskinny64-plus.h
+        src/forkskinny-plus/64bit/roundfunction/lfsr.h
+        src/forkskinny-plus/64bit/slicing.h)
 
 
 # Thesis project code:
@@ -18,8 +20,8 @@ add_executable(forkskinnyplus
         src/main.cpp
         src/headers/main.h
         src/utils.h
-        src/forkskinny-plus/forkskinny-plus.cpp
-        src/forkskinny-plus/headers/forkskinny64-plus.h
+        src/forkskinny-plus-old/forkskinny-plus.cpp
+        src/forkskinny-plus-old/headers/forkskinny64-plus.h
         src/headers/full-state-slicing.h
         src/headers/half-state-slicing.h
         )
