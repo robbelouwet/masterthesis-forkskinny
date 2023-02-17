@@ -11,9 +11,9 @@ works.
 
 # Friday
 
-Implemented the LFSR and TK permutation in the new bit sliced implementation. Since I started doing the key schedule
-anyway, I started implementing the full fixed-sliced tweakey schedule according to the paper. Since this is a 64 bit
-implementation, I used SIMD instructions.
+Implemented the LFSR and TK permutation in the new bit sliced implementation, and precomputed the permutation tables for
+fixed slicing approach. Since I started doing the key schedule anyway, I started implementing the full fixed-sliced
+tweakey schedule according to the paper. Since this is a 64 bit implementation, I used SIMD instructions.
 
 ## What was on my mind
 
