@@ -3,16 +3,14 @@
 
 #include "forkskinny64-plus.h"
 
-#define FSKINNY_INIT_ROUNDS 21
-#define FSKINNY_BRANCH_ROUNDS 27
-
 // (defined below)
 static inline void tk2_lfsr_simd(State64Sliced_t *state);
 
 static inline void tk3_lfsr_simd(State64Sliced_t *state);
 
-static inline void xor_key(State64Sliced_t *a, State64Sliced_t *b);
+static inline State64Sliced_t xor_key(State64Sliced_t a, State64Sliced_t b, uint8_t n = 8);
 
+static inline State64Sliced_t permute(State64Sliced_t values, const uint8_t table[16]);
 
 
 /**
@@ -25,8 +23,10 @@ static inline void xor_key(State64Sliced_t *a, State64Sliced_t *b);
  * @param tk3
  * @return
  */
-static inline State64Sliced_t precompute_64_key_schedules(State64Sliced_t *tk1, State64Sliced_t *tk2 = nullptr,
-                                                          State64Sliced_t *tk3 = nullptr) {
+static inline KeySchedule64Sliced_t precompute_64_key_schedules(State64Sliced_t *tk1, State64Sliced_t *tk2,
+                                                                State64Sliced_t *tk3) {
+	KeySchedule64Sliced_t schedule = KeySchedule64Sliced_t();
+	
 	//<editor-fold desc="recursive PT tables"
 	uint8_t pt[7][16] =
 			{
@@ -40,30 +40,34 @@ static inline State64Sliced_t precompute_64_key_schedules(State64Sliced_t *tk1, 
 			};
 	//</editor-fold>
 	
-	KeySchedule64Sliced_t schedule = KeySchedule64Sliced_t();
+	// <editor-fold desc="RTK 0">
+	auto res = xor_key(*tk3, *tk2); // TK1 ^= TK2 ^ TK3, dereference because we don't want to update the TK's themselves
+	res = xor_key(res, *tk1);
+	schedule.keys[0] = res.halves[0]; // RTK0
 	
-	// ----- STEP 1: RTK0 -----
-	// Update TK3
-	if (tk3 != nullptr) tk3_lfsr_simd(tk3);
+	tk3_lfsr_simd(tk3); // Update TK3
+	tk2_lfsr_simd(tk2); // Update TK2
+	// </editor-fold>
 	
-	// Update tk2
-	// don't xor if one of them is null
-	if (tk2 != nullptr && tk3 != nullptr) tk2_lfsr_simd(tk2);
-	
-	// Update tk1
-	if (tk2 != nullptr && tk3 != nullptr){
-		xor_key(tk2, tk1);
-		xor_key(tk3, tk1);
+	// <editor-fold desc="double RTK i & i+1"
+	// every iteration = 2 round keys, so bound = ceil(max_rounds/2)
+	auto bound = (FORKSKINNY64_MAX_ROUNDS >> 1) + (FORKSKINNY64_MAX_ROUNDS & 1);
+	for (int i = 1; i < bound; i++) {
+		// Add TK states
+		auto pt_values = xor_key(*tk3, *tk2, 16);
+		pt_values = xor_key(pt_values, *tk1, 16);
+		
+		// Round permutation
+		auto pt_index = (i * 2) % 16;
+		auto double_rtk = permute(pt_values, pt[pt_index]);
+		schedule.keys[i] = double_rtk.halves[1];
+		schedule.keys[i + 1] = double_rtk.halves[0];
+		
+		// Update TK2 & TK3
+		tk3_lfsr_simd(tk3); // Update TK3
+		tk2_lfsr_simd(tk2); // Update TK2
 	}
-	
-	// extract RTK0
-	schedule.keys[0] = tk1->halves[0];
-	
-	
-	// RK1+
-	for (int i = 0; i < FSKINNY_INIT_ROUNDS + 2 * FSKINNY_BRANCH_ROUNDS; ++i) {
-	
-	}
+	//</editor-fold>
 }
 
 static inline void tk2_lfsr_simd(State64Sliced_t *state) {
@@ -87,14 +91,23 @@ static inline void tk3_lfsr_simd(State64Sliced_t *state) {
 }
 
 /**
- * XOR's the first n cells of 2 keys together, and stores them in b.
+ * XOR's the first n cells of 2 keys together, and stores them in res
  * @param a
- * @param b destination value
+ * @param b
  * @param n amount of cells to xor, default = 8
  */
-static inline void xor_key(State64Sliced_t *a, State64Sliced_t *b, uint8_t n = 8) {
+static inline State64Sliced_t xor_key(State64Sliced_t a, State64Sliced_t b, uint8_t n) {
+	auto res = State64Sliced_t();
 	for (int i = 0; i < n; ++i)
-		a->cells[i].simd_cell = _mm256_xor_si256(a->cells[i].simd_cell, b->cells[i].simd_cell);
+		res.cells[i].simd_cell = _mm256_xor_si256(a.cells[i].simd_cell, b.cells[i].simd_cell);
+	return res;
+}
+
+static inline State64Sliced_t permute(State64Sliced_t values, const uint8_t table[16]) {
+	auto res = State64Sliced_t();
+	for (int i = 0; i < 16; ++i)
+		res.cells[i] = values.cells[table[i]];
+	return res;
 }
 
 #endif //FORKSKINNYPLUS_FIXSLICED_KEYSCHEDULE_H
