@@ -31,7 +31,7 @@ parallel.
   structure of how the key and cipher state is laid out differently, and so the code is much different from mine as
   well.
 - I have an idea: why stick with doing 64 blocks in parallel? The thought was that we can only do 64 blocks in parallel,
-  because register can only be 64 bits, but what about simd registers? Simd registers can go up to 512 bits, why not
+  because registers can only be 64 bits, but what about simd registers? Simd registers can go up to 512 bits, why not
   calculate 512 blocks in parallel? What if a single slice now equals an `__m512i` data type, which is a special 512 bit
   register? The ony thing we have to be able to do is the basic logical operations (xor, or, and) and we need to be able
   to move a slice, but we can do this. Moving is just re-assignment within an array, and the logical operations also
@@ -42,6 +42,12 @@ parallel.
       b) ([link](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#ig_expand=6790,694,6097,5383,7788,363,7788,5295&techs=AVX_512&text=_mm512_or_si512))
     - _mm512_and_si512(__m512i a, __m512i
       b) ([link](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#ig_expand=6790,694,6097,5383,7788,363,7788,5295,363&techs=AVX_512&text=_mm512_and_si512))
-  
+
   SIMD was already used in skinny-like implementations, but it was used to speed up operations themselves, and not
-  increase the size of a slice.
+  increase the size of a slice (hence you will only find skinny implementations with at most 64 blocks in parallel,
+  never more). The only catch will be that I won't be able to use simd speedups in the operations
+  themselves. So either we make the slices 512 bits and do all the operations manually as if we're working on individual
+  bits of an internal state; or we do 64 bits per slice, and might get some speedups in the operations themselves. The
+  problem is that getting speedups in the operations themselves would have to offer exactly 4x speedups, otherwise
+  256bit simd slices with manual operations would become faster, which isn't always the case, let alone with 512 bit
+  slices.
