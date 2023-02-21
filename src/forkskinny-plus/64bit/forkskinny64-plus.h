@@ -2,60 +2,41 @@
 #define FORKSKINNYPLUS_FORKSKINNY64_PLUS_H
 
 #define FORKSKINNY64_BLOCK_SIZE 8
-
 #define FORKSKINNY_64_192_ROUNDS_BEFORE 17
-
 #define FORKSKINNY_64_192_ROUNDS_AFTER 23
-
 #define FORKSKINNY64_MAX_ROUNDS (FORKSKINNY_64_192_ROUNDS_BEFORE + 2*FORKSKINNY_64_192_ROUNDS_AFTER)
 
 #include <cstdint>
 #include <immintrin.h>
 
+/** ---- SKINNY64 ---- */
 // wrapper so we can return arrays from unslice()
 // represent 64 unsliced states
 typedef union {
-	uint64_t cells[16][4];
 	uint64_t values[64];
 } Blocks64;
-
-typedef union {
-	uint8_t pairs[4];
-	uint16_t row[2];
-	uint32_t lrow;
-	
-} HalfState64_t;
 
 typedef union {
 	uint64_t slices[4];
 	__m256i simd_cell;
 } Cell64;
 
-
 typedef union {
-	Cell64 cells[8];
 	uint64_t raw[32];
+	Cell64 cells[8];
 } HalfState64Sliced_t;
 
 typedef union {
+	uint64_t raw[64];
 	Cell64 cells[16];
 	HalfState64Sliced_t halves[2];
-	uint64_t raw[64];
 } State64Sliced_t;
 
-typedef union {
-	uint64_t cells[8][16];
-	uint64_t raw[128];
-	__m512 simd_cells[16];
-} State128Sliced_t;
-
-/**
- * Key keys for Forkskinny-64-192
- */
 typedef struct {
 	/** All words of the key keys */
 	HalfState64Sliced_t keys[FORKSKINNY64_MAX_ROUNDS];
 } KeySchedule64Sliced_t;
+
 
 ///*static inline State64Sliced_8_t lsfr_64_tk2_4bit(State64Sliced_8_t state) {
 //	auto x0 = state.slices[0];

@@ -8,6 +8,14 @@ the paper. Thinking about cloning their repo and hoping that we both compute the
 problem could lie anywhere because my implementation is not exactly the same of course.
 I could mail the authors of the fixslicing paper and ask for a test vector if they had one?
 
+# Tuesday
+
+Implemented slice, unslice and fixedslicing key schedule operation for skinny128. I had to do this because in order to
+test the correctness of the fixedslicing keyschedule, I have to compare it against the implementation of the authors of
+[the paper](https://www.esat.kuleuven.be/cosic/events/silc2020/wp-content/uploads/sites/4/2020/10/Submission6.pdf) on
+the fixed slicing technique, and their implementation of the fixsliced keyschedule computes 2 schedules of skinny128 in
+parallel.
+
 # Thursday
 
 # Friday
