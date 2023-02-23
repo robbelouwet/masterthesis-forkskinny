@@ -1,0 +1,11 @@
+- 13/02: Refactor all rounds to 64BlockState (so 64 blocks in parallel, like prof. Preneel said) = 2 academic weeks 
+- 27/02: Sew ops together + fixed slicing + decryption = 2-3 academic weeks
+- 20/03: Write 15 pages on bit-sliced operations and fixed slicing already = 1 academic week (?)
+- Easter holidays:
+  - 03/04: ForkSKINNY modes (1 full-time week, 5x 8-hour days) 
+  - 10/04:  (1 full-time week)
+    - Write theses pages relating to modes 
+    - Start writing and digesting benchmarking results into theses text
+- 17 april: Continue writing theses (until theses deadline ?)
+  - All text containing important core knowledge should be somewhat done. Expand on this, dot the I’s and format into scientific text in LaTex.
+

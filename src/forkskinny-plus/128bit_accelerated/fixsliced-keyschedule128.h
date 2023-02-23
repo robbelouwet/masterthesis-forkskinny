@@ -68,6 +68,8 @@ static inline KeySchedule128Sliced_t precompute_64_key_schedules(State128Sliced_
 		tk2_lfsr_simd(tk2); // Update TK2
 	}
 	//</editor-fold>
+	
+	return schedule;
 }
 
 static inline void tk2_lfsr_simd(State128Sliced_t *state) {

@@ -68,6 +68,8 @@ static inline KeySchedule128Sliced_t precompute_64_key_schedules(State128Sliced_
 		tk2_lfsr_simd(tk2); // Update TK2
 	}
 	//</editor-fold>
+	
+	return schedule;
 }
 
 static inline void tk2_lfsr_simd(State128Sliced_t *state) {
@@ -114,8 +116,13 @@ static inline void tk3_lfsr_simd(State128Sliced_t *state) {
  */
 static inline State128Sliced_t xor_key(State128Sliced_t a, State128Sliced_t b, uint8_t n) {
 	auto res = State128Sliced_t();
-	for (int i = 0; i < n; ++i)
-		res.cells[i].simd_cell = _mm512_xor_epi64(a.cells[i].simd_cell, b.cells[i].simd_cell);
+	for (int i = 0; i < n; ++i) {
+		// TODO: #IFDEFINED AVX512: provide faster alternative: _mm512_xor_epi64 instead of 2x 256b lanes
+		
+		// for every sliced cell consisting of 8x 64bit integers, view it as 2x 256bit simd lanes and xor both
+		res.cells[i].simd_cells[0] = _mm256_xor_si256(a.cells[i].simd_cells[0], b.cells[i].simd_cells[0]);
+		res.cells[i].simd_cells[1] = _mm256_xor_si256(a.cells[i].simd_cells[1], b.cells[i].simd_cells[1]);
+	}
 	return res;
 }
 

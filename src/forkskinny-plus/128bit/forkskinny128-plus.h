@@ -19,7 +19,7 @@ typedef union {
 
 typedef union {
 	uint64_t slices[8];
-	__m512i simd_cell;
+	__m256i simd_cells[2];
 } Cell128;
 
 typedef union {

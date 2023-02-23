@@ -18,7 +18,10 @@ parallel.
 
 # Thursday
 
-# Friday
+Refactored some code because my desktop apparently doesn't support the AVX512 hardware, only up to AVX2 with 256bit
+registers. Next, implemented the skinny64 keyschedule with no fixslicing, then re-implemented the s-box and shift rows
+round operations because the slicing works in a different way than from what I had last semester, although most of the
+code of those operations really is the same.
 
 ## What was on my mind
 
