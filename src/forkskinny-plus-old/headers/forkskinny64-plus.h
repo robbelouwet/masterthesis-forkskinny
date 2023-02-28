@@ -1,13 +1,13 @@
-#ifndef FORKSKINNYPLUS_FORKSKINNY64_PLUS_H
+#ifndef FORKSKINNYPLUS_SKINNY64_DATATYPES_H
 #define FORKSKINNYPLUS_FORKSKINNY64_PLUS_H
 
 #define FORKSKINNY64_BLOCK_SIZE 8
 
-#define FORKSKINNY_64_192_ROUNDS_BEFORE 17
+#define FORKSKINNY_ROUNDS_BEFORE 17
 
-#define FORKSKINNY_64_192_ROUNDS_AFTER 23
+#define FORKSKINNY_ROUNDS_AFTER 23
 
-#define FORKSKINNY64_MAX_ROUNDS (FORKSKINNY_64_192_ROUNDS_BEFORE + 2*FORKSKINNY_64_192_ROUNDS_AFTER)
+#define FORKSKINNY64_MAX_ROUNDS (FORKSKINNY_ROUNDS_BEFORE + 2*FORKSKINNY_ROUNDS_AFTER)
 
 #include <cstdint>
 #include <immintrin.h>
@@ -22,11 +22,11 @@ typedef union {
 typedef union {
 	uint64_t cell[4];
 	__m256i simd_cell;
-} Cell64;
+} Cell64_t;
 
 typedef union {
-	Cell64 cells[16];
-	Cell64 half_cells[8][2];
+	Cell64_t cells[16];
+	Cell64_t half_cells[8][2];
 	uint64_t raw[64];
 } State64Sliced_t;
 
@@ -130,4 +130,4 @@ typedef struct {
 //void forkskinny_c_64_192_decrypt(const KeySchedule64_t *tks1, const KeySchedule64_t *tks2,
 //                                 uint8_t *output_left, uint8_t *output_right, const uint8_t *input_right);
 //
-#endif //FORKSKINNYPLUS_FORKSKINNY64_PLUS_H
+#endif //FORKSKINNYPLUS_SKINNY64_DATATYPES_H

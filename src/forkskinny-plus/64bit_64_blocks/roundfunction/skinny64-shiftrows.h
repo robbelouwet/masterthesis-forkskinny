@@ -1,7 +1,7 @@
 #ifndef FORKSKINNYPLUS_SKINNY64_SHIFTROWS_H
 #define FORKSKINNYPLUS_SKINNY64_SHIFTROWS_H
 
-#include "../forkskinny64-plus.h"
+#include "../utils/skinny64_datatypes.h"
 
 static inline void skinny64_shiftrows(State64Sliced_t *state){
 	

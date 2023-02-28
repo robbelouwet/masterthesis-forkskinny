@@ -12,7 +12,7 @@
 
 /** ---- SKINNY128 ---- */
 typedef union {
-	// a 128bit block represented as 2x 64bit integers
+	// a 128bit_64_blocks block represented as 2x 64bit_64_blocks integers
 	// values[i][0] is less significant than values[i][1]
 	uint64_t values[64][2];
 } Blocks128;

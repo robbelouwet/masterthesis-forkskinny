@@ -315,7 +315,7 @@ void forkskinny_c_64_192_encrypt(const KeySchedule64_t *tks1, const KeySchedule6
 	#endif
 	
 	/* Run all of the rounds before the forking point */
-	state = forkskinny64_encrypt_rounds(state, tks1, tks2, 0, FORKSKINNY_64_192_ROUNDS_BEFORE);
+	state = forkskinny64_encrypt_rounds(state, tks1, tks2, 0, FORKSKINNY_ROUNDS_BEFORE);
 	
 	/* Determine which output blocks we need */
 	if (output_left && output_right) {
@@ -323,8 +323,8 @@ void forkskinny_c_64_192_encrypt(const KeySchedule64_t *tks1, const KeySchedule6
 		/* Generate the right output block */
 		State64_t fstate = forkskinny64_encrypt_rounds(
 				state, tks1, tks2,
-				FORKSKINNY_64_192_ROUNDS_BEFORE,
-				FORKSKINNY_64_192_ROUNDS_BEFORE + FORKSKINNY_64_192_ROUNDS_AFTER);
+				FORKSKINNY_ROUNDS_BEFORE,
+				FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER);
 		
 		/* Convert host-endian back into little-endian in the output buffer */
 		#if SKINNY_64BIT && SKINNY_LITTLE_ENDIAN
@@ -351,8 +351,8 @@ void forkskinny_c_64_192_encrypt(const KeySchedule64_t *tks1, const KeySchedule6
 		#endif
 		
 		state = forkskinny64_encrypt_rounds(state, tks1, tks2,
-		                                    FORKSKINNY_64_192_ROUNDS_BEFORE + FORKSKINNY_64_192_ROUNDS_AFTER,
-		                                    FORKSKINNY_64_192_ROUNDS_BEFORE + FORKSKINNY_64_192_ROUNDS_AFTER * 2);
+		                                    FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER,
+		                                    FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER * 2);
 		
 		/* Convert host-endian back into little-endian in the output buffer */
 		#if SKINNY_64BIT && SKINNY_LITTLE_ENDIAN
@@ -370,9 +370,9 @@ void forkskinny_c_64_192_encrypt(const KeySchedule64_t *tks1, const KeySchedule6
 	} else {
 		/* We only need the right output block */
 		state = forkskinny64_encrypt_rounds
-				(state, tks1, tks2, FORKSKINNY_64_192_ROUNDS_BEFORE,
-				 FORKSKINNY_64_192_ROUNDS_BEFORE +
-				 FORKSKINNY_64_192_ROUNDS_AFTER);
+				(state, tks1, tks2, FORKSKINNY_ROUNDS_BEFORE,
+				 FORKSKINNY_ROUNDS_BEFORE +
+				 FORKSKINNY_ROUNDS_AFTER);
 		
 		/* Convert host-endian back into little-endian in the output buffer */
 		#if SKINNY_64BIT && SKINNY_LITTLE_ENDIAN
@@ -458,9 +458,9 @@ void forkskinny_c_64_192_decrypt(const KeySchedule64_t *tks1, const KeySchedule6
 	/* Perform the "after" rounds on the input to get back
 	 * to the forking point in the cipher */
 	state = forkskinny64_decrypt_rounds
-			(state, tks1, tks2, FORKSKINNY_64_192_ROUNDS_BEFORE +
-			                    FORKSKINNY_64_192_ROUNDS_AFTER,
-			 FORKSKINNY_64_192_ROUNDS_BEFORE);
+			(state, tks1, tks2, FORKSKINNY_ROUNDS_BEFORE +
+			                    FORKSKINNY_ROUNDS_AFTER,
+			 FORKSKINNY_ROUNDS_BEFORE);
 	
 	if (output_left) {
 		State64_t fstate = state;
@@ -476,8 +476,8 @@ void forkskinny_c_64_192_decrypt(const KeySchedule64_t *tks1, const KeySchedule6
 		
 		/* Generate the left output block after another "after" rounds */
 		fstate = forkskinny64_encrypt_rounds(fstate, tks1, tks2,
-		                                     FORKSKINNY_64_192_ROUNDS_BEFORE + FORKSKINNY_64_192_ROUNDS_AFTER,
-		                                     FORKSKINNY_64_192_ROUNDS_BEFORE + 2 * FORKSKINNY_64_192_ROUNDS_AFTER);
+		                                     FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER,
+		                                     FORKSKINNY_ROUNDS_BEFORE + 2 * FORKSKINNY_ROUNDS_AFTER);
 		
 		/* Convert host-endian back into little-endian in the output buffer */
 		#if SKINNY_64BIT && SKINNY_LITTLE_ENDIAN
@@ -497,7 +497,7 @@ void forkskinny_c_64_192_decrypt(const KeySchedule64_t *tks1, const KeySchedule6
 	/* Generate the right output block by going backward "before"
 	 * rounds from the forking point */
 	state = forkskinny64_decrypt_rounds
-			(state, tks1, tks2, FORKSKINNY_64_192_ROUNDS_BEFORE, 0);
+			(state, tks1, tks2, FORKSKINNY_ROUNDS_BEFORE, 0);
 	
 	/* Convert host-endian back into little-endian in the output buffer */
 	#if SKINNY_64BIT && SKINNY_LITTLE_ENDIAN

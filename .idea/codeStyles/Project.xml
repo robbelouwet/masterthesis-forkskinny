@@ -5,6 +5,7 @@
       <option name="INDENT_DIRECTIVE_AS_CODE" value="true" />
     </Objective-C>
     <codeStyleSettings language="ObjectiveC">
+      <option name="RIGHT_MARGIN" value="120" />
       <indentOptions>
         <option name="USE_TAB_CHARACTER" value="true" />
         <option name="SMART_TABS" value="true" />

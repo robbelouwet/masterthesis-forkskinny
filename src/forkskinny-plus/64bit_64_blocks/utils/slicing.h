@@ -2,7 +2,7 @@
 #define FORKSKINNYPLUS_SLICING_H
 
 #include <cstdint>
-#include "forkskinny64-plus.h"
+#include "skinny64_datatypes.h"
 
 /**
  *
@@ -10,7 +10,7 @@
  * @param significance LSB = 0, MSB = 63
  * @return
  */
-static inline uint64_t slice_significance(const Blocks64 blocks, uint8_t significance) {
+static inline uint64_t slice_significance(const Blocks64_t blocks, uint8_t significance) {
 	uint64_t mask = 1ULL << significance;
 	uint64_t slice = 0ULL;
 	
@@ -20,7 +20,7 @@ static inline uint64_t slice_significance(const Blocks64 blocks, uint8_t signifi
 	return slice;
 }
 
-static inline State64Sliced_t slice(const Blocks64 blocks) {
+static inline State64Sliced_t slice(const Blocks64_t blocks) {
 	State64Sliced_t result = State64Sliced_t();
 	for (uint i = 0; i < 64; ++i) {
 		result.raw[i] = slice_significance(blocks, i);
@@ -35,7 +35,7 @@ static inline State64Sliced_t slice(const Blocks64 blocks) {
  * @param sb_index the index of the slice, what 'significance' are we talking about w.r.t. the slice.
  * 					E.g. the very first slice contains the *least* significant bits of 64 states
  */
-static inline void unslice_significance(const uint64_t slice, Blocks64 *blocks, uint8_t sb_index) {
+static inline void unslice_significance(const uint64_t slice, Blocks64_t *blocks, uint8_t sb_index) {
 	for (uint b_number = 0; b_number < 64; ++b_number) {
 		uint64_t mask = 1ULL << b_number;
 		
@@ -47,8 +47,8 @@ static inline void unslice_significance(const uint64_t slice, Blocks64 *blocks, 
 	}
 }
 
-static inline Blocks64 unslice(const State64Sliced_t state) {
-	Blocks64 unsliced = Blocks64();
+static inline Blocks64_t unslice(const State64Sliced_t state) {
+	Blocks64_t unsliced = Blocks64_t();
 	for (int i = 0; i < 64; ++i) {
 		unslice_significance(state.raw[i], &unsliced, i);
 	}

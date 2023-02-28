@@ -19,7 +19,7 @@ static inline KeySchedule64Sliced_t precompute_64_key_schedules(State64Sliced_t 
 	KeySchedule64Sliced_t schedule = KeySchedule64Sliced_t();
 	
 	//<editor-fold desc="recursive PT tables"
-	uint8_t pt[7][16] =
+	uint8_t const pt[7][16] =
 			{
 					{1, 7, 0, 5, 2, 6, 4, 3, 9,  15, 8,  13, 10, 14, 12, 11}, // PT²
 					{7, 3, 1, 6, 0, 4, 2, 5, 15, 11, 9,  14, 8,  12, 10, 13}, // PT⁴
@@ -37,25 +37,25 @@ static inline KeySchedule64Sliced_t precompute_64_key_schedules(State64Sliced_t 
 	for (int i = 0; i < bound; i++) {
 		// RTK15
 		if (i % 8 == 7) {
-			auto res = xor_key(*tk3, *tk2, 8, 16);
-			res = xor_key(res, *tk1, 8, 16);
+			auto res = xor_keys(*tk3, *tk2, 8, 16);
+			res = xor_keys(res, *tk1, 8, 16);
 			schedule.keys[++i] = res.halves[1]; // RTK0
 		}
 		
 		// RTK0
 		if (i % 8 == 0) {
-			auto res = xor_key(*tk3, *tk2);
-			res = xor_key(res, *tk1);
+			auto res = xor_keys(*tk3, *tk2);
+			res = xor_keys(res, *tk1);
 			schedule.keys[i] = res.halves[0]; // RTK0
 			
-			tk3_lfsr_simd(tk3); // Update TK3
-			tk2_lfsr_simd(tk2); // Update TK2
+			tk3_lfsr_simd(tk3, 16); // Update TK3
+			tk2_lfsr_simd(tk2, 16); // Update TK2
 			continue;
 		}
 		
 		// Add TK states
-		auto pt_values = xor_key(*tk3, *tk2, 16);
-		pt_values = xor_key(pt_values, *tk1, 16);
+		auto pt_values = xor_keys(*tk3, *tk2, 16);
+		pt_values = xor_keys(pt_values, *tk1, 16);
 		
 		// PT² / PT⁴ / PT⁶ / ... / PT¹⁴ / PT² / ...
 		auto pt_index = (i * 2) % 16;
@@ -64,8 +64,8 @@ static inline KeySchedule64Sliced_t precompute_64_key_schedules(State64Sliced_t 
 		schedule.keys[i + 1] = double_rtk.halves[0];
 		
 		// Update TK2 & TK3
-		tk3_lfsr_simd(tk3); // Update TK3
-		tk2_lfsr_simd(tk2); // Update TK2
+		tk3_lfsr_simd(tk3, 16); // Update TK3
+		tk2_lfsr_simd(tk2, 16); // Update TK2
 	}
 	//</editor-fold>
 	

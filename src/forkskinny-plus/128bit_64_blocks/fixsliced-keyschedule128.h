@@ -119,7 +119,7 @@ static inline State128Sliced_t xor_key(State128Sliced_t a, State128Sliced_t b, u
 	for (int i = 0; i < n; ++i) {
 		// TODO: #IFDEFINED AVX512: provide faster alternative: _mm512_xor_epi64 instead of 2x 256b lanes
 		
-		// for every sliced cell consisting of 8x 64bit integers, view it as 2x 256bit simd lanes and xor both
+		// for every sliced cell consisting of 8x 64bit_64_blocks integers, view it as 2x 256bit simd lanes and xor both
 		res.cells[i].simd_cells[0] = _mm256_xor_si256(a.cells[i].simd_cells[0], b.cells[i].simd_cells[0]);
 		res.cells[i].simd_cells[1] = _mm256_xor_si256(a.cells[i].simd_cells[1], b.cells[i].simd_cells[1]);
 	}

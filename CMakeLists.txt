@@ -9,19 +9,19 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx2")
 
 add_executable(roundconstants_generator
-        roundconstants_generator.cpp)
+        constants_generator.cpp)
 
 add_executable(forkskinny-plus64
-        src/forkskinny-plus/64bit/run.cpp
-        src/forkskinny-plus/64bit/forkskinny64-plus.h
-        src/forkskinny-plus/64bit/keyschedule/fixsliced-keyschedule64.h
-        src/forkskinny-plus/64bit/slicing.h)
+        src/forkskinny-plus/64bit_64_blocks/run.cpp
+        src/forkskinny-plus/64bit_64_blocks/utils/skinny64_datatypes.h
+        src/forkskinny-plus/64bit_64_blocks/keyschedule/fixsliced-keyschedule64.h
+        src/forkskinny-plus/64bit_64_blocks/utils/slicing.h)
 
 add_executable(forkskinny-plus128
-        src/forkskinny-plus/128bit/run.cpp
-        src/forkskinny-plus/128bit/forkskinny128-plus.h
-        src/forkskinny-plus/128bit/fixsliced-keyschedule128.h
-        src/forkskinny-plus/128bit/slicing.h)
+        src/forkskinny-plus/128bit_64_blocks/run.cpp
+        src/forkskinny-plus/128bit_64_blocks/forkskinny128-plus.h
+        src/forkskinny-plus/128bit_64_blocks/fixsliced-keyschedule128.h
+        src/forkskinny-plus/128bit_64_blocks/slicing.h)
 
 
 # Thesis project code:

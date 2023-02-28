@@ -2,17 +2,19 @@
 #define FORKSKINNYPLUS_KEYSCHEDULE64_H
 
 #include "keyschedule64-internal.h"
-#include "../forkskinny64-plus.h"
+#include "../utils/skinny64_datatypes.h"
 
 static inline KeySchedule64Sliced_t precompute_64_key_schedules(State64Sliced_t tk1, State64Sliced_t tk2,
                                                                 State64Sliced_t tk3) {
-	uint8_t table[16] = {9, 15, 8, 13, 10, 14, 12, 11, 0, 1, 2, 3, 4, 5, 6, 7};
+	
+	// TODO: get rid of lookup table to make constant-time, perform permutation manually
+	uint8_t const table[16] = {9, 15, 8, 13, 10, 14, 12, 11, 0, 1, 2, 3, 4, 5, 6, 7};
 	auto schedule = KeySchedule64Sliced_t();
 	
 	for (int i = 0; i < FORKSKINNY64_MAX_ROUNDS; ++i) {
 		// Extract RTK
-		auto res = xor_key(tk1, tk2);
-		res = xor_key(res, tk3);
+		auto res = xor_keys(tk1, tk2);
+		res = xor_keys(res, tk3);
 		schedule.keys[i] = res.halves[0];
 		
 		// Update TK2
