@@ -20,7 +20,7 @@ static inline void skinny64_shiftrows(State64Sliced_t *state){
 	state->cells[9] = state->cells[11];
 	state->cells[11] = temp;
 	
-	// shift fourth row (sr 3 = sl 1)
+	// shift fourth row
 	temp = state->cells[12];
 	state->cells[12] = state->cells[13];
 	state->cells[13] = state->cells[14];

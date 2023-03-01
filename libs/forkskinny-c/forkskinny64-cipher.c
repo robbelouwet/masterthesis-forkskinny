@@ -120,6 +120,7 @@ void forkskinny_c_64_192_init_tk2_tk3(KeySchedule64_t *ks, const uint8_t *key, u
 		/* XOR in the round constants for the first two rows.
 		   The round constants for the 3rd and 4th rows are
 		   fixed and will be applied during encrypt/decrypt */
+		int test = RC[index];
 		ks->schedule[index].row[0] ^= ((RC[index] & 0x0F) << 4) ^ 0x2000;
 		ks->schedule[index].row[1] ^= (RC[index] & 0x70);
 		

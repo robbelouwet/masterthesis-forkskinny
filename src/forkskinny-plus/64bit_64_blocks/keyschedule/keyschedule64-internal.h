@@ -4,8 +4,6 @@
 #include "../utils/skinny64_datatypes.h"
 
 static inline void tk2_lfsr_simd(State64Sliced_t *state, uint8_t n = 8) {
-	// loop all 16 cells instead of top 2 rows only
-	// -> see paper
 	for (int i = 0; i < n; i++) {
 		// 0b10010011 = 2 1 0 3 -> lanes for the simd permutation
 		state->cells[i].simd_cell = _mm256_permute4x64_epi64(state->cells[i].simd_cell, 0b10010011);
@@ -14,8 +12,6 @@ static inline void tk2_lfsr_simd(State64Sliced_t *state, uint8_t n = 8) {
 }
 
 static inline void tk3_lfsr_simd(State64Sliced_t *state, uint8_t n = 8) {
-	// loop all 16 cells instead of top 2 rows only
-	// -> see paper
 	for (int i = 0; i < n; i++) {
 		// 0b10010011 = 0 3 2 1 -> lanes for the simd permutation
 		state->cells[i].simd_cell = _mm256_permute4x64_epi64(state->cells[i].simd_cell, 0b00111001);
@@ -36,11 +32,14 @@ static inline State64Sliced_t xor_keys(State64Sliced_t a, State64Sliced_t b, uin
 	return res;
 }
 
-static inline State64Sliced_t permute(State64Sliced_t values, const uint8_t table[16]) {
-	auto res = State64Sliced_t();
+static inline State64Sliced_t permute(State64Sliced_t input, const uint8_t table[16]) {
+	auto output = State64Sliced_t();
+	
+	// TODO: optimize by manual moving
 	for (int i = 0; i < 16; ++i)
-		res.cells[i] = values.cells[table[i]];
-	return res;
+		output.cells[i] = input.cells[table[i]];
+	
+	return output;
 }
 
 #endif //FORKSKINNYPLUS_KEYSCHEDULE64_INTERNAL_H

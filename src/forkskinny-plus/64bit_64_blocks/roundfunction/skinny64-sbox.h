@@ -3,7 +3,8 @@
 
 #include "../utils/skinny64_datatypes.h"
 
-static inline void skinny64_sbox(State64Sliced_t *state){
+/// VERIFIED: 0xaaaaaaaaaaaaaaaa -> 0x5555555555555555
+static inline void skinny64_sbox(State64Sliced_t *state) {
 	for (int i = 0; i < 16; ++i) {
 		auto cell = state->cells[i];
 		
@@ -14,7 +15,7 @@ static inline void skinny64_sbox(State64Sliced_t *state){
 	}
 }
 
-static inline Cell64_t skinny64_sbox_inverse(Cell64_t cell){
+static inline Cell64_t skinny64_sbox_inverse(Cell64_t cell) {
 
 }
 

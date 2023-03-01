@@ -19,11 +19,12 @@ static inline void inject_key(HalfState64Sliced_t round_key, State64Sliced_t *st
 }
 
 static inline void encrypt_single_round_64_blocks(KeySchedule64Sliced_t schedule, State64Sliced_t *state,
-                                                  uint16_t iteration, uint16_t key_index) {
+                                                  uint16_t iteration) {
 	skinny64_sbox(state);
-	skinny64_add_constant(state, iteration);
 	
-	inject_key(schedule.keys[key_index], state);
+	/* round constant is added during pre computation of key schedule and added to the roundkey */
+	
+	inject_key(schedule.keys[iteration], state);
 	
 	skinny64_shiftrows(state);
 	skinny64_mixcols(state);
@@ -33,22 +34,23 @@ static SlicedCiphertext64_t forkskinny64_encrypt_64_blocks(KeySchedule64Sliced_t
 	// ### INITIAL ROUNDS ###
 	int i = 0;
 	for (; i < FORKSKINNY_ROUNDS_BEFORE; i++)
-		encrypt_single_round_64_blocks(schedule, state, i, i);
+		encrypt_single_round_64_blocks(schedule, state, i);
 	
 	
 	// ### LEFT ###
-	for (int l = i; l < FORKSKINNY64_MAX_ROUNDS; l++)
-		encrypt_single_round_64_blocks(schedule, state, l, i);
+	auto left = *state; // dereference and copy the state
+	for (int l = i; l < i + FORKSKINNY_ROUNDS_AFTER; l++)
+		encrypt_single_round_64_blocks(schedule, &left, l);
 	
 	
 	// ### RIGHT ###
 	auto right = *state; // dereference and copy the state
 	add_branch_constant(&right);
-	for (int r = i; r < FORKSKINNY64_MAX_ROUNDS; r++)
-		encrypt_single_round_64_blocks(schedule, &right, r, FORKSKINNY64_MAX_ROUNDS + r);
+	for (int r = i; r < i + FORKSKINNY_ROUNDS_AFTER; r++)
+		encrypt_single_round_64_blocks(schedule, &right, FORKSKINNY_ROUNDS_AFTER + r);
 	
 	
-	return {*state, right};
+	return {left, right};
 }
 
 #endif //FORKSKINNYPLUS_SKINNY64_64_BLOCKS_H
