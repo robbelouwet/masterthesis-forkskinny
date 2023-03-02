@@ -16,7 +16,7 @@ static inline std::vector<uint64_t> to_slices(uint64_t value, uint8_t width) {
 	return res;
 }
 
-int main() {
+void forkskinny64_branch_constant(){
 	uint64_t bc = 0x18cef7b5ad639421;
 	auto slices = to_slices(bc, 64);
 	
@@ -31,8 +31,10 @@ int main() {
 		else std::cout << "ONE, ";
 	}
 	std::cout << " // " << unsigned(((bc & (0xFUL << (60))) >> (60))) << "\n};\n\n";
-	
-	std::cout << "uint64_t precomputed_round_constants[FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER][7] = {";
+}
+
+void forkskinny64_round_constants(){
+	std::cout << "uint64_t forkskinny64_precomputed_round_constants[FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER][7] = {";
 	uint8_t lfsr = 0;
 	for (int i = 0; i < FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER; ++i) {
 		auto rc6 = (lfsr & 0b1000000) >> 6;
@@ -50,5 +52,34 @@ int main() {
 	}
 	
 	std::cout << "\n};";
+}
+
+void skinny64_round_constants(){
+	std::cout << "uint64_t skinny64_precomputed_round_constants[62][6] = {";
+	uint8_t lfsr = 0;
+	for (int i = 0; i < 62; ++i) {
+		auto rc5 = (lfsr & 0b100000) >> 5;
+		auto rc4 = (lfsr & 0b010000) >> 4;
+		lfsr = ((lfsr & 0b011111) << 1) | (rc5 ^ rc4 ^ 1);
+		
+		auto res = to_slices(lfsr, 6);
+		
+		std::cout << "\n\t{";
+		for (auto &value: res) {
+			if (value == 0) std::cout << "ZER, ";
+			else std::cout << "ONE, ";
+		}
+		std::cout << "}, // " << unsigned(lfsr);
+	}
+	
+	std::cout << "\n};";
+}
+
+int main() {
+//	forkskinny64_branch_constant();
+	
+//	forkskinny64_round_constants();
+	
+	skinny64_round_constants();
 	
 }

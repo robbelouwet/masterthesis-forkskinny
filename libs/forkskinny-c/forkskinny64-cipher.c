@@ -84,7 +84,9 @@ void forkskinny_c_64_192_init_tk1(KeySchedule64_t *ks, const uint8_t *key, unsig
 		ks->schedule[index].lrow = tk.lrow[0];
 		
 		/* Permute TK1 for the next round */
+		tk.llrow = 0x0123456789abcdef;
 		skinny64_permute_tk(&tk);
+		int appel = 1;
 	}
 }
 
@@ -120,6 +122,7 @@ void forkskinny_c_64_192_init_tk2_tk3(KeySchedule64_t *ks, const uint8_t *key, u
 		/* XOR in the round constants for the first two rows.
 		   The round constants for the 3rd and 4th rows are
 		   fixed and will be applied during encrypt/decrypt */
+		ks->schedule[index].lrow = 0x87654321;
 		int test = RC[index];
 		ks->schedule[index].row[0] ^= ((RC[index] & 0x0F) << 4) ^ 0x2000;
 		ks->schedule[index].row[1] ^= (RC[index] & 0x70);
@@ -280,6 +283,7 @@ static State64_t forkskinny64_encrypt_rounds(
 		#endif
 		
 		/* Shift the rows */
+		int appel = 1;
 		state.row[1] = skinny64_rotate_right(state.row[1], 4);
 		state.row[2] = skinny64_rotate_right(state.row[2], 8);
 		state.row[3] = skinny64_rotate_right(state.row[3], 12);

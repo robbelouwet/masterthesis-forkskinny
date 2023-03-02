@@ -18,7 +18,7 @@ int main() {
 	auto res = unslice(sliced);
 /*	auto zero_tk2 = State128Sliced_t();
 	auto zero_tk3 = State128Sliced_t();
-	auto keyschedule = precompute_64_key_schedules(&sliced, &zero_tk2, &zero_tk3);*/
+	auto keyschedule = skinny64_precompute_64_key_schedules(&sliced, &zero_tk2, &zero_tk3);*/
 	
 	auto appel = 1;
 }

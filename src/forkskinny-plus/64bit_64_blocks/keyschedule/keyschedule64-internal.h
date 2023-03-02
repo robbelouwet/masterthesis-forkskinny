@@ -35,6 +35,7 @@ static inline State64Sliced_t xor_keys(State64Sliced_t a, State64Sliced_t b, uin
 static inline State64Sliced_t permute(State64Sliced_t input, const uint8_t table[16]) {
 	auto output = State64Sliced_t();
 	
+	
 	// TODO: optimize by manual moving
 	for (int i = 0; i < 16; ++i)
 		output.cells[i] = input.cells[table[i]];
