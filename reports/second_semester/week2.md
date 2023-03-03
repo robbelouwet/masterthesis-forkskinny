@@ -24,7 +24,17 @@ think) but I apply them in a mirror-like manner. This means that when a plaintex
 0xFEDCBA987654321, 0x1 is my first upper-left cell, but that should be 0xF, and 0xE should be the second etc. When
 looking at Erik's implementation, he also does it like this. Although I think I can relatively quickly solve this by
 adjusting the slicing operation where slices are just turned around. So the first slice will now become the last one
-etc. When unslicing, I mirror them bac in place.
+etc. When unslicing, I mirror them back in place.
+
+# Friday
+
+Fixed the problem by reversing the order of the sliced cells, so 0x0123456789ABCDE as a plaintext block is first
+reversed to 0xFEDCBA9876543210 and then sliced. If I do this, the results of the ShiftRows and tk permutation are the
+same as Erik's and they make sense. Although still no correct ciphertext is computed, still stuck on the weird
+AddConstant step. I benchmarked against skinny-64-192 and Erik's forkskinny-64-192 but both produce wrong ciphertexts,
+even though the individual operations all seem to work fine and correctly (except for AddConstant step which I have
+trouble comparing because Erik's implemented it in a weird way inside the keyschedule). Also the AddBranchConstant I cant
+really test except for calculating it by hand and verifying maybe.
 
 ## What was on my mind
 

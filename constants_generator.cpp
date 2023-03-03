@@ -34,9 +34,9 @@ void forkskinny64_branch_constant(){
 }
 
 void forkskinny64_round_constants(){
-	std::cout << "uint64_t forkskinny64_precomputed_round_constants[FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER][7] = {";
+	std::cout << "uint64_t forkskinny64_precomputed_round_constants[17 + 2 * 23][7] = {";
 	uint8_t lfsr = 0;
-	for (int i = 0; i < FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER; ++i) {
+	for (int i = 0; i < 17 + 2 * 23; ++i) {
 		auto rc6 = (lfsr & 0b1000000) >> 6;
 		auto rc5 = (lfsr & 0b0100000) >> 5;
 		lfsr = ((lfsr & 0b0111111) << 1) | (rc6 ^ rc5 ^ 1);
@@ -55,9 +55,9 @@ void forkskinny64_round_constants(){
 }
 
 void skinny64_round_constants(){
-	std::cout << "uint64_t skinny64_precomputed_round_constants[62][6] = {";
+	std::cout << "uint64_t skinny64_precomputed_round_constants[56][6] = {";
 	uint8_t lfsr = 0;
-	for (int i = 0; i < 62; ++i) {
+	for (int i = 0; i < 56; ++i) { // 56 = max number of rounds, aka with skinny128-192
 		auto rc5 = (lfsr & 0b100000) >> 5;
 		auto rc4 = (lfsr & 0b010000) >> 4;
 		lfsr = ((lfsr & 0b011111) << 1) | (rc5 ^ rc4 ^ 1);

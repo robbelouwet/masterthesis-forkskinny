@@ -29,17 +29,19 @@ static inline State64Sliced_t xor_keys(State64Sliced_t a, State64Sliced_t b, uin
 	auto res = State64Sliced_t();
 	for (int i = start; i < stop; ++i)
 		res.cells[i].simd_cell = _mm256_xor_si256(a.cells[i].simd_cell, b.cells[i].simd_cell);
+	
 	return res;
 }
 
 static inline State64Sliced_t permute(State64Sliced_t input, const uint8_t table[16]) {
 	auto output = State64Sliced_t();
-	
+	//auto test_input = unslice(input).values[0];
 	
 	// TODO: optimize by manual moving
 	for (int i = 0; i < 16; ++i)
 		output.cells[i] = input.cells[table[i]];
 	
+	//auto test_output = unslice(output).values[0];
 	return output;
 }
 

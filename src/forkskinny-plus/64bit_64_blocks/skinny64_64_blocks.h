@@ -10,13 +10,10 @@
 static inline void skinny_inject_key(HalfState64Sliced_t round_key, State64Sliced_t *state) {
 	for (int i = 0; i < 8; ++i)
 		state->cells[i].simd_cell = _mm256_xor_si256(round_key.cells[i].simd_cell, state->cells[i].simd_cell);
-	
-	// AddConstant: Cell 8 XOR 0x2, aka slice 1 of cell 8
-	//state->cells[8].slices[1] ^= ONE;
 }
 
 static inline void skinny64_encrypt_single_round_64_blocks(KeySchedule64Sliced_t schedule, State64Sliced_t *state,
-                                                  uint16_t iteration) {
+                                                           uint16_t iteration) {
 	skinny64_sbox(state);
 	
 	skinny64_add_constant(state, iteration);
@@ -24,6 +21,7 @@ static inline void skinny64_encrypt_single_round_64_blocks(KeySchedule64Sliced_t
 	skinny_inject_key(schedule.keys[iteration], state);
 	
 	skinny64_shiftrows(state);
+	
 	skinny64_mixcols(state);
 }
 
