@@ -15,7 +15,7 @@ static inline uint64_t slice_significance(const Blocks64_t blocks, uint8_t signi
 	uint64_t slice = 0ULL;
 	
 	for (uint i = 0; i < 64; ++i)
-		slice |= (blocks.values[i] & mask) >> significance << (i);
+		slice |= (blocks.values[i].raw & mask) >> significance << (i);
 	
 	return slice;
 }
@@ -28,12 +28,12 @@ static inline State64Sliced_t slice(const Blocks64_t blocks, bool reverse = true
 	
 	
 	// reverse the cells (!= 'just' reversing the raw slices array, their order within a cell needs to be maintained!)
-	if (reverse)
-		for (int i = 0; i < 8; ++i) {
-			auto temp = result.cells[15 - i];
-			result.cells[15 - i] = result.cells[i];
-			result.cells[i] = temp;
-		}
+//	if (reverse)
+//		for (int i = 0; i < 8; ++i) {
+//			auto temp = result.cells[15 - i];
+//			result.cells[15 - i] = result.cells[i];
+//			result.cells[i] = temp;
+//		}
 	
 	return result;
 }
@@ -52,19 +52,19 @@ static inline void unslice_significance(const uint64_t slice, Blocks64_t *blocks
 		uint64_t temp = slice & mask;
 		temp >>= b_number;
 		temp <<= sb_index;
-		blocks->values[b_number] |= temp;
+		blocks->values[b_number].raw |= temp;
 		//blocks->values[b_number] |= (slice & mask) >> b_number << sb_index;
 	}
 }
 
 static inline Blocks64_t unslice(State64Sliced_t state, bool reverse_back = true) {
 	// reverse the cells (!= 'just' reversing the raw slices array, their order within a cell needs to be maintained!)
-	if (reverse_back)
-		for (int i = 0; i < 8; ++i) {
-			auto temp = state.cells[15 - i];
-			state.cells[15 - i] = state.cells[i];
-			state.cells[i] = temp;
-		}
+//	if (reverse_back)
+//		for (int i = 0; i < 8; ++i) {
+//			auto temp = state.cells[15 - i];
+//			state.cells[15 - i] = state.cells[i];
+//			state.cells[i] = temp;
+//		}
 	
 	Blocks64_t unsliced = Blocks64_t();
 	for (int i = 0; i < 64; ++i) {

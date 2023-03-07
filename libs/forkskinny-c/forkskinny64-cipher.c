@@ -272,7 +272,16 @@ static State64_t forkskinny64_encrypt_rounds(
 		/// AddConstants
 		/* Apply the subkey for this round */
 		#if SKINNY_64BIT && SKINNY_LITTLE_ENDIAN
+		
+		// state before: 0x 7F4E 5D38   2B1A 90C6
+		// with RTK:     0x 0000 000(2) 0765 41200 // (2) ->C2 of addconstant step
+		int appel = 1;
 		state.llrow ^= (schedule1->lrow ^ schedule2->lrow) | 0x2000000000ULL;
+		int banaan = 1;
+		// state after:  0x 7F4E 5D18 5D4E 82C6
+		
+		
+		
 		#else
 		state.lrow[0] ^= schedule1->lrow ^ schedule2->lrow;
 		state.row[2] ^= 0x20;
@@ -282,6 +291,7 @@ static State64_t forkskinny64_encrypt_rounds(
 		state.row[1] = skinny64_rotate_right(state.row[1], 4);
 		state.row[2] = skinny64_rotate_right(state.row[2], 8);
 		state.row[3] = skinny64_rotate_right(state.row[3], 12);
+		// state after:  0x F4E7 185D E5D4 82C6
 		
 		/* Mix the columns */
 		state.row[1] ^= state.row[2];
@@ -291,6 +301,8 @@ static State64_t forkskinny64_encrypt_rounds(
 		state.row[2] = state.row[1];
 		state.row[1] = state.row[0];
 		state.row[0] = temp;
+		// state after:  0x 9A9B FD89 82C6 6E7C
+		int appel1 = 1;
 	}
 	return state;
 }

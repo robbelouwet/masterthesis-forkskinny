@@ -33,15 +33,30 @@ static inline State64Sliced_t xor_keys(State64Sliced_t a, State64Sliced_t b, uin
 	return res;
 }
 
-static inline State64Sliced_t permute(State64Sliced_t input, const uint8_t table[16]) {
+static inline State64Sliced_t permute(State64Sliced_t input) {
+//	auto test_blocks = Blocks64_t();
+//	test_blocks.values[0].raw = 0xFEDCBA9876543210;
+//	input = slice(test_blocks);
+	
 	auto output = State64Sliced_t();
-	//auto test_input = unslice(input).values[0];
 	
-	// TODO: optimize by manual moving
-	for (int i = 0; i < 16; ++i)
-		output.cells[i] = input.cells[table[i]];
+	output.halves[1] = input.halves[0];
 	
-	//auto test_output = unslice(output).values[0];
+	output.cells[0] = input.cells[0xE];
+	output.cells[1] = input.cells[0x8];
+	output.cells[2] = input.cells[0xC];
+	output.cells[3] = input.cells[0x9];
+	output.cells[4] = input.cells[0xF];
+	output.cells[5] = input.cells[0xB];
+	output.cells[6] = input.cells[0xA];
+	output.cells[7] = input.cells[0xD];
+	
+	// Input:   0x FEDC BA98 7654 3210
+	
+	// Erik:    0x 7654 3210 DABF 9C8E
+	// Us:      0x 7654 3210 DABF 9C8E
+	
+//	auto test_output = unslice(output).values[0].raw;
 	return output;
 }
 

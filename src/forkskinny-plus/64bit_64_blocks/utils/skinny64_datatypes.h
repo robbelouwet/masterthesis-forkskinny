@@ -12,7 +12,12 @@
 // wrapper so we can return arrays from unslice()
 // represent 64 unsliced states
 typedef union {
-	uint64_t values[64];
+	uint64_t raw;
+	unsigned char bytes[8];
+} Slice64_t;
+
+typedef union {
+	Slice64_t values[64];
 } Blocks64_t;
 
 typedef union {

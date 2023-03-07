@@ -18,19 +18,26 @@ static inline void inject_key(HalfState64Sliced_t round_key, State64Sliced_t *st
 		state->cells[i].simd_cell = _mm256_xor_si256(round_key.cells[i].simd_cell, state->cells[i].simd_cell);
 	
 	// AddConstant: Cell 8 XOR 0x2, aka slice 1 of cell 8, because C2 is on the third row and not present in the round key!
-	state->cells[8].slices[1] ^= ONE;
+	state->cells[9].slices[1] ^= ONE;
 }
 
 static inline void encrypt_single_round_64_blocks(KeySchedule64Sliced_t schedule, State64Sliced_t *state,
                                                   uint16_t iteration) {
+	auto test_sbox_before = unslice(*state).values[0].raw;
 	skinny64_sbox(state);
+	auto test_state = unslice(*state).values[0].raw;
 	
 	/* round constant is added during pre computation of key schedule and added to the roundkey */
 	inject_key(schedule.keys[iteration], state);
+	test_state = unslice(*state).values[0].raw;
 	
 	skinny64_shiftrows(state);
+	test_state = unslice(*state).values[0].raw;
 	
 	skinny64_mixcols(state);
+	test_state = unslice(*state).values[0].raw;
+	
+	int appel = 1;
 }
 
 static SlicedCiphertext64_t forkskinny64_encrypt_64_blocks(KeySchedule64Sliced_t schedule, State64Sliced_t *state) {

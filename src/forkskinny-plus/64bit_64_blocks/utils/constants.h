@@ -10,22 +10,22 @@
 //<editor-fold desc="forkskinny64 sliced branch constant"
 State64Sliced_t const branch_constant = {
 		// LSB         MSB
-		ONE, ZER, ZER, ZER,  // 1
 		ZER, ONE, ZER, ZER,  // 2
-		ZER, ZER, ONE, ZER,  // 4
+		ONE, ZER, ZER, ZER,  // 1
 		ONE, ZER, ZER, ONE,  // 9
-		ONE, ONE, ZER, ZER,  // 3
+		ZER, ZER, ONE, ZER,  // 4
 		ZER, ONE, ONE, ZER,  // 6
-		ONE, ZER, ONE, ONE,  // 13
-		ZER, ONE, ZER, ONE,  // 10
+		ONE, ONE, ZER, ZER,  // 3
+		ZER, ONE, ZER, ONE,  // A
+		ONE, ZER, ONE, ONE,  // D
+		ONE, ONE, ZER, ONE,  // B
 		ONE, ZER, ONE, ZER,  // 5
-		ONE, ONE, ZER, ONE,  // 11
+		ONE, ONE, ONE, ONE,  // F
 		ONE, ONE, ONE, ZER,  // 7
-		ONE, ONE, ONE, ONE,  // 15
-		ZER, ONE, ONE, ONE,  // 14
-		ZER, ZER, ONE, ONE,  // 12
-		ZER, ZER, ZER, ONE,  // 8
+		ZER, ZER, ONE, ONE,  // C
+		ZER, ONE, ONE, ONE,  // E
 		ONE, ZER, ZER, ZER, //  1
+		ZER, ZER, ZER, ONE,  // 8
 };
 //</editor-fold>
 
