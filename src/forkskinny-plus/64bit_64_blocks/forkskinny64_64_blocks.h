@@ -43,24 +43,34 @@ static inline void encrypt_single_round_64_blocks(KeySchedule64Sliced_t schedule
 static SlicedCiphertext64_t forkskinny64_encrypt_64_blocks(KeySchedule64Sliced_t schedule, State64Sliced_t *state) {
 	// ### INITIAL ROUNDS ###
 	int i = 0;
-	for (; i < FORKSKINNY_ROUNDS_BEFORE; i++)
+	for (; i < FORKSKINNY_ROUNDS_BEFORE; i++) {
+		auto res_state = unslice(*state).values[0].raw;
 		encrypt_single_round_64_blocks(schedule, state, i);
+	}
+	
+	auto state_branching_point = unslice(*state).values[0].raw;
+	
+	// ### RIGHT ###
+	auto right = *state; // dereference and copy the state
+	int r = i;
+	for (; r < FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER; r++) {
+		auto unsliced_right = unslice(right).values[0].raw;
+		encrypt_single_round_64_blocks(schedule, &right, r);
+	}
+	
+	auto unsliced_right = unslice(right).values[0].raw;
 	
 	
 	// ### LEFT ###
 	auto left = *state; // dereference and copy the state
-	auto unsliced_left = unslice(left).values[0];
-	for (int l = i; l < i + FORKSKINNY_ROUNDS_AFTER; l++)
+	auto unsliced_left_start = unslice(left).values[0].raw;
+	add_branch_constant(&left);
+	for (int l = r; l < FORKSKINNY64_MAX_ROUNDS; l++) {
+		auto unsliced_left = unslice(left).values[0].raw;
 		encrypt_single_round_64_blocks(schedule, &left, l);
+	}
 	
-	
-	// ### RIGHT ###
-	auto right = *state; // dereference and copy the state
-	add_branch_constant(&right);
-	auto unsliced_right = unslice(right).values[0];
-	for (int r = i; r < i + FORKSKINNY_ROUNDS_AFTER; r++)
-		encrypt_single_round_64_blocks(schedule, &right, FORKSKINNY_ROUNDS_AFTER + r);
-	
+	auto res_unsliced_left = unslice(left).values[0].raw;
 	
 	return {left, right};
 }

@@ -1,7 +1,14 @@
+#include <cstdio>
+#include <iostream>
 #include "utils/slicing.h"
 #include "keyschedule/keyschedule64.h"
 #include "skinny64_64_blocks.h"
 #include "forkskinny64_64_blocks.h"
+
+void print_block(uint8_t *block, unsigned int n) {
+	for (unsigned int i = 0; i < n; i++)
+		printf("%02x", block[i]);
+}
 
 void forkskinny_test(){
 	// Set 64 state blocks, with only the first one containing A's
@@ -28,14 +35,13 @@ void forkskinny_test(){
 	// encrypt Forkskinny-64-192 with s=b mode
 	auto ciphertext = forkskinny64_encrypt_64_blocks(keyschedule, &sliced_state);
 	
-	// unslice ciphertext
-	// 0x 0c2f 9bae 1e3a a824
-	auto left = unslice(ciphertext.left).values[0].raw;
+	auto right = unslice(ciphertext.right).values[0];
+	std::cout << "C0: ";
+	print_block(right.bytes, 8);
 	
-	// 0x 85ce 7a39 bea6 fac8
-	auto right = unslice(ciphertext.right).values[0].raw;
-	
-	int appel = 1;
+	auto left = unslice(ciphertext.left).values[0];
+	std::cout << "\nC1: ";
+	print_block(left.bytes, 8);
 }
 
 void skinny_test(){
