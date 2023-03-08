@@ -3,7 +3,7 @@
 ### Monday
 
 Migrated the github repo into the KUL gitlab repo I was provided from my faculty and invited Elena and Amit. Fixed up
-the structure of this repository, was struggling with getting the git submodules right. Cloning
+the structure of this repository, was struggling with getting the git submodules C0. Cloning
 with `--recurse-submodules` now clones the external repos as well.
 
 # Wednesday

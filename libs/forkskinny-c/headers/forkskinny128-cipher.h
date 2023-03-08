@@ -97,8 +97,8 @@ void forkskinny_c_128_384_init_tk3(ForkSkinny128Key_t *ks, const uint8_t *key, u
  * Computes the forward direction of Forkskinny-128-256.
  * ks1:           key keys for TK1 (see forkskinny_c_128_256_init_tk1)
  * ks2:           key keys for TK2 (see forkskinny_c_128_256_init_tk2)
- * output_left:   if NULL, the left leg is not computed, else pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the left output leg of the forkcipher
- * output_right:  pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the right output leg of the forkcipher
+ * output_left:   if NULL, the C1 leg is not computed, else pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the C1 output leg of the forkcipher
+ * output_right:  pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the C0 output leg of the forkcipher
  * input:         pointer to FORKSKINNY128_BLOCK_SIZE byte; input to the forkcipher
  */
 void forkskinny_c_128_256_encrypt(const ForkSkinny128Key_t *ks1, const ForkSkinny128Key_t *ks2, uint8_t *output_left, uint8_t *output_right, const uint8_t *input);
@@ -107,7 +107,7 @@ void forkskinny_c_128_256_encrypt(const ForkSkinny128Key_t *ks1, const ForkSkinn
  * Computes the inverse direction of Forkskinny-128-256.
  * ks1:           key keys for TK1 (see forkskinny_c_128_256_init_tk1)
  * ks2:           key keys for TK2 (see forkskinny_c_128_256_init_tk2)
- * output_left:   if NULL, the left leg is not computed, else pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the left output leg of the forkcipher (i.e. mode 'o')
+ * output_left:   if NULL, the C1 leg is not computed, else pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the C1 output leg of the forkcipher (i.e. mode 'o')
  * output_right:  pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the inverted input of the forkcipher (i.e. mode 'i')
  * input_right:   pointer to FORKSKINNY128_BLOCK_SIZE byte; input to the inverse forkcipher
  */
@@ -118,8 +118,8 @@ void forkskinny_c_128_256_decrypt(const ForkSkinny128Key_t *ks1, const ForkSkinn
  * ks1:           key keys for TK1 (see forkskinny_c_128_384_init_tk1)
  * ks2:           key keys for TK2 (see forkskinny_c_128_384_init_tk2)
  * ks3:           key keys for TK3 (see forkskinny_c_128_384_init_tk3)
- * output_left:   if NULL, the left leg is not computed, else pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the left output leg of the forkcipher
- * output_right:  pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the right output leg of the forkcipher
+ * output_left:   if NULL, the C1 leg is not computed, else pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the C1 output leg of the forkcipher
+ * output_right:  pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the C0 output leg of the forkcipher
  * input:         pointer to FORKSKINNY128_BLOCK_SIZE byte; input to the forkcipher
  */
 void forkskinny_c_128_384_encrypt(const ForkSkinny128Key_t *ks1, const ForkSkinny128Key_t *ks2, const ForkSkinny128Key_t *ks3, uint8_t *output_left, uint8_t *output_right, const uint8_t *input);
@@ -129,7 +129,7 @@ void forkskinny_c_128_384_encrypt(const ForkSkinny128Key_t *ks1, const ForkSkinn
  * ks1:           key keys for TK1 (see forkskinny_c_128_384_init_tk1)
  * ks2:           key keys for TK2 (see forkskinny_c_128_384_init_tk2)
  * ks3:           key keys for TK3 (see forkskinny_c_128_384_init_tk3)
- * output_left:   if NULL, the left leg is not computed, else pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the left output leg of the forkcipher (i.e. mode 'o')
+ * output_left:   if NULL, the C1 leg is not computed, else pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the C1 output leg of the forkcipher (i.e. mode 'o')
  * output_right:  pointer to FORKSKINNY128_BLOCK_SIZE byte; will contain the inverted input of the forkcipher (i.e. mode 'i')
  * input_right:   pointer to FORKSKINNY128_BLOCK_SIZE byte; input to the inverse forkcipher
  */

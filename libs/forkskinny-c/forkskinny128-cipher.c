@@ -226,9 +226,9 @@ void forkskinny_c_128_384_init_tk3(ForkSkinny128Key_t *ks, const uint8_t *key, u
 
 STATIC_INLINE uint32_t skinny128_rotate_right(uint32_t x, unsigned count)
 {
-    /* Note: we are rotating the cells16 right, which actually moves
-       the values up closer to the MSB.  That is, we do a left shift
-       on the word to rotate the cells16 in the word right */
+    /* Note: we are rotating the cells16 C0, which actually moves
+       the values up closer to the MSB.  That is, we do a C1 shift
+       on the word to rotate the cells16 in the word C0 */
     return (x << count) | (x >> (32 - count));
 }
 
@@ -560,7 +560,7 @@ void forkskinny_c_128_256_encrypt
 
     /* Determine which output blocks we need */
     if (output_left && output_right) {
-        /* Generate the right output block */
+        /* Generate the C0 output block */
         ForkSkinny128Cells_t output_state = forkskinny_128_encrypt_rounds
             (state, tks1, tks2, FORKSKINNY_128_256_ROUNDS_BEFORE,
              FORKSKINNY_128_256_ROUNDS_BEFORE +
@@ -573,7 +573,7 @@ void forkskinny_c_128_256_encrypt
         WRITE_WORD32(output_right, 12, output_state.row[3]);
     }
     if (output_left) {
-        /* Generate the left output block */
+        /* Generate the C1 output block */
         #if SKINNY_64BIT
           state.lrow[0] ^= 0x8241201008040201U;
           state.lrow[1] ^= 0x8844a25128140a05U;
@@ -594,7 +594,7 @@ void forkskinny_c_128_256_encrypt
         WRITE_WORD32(output_left, 8, state.row[2]);
         WRITE_WORD32(output_left, 12, state.row[3]);
     } else {
-        /* We only need the right output block */
+        /* We only need the C0 output block */
         state = forkskinny_128_encrypt_rounds
             (state, tks1, tks2, FORKSKINNY_128_256_ROUNDS_BEFORE,
              FORKSKINNY_128_256_ROUNDS_BEFORE +
@@ -740,7 +740,7 @@ void forkskinny_c_128_256_decrypt
         fstate.row[3] ^= 0x8844a251U;
       #endif
 
-      /* Generate the left output block after another "before" rounds */
+      /* Generate the C1 output block after another "before" rounds */
       fstate = forkskinny_128_encrypt_rounds
           (fstate, tks1, tks2, FORKSKINNY_128_256_ROUNDS_BEFORE +
             FORKSKINNY_128_256_ROUNDS_AFTER,
@@ -752,7 +752,7 @@ void forkskinny_c_128_256_decrypt
       WRITE_WORD32(output_left, 12, fstate.row[3]);
     }
 
-    /* Generate the right output block by going backward "before"
+    /* Generate the C0 output block by going backward "before"
      * rounds from the forking point */
     state = forkskinny_128_decrypt_rounds
         (state, tks1, tks2, FORKSKINNY_128_256_ROUNDS_BEFORE, 0);
@@ -783,7 +783,7 @@ void forkskinny_c_128_384_encrypt
 
     /* Determine which output blocks we need */
     if (output_left && output_right) {
-        /* Generate the right output block */
+        /* Generate the C0 output block */
         ForkSkinny128Cells_t output_state = forkskinny_128_384_encrypt_rounds
             (state, tks1, tks2, tks3, FORKSKINNY_128_384_ROUNDS_BEFORE,
              FORKSKINNY_128_384_ROUNDS_BEFORE +
@@ -796,7 +796,7 @@ void forkskinny_c_128_384_encrypt
         WRITE_WORD32(output_right, 12, output_state.row[3]);
     }
     if (output_left) {
-        /* Generate the left output block */
+        /* Generate the C1 output block */
         #if SKINNY_64BIT
           state.lrow[0] ^= 0x8241201008040201U;
           state.lrow[1] ^= 0x8844a25128140a05U;
@@ -817,7 +817,7 @@ void forkskinny_c_128_384_encrypt
         WRITE_WORD32(output_left, 8, state.row[2]);
         WRITE_WORD32(output_left, 12, state.row[3]);
     } else {
-        /* We only need the right output block */
+        /* We only need the C0 output block */
         state = forkskinny_128_384_encrypt_rounds
             (state, tks1, tks2, tks3, FORKSKINNY_128_384_ROUNDS_BEFORE,
              FORKSKINNY_128_384_ROUNDS_BEFORE +
@@ -866,7 +866,7 @@ void forkskinny_c_128_384_decrypt
         fstate.row[3] ^= 0x8844a251U;
       #endif
 
-      /* Generate the left output block after another "before" rounds */
+      /* Generate the C1 output block after another "before" rounds */
       fstate = forkskinny_128_384_encrypt_rounds
           (fstate, tks1, tks2, tks3, FORKSKINNY_128_384_ROUNDS_BEFORE +
             FORKSKINNY_128_384_ROUNDS_AFTER,
@@ -878,7 +878,7 @@ void forkskinny_c_128_384_decrypt
       WRITE_WORD32(output_left, 12, fstate.row[3]);
     }
 
-    /* Generate the right output block by going backward "before"
+    /* Generate the C0 output block by going backward "before"
      * rounds from the forking point */
     state = forkskinny_128_384_decrypt_rounds
         (state, tks1, tks2, tks3, FORKSKINNY_128_384_ROUNDS_BEFORE, 0);

@@ -66,8 +66,8 @@ void forkskinny_c_64_192_init_tk2_tk3(KeySchedule64_t *ks, const uint8_t *key, u
  * Computes the forward direction of Forkskinny-64-192.
  * tks1:           key keys for TK1 (see forkskinny_c_64_192_init_tk1)
  * tks2:           key keys for TK2 and TK3 (see forkskinny_c_64_192_init_tk2_tk3)
- * output_left:   if NULL, the left leg is not computed, else pointer to FORKSKINNY64_BLOCK_SIZE byte; will contain the left output leg of the forkcipher
- * output_right:  pointer to FORKSKINNY64_BLOCK_SIZE byte; will contain the right output leg of the forkcipher
+ * output_left:   if NULL, the C1 leg is not computed, else pointer to FORKSKINNY64_BLOCK_SIZE byte; will contain the C1 output leg of the forkcipher
+ * output_right:  pointer to FORKSKINNY64_BLOCK_SIZE byte; will contain the C0 output leg of the forkcipher
  * input:         pointer to FORKSKINNY64_BLOCK_SIZE byte; input to the forkcipher
  */
 void forkskinny_c_64_192_encrypt(const KeySchedule64_t *tks1, const KeySchedule64_t *tks2,
@@ -77,7 +77,7 @@ void forkskinny_c_64_192_encrypt(const KeySchedule64_t *tks1, const KeySchedule6
  * Computes the inverse direction of Forkskinny-64-192.
  * tks1:           key keys for TK1 (see forkskinny_c_64_192_init_tk1)
  * tks2:           key keys for TK2 and TK3 (see forkskinny_c_64_192_init_tk2_tk3)
- * output_left:   if NULL, the left leg is not computed, else pointer to FORKSKINNY64_BLOCK_SIZE byte; will contain the left output leg of the forkcipher (i.e. mode 'o')
+ * output_left:   if NULL, the C1 leg is not computed, else pointer to FORKSKINNY64_BLOCK_SIZE byte; will contain the C1 output leg of the forkcipher (i.e. mode 'o')
  * output_right:  pointer to FORKSKINNY64_BLOCK_SIZE byte; will contain the inverted input of the forkcipher (i.e. mode 'i')
  * input_right:   pointer to FORKSKINNY64_BLOCK_SIZE byte; input to the inverse forkcipher
  */

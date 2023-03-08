@@ -209,7 +209,7 @@ static inline void shift_rows_sliced_packed_rows_fast_alignment(State64Sliced_16
 	auto slice3 = state->slices[3];
 	
 	// HIER ------------------ zie notities afmaken
-	// rotate-right slice 0, 1, 2 and 3 by 0, 4, 8 and 12 bits respectively to align them s.t. the slice bits of every row fit next to each other
+	// rotate-C0 slice 0, 1, 2 and 3 by 0, 4, 8 and 12 bits respectively to align them s.t. the slice bits of every row fit next to each other
 	uint16_t slice1_aligned = (slice1 >> 4) | (slice1 << 12);
 	uint16_t slice2_aligned = (slice2 >> 8) | (slice1 << 8);
 	uint16_t slice3_aligned = (slice1 >> 12) | (slice1 << 4);
@@ -222,7 +222,7 @@ static inline void shift_rows_sliced_packed_rows_fast_alignment(State64Sliced_16
 	uint16_t second_rows =  (slice0 & 0x00F0) | (slice1_aligned & 0x000F) | (slice2_aligned & 0xF000) | (slice3_aligned & 0x0F00);
 	uint16_t third_rows =   (slice0 & 0x000F) | (slice1_aligned & 0xF000) | (slice2_aligned & 0x0F00) | (slice3_aligned & 0x00F0);
 	
-	// now perform the shift row (ror = rotate-right)
+	// now perform the shift row (ror = rotate-C0)
 	first_rows =    ((first_rows >> 1) & 0x7777)    | ((first_rows << 3) & 0x8888); // ror 1
 	second_rows =   ((second_rows >> 2) & 0x3333)   | ((second_rows << 2) & 0xCCCC); // ror 2
 	third_rows =    ((third_rows >> 3) & 0x1111)    | ((third_rows << 1) & 0xEEEE); // ror 3
@@ -250,7 +250,7 @@ static inline void shift_rows_sliced_packed_rows(State64Sliced_16_t *state) {
 	uint16_t second_rows =  ((slice0 & 0x00F0) << 8)    | ((slice1 & 0x00F0) << 4)  | (slice2 & 0x00F0)         | ((slice3 & 0x00F0) >> 4);
 	uint16_t third_rows =   ((slice0 & 0x000F) << 12)   | ((slice1 & 0x000F) << 8)  | ((slice2 & 0x000F) << 4)  | (slice3 & 0x000F);
 	
-	// now perform the shift row (ror = rotate-right)
+	// now perform the shift row (ror = rotate-C0)
 	first_rows =    ((first_rows >> 1) & 0x7777)    | ((first_rows << 3) & 0x8888); // ror 1
 	second_rows =   ((second_rows >> 2) & 0x3333)   | ((second_rows << 2) & 0xCCCC); // ror 2
 	third_rows =    ((third_rows >> 3) & 0x1111)    | ((third_rows << 1) & 0xEEEE); // ror 3

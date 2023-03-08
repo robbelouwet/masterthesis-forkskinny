@@ -57,8 +57,8 @@ static inline KeySchedule64Sliced_t forkskinny_64_init_tk12(State64Sliced_t tk1,
 		schedule.keys[i] = res.halves[0];
 		
 		// Permute TK's
-		tk2 = permute(tk2);
 		tk1 = permute(tk1);
+		tk2 = permute(tk2);
 		
 		// LFSR TK2 & TK3
 		tk2_lfsr_simd(&tk2);
@@ -75,10 +75,9 @@ static inline KeySchedule64Sliced_t forkskinny_64_init_tk123(State64Sliced_t tk1
 		auto res = xor_keys(xor_keys(tk2, tk3), tk1);
 		//auto test_tks = unslice(res);
 		
-		forkskinny64_add_constant(&res, i);
-		
 		// Keep in mind: the C2 constant relating to the 9nth cell is part of the 2nd 'half'!
 		// So we add 0x2 at the key injection step
+		forkskinny64_add_constant(&res, i);
 		schedule.keys[i] = res.halves[0];
 		
 		// 0x76541200, 0xa57e182c, 0xb46f097d

@@ -332,7 +332,7 @@ void forkskinny_c_64_192_encrypt(const KeySchedule64_t *tks1, const KeySchedule6
 	/* Determine which output blocks we need */
 	if (output_left && output_right) {
 		
-		/* Generate the right output block */
+		/* Generate the C0 output block */
 		State64_t fstate = forkskinny64_encrypt_rounds(
 				state, tks1, tks2,
 				FORKSKINNY_ROUNDS_BEFORE,
@@ -352,7 +352,7 @@ void forkskinny_c_64_192_encrypt(const KeySchedule64_t *tks1, const KeySchedule6
 		#endif
 	}
 	if (output_left) {
-		/* Generate the left output block */
+		/* Generate the C1 output block */
 		#if SKINNY_64BIT
 		state.llrow ^= 0x81ec7f5bda364912U;
 		#else
@@ -380,7 +380,7 @@ void forkskinny_c_64_192_encrypt(const KeySchedule64_t *tks1, const KeySchedule6
 		WRITE_WORD16(output_left, 6, state.row[3]);
 		#endif
 	} else {
-		/* We only need the right output block */
+		/* We only need the C0 output block */
 		state = forkskinny64_encrypt_rounds
 				(state, tks1, tks2, FORKSKINNY_ROUNDS_BEFORE,
 				 FORKSKINNY_ROUNDS_BEFORE +
@@ -486,7 +486,7 @@ void forkskinny_c_64_192_decrypt(const KeySchedule64_t *tks1, const KeySchedule6
 		fstate.row[3] ^= 0x81ecU;
 		#endif
 		
-		/* Generate the left output block after another "after" rounds */
+		/* Generate the C1 output block after another "after" rounds */
 		fstate = forkskinny64_encrypt_rounds(fstate, tks1, tks2,
 		                                     FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER,
 		                                     FORKSKINNY_ROUNDS_BEFORE + 2 * FORKSKINNY_ROUNDS_AFTER);
@@ -506,7 +506,7 @@ void forkskinny_c_64_192_decrypt(const KeySchedule64_t *tks1, const KeySchedule6
 	}
 	
 	
-	/* Generate the right output block by going backward "before"
+	/* Generate the C0 output block by going backward "before"
 	 * rounds from the forking point */
 	state = forkskinny64_decrypt_rounds
 			(state, tks1, tks2, FORKSKINNY_ROUNDS_BEFORE, 0);

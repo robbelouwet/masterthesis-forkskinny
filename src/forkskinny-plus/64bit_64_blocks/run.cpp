@@ -33,15 +33,23 @@ void forkskinny_test(){
 	auto keyschedule = forkskinny_64_init_tk123(sliced_TK1, sliced_TK2, sliced_TK3);
 	
 	// encrypt Forkskinny-64-192 with s=b mode
-	auto ciphertext = forkskinny64_encrypt_64_blocks(keyschedule, &sliced_state);
+	auto ciphertext = forkskinny64_encrypt_64_blocks(keyschedule, &sliced_state, 'b');
 	
-	auto right = unslice(ciphertext.right).values[0];
-	std::cout << "C0: ";
-	print_block(right.bytes, 8);
+	auto C0 = unslice(ciphertext.C0).values[0];
+	std::cout << "\nC0: ";
+	print_block(C0.bytes, 8);
 	
-	auto left = unslice(ciphertext.left).values[0];
+	auto C1 = unslice(ciphertext.C1).values[0];
 	std::cout << "\nC1: ";
-	print_block(left.bytes, 8);
+	print_block(C1.bytes, 8);
+	
+	auto recovered_pt = forkskinny64_decrypt_64_blocks(keyschedule, &ciphertext, '1', 'i');
+
+	auto recovered_M = unslice(recovered_pt.M).values[0].raw;
+	auto recovered_C0 = unslice(recovered_pt.C0).values[0].raw;
+	auto recovered_C1 = unslice(recovered_pt.C1).values[0].raw;
+	
+	int appel = 1;
 }
 
 void skinny_test(){

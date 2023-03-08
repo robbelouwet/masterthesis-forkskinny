@@ -9,7 +9,7 @@
 static inline void forkskinny64_add_constant(State64Sliced_t *state, uint16_t iteration) {
 	// The beauty of unions:
 	// Cell 0 XOR C0
-	auto unsliced = unslice(*state).values[0].raw;
+	//auto unsliced = unslice(*state).values[0].raw;
 	Cell64_t C0 = {.slices = {
 			forkskinny64_precomputed_round_constants[iteration][0],
 			forkskinny64_precomputed_round_constants[iteration][1],
@@ -30,8 +30,8 @@ static inline void forkskinny64_add_constant(State64Sliced_t *state, uint16_t it
 	// only for TK2 and TK3
 	state->raw[13] ^= ONE;
 	
-	auto unsliced_res = unslice(*state).values[0].raw;
-	int appel = 1;
+	//auto unsliced_res = unslice(*state).values[0].raw;
+	//int appel = 1;
 	
 //	 Cell 8 XOR 0x2, aka slice 1 of cell 8
 //	state->cells[9].slices[1] ^= ONE;

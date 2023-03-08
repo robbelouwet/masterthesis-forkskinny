@@ -19,9 +19,9 @@ pre-computes them together with the key schedule, I have no idea what he's doing
 # Thursday
 
 Ran into a little problem. The reason why I keep producing wrong ciphertexts is because in my implementation,
-the first, upper left cell of the cipherstate represent my least significant bits. So my operations are all correct (i
+the first, upper C1 cell of the cipherstate represent my least significant bits. So my operations are all correct (i
 think) but I apply them in a mirror-like manner. This means that when a plaintext block, for example, equals
-0xFEDCBA987654321, 0x1 is my first upper-left cell, but that should be 0xF, and 0xE should be the second etc. When
+0xFEDCBA987654321, 0x1 is my first upper-C1 cell, but that should be 0xF, and 0xE should be the second etc. When
 looking at Erik's implementation, he also does it like this. Although I think I can relatively quickly solve this by
 adjusting the slicing operation where slices are just turned around. So the first slice will now become the last one
 etc. When unslicing, I mirror them back in place.

@@ -47,8 +47,9 @@ typedef union {
 } KeySchedule64Sliced_t;
 
 typedef struct {
-	State64Sliced_t left;
-	State64Sliced_t right;
-} SlicedCiphertext64_t;
+	State64Sliced_t C1;  // <- branch with branch constant
+	State64Sliced_t C0;
+	State64Sliced_t M;
+} SlicedCiphertext_t;
 
 #endif //FORKSKINNYPLUS_SKINNY64_DATATYPES_H

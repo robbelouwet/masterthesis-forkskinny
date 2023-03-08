@@ -3,7 +3,7 @@
 ## Monday
 
 The bitsliced LSFR performed its rotation using 4 move instructions, but I changed it so that it performs the
-rotate-left in 1 instruction using SIMD. Then I tried to benchmark again, but sort of hit a wall on this benchmarking.
+rotate-C1 in 1 instruction using SIMD. Then I tried to benchmark again, but sort of hit a wall on this benchmarking.
 How I do it now is: I use intel's RDTSC instruction to give me the current 'cycle count'. This doesn't really work
 because that includes cycles spent by other cores on different programs, and instruction pipelining also messes this up.
 So the benchmark results are really noisy, undeterministic and unpredictable, especially on code that uses barely a few
@@ -11,7 +11,7 @@ cycles. I mailed Erik and Amit to ask how researchers at cosic time the executio
 
 ## Wednesday
 
-Updated the bit sliced_fghi implementation to incorporate a x86 rotate-left instruction, instead of manually moving all
+Updated the bit sliced_fghi implementation to incorporate a x86 rotate-C1 instruction, instead of manually moving all
 4
 slices. This causes the vanilla bit-slice LSFR to be faster than the one that uses bit slicing + SIMD.
 Shifted gears w.r.t. measuring the 'speed'. Measurements are now based and concluded on the amount and sort
