@@ -35,13 +35,13 @@ static inline State128Sliced_t slice(const Blocks128 pt_blocks) {
  *
  * @param slice
  * @param blocks
- * @param significance the index of the slice, what 'significance' are we talking about w.r.t. the slice.
- * 					E.g. the very first slice contains the *least* significant bits of 64 states
+ * @param significance the index of the slice_t, what 'significance' are we talking about w.r.t. the slice_t.
+ * 					E.g. the very first slice_t contains the *least* significant bits of 64 states
  */
 static inline void unslice_significance(const uint64_t slice, Blocks128 *blocks, uint8_t significance) {
 	for (uint block_i = 0; block_i < 64; ++block_i) {
 		
-		// the index of a bit within the slice refers to a specific round state / block
+		// the index of a bit within the slice_t refers to a specific round state / block
 		uint64_t mask = 1ULL << (block_i % 64);
 		
 		blocks->values[block_i][significance >= 64] |= (slice & mask) >> block_i << (significance % 64);

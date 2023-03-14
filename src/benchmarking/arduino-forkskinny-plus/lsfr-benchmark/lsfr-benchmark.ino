@@ -41,10 +41,10 @@
  * E.g.:
  *       v    v    v
  * x = 1000 1010 0000
- * i = 1 = slice the 2nd LSB of every nibble (0-based index)
+ * i = 1 = slice_t the 2nd LSB of every nibble (0-based index)
  * output: 010
  *
- * @param x: the input to slice
+ * @param x: the input to slice_t
  * @param m: 0 <= m <= 3; the 0-based index that masks the relevant significant bit of every slices.
  * @return the input in a bit sliced_fghi manner
  */

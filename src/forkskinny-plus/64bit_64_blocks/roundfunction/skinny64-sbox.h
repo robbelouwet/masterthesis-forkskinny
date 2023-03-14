@@ -5,7 +5,7 @@
 
 static inline void skinny64_sbox(State64Sliced_t *state) {
 //	auto blocks = Blocks64_t{.values = {0xFEDCBA9876543210}};
-//	*state = slice(blocks);
+//	*state = slice_t(blocks);
 //	int appel = 1;
 	
 	for (int i = 0; i < 16; ++i) {
@@ -27,7 +27,7 @@ static inline void skinny64_sbox(State64Sliced_t *state) {
 
 static inline void skinny64_sbox_inv(State64Sliced_t *state) {
 //	auto blocks = Blocks64_t{.values = {0xF7E4D583B2A1096C}};
-//	*state = slice(blocks);
+//	*state = slice_t(blocks);
 //	int appel = 1;
 	
 	for (int i = 0; i < 16; ++i) {

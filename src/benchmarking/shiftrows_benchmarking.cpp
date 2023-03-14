@@ -209,15 +209,15 @@ static inline void shift_rows_sliced_packed_rows_fast_alignment(State64Sliced_16
 	auto slice3 = state->slices[3];
 	
 	// HIER ------------------ zie notities afmaken
-	// rotate-C0 slice 0, 1, 2 and 3 by 0, 4, 8 and 12 bits respectively to align them s.t. the slice bits of every row fit next to each other
+	// rotate-C0 slice_t 0, 1, 2 and 3 by 0, 4, 8 and 12 bits respectively to align them s.t. the slice_t bits of every row fit next to each other
 	uint16_t slice1_aligned = (slice1 >> 4) | (slice1 << 12);
 	uint16_t slice2_aligned = (slice2 >> 8) | (slice1 << 8);
 	uint16_t slice3_aligned = (slice1 >> 12) | (slice1 << 4);
 	
-	// Split up every slice into 4 rows each
+	// Split up every slice_t into 4 rows each
 	// So if slice0 contains 16 bits, then every bit of the first 4 bits of slice0 correspond to the most significant bit
-	// of the first 4 cells (-> MSB because it's the first slice).
-	// By this analogy, pack all the bits of the same row over every slice next to each other.
+	// of the first 4 cells (-> MSB because it's the first slice_t).
+	// By this analogy, pack all the bits of the same row over every slice_t next to each other.
 	uint16_t first_rows =   (slice0 & 0x0F00) | (slice1_aligned & 0x00F0) | (slice2_aligned & 0x000F) | (slice3_aligned & 0xF000);
 	uint16_t second_rows =  (slice0 & 0x00F0) | (slice1_aligned & 0x000F) | (slice2_aligned & 0xF000) | (slice3_aligned & 0x0F00);
 	uint16_t third_rows =   (slice0 & 0x000F) | (slice1_aligned & 0xF000) | (slice2_aligned & 0x0F00) | (slice3_aligned & 0x00F0);
@@ -242,10 +242,10 @@ static inline void shift_rows_sliced_packed_rows(State64Sliced_16_t *state) {
 	auto slice2 = state->slices[2];
 	auto slice3 = state->slices[3];
 	
-	// Split up every slice into 4 rows each
+	// Split up every slice_t into 4 rows each
 	// So if slice0 contains 16 bits, then every bit of the first 4 bits of slice0 correspond to the most significant bit
-	// of the first 4 cells (-> MSB because it's the first slice).
-	// By this analogy, pack all the bits of the same row over every slice next to each other.
+	// of the first 4 cells (-> MSB because it's the first slice_t).
+	// By this analogy, pack all the bits of the same row over every slice_t next to each other.
 	uint16_t first_rows =   ((slice0 & 0x0F00) << 4)    | (slice1 & 0x0F00)         | ((slice2 & 0x0F00) >> 4)  | ((slice3 & 0x0F00) >> 8);
 	uint16_t second_rows =  ((slice0 & 0x00F0) << 8)    | ((slice1 & 0x00F0) << 4)  | (slice2 & 0x00F0)         | ((slice3 & 0x00F0) >> 4);
 	uint16_t third_rows =   ((slice0 & 0x000F) << 12)   | ((slice1 & 0x000F) << 8)  | ((slice2 & 0x000F) << 4)  | (slice3 & 0x000F);
@@ -282,7 +282,7 @@ int main(int argc, char **argv) {
 	auto vanilla = State64_t();
 	vanilla.llrow = state;
 	
-	// slice the state
+	// slice_t the state
 	auto sliced_state1 = State64Sliced_16_t();
 	sliced_state1.state = slice(state);
 	auto sliced_state2 = State64Sliced_16_t();

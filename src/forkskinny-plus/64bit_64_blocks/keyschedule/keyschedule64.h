@@ -5,32 +5,6 @@
 #include "../utils/skinny64_datatypes.h"
 #include "../roundfunction/skinny64-addconstant.h"
 
-//static inline KeySchedule64Sliced_t skinny64_precompute_64_key_schedules(State64Sliced_t tk1, State64Sliced_t tk2,
-//                                                                         State64Sliced_t tk3) {
-//	auto schedule = KeySchedule64Sliced_t();
-//
-//	for (auto &key: schedule.keys) {
-//		// Extract RTK
-//		auto res = xor_keys(tk2, tk3);
-//		res = xor_keys(res, tk1);
-//		//auto test_tks = unslice(res);
-//
-//		//auto test_res = unslice(res);
-//
-//		key = res.halves[0];
-//
-//		// Permute TK's
-//		tk1 = permute(tk1);
-//		tk2 = permute(tk2);
-//		tk3 = permute(tk3);
-//
-//		// LFSR TK2 & TK3
-//		tk2_lfsr(&tk2);
-//		tk3_lfsr(&tk3);
-//	}
-//	return schedule;
-//}
-
 static inline KeySchedule64Sliced_t forkskinny_64_init_tk1(State64Sliced_t tk1) {
 	auto schedule = KeySchedule64Sliced_t();
 	

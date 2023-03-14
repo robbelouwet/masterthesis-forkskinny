@@ -19,7 +19,7 @@ I found the correct compiler flag, I already found the flag `-fopt-info` to show
 and the vectorization info is now shown through `-fopt-info-internals`. Also found where this info is displayed in my
 IDE.
 I'm starting to think that auto-vectorization isn't a good idea, because you're basically hoping the compiler is smart
-enough to recognize the fixed-slice representation and vectorizes it. Intel and AMD both support the AVX and AVX2
+enough to recognize the fixed-slice_t representation and vectorizes it. Intel and AMD both support the AVX and AVX2
 intrinsics, so thinking about implementing it directly. This shouldn't be too hard because the LSFR's and permutation
 both can be described with logical gates, which goes very well with the provided intrinsic library's instructions.
 

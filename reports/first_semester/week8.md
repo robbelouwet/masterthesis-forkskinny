@@ -13,7 +13,7 @@ cycles. I mailed Erik and Amit to ask how researchers at cosic time the executio
 
 Updated the bit sliced_fghi implementation to incorporate a x86 rotate-C1 instruction, instead of manually moving all
 4
-slices. This causes the vanilla bit-slice LSFR to be faster than the one that uses bit slicing + SIMD.
+slices. This causes the vanilla bit-slice_t LSFR to be faster than the one that uses bit slicing + SIMD.
 Shifted gears w.r.t. measuring the 'speed'. Measurements are now based and concluded on the amount and sort
 of assembly instructions are generated. Started to build a small rapport which goes over the comparison of all 3 LSFR's
 and its generated x86 instructions, comparing speed etc. The reason that this is a good idea, is that there

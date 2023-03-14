@@ -18,10 +18,10 @@ encrypt and decrypt a fs64-192 block according to every 'forward' mode.
 tomorrow:
 
 - cleanup debug related code
-- `#define` dynamic `slice` datatype together with its dynamic `xor_slice`, `and_slice` and `not_slice` operations so
+- `#define` dynamic `slice_t` datatype together with its dynamic `xor_slice`, `and_slice` and `not_slice` operations so
   that you can dynamically tweak how many blocks you want to do in parallel and define how big your slices should be.
   This should allow for 1 single straightforward codebase instead of multiple implementations of the cipher for multiple
-  register widths and slice sizes. This would also allow easily running the code with 32-bit slices and run in on the
+  register widths and slice_t sizes. This would also allow easily running the code with 32-bit slices and run in on the
   arduino.
 
 # Thursday

@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
 	// create state stochastically to prevent compiler optimizing the state to a constant
 	uint64_t state = ((long long)random() << 32) | random(); // 2**64 - 1
 	
-	// slice the state
+	// slice_t the state
 	auto sliced_state = State64Sliced_16_t();
 	sliced_state.state = slice(state);
 	

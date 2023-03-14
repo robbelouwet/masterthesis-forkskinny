@@ -12,7 +12,7 @@ values never leave the SIMD register after an instruction.
 Look into a simple example of what bit slicing is, and looked at comparing a single round in forkskinny and skinny+.
 
 ## Thursday 
-Came up with an idea to bit-slice the tweakey in order to perform the same LSFR on all cells in parallel,
+Came up with an idea to bit-slice_t the tweakey in order to perform the same LSFR on all cells in parallel,
 trying this out (on paper first).
 
 ### What was on my mind

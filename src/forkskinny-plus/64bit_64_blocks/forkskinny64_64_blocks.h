@@ -10,41 +10,77 @@
 static inline void add_branch_constant(State64Sliced_t *state) {
 	// <editor-fold desc="branch constant">
 	// @formatter:off
-	state->cells[0].simd_cell   = _mm256_xor_si256(state->cells[0].simd_cell,   branch_constant.cells[0].simd_cell);
-	state->cells[1].simd_cell   = _mm256_xor_si256(state->cells[1].simd_cell,   branch_constant.cells[1].simd_cell);
-	state->cells[2].simd_cell   = _mm256_xor_si256(state->cells[2].simd_cell,   branch_constant.cells[2].simd_cell);
-	state->cells[3].simd_cell   = _mm256_xor_si256(state->cells[3].simd_cell,   branch_constant.cells[3].simd_cell);
-	state->cells[4].simd_cell   = _mm256_xor_si256(state->cells[4].simd_cell,   branch_constant.cells[4].simd_cell);
-	state->cells[5].simd_cell   = _mm256_xor_si256(state->cells[5].simd_cell,   branch_constant.cells[5].simd_cell);
-	state->cells[6].simd_cell   = _mm256_xor_si256(state->cells[6].simd_cell,   branch_constant.cells[6].simd_cell);
-	state->cells[7].simd_cell   = _mm256_xor_si256(state->cells[7].simd_cell,   branch_constant.cells[7].simd_cell);
-	state->cells[8].simd_cell   = _mm256_xor_si256(state->cells[8].simd_cell,   branch_constant.cells[8].simd_cell);
-	state->cells[9].simd_cell   = _mm256_xor_si256(state->cells[9].simd_cell,   branch_constant.cells[9].simd_cell);
-	state->cells[0xa].simd_cell = _mm256_xor_si256(state->cells[0xa].simd_cell, branch_constant.cells[0xa].simd_cell);
-	state->cells[0xb].simd_cell = _mm256_xor_si256(state->cells[0xb].simd_cell, branch_constant.cells[0xb].simd_cell);
-	state->cells[0xc].simd_cell = _mm256_xor_si256(state->cells[0xc].simd_cell, branch_constant.cells[0xc].simd_cell);
-	state->cells[0xd].simd_cell = _mm256_xor_si256(state->cells[0xd].simd_cell, branch_constant.cells[0xd].simd_cell);
-	state->cells[0xe].simd_cell = _mm256_xor_si256(state->cells[0xe].simd_cell, branch_constant.cells[0xe].simd_cell);
-	state->cells[0xf].simd_cell = _mm256_xor_si256(state->cells[0xf].simd_cell, branch_constant.cells[0xf].simd_cell);
+	#if AVX512_acceleration
+	state->pairs[0].avx512_simd_pair = _mm512_xor_si512(state->pairs[0].avx512_simd_pair, branch_constant.pairs[0].avx512_simd_pair);
+	state->pairs[1].avx512_simd_pair = _mm512_xor_si512(state->pairs[1].avx512_simd_pair, branch_constant.pairs[1].avx512_simd_pair);
+	state->pairs[2].avx512_simd_pair = _mm512_xor_si512(state->pairs[2].avx512_simd_pair, branch_constant.pairs[2].avx512_simd_pair);
+	state->pairs[3].avx512_simd_pair = _mm512_xor_si512(state->pairs[3].avx512_simd_pair, branch_constant.pairs[3].avx512_simd_pair);
+	state->pairs[4].avx512_simd_pair = _mm512_xor_si512(state->pairs[4].avx512_simd_pair, branch_constant.pairs[4].avx512_simd_pair);
+	state->pairs[5].avx512_simd_pair = _mm512_xor_si512(state->pairs[5].avx512_simd_pair, branch_constant.pairs[5].avx512_simd_pair);
+	state->pairs[6].avx512_simd_pair = _mm512_xor_si512(state->pairs[6].avx512_simd_pair, branch_constant.pairs[6].avx512_simd_pair);
+	state->pairs[7].avx512_simd_pair = _mm512_xor_si512(state->pairs[7].avx512_simd_pair, branch_constant.pairs[7].avx512_simd_pair);
+	
+	#elif AVX2_acceleration
+	state->cells[0].avx2_simd_cell   = _mm256_xor_si256(state->cells[0].avx2_simd_cell,   branch_constant.cells[0].avx2_simd_cell);
+	state->cells[1].avx2_simd_cell   = _mm256_xor_si256(state->cells[1].avx2_simd_cell,   branch_constant.cells[1].avx2_simd_cell);
+	state->cells[2].avx2_simd_cell   = _mm256_xor_si256(state->cells[2].avx2_simd_cell,   branch_constant.cells[2].avx2_simd_cell);
+	state->cells[3].avx2_simd_cell   = _mm256_xor_si256(state->cells[3].avx2_simd_cell,   branch_constant.cells[3].avx2_simd_cell);
+	state->cells[4].avx2_simd_cell   = _mm256_xor_si256(state->cells[4].avx2_simd_cell,   branch_constant.cells[4].avx2_simd_cell);
+	state->cells[5].avx2_simd_cell   = _mm256_xor_si256(state->cells[5].avx2_simd_cell,   branch_constant.cells[5].avx2_simd_cell);
+	state->cells[6].avx2_simd_cell   = _mm256_xor_si256(state->cells[6].avx2_simd_cell,   branch_constant.cells[6].avx2_simd_cell);
+	state->cells[7].avx2_simd_cell   = _mm256_xor_si256(state->cells[7].avx2_simd_cell,   branch_constant.cells[7].avx2_simd_cell);
+	state->cells[8].avx2_simd_cell   = _mm256_xor_si256(state->cells[8].avx2_simd_cell,   branch_constant.cells[8].avx2_simd_cell);
+	state->cells[9].avx2_simd_cell   = _mm256_xor_si256(state->cells[9].avx2_simd_cell,   branch_constant.cells[9].avx2_simd_cell);
+	state->cells[0xa].avx2_simd_cell = _mm256_xor_si256(state->cells[0xa].avx2_simd_cell, branch_constant.cells[0xa].avx2_simd_cell);
+	state->cells[0xb].avx2_simd_cell = _mm256_xor_si256(state->cells[0xb].avx2_simd_cell, branch_constant.cells[0xb].avx2_simd_cell);
+	state->cells[0xc].avx2_simd_cell = _mm256_xor_si256(state->cells[0xc].avx2_simd_cell, branch_constant.cells[0xc].avx2_simd_cell);
+	state->cells[0xd].avx2_simd_cell = _mm256_xor_si256(state->cells[0xd].avx2_simd_cell, branch_constant.cells[0xd].avx2_simd_cell);
+	state->cells[0xe].avx2_simd_cell = _mm256_xor_si256(state->cells[0xe].avx2_simd_cell, branch_constant.cells[0xe].avx2_simd_cell);
+	state->cells[0xf].avx2_simd_cell = _mm256_xor_si256(state->cells[0xf].avx2_simd_cell, branch_constant.cells[0xf].avx2_simd_cell);
+	
+	#else
+	for (int i = 0; i < 16; ++i) {
+		state->cells[i].slices[0] = XOR_SLICE(state->cells[i].slices[0], branch_constant.cells[i].slices[0]);
+		state->cells[i].slices[1] = XOR_SLICE(state->cells[i].slices[1], branch_constant.cells[i].slices[1]);
+		state->cells[i].slices[2] = XOR_SLICE(state->cells[i].slices[2], branch_constant.cells[i].slices[2]);
+		state->cells[i].slices[3] = XOR_SLICE(state->cells[i].slices[3], branch_constant.cells[i].slices[3]);
+	}
+	
+	#endif
 	// @formatter:on
 	// </editor-fold>
 }
 
 static inline void apply_roundkey(HalfState64Sliced_t round_key, State64Sliced_t *state) {
 	// <editor-fold desc="xor first 8 least significant cells">
-	state->cells[0].simd_cell = _mm256_xor_si256(round_key.cells[0].simd_cell, state->cells[0].simd_cell);
-	state->cells[1].simd_cell = _mm256_xor_si256(round_key.cells[1].simd_cell, state->cells[1].simd_cell);
-	state->cells[2].simd_cell = _mm256_xor_si256(round_key.cells[2].simd_cell, state->cells[2].simd_cell);
-	state->cells[3].simd_cell = _mm256_xor_si256(round_key.cells[3].simd_cell, state->cells[3].simd_cell);
-	state->cells[4].simd_cell = _mm256_xor_si256(round_key.cells[4].simd_cell, state->cells[4].simd_cell);
-	state->cells[5].simd_cell = _mm256_xor_si256(round_key.cells[5].simd_cell, state->cells[5].simd_cell);
-	state->cells[6].simd_cell = _mm256_xor_si256(round_key.cells[6].simd_cell, state->cells[6].simd_cell);
-	state->cells[7].simd_cell = _mm256_xor_si256(round_key.cells[7].simd_cell, state->cells[7].simd_cell);
+	#if AVX512_acceleration
+	state->pairs[0].avx512_simd_pair = _mm512_xor_si512(round_key.pairs[0].avx512_simd_pair, round_key.pairs[0].avx512_simd_pair);
+	state->pairs[1].avx512_simd_pair = _mm512_xor_si512(round_key.pairs[1].avx512_simd_pair, round_key.pairs[1].avx512_simd_pair);
+	state->pairs[2].avx512_simd_pair = _mm512_xor_si512(round_key.pairs[2].avx512_simd_pair, round_key.pairs[2].avx512_simd_pair);
+	state->pairs[3].avx512_simd_pair = _mm512_xor_si512(round_key.pairs[3].avx512_simd_pair, round_key.pairs[3].avx512_simd_pair);
+	
+	#elif AVX2_acceleration
+	state->cells[0].avx2_simd_cell = _mm256_xor_si256(round_key.cells[0].avx2_simd_cell, round_key.cells[0].avx2_simd_cell);
+	state->cells[1].avx2_simd_cell = _mm256_xor_si256(round_key.cells[1].avx2_simd_cell, round_key.cells[1].avx2_simd_cell);
+	state->cells[2].avx2_simd_cell = _mm256_xor_si256(round_key.cells[2].avx2_simd_cell, round_key.cells[2].avx2_simd_cell);
+	state->cells[3].avx2_simd_cell = _mm256_xor_si256(round_key.cells[3].avx2_simd_cell, round_key.cells[3].avx2_simd_cell);
+	state->cells[4].avx2_simd_cell = _mm256_xor_si256(round_key.cells[4].avx2_simd_cell, round_key.cells[4].avx2_simd_cell);
+	state->cells[5].avx2_simd_cell = _mm256_xor_si256(round_key.cells[5].avx2_simd_cell, round_key.cells[5].avx2_simd_cell);
+	state->cells[6].avx2_simd_cell = _mm256_xor_si256(round_key.cells[6].avx2_simd_cell, round_key.cells[6].avx2_simd_cell);
+	state->cells[7].avx2_simd_cell = _mm256_xor_si256(round_key.cells[7].avx2_simd_cell, round_key.cells[7].avx2_simd_cell);
+	#else
+	for (int i = 0; i < 16; ++i) {
+		state->cells[i].slices[0] = XOR_SLICE(state->cells[i].slices[0], round_key.cells[i].slices[0]);
+		state->cells[i].slices[1] = XOR_SLICE(state->cells[i].slices[1], round_key.cells[i].slices[1]);
+		state->cells[i].slices[2] = XOR_SLICE(state->cells[i].slices[2], round_key.cells[i].slices[2]);
+		state->cells[i].slices[3] = XOR_SLICE(state->cells[i].slices[3], round_key.cells[i].slices[3]);
+	}
+	#endif
 	// </editor-fold
 	
-	// AddConstant: Cell 8 XOR 0x2, aka slice 1 of cell 8, because C2 is on the third row and not present in the round key!
+	// AddConstant: Cell 8 XOR 0x2, aka slice_t 1 of cell 8, because C2 is on the third row and not present in the round key!
 	// cell 8 is at position 9
-	state->cells[9].slices[1] ^= ONE;
+	state->cells[9].slices[1] = XOR_SLICE(state->cells[9].slices[1], ONE);
 }
 
 static inline void encrypt_single_round_64_blocks(KeySchedule64Sliced_t schedule, State64Sliced_t *state,
@@ -126,7 +162,7 @@ static inline void decrypt_single_round_64_blocks(KeySchedule64Sliced_t schedule
 //	auto roundkey = unslice({.halves= {schedule.keys[iteration], {}}}).values[0].raw;
 
 //	auto ct = Blocks64_t{.values = {0x9A9BFD8982C66E7C}};
-//	*state = slice(ct);
+//	*state = slice_t(ct);
 
 //	auto test_sbox_before = unslice(*state).values[0].raw;
 	skinny64_mixcols_inv(state);
@@ -163,27 +199,18 @@ static inline SlicedCiphertext_t forkskinny64_decrypt_64_blocks_C0(KeySchedule64
 	// Further decrypt to M
 	if (mode == 'i' || mode == 'b') {
 		M = *state;
-		for (int i = c0_i; i >= 0; --i){
+		for (int i = c0_i; i >= 0; --i)
 			decrypt_single_round_64_blocks(schedule, &M, i);
-			auto test = unslice(M).values[0].raw;
-			int appel = 1;
-		}
+		
 	}
 	
-	auto test3 = unslice(M).values[0].raw;
-	uint64_t test3c = 0x0;
-	
-	auto test3_before = unslice(*state).values[0].raw;
 	// Re-encrypt to C1
 	if (mode == 'o' || mode == 'b') {
 		C1 = *state;
 		add_branch_constant(&C1);
-		test3c = unslice(C1).values[0].raw;
 		for (int i = FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER; i < FORKSKINNY64_MAX_ROUNDS; ++i)
 			encrypt_single_round_64_blocks(schedule, &C1, i);
 	}
-	
-	auto test4 = unslice(C1).values[0].raw;
 	
 	return {C1, State64Sliced_t(), M};
 	
@@ -194,43 +221,27 @@ static inline SlicedCiphertext_t forkskinny64_decrypt_64_blocks_C1(KeySchedule64
 	auto M = State64Sliced_t();
 	auto C0 = State64Sliced_t();
 	
-	auto initial_state = unslice(*state).values[0].raw;
-	
 	// decrypt C1 branch
-	uint64_t test2 = 0;
 	int c1_i = FORKSKINNY64_MAX_ROUNDS-1;
-	for (; c1_i > FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER-1; --c1_i){
+	for (; c1_i > FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER-1; --c1_i)
 		decrypt_single_round_64_blocks(schedule, state, c1_i);
-		test2 = unslice(*state).values[0].raw;
-		int appel = 1;
-	}
 	
 	add_branch_constant(state);
-	
-	auto test2_bc = unslice(*state).values[0].raw;
 	
 	// Further decrypt to M
 	if (mode == 'i' || mode == 'b') {
 		M = *state;
-		for (int i = c1_i - FORKSKINNY_ROUNDS_AFTER; i >= 0; --i){
+		for (int i = c1_i - FORKSKINNY_ROUNDS_AFTER; i >= 0; --i)
 			decrypt_single_round_64_blocks(schedule, &M, i);
-			test2 = unslice(M).values[0].raw;
-			int appel = 1;
-		}
 	}
 	
-	auto test3 = unslice(*state).values[0].raw;
 	// Re-encrypt to C0
 	if (mode == 'o' || mode == 'b') {
 		C0 = *state;
-		for (int i = FORKSKINNY_ROUNDS_BEFORE; i < FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER; ++i){
+		for (int i = FORKSKINNY_ROUNDS_BEFORE; i < FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER; ++i)
 			encrypt_single_round_64_blocks(schedule, &C0, i);
-			test2 = unslice(C0).values[0].raw;
-			int appel = 1;
-		}
 	}
 	
-	auto test4 = unslice(C0).values[0].raw;
 	return {State64Sliced_t(), C0, M};
 	
 }

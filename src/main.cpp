@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
 	if (argc == 0) state = 0xFFEEFFEEFFEEFF;
 	else state = 0xABCDABCDABCDABCD;
 	
-	// slice the state
+	// slice_t the state
 	auto sliced_state = State64Sliced_16_t();
 	sliced_state.state = slice(state);
 	

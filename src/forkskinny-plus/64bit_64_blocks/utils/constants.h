@@ -28,7 +28,7 @@ State64Sliced_t const branch_constant = {
 
 //<editor-fold desc="63 pre-computed forkskinny64 sliced round constants"
 /// These really represent the state lfsr of the AddConstant step at every round
-uint64_t forkskinny64_precomputed_round_constants[FORKSKINNY_ROUNDS_BEFORE + 2 * FORKSKINNY_ROUNDS_AFTER][7] = {
+slice_t forkskinny64_precomputed_round_constants[FORKSKINNY_ROUNDS_BEFORE + 2 * FORKSKINNY_ROUNDS_AFTER][7] = {
 		// LSB                         MSB
 		{ONE, ZER, ZER, ZER, ZER, ZER, ZER}, // 1
 		{ONE, ONE, ZER, ZER, ZER, ZER, ZER}, // 3
@@ -97,7 +97,7 @@ uint64_t forkskinny64_precomputed_round_constants[FORKSKINNY_ROUNDS_BEFORE + 2 *
 //</editor-fold>
 
 //<editor-fold desc="56 pre-computed skinny64 sliced round constants"
-uint64_t skinny64_precomputed_round_constants[56][6] = {
+slice_t skinny64_precomputed_round_constants[56][6] = {
 		// LSB                    MSB
 		{ONE, ZER, ZER, ZER, ZER, ZER}, // 1
 		{ONE, ONE, ZER, ZER, ZER, ZER}, // 3

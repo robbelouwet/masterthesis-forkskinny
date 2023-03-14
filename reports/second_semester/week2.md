@@ -23,7 +23,7 @@ the first, upper C1 cell of the cipherstate represent my least significant bits.
 think) but I apply them in a mirror-like manner. This means that when a plaintext block, for example, equals
 0xFEDCBA987654321, 0x1 is my first upper-C1 cell, but that should be 0xF, and 0xE should be the second etc. When
 looking at Erik's implementation, he also does it like this. Although I think I can relatively quickly solve this by
-adjusting the slicing operation where slices are just turned around. So the first slice will now become the last one
+adjusting the slicing operation where slices are just turned around. So the first slice_t will now become the last one
 etc. When unslicing, I mirror them back in place.
 
 # Friday

@@ -67,10 +67,10 @@ typedef union {
  * E.g.:
  *       v    v    v
  * x = 1000 1010 0000
- * i = 1 = slice the 2nd LSB of every nibble (0-based index)
+ * i = 1 = slice_t the 2nd LSB of every nibble (0-based index)
  * output: 010
  *
- * @param x: the input to slice
+ * @param x: the input to slice_t
  * @param m: 0 <= m <= 3; the 0-based index that masks the relevant significant bit of every slices.
  * @return the input in a bit sliced_fghi manner
  */
@@ -400,10 +400,10 @@ void shift_rows_sliced_packed_rows(State64Sliced_16_t *state) {
   auto slice2 = state->slices[2];
   auto slice3 = state->slices[3];
 
-  // Split up every slice into 4 rows each
+  // Split up every slice_t into 4 rows each
   // So if slice0 contains 16 bits, then the first 4 bits of slice0 correspond to the most significant bit
-  // of the first 4 cells (-> MSB because it's the first slice).
-  // By this analogy, pack all the bits of the same row over every slice next to each other.
+  // of the first 4 cells (-> MSB because it's the first slice_t).
+  // By this analogy, pack all the bits of the same row over every slice_t next to each other.
   uint16_t first_rows = ((slice0 & 0x0F00) << 4) | (slice1 & 0x0F00) | ((slice2 & 0x0F00) >> 4) | ((slice3 & 0x0F00) >> 8);
   uint16_t second_rows = ((slice0 & 0x00F0) << 8) | ((slice1 & 0x00F0) << 4) | (slice2 & 0x00F0) | ((slice3 & 0x00F0) >> 4);
   uint16_t third_rows = ((slice0 & 0x000F) << 12) | ((slice1 & 0x000F) << 8) | ((slice2 & 0x000F) << 4) | (slice3 & 0x000F);
@@ -445,7 +445,7 @@ void run() {
   auto vanilla = State64_t();
   vanilla.llrow = state;
 
-  // slice the state
+  // slice_t the state
   auto sliced_packed_rows = State64Sliced_16_t();
   sliced_packed_rows.state = slice(state);
   auto sliced_packed_state = State64Sliced_16_t();
@@ -506,7 +506,7 @@ void run() {
   Serial.print(", cycles: ");
   Serial.println(cycles_lookup);
 
-  Serial.print("bit sliced, 8-bit data section lookup without slice alignment: ");
+  Serial.print("bit sliced, 8-bit data section lookup without slice_t alignment: ");
   Serial.print(unsliced_lookup_8bit);
   Serial.print(", cycles: ");
   Serial.println(cycles_lookup_8bit);
