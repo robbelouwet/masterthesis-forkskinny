@@ -13,8 +13,8 @@ static inline Row64_t xor_row(Row64_t a, Row64_t b) {
 	#elif AVX2_acceleration
 	res.cols[0].avx2_simd_cell = _mm256_xor_si256(a.cols[0].avx2_simd_cell, b.cols[0].avx2_simd_cell);
 	res.cols[1].avx2_simd_cell = _mm256_xor_si256(a.cols[1].avx2_simd_cell, b.cols[1].avx2_simd_cell);
-	res.cols[0].avx2_simd_cell = _mm256_xor_si256(a.cols[0].avx2_simd_cell, b.cols[0].avx2_simd_cell);
-	res.cols[1].avx2_simd_cell = _mm256_xor_si256(a.cols[1].avx2_simd_cell, b.cols[1].avx2_simd_cell);
+	res.cols[2].avx2_simd_cell = _mm256_xor_si256(a.cols[2].avx2_simd_cell, b.cols[2].avx2_simd_cell);
+	res.cols[3].avx2_simd_cell = _mm256_xor_si256(a.cols[3].avx2_simd_cell, b.cols[3].avx2_simd_cell);
 	
 	#else
 	for (int i = 0; i < 4; ++i) {
@@ -31,7 +31,7 @@ static inline Row64_t xor_row(Row64_t a, Row64_t b) {
 static inline void skinny64_mixcols(State64Sliced_t *state) {
 //	auto test_blocks = Blocks64_t();
 //	test_blocks.values[0].raw = 0x55557555B6988DDF;
-//	*state = slice_t(test_blocks);
+//	*state = slice(test_blocks);
 	
 	state->rows[1] = xor_row(state->rows[1], state->rows[2]);
 	state->rows[2] = xor_row(state->rows[2], state->rows[0]);
