@@ -1,7 +1,6 @@
 #include <x86intrin.h>
 #include "headers/full-state-slicing.h"
 #include "forkskinny-plus/headers/forkskinny64-plus.h"
-#include <immintrin.h>
 #include <cassert>
 #include <vector>
 

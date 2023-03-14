@@ -8,7 +8,6 @@
 #define FORKSKINNY128_MAX_ROUNDS (FORKSKINNY_128_384_ROUNDS_BEFORE + 2*FORKSKINNY_128_384_ROUNDS_AFTER)
 
 #include <cstdint>
-#include <immintrin.h>
 
 /** ---- SKINNY128 ---- */
 typedef union {

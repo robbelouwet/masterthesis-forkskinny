@@ -5,7 +5,7 @@
 #include "roundfunction/skinny64-addconstant.h"
 #include "roundfunction/skinny64-shiftrows.h"
 #include "roundfunction/skinny64-mixcols.h"
-#include "immintrin.h"
+
 
 static inline void skinny_inject_key(HalfState64Sliced_t round_key, State64Sliced_t *state) {
 	for (int i = 0; i < 8; ++i)

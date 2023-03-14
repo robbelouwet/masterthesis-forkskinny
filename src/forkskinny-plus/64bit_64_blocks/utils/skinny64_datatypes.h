@@ -6,23 +6,23 @@
 #define FORKSKINNY64_MAX_ROUNDS (FORKSKINNY_ROUNDS_BEFORE + 2*FORKSKINNY_ROUNDS_AFTER)
 
 #include <cstdint>
-#include <immintrin.h>
+#include "config.h"
+#include "immintrin.h"
 
 /** ---- SKINNY64 ---- */
 // wrapper so we can return arrays from unslice()
 // represent 64 unsliced states
 typedef union {
-	uint64_t raw;
-	unsigned char bytes[8];
+	slice raw;
+	unsigned char bytes[bytes_per_slice];
 } Slice64_t;
 
 typedef union {
-	Slice64_t values[64];
+	uint64_t values[slice_size];
 } Blocks64_t;
 
 typedef union {
-	uint64_t slices[4];
-	__m256i simd_cell;
+	slice slices[4];
 } Cell64_t;
 
 typedef union {
@@ -37,6 +37,9 @@ typedef union {
 typedef union {
 	uint64_t raw[64];
 	Cell64_t cells[16];
+	#ifdef segment
+	segment segments[segment_amount];
+	#endif
 	Row64_t rows[4];
 	HalfState64Sliced_t halves[2];
 } State64Sliced_t;

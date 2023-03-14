@@ -10,7 +10,7 @@
 #define FORKSKINNY64_MAX_ROUNDS (FORKSKINNY_ROUNDS_BEFORE + 2*FORKSKINNY_ROUNDS_AFTER)
 
 #include <cstdint>
-#include <immintrin.h>
+
 
 typedef union {
 	uint8_t pairs[4];

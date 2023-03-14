@@ -48,8 +48,8 @@ static inline KeySchedule64Sliced_t precompute_64_key_schedules(State64Sliced_t 
 			res = xor_keys(res, *tk1);
 			schedule.keys[i] = res.halves[0]; // RTK0
 			
-			tk3_lfsr_simd(tk3, 16); // Update TK3
-			tk2_lfsr_simd(tk2, 16); // Update TK2
+			tk3_lfsr(tk3, 16); // Update TK3
+			tk2_lfsr(tk2, 16); // Update TK2
 			continue;
 		}
 		
@@ -64,8 +64,8 @@ static inline KeySchedule64Sliced_t precompute_64_key_schedules(State64Sliced_t 
 		schedule.keys[i + 1] = double_rtk.halves[0];
 		
 		// Update TK2 & TK3
-		tk3_lfsr_simd(tk3, 16); // Update TK3
-		tk2_lfsr_simd(tk2, 16); // Update TK2
+		tk3_lfsr(tk3, 16); // Update TK3
+		tk2_lfsr(tk2, 16); // Update TK2
 	}
 	//</editor-fold>
 	

@@ -4,9 +4,6 @@
 #include <cstdint>
 #include "skinny64_datatypes.h"
 
-#define ONE 0xffffffffffffffff
-#define ZER 0x0
-
 //<editor-fold desc="forkskinny64 sliced branch constant"
 State64Sliced_t const branch_constant = {
 		// LSB         MSB

@@ -2,7 +2,6 @@
 #define FORKSKINNYPLUS_SKINNY64_ADDCONSTANT_H
 
 #include <cstdint>
-#include "immintrin.h"
 #include "../utils/skinny64_datatypes.h"
 #include "../utils/constants.h"
 

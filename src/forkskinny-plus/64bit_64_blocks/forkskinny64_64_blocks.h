@@ -6,7 +6,6 @@
 #include "roundfunction/skinny64-addconstant.h"
 #include "roundfunction/skinny64-shiftrows.h"
 #include "roundfunction/skinny64-mixcols.h"
-#include "immintrin.h"
 
 static inline void add_branch_constant(State64Sliced_t *state) {
 	// <editor-fold desc="branch constant">

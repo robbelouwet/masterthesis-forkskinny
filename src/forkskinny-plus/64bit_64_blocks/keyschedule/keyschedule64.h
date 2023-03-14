@@ -25,8 +25,8 @@
 //		tk3 = permute(tk3);
 //
 //		// LFSR TK2 & TK3
-//		tk2_lfsr_simd(&tk2);
-//		tk3_lfsr_simd(&tk3);
+//		tk2_lfsr(&tk2);
+//		tk3_lfsr(&tk3);
 //	}
 //	return schedule;
 //}
@@ -61,7 +61,7 @@ static inline KeySchedule64Sliced_t forkskinny_64_init_tk12(State64Sliced_t tk1,
 		tk2 = permute(tk2);
 		
 		// LFSR TK2 & TK3
-		tk2_lfsr_simd(&tk2);
+		tk2_lfsr(&tk2);
 	}
 	
 	return schedule;
@@ -89,8 +89,8 @@ static inline KeySchedule64Sliced_t forkskinny_64_init_tk123(State64Sliced_t tk1
 		tk1 = permute(tk1);
 		
 		// LFSR TK2 & TK3
-		tk2_lfsr_simd(&tk2);
-		tk3_lfsr_simd(&tk3);
+		tk2_lfsr(&tk2);
+		tk3_lfsr(&tk3);
 	}
 	
 	return schedule;
