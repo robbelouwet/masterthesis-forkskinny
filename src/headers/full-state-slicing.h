@@ -43,16 +43,16 @@ static inline uint64_t slice_index(uint64_t x, uint64_t i) {
 }
 
 /**
- * Place all the equally significant bits packed in *value*, back in their nibble on their correct significant position.
- * I.e., every bit of *value* gets projected to a nibble. More specifically it gets projected to the
+ * Place all the equally significant bits packed in *raw*, back in their nibble on their correct significant position.
+ * I.e., every bit of *raw* gets projected to a nibble. More specifically it gets projected to the
  * ith significant bit of each nibble.
  *
  * e.g.:
- * 	value: 0000 0000 0000 1111
+ * 	raw: 0000 0000 0000 1111
  * 	i: 1 (0-based index)
  *
  * 	output: 0000 (0000)¹¹ 0010 0010 0010 0010
- * 		-> the 4 ones of *value* each get projected to the second-LSD in a separate nibble
+ * 		-> the 4 ones of *raw* each get projected to the second-LSD in a separate nibble
  *
  * @param value: the one of the 4 packed input rows of 16 bits in bit sliced_fghi representation
  * @param i: 0-based index to identify to which significant bit of every nibble needs to be projected.

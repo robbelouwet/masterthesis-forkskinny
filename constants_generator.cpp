@@ -3,7 +3,7 @@
 #include <vector>
 #include "src/forkskinny-plus/64bit_64_blocks/utils/skinny64_datatypes.h"
 
-// expand every bit of the value to a 64bit slice_t
+// expand every bit of the raw to a 64bit slice_t
 // if bit == 0: return 0⁶⁴
 // if bit == 1: return 1⁶⁴
 static inline std::vector<uint64_t> to_slices(uint64_t value, uint8_t width) {

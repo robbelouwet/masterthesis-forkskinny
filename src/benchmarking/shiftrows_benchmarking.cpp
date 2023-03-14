@@ -51,7 +51,7 @@ uint8_t const row2_row3[] = {0x0, 0x2, 0x4, 0x6, 0x8, 0xa, 0xc, 0xe, 0x1, 0x3, 0
 static inline uint16_t ARM_ror(uint16_t value, uint16_t offset) {
 	uint16_t rotatedValue;
 	asm volatile (
-			"ROR %[rotated], %[value], %[bits]\n"
+			"ROR %[rotated], %[raw], %[bits]\n"
 			: [rotated] "=r"(rotatedValue)
 	: [value] "r"(value), [bits] "r"(offset)
 	);

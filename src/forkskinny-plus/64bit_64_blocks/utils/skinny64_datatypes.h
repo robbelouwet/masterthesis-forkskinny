@@ -11,12 +11,12 @@
 
 /** ---- SKINNY64 ---- */
 typedef union {
-	slice_t raw;
-	unsigned char bytes[bytes_per_slice];
-} Slice64_t;
+	uint64_t raw;
+	unsigned char bytes[16];
+} Block64_t;
 
 typedef union {
-	Slice64_t values[slice_size];
+	Block64_t values[slice_size];
 } Blocks64_t;
 
 typedef union {

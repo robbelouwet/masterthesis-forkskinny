@@ -33,7 +33,7 @@ variable. Then we only do 2 of these 'slice_t-permutations' instead of 4.
 
 ### Sunday 01 jan
 
-I implemented my idea of packing 2 or all 4 slices in 1 value, and performing the permutation on this packed value.
+I implemented my idea of packing 2 or all 4 slices in 1 raw, and performing the permutation on this packed raw.
 
 - old non-bitsliced permutation: 56 cycles (using 2x 32 bit registers)
 - 4 times 1 permutation per slice_t: 131 cycles (using 4x 8 bit registers)
@@ -52,17 +52,17 @@ Implemented the shift rows operation, benchmarked it on arduino. We hit a real r
 operation is 4-5 times as slow as before. The problem is again we have to perform the shiftrow on every slice_t, which is
 again, evidently, 4 times the amount of work that was done before.
 I'm thinking of a way to make this faster: what if we use lookup tables? If every row is just a bit rotation, what if we
-just wake a 4-bit lookup table that just maps a nibble to its bit rotated value? Then we can swap a rotate instruction
+just wake a 4-bit lookup table that just maps a nibble to its bit rotated raw? Then we can swap a rotate instruction
 with a single lookup. Since the lookup table is only 4-bit, we only need 2^4 values, which well fits in the arduino's
 cache. If we could simplify bit rotations like this, I believe we could achieve a tremendous speedup, as a bit rotation
 is multiple instructions, replacing it with a single lookup could speed this up drastically. I'll try this tomorrow.
 
 ## Wednesday 04 jan
 
-Implemented the substitution tables. I made 4 lookup tables, 3 of them map to a nibble's rotated value, rotating 1,2 or
+Implemented the substitution tables. I made 4 lookup tables, 3 of them map to a nibble's rotated raw, rotating 1,2 or
 3
 bits (for the 2nd, 3rd and 4th row in shiftrows). I then also made a 8-bit lookup table that maps row3||row4 to its
-corresponding value where row3 is rotated 2 bits and row4 3 bits (as 1 8-bit value).
+corresponding raw where row3 is rotated 2 bits and row4 3 bits (as 1 8-bit raw).
 When benchmarking individually, the 4-bit lookup tables seem faster, even 2 4-bit lookups are faster than 1 8-bit lookup
 for a combined row2||row3, for some reason.
 a 4-bit lookup takes 6-8 cycles, this is a speedup compared to manually calculating a rotation (13 cycles). This isn't
@@ -101,6 +101,6 @@ register.
   fast with 64 bit SIMD (e.g. this
   intel [SIMD intrinsic](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=shuffle&techs=MMX,SSE_ALL&ig_expand=6562,5660)
   that performs a constant permutation in 1 instruction).
-- The shift row operation is really difficult to optimize, as it's a function that doesn't change the value of every
+- The shift row operation is really difficult to optimize, as it's a function that doesn't change the raw of every
   individual slices by a logical operation, rather it moves cells around within their state. And bit slicing is not really
   optimized for that. I fear the same reasoning will hold for mix cols, but I haven't looked at mix cols yet. 

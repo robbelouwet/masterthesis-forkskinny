@@ -27,25 +27,25 @@ static inline void tk2_lfsr(State64Sliced_t *state) {
 	state->cells[0].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[0].avx2_simd_cell, 0b10010011);
 	state->cells[0].slices[0] = XOR_SLICE(state->cells[0].slices[0], state->cells[0].slices[3]);
 	
-	state->cells[1].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[0].avx2_simd_cell, 0b10010011);
+	state->cells[1].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[1].avx2_simd_cell, 0b10010011);
 	state->cells[1].slices[0] = XOR_SLICE(state->cells[1].slices[0], state->cells[1].slices[3]);
-	
-	state->cells[2].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[0].avx2_simd_cell, 0b10010011);
+
+	state->cells[2].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[2].avx2_simd_cell, 0b10010011);
 	state->cells[2].slices[0] = XOR_SLICE(state->cells[2].slices[0], state->cells[2].slices[3]);
-	
-	state->cells[3].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[0].avx2_simd_cell, 0b10010011);
+
+	state->cells[3].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[3].avx2_simd_cell, 0b10010011);
 	state->cells[3].slices[0] = XOR_SLICE(state->cells[3].slices[0], state->cells[3].slices[3]);
-	
-	state->cells[4].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[0].avx2_simd_cell, 0b10010011);
+
+	state->cells[4].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[4].avx2_simd_cell, 0b10010011);
 	state->cells[4].slices[0] = XOR_SLICE(state->cells[4].slices[0], state->cells[4].slices[3]);
-	
-	state->cells[5].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[0].avx2_simd_cell, 0b10010011);
+
+	state->cells[5].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[5].avx2_simd_cell, 0b10010011);
 	state->cells[5].slices[0] = XOR_SLICE(state->cells[5].slices[0], state->cells[5].slices[3]);
-	
-	state->cells[6].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[0].avx2_simd_cell, 0b10010011);
+
+	state->cells[6].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[6].avx2_simd_cell, 0b10010011);
 	state->cells[6].slices[0] = XOR_SLICE(state->cells[6].slices[0], state->cells[6].slices[3]);
-	
-	state->cells[7].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[0].avx2_simd_cell, 0b10010011);
+
+	state->cells[7].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[7].avx2_simd_cell, 0b10010011);
 	state->cells[7].slices[0] = XOR_SLICE(state->cells[7].slices[0], state->cells[7].slices[3]);
 	
 	
@@ -81,28 +81,21 @@ static inline void tk3_lfsr(State64Sliced_t *state, uint8_t n = 8) {
 	
 	#elif AVX2_acceleration
 	state->cells[0].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[0].avx2_simd_cell, 0b00111001);
-	state->cells[0].slices[0] = XOR_SLICE(state->cells[0].slices[0], state->cells[0].slices[3]);
-	
+	state->cells[0].slices[3] = XOR_SLICE(state->cells[0].slices[3], state->cells[0].slices[0]);
 	state->cells[1].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[0].avx2_simd_cell, 0b00111001);
-	state->cells[1].slices[0] = XOR_SLICE(state->cells[1].slices[0], state->cells[1].slices[3]);
-	
+	state->cells[1].slices[3] = XOR_SLICE(state->cells[1].slices[3], state->cells[1].slices[0]);
 	state->cells[2].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[0].avx2_simd_cell, 0b00111001);
-	state->cells[2].slices[0] = XOR_SLICE(state->cells[2].slices[0], state->cells[2].slices[3]);
-	
+	state->cells[2].slices[3] = XOR_SLICE(state->cells[2].slices[3], state->cells[2].slices[0]);
 	state->cells[3].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[0].avx2_simd_cell, 0b00111001);
-	state->cells[3].slices[0] = XOR_SLICE(state->cells[3].slices[0], state->cells[3].slices[3]);
-	
+	state->cells[3].slices[3] = XOR_SLICE(state->cells[3].slices[3], state->cells[3].slices[0]);
 	state->cells[4].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[0].avx2_simd_cell, 0b00111001);
-	state->cells[4].slices[0] = XOR_SLICE(state->cells[4].slices[0], state->cells[4].slices[3]);
-	
+	state->cells[4].slices[3] = XOR_SLICE(state->cells[4].slices[3], state->cells[4].slices[0]);
 	state->cells[5].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[0].avx2_simd_cell, 0b00111001);
-	state->cells[5].slices[0] = XOR_SLICE(state->cells[5].slices[0], state->cells[5].slices[3]);
-	
+	state->cells[5].slices[3] = XOR_SLICE(state->cells[5].slices[3], state->cells[5].slices[0]);
 	state->cells[6].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[0].avx2_simd_cell, 0b00111001);
-	state->cells[6].slices[0] = XOR_SLICE(state->cells[6].slices[0], state->cells[6].slices[3]);
-	
+	state->cells[6].slices[3] = XOR_SLICE(state->cells[6].slices[3], state->cells[6].slices[0]);
 	state->cells[7].avx2_simd_cell = _mm256_permute4x64_epi64(state->cells[0].avx2_simd_cell, 0b00111001);
-	state->cells[7].slices[0] = XOR_SLICE(state->cells[7].slices[0], state->cells[7].slices[3]);
+	state->cells[7].slices[3] = XOR_SLICE(state->cells[7].slices[3], state->cells[7].slices[0]);
 	
 	#else
 	for (int i = 0; i < n; i++) {
@@ -131,7 +124,7 @@ static inline State64Sliced_t xor_keys(State64Sliced_t a, State64Sliced_t b) {
 	
 	#elif AVX2_acceleration
 	for (int i = 0; i < 8; ++i)
-		res.cells[i].avx2_simd_cell = _mm256_xor_si256(a.cells[i].avx2_simd_cell, b.cells[i].avx2_simd_cell)
+		res.cells[i].avx2_simd_cell = _mm256_xor_si256(a.cells[i].avx2_simd_cell, b.cells[i].avx2_simd_cell);
 		
 	#else
 	for (int i = 0; i < 8; ++i) {

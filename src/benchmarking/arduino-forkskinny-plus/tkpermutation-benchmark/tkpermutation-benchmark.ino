@@ -75,16 +75,16 @@ uint32_t slice_index(uint32_t x, uint8_t i) {
 }
 
 /**
- * Place all the equally significant bits packed in *value*, back in their nibble on their correct significant position.
- * I.e., every bit of *value* gets projected to a nibble. More specifically it gets projected to the
+ * Place all the equally significant bits packed in *raw*, back in their nibble on their correct significant position.
+ * I.e., every bit of *raw* gets projected to a nibble. More specifically it gets projected to the
  * ith significant bit of each nibble.
  *
  * e.g.:
- * 	value: 0000 0000 0000 1111
+ * 	raw: 0000 0000 0000 1111
  * 	i: 1 (0-based index)
  *
  * 	output: 0000 (0000)¹¹ 0010 0010 0010 0010
- * 		-> the 4 ones of *value* each get projected to the second-LSD in a separate nibble
+ * 		-> the 4 ones of *raw* each get projected to the second-LSD in a separate nibble
  *
  * @param value: the one of the 4 packed input rows of 16 bits in bit sliced_fghi representation
  * @param i: 0-based index to identify to which significant bit of every nibble needs to be projected.
@@ -202,7 +202,7 @@ void permute_sliced_circuit(State64Sliced_16_t *tk) {
   auto slice1 = tk->slices[1];
   auto slice2 = tk->slices[2];
   auto slice3 = tk->slices[3];
-  // --------------------------------------------------- source bits: Z123 4567 89ab cdef	| Cumulative value
+  // --------------------------------------------------- source bits: Z123 4567 89ab cdef	| Cumulative raw
   tk->slices[0] = ((slice0 & 0xFF00) >> 8)      // masks:       1111 1111 0000 0000 | 0000 0000 Z123 4567
                   | ((slice0 & 0x00A8) << 6)    //              0000 0000 1010 1000 | 0080 A0C0 Z123 4567
                   | ((slice0 & 0x0040) << 9)    //              0000 0000 0100 0000 | 9080 A0C0 Z123 4567
@@ -211,7 +211,7 @@ void permute_sliced_circuit(State64Sliced_16_t *tk) {
                   | ((slice0 & 0x0002) << 9)    //              0000 0000 0000 0010 | 908D AECB Z123 4567
                   | ((slice0 & 0x0001) << 14);  //              0000 0000 0000 0001 | 9F8D AECB Z123 4567
 
-  // --------------------------------------------------- source bits: Z123 4567 89ab cdef	| Cumulative value
+  // --------------------------------------------------- source bits: Z123 4567 89ab cdef	| Cumulative raw
   tk->slices[1] = ((slice1 & 0xFF00) >> 8)      // masks:       1111 1111 0000 0000 | 0000 0000 Z123 4567
                   | ((slice1 & 0x00A8) << 6)    //              0000 0000 1010 1000 | 0080 A0C0 Z123 4567
                   | ((slice1 & 0x0040) << 9)    //              0000 0000 0100 0000 | 9080 A0C0 Z123 4567
@@ -220,7 +220,7 @@ void permute_sliced_circuit(State64Sliced_16_t *tk) {
                   | ((slice1 & 0x0002) << 9)    //              0000 0000 0000 0010 | 908D AECB Z123 4567
                   | ((slice1 & 0x0001) << 14);  //              0000 0000 0000 0001 | 9F8D AECB Z123 4567
 
-  // --------------------------------------------------- source bits: Z123 4567 89ab cdef	| Cumulative value
+  // --------------------------------------------------- source bits: Z123 4567 89ab cdef	| Cumulative raw
   tk->slices[2] = ((slice2 & 0xFF00) >> 8)      // masks:       1111 1111 0000 0000 | 0000 0000 Z123 4567
                   | ((slice2 & 0x00A8) << 6)    //              0000 0000 1010 1000 | 0080 A0C0 Z123 4567
                   | ((slice2 & 0x0040) << 9)    //              0000 0000 0100 0000 | 9080 A0C0 Z123 4567
@@ -229,7 +229,7 @@ void permute_sliced_circuit(State64Sliced_16_t *tk) {
                   | ((slice2 & 0x0002) << 9)    //              0000 0000 0000 0010 | 908D AECB Z123 4567
                   | ((slice2 & 0x0001) << 14);  //              0000 0000 0000 0001 | 9F8D AECB Z123 4567
 
-  // --------------------------------------------------- source bits: Z123 4567 89ab cdef	| Cumulative value
+  // --------------------------------------------------- source bits: Z123 4567 89ab cdef	| Cumulative raw
   tk->slices[3] = ((slice3 & 0xFF00) >> 8)      // masks:       1111 1111 0000 0000 | 0000 0000 Z123 4567
                   | ((slice3 & 0x00A8) << 6)    //              0000 0000 1010 1000 | 0080 A0C0 Z123 4567
                   | ((slice3 & 0x0040) << 9)    //              0000 0000 0100 0000 | 9080 A0C0 Z123 4567

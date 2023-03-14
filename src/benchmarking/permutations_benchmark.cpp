@@ -81,7 +81,7 @@ static inline void permute_sliced_packed_8(State64Sliced_16_t *tk) {
 	uint16_t slice1 = tk->slices[1];
 	uint16_t slice2 = tk->slices[2];
 	uint16_t slice3 = tk->slices[3];
-	// --------------------------------------------------- source bits: Z123 4567 89ab cdef	| Cumulative value
+	// --------------------------------------------------- source bits: Z123 4567 89ab cdef	| Cumulative raw
 	tk->slices[0] = ((slice0 & 0xFF00) >> 8)     // masks:       1111 1111 0000 0000 | 0000 0000 Z123 4567
 	                | ((slice0 & 0x00A8) << 6)   //              0000 0000 1010 1000 | 0080 A0C0 Z123 4567
 	                | ((slice0 & 0x0040) << 9)   //              0000 0000 0100 0000 | 9080 A0C0 Z123 4567
@@ -90,7 +90,7 @@ static inline void permute_sliced_packed_8(State64Sliced_16_t *tk) {
 	                | ((slice0 & 0x0002) << 9)   //              0000 0000 0000 0010 | 908D AECB Z123 4567
 	                | ((slice0 & 0x0001) << 14); //              0000 0000 0000 0001 | 9F8D AECB Z123 4567
 	
-	// --------------------------------------------------- source bits: Z123 4567 89ab cdef	| Cumulative value
+	// --------------------------------------------------- source bits: Z123 4567 89ab cdef	| Cumulative raw
 	tk->slices[1] = ((slice1 & 0xFF00) >> 8)     // masks:       1111 1111 0000 0000 | 0000 0000 Z123 4567
 	                | ((slice1 & 0x00A8) << 6)   //              0000 0000 1010 1000 | 0080 A0C0 Z123 4567
 	                | ((slice1 & 0x0040) << 9)   //              0000 0000 0100 0000 | 9080 A0C0 Z123 4567
@@ -99,7 +99,7 @@ static inline void permute_sliced_packed_8(State64Sliced_16_t *tk) {
 	                | ((slice1 & 0x0002) << 9)   //              0000 0000 0000 0010 | 908D AECB Z123 4567
 	                | ((slice1 & 0x0001) << 14); //              0000 0000 0000 0001 | 9F8D AECB Z123 4567
 	
-	// --------------------------------------------------- source bits: Z123 4567 89ab cdef	| Cumulative value
+	// --------------------------------------------------- source bits: Z123 4567 89ab cdef	| Cumulative raw
 	tk->slices[2] = ((slice2 & 0xFF00) >> 8)     // masks:       1111 1111 0000 0000 | 0000 0000 Z123 4567
 	                | ((slice2 & 0x00A8) << 6)   //              0000 0000 1010 1000 | 0080 A0C0 Z123 4567
 	                | ((slice2 & 0x0040) << 9)   //              0000 0000 0100 0000 | 9080 A0C0 Z123 4567
@@ -108,7 +108,7 @@ static inline void permute_sliced_packed_8(State64Sliced_16_t *tk) {
 	                | ((slice2 & 0x0002) << 9)   //              0000 0000 0000 0010 | 908D AECB Z123 4567
 	                | ((slice2 & 0x0001) << 14); //              0000 0000 0000 0001 | 9F8D AECB Z123 4567
 	
-	// --------------------------------------------------- source bits: Z123 4567 89ab cdef	| Cumulative value
+	// --------------------------------------------------- source bits: Z123 4567 89ab cdef	| Cumulative raw
 	tk->slices[3] = ((slice3 & 0xFF00) >> 8)     // masks:       1111 1111 0000 0000 | 0000 0000 Z123 4567
 	                | ((slice3 & 0x00A8) << 6)   //              0000 0000 1010 1000 | 0080 A0C0 Z123 4567
 	                | ((slice3 & 0x0040) << 9)   //              0000 0000 0100 0000 | 9080 A0C0 Z123 4567

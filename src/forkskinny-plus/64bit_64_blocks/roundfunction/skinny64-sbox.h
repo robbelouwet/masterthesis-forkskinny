@@ -11,6 +11,13 @@ static inline void skinny64_sbox(State64Sliced_t *state) {
 	for (int i = 0; i < 16; ++i) {
 		auto cell = state->cells[i];
 		
+//		// @formatter:off
+//		state->cells[i].slices[3] = NOT_AND_SLICE()
+//		state->cells[i].slices[2] = cell.slices[3] ^ ~(cell.slices[2]            | cell.slices[1]);
+//		state->cells[i].slices[1] = cell.slices[2] ^ ~(cell.slices[1]            | state->cells[i].slices[3]);
+//		state->cells[i].slices[0] = cell.slices[1] ^ ~(state->cells[i].slices[3] | state->cells[i].slices[2]);
+//		// @formatter:on
+		
 		// @formatter:off
 		state->cells[i].slices[3] = cell.slices[0] ^ ~(cell.slices[3]            | cell.slices[2]);
 		state->cells[i].slices[2] = cell.slices[3] ^ ~(cell.slices[2]            | cell.slices[1]);

@@ -55,7 +55,7 @@ static inline KeySchedule64Sliced_t forkskinny_64_init_tk123(State64Sliced_t tk1
 		schedule.keys[i] = res.halves[0];
 		
 		// 0x76541200, 0xa57e182c, 0xb46f097d
-		//auto round_key = unslice({.halves = {schedule.keys[i], {}}}).values[0].raw;
+		auto round_key = unslice({.halves = {schedule.keys[i], {}}}).values[0].raw;
 		
 		// Permute TK's
 		tk2 = permute(tk2);

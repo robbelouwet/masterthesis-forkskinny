@@ -10,11 +10,11 @@
  * @param significance LSB = 0, MSB = 63
  * @return
  */
-static inline uint64_t slice_significance(const Blocks64_t blocks, uint8_t significance) {
+static inline slice_t slice_significance(const Blocks64_t blocks, uint8_t significance) {
 	uint64_t mask = 1ULL << significance;
 	uint64_t slice = 0ULL;
 	
-	for (uint i = 0; i < 64; ++i)
+	for (uint i = 0; i < slice_size; ++i)
 		slice |= (blocks.values[i].raw & mask) >> significance << (i);
 	
 	return slice;
@@ -46,7 +46,7 @@ static inline State64Sliced_t slice(const Blocks64_t blocks, bool reverse = true
  * 					E.g. the very first slice_t contains the *least* significant bits of 64 states
  */
 static inline void unslice_significance(const uint64_t slice, Blocks64_t *blocks, uint8_t sb_index) {
-	for (uint b_number = 0; b_number < 64; ++b_number) {
+	for (uint b_number = 0; b_number < slice_size; ++b_number) {
 		uint64_t mask = 1ULL << b_number;
 		
 		uint64_t temp = slice & mask;

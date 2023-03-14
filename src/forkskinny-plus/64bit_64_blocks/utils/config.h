@@ -3,7 +3,7 @@
 
 // @formatter:off
 #define slice_size 64 // 32, 64, 256 or 512
-#define AVX2_acceleration (slice_size == 64 && false)
+#define AVX2_acceleration (slice_size == 64 && true)
 #define AVX512_acceleration (slice_size == 64 && false)
 
 // ----- 32-bit slices -----

@@ -324,7 +324,7 @@ inline uint16_t ARM_ror(uint16_t value, uint16_t offset) __attribute__((always_i
 uint16_t ARM_ror(uint16_t value, uint16_t offset){
 	uint16_t rotatedValue;
 	asm volatile (
-			"ROR %[rotated], %[value], %[bits]\n"
+			"ROR %[rotated], %[raw], %[bits]\n"
 			: [rotated] "=r" (rotatedValue)
 			: [value] "r" (value), [bits] "r" (offset)
 	);

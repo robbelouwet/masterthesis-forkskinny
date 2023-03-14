@@ -54,22 +54,22 @@ static inline void add_branch_constant(State64Sliced_t *state) {
 static inline void apply_roundkey(HalfState64Sliced_t round_key, State64Sliced_t *state) {
 	// <editor-fold desc="xor first 8 least significant cells">
 	#if AVX512_acceleration
-	state->pairs[0].avx512_simd_pair = _mm512_xor_si512(round_key.pairs[0].avx512_simd_pair, round_key.pairs[0].avx512_simd_pair);
-	state->pairs[1].avx512_simd_pair = _mm512_xor_si512(round_key.pairs[1].avx512_simd_pair, round_key.pairs[1].avx512_simd_pair);
-	state->pairs[2].avx512_simd_pair = _mm512_xor_si512(round_key.pairs[2].avx512_simd_pair, round_key.pairs[2].avx512_simd_pair);
-	state->pairs[3].avx512_simd_pair = _mm512_xor_si512(round_key.pairs[3].avx512_simd_pair, round_key.pairs[3].avx512_simd_pair);
+	state->pairs[0].avx512_simd_pair = _mm512_xor_si512(state->pairs[0].avx512_simd_pair, round_key.pairs[0].avx512_simd_pair);
+	state->pairs[1].avx512_simd_pair = _mm512_xor_si512(state->pairs[1].avx512_simd_pair, round_key.pairs[1].avx512_simd_pair);
+	state->pairs[2].avx512_simd_pair = _mm512_xor_si512(state->pairs[2].avx512_simd_pair, round_key.pairs[2].avx512_simd_pair);
+	state->pairs[3].avx512_simd_pair = _mm512_xor_si512(state->pairs[3].avx512_simd_pair, round_key.pairs[3].avx512_simd_pair);
 	
 	#elif AVX2_acceleration
-	state->cells[0].avx2_simd_cell = _mm256_xor_si256(round_key.cells[0].avx2_simd_cell, round_key.cells[0].avx2_simd_cell);
-	state->cells[1].avx2_simd_cell = _mm256_xor_si256(round_key.cells[1].avx2_simd_cell, round_key.cells[1].avx2_simd_cell);
-	state->cells[2].avx2_simd_cell = _mm256_xor_si256(round_key.cells[2].avx2_simd_cell, round_key.cells[2].avx2_simd_cell);
-	state->cells[3].avx2_simd_cell = _mm256_xor_si256(round_key.cells[3].avx2_simd_cell, round_key.cells[3].avx2_simd_cell);
-	state->cells[4].avx2_simd_cell = _mm256_xor_si256(round_key.cells[4].avx2_simd_cell, round_key.cells[4].avx2_simd_cell);
-	state->cells[5].avx2_simd_cell = _mm256_xor_si256(round_key.cells[5].avx2_simd_cell, round_key.cells[5].avx2_simd_cell);
-	state->cells[6].avx2_simd_cell = _mm256_xor_si256(round_key.cells[6].avx2_simd_cell, round_key.cells[6].avx2_simd_cell);
-	state->cells[7].avx2_simd_cell = _mm256_xor_si256(round_key.cells[7].avx2_simd_cell, round_key.cells[7].avx2_simd_cell);
+	state->cells[0].avx2_simd_cell = _mm256_xor_si256(state->cells[0].avx2_simd_cell, round_key.cells[0].avx2_simd_cell);
+	state->cells[1].avx2_simd_cell = _mm256_xor_si256(state->cells[1].avx2_simd_cell, round_key.cells[1].avx2_simd_cell);
+	state->cells[2].avx2_simd_cell = _mm256_xor_si256(state->cells[2].avx2_simd_cell, round_key.cells[2].avx2_simd_cell);
+	state->cells[3].avx2_simd_cell = _mm256_xor_si256(state->cells[3].avx2_simd_cell, round_key.cells[3].avx2_simd_cell);
+	state->cells[4].avx2_simd_cell = _mm256_xor_si256(state->cells[4].avx2_simd_cell, round_key.cells[4].avx2_simd_cell);
+	state->cells[5].avx2_simd_cell = _mm256_xor_si256(state->cells[5].avx2_simd_cell, round_key.cells[5].avx2_simd_cell);
+	state->cells[6].avx2_simd_cell = _mm256_xor_si256(state->cells[6].avx2_simd_cell, round_key.cells[6].avx2_simd_cell);
+	state->cells[7].avx2_simd_cell = _mm256_xor_si256(state->cells[7].avx2_simd_cell, round_key.cells[7].avx2_simd_cell);
 	#else
-	for (int i = 0; i < 16; ++i) {
+	for (int i = 0; i < 8; ++i) {
 		state->cells[i].slices[0] = XOR_SLICE(state->cells[i].slices[0], round_key.cells[i].slices[0]);
 		state->cells[i].slices[1] = XOR_SLICE(state->cells[i].slices[1], round_key.cells[i].slices[1]);
 		state->cells[i].slices[2] = XOR_SLICE(state->cells[i].slices[2], round_key.cells[i].slices[2]);
