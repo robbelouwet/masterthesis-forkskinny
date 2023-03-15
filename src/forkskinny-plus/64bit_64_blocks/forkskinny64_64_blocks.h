@@ -40,10 +40,10 @@ static inline void add_branch_constant(State64Sliced_t *state) {
 	
 	#else
 	for (int i = 0; i < 16; ++i) {
-		state->cells[i].slices[0] = XOR_SLICE(state->cells[i].slices[0], branch_constant.cells[i].slices[0]);
-		state->cells[i].slices[1] = XOR_SLICE(state->cells[i].slices[1], branch_constant.cells[i].slices[1]);
-		state->cells[i].slices[2] = XOR_SLICE(state->cells[i].slices[2], branch_constant.cells[i].slices[2]);
-		state->cells[i].slices[3] = XOR_SLICE(state->cells[i].slices[3], branch_constant.cells[i].slices[3]);
+		state->cells[i].slices[0].value = XOR_SLICE(state->cells[i].slices[0].value, branch_constant.cells[i].slices[0].value);
+		state->cells[i].slices[1].value = XOR_SLICE(state->cells[i].slices[1].value, branch_constant.cells[i].slices[1].value);
+		state->cells[i].slices[2].value = XOR_SLICE(state->cells[i].slices[2].value, branch_constant.cells[i].slices[2].value);
+		state->cells[i].slices[3].value = XOR_SLICE(state->cells[i].slices[3].value, branch_constant.cells[i].slices[3].value);
 	}
 	
 	#endif
@@ -70,17 +70,17 @@ static inline void apply_roundkey(HalfState64Sliced_t round_key, State64Sliced_t
 	state->cells[7].avx2_simd_cell = _mm256_xor_si256(state->cells[7].avx2_simd_cell, round_key.cells[7].avx2_simd_cell);
 	#else
 	for (int i = 0; i < 8; ++i) {
-		state->cells[i].slices[0] = XOR_SLICE(state->cells[i].slices[0], round_key.cells[i].slices[0]);
-		state->cells[i].slices[1] = XOR_SLICE(state->cells[i].slices[1], round_key.cells[i].slices[1]);
-		state->cells[i].slices[2] = XOR_SLICE(state->cells[i].slices[2], round_key.cells[i].slices[2]);
-		state->cells[i].slices[3] = XOR_SLICE(state->cells[i].slices[3], round_key.cells[i].slices[3]);
+		state->cells[i].slices[0].value = XOR_SLICE(state->cells[i].slices[0].value, round_key.cells[i].slices[0].value);
+		state->cells[i].slices[1].value = XOR_SLICE(state->cells[i].slices[1].value, round_key.cells[i].slices[1].value);
+		state->cells[i].slices[2].value = XOR_SLICE(state->cells[i].slices[2].value, round_key.cells[i].slices[2].value);
+		state->cells[i].slices[3].value = XOR_SLICE(state->cells[i].slices[3].value, round_key.cells[i].slices[3].value);
 	}
 	#endif
 	// </editor-fold
 	
 	// AddConstant: Cell 8 XOR 0x2, aka slice_t 1 of cell 8, because C2 is on the third row and not present in the round key!
 	// cell 8 is at position 9
-	state->cells[9].slices[1] = XOR_SLICE(state->cells[9].slices[1], ONE);
+	state->cells[9].slices[1].value = XOR_SLICE(state->cells[9].slices[1].value, ONE);
 }
 
 static inline void encrypt_single_round_64_blocks(KeySchedule64Sliced_t schedule, State64Sliced_t *state,

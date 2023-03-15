@@ -11,6 +11,17 @@
 
 /** ---- SKINNY64 ---- */
 typedef union {
+	slice_t value;
+	
+	#if slice_size == 256
+	uint64_t segments[4];
+	#elif slice_size == 512
+	uint64_t segments[8];
+	#endif
+	
+} Slice64_t;
+
+typedef union {
 	uint64_t raw;
 	unsigned char bytes[16];
 } Block64_t;
@@ -20,7 +31,7 @@ typedef union {
 } Blocks64_t;
 
 typedef union {
-	slice_t slices[4];
+	Slice64_t slices[4];
 	#if AVX2_acceleration || AVX512_acceleration
 	__m256i avx2_simd_cell;
 	#endif
@@ -42,13 +53,13 @@ typedef union {
 } Row64_t;
 
 typedef union {
-	slice_t raw[32];
+	Slice64_t raw[32];
 	Cell64_t cells[8];
 	Pair64_t pairs[4];
 } HalfState64Sliced_t;
 
 typedef union {
-	slice_t raw[64];
+	Slice64_t raw[64];
 	Cell64_t cells[16];
 	Row64_t rows[4];
 	Pair64_t pairs[8];

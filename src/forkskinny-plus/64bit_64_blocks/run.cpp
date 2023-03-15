@@ -45,9 +45,12 @@ void forkskinny_test(){
 	
 	auto recovered_pt = forkskinny64_decrypt_64_blocks(keyschedule, &ciphertext, '1', 'i');
 
-	auto recovered_M = unslice(recovered_pt.M).values[0].raw;
+	auto recovered_M = unslice(recovered_pt.M).values[0];
 	auto recovered_C0 = unslice(recovered_pt.C0).values[0].raw;
 	auto recovered_C1 = unslice(recovered_pt.C1).values[0].raw;
+	
+	std::cout << "\nrecovered M: ";
+	print_block(recovered_M.bytes, 8);
 	
 	int appel = 1;
 }

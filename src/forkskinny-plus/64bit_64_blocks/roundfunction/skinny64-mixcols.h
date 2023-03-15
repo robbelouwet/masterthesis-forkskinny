@@ -18,10 +18,10 @@ static inline Row64_t xor_row(Row64_t a, Row64_t b) {
 	
 	#else
 	for (int i = 0; i < 4; ++i) {
-		res.cols[i].slices[0] = XOR_SLICE(a.cols[i].slices[0], b.cols[i].slices[0]);
-		res.cols[i].slices[1] = XOR_SLICE(a.cols[i].slices[1], b.cols[i].slices[1]);
-		res.cols[i].slices[2] = XOR_SLICE(a.cols[i].slices[2], b.cols[i].slices[2]);
-		res.cols[i].slices[3] = XOR_SLICE(a.cols[i].slices[3], b.cols[i].slices[3]);
+		res.cols[i].slices[0].value = XOR_SLICE(a.cols[i].slices[0].value, b.cols[i].slices[0].value);
+		res.cols[i].slices[1].value = XOR_SLICE(a.cols[i].slices[1].value, b.cols[i].slices[1].value);
+		res.cols[i].slices[2].value = XOR_SLICE(a.cols[i].slices[2].value, b.cols[i].slices[2].value);
+		res.cols[i].slices[3].value = XOR_SLICE(a.cols[i].slices[3].value, b.cols[i].slices[3].value);
 	}
 	#endif
 	
