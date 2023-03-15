@@ -3,10 +3,17 @@
 
 // @formatter:off
 // -- CONFIG --
-#define slice_size 32 // 32, 64, 256 or 512
-#define AVX2_support true
+#define slice_size 256 // 32, 64, 256 or 512
+#define AVX2_support false
 #define AVX512_support false
 // ------------
+
+/* Define SKINNY_64BIT to 1 if the CPU is natively 64-bit */
+#if defined(__WORDSIZE) && __WORDSIZE == 64
+#define SKINNY_64BIT true
+#else
+#define SKINNY_64BIT false
+#endif
 
 #define AVX2_acceleration (slice_size == 64 && AVX2_support)
 #define AVX512_acceleration (slice_size == 64 && AVX512_support)
@@ -58,5 +65,9 @@
 #define AND_SLICE(s1, s2) _mm512_and_si512(s1, s2)
 #endif
 // @formatter:on
+
+#ifndef slice_t
+#error "Please specify a valid configuration"
+#endif
 
 #endif //FORKSKINNYPLUS_CONFIG_H

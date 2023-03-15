@@ -22,7 +22,12 @@ typedef union {
 } Slice64_t;
 
 typedef union {
+	#if SKINNY_64BIT
 	uint64_t raw;
+	#else
+	uint32_t raw[2];
+	#endif
+	
 	unsigned char bytes[16];
 } Block64_t;
 

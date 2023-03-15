@@ -16,8 +16,7 @@ void forkskinny_test(){
 	auto sliced_state = slice(state);
 	
 	// Set TK1
-	auto tk1_blocks = Blocks64_t();
-	tk1_blocks.values[0].raw = 0x0;
+	auto tk1_blocks = Blocks64_t{.values = {{.bytes = {0, 0, 0, 0, 0, 0, 0, 0}}}};
 	auto sliced_TK1 = slice(tk1_blocks);
 	
 	// Set TK2
@@ -25,8 +24,7 @@ void forkskinny_test(){
 	auto sliced_TK2 = slice(tk2_blocks);
 	
 	// Set TK3
-	auto tk3_blocks = Blocks64_t();
-	tk3_blocks.values[0].raw = 0x0;
+	auto tk3_blocks = Blocks64_t{.values = {{.bytes = {0, 0, 0, 0, 0, 0, 0, 0}}}};
 	auto sliced_TK3 = slice(tk3_blocks);
 	
 	// Calculate TK schedule

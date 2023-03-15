@@ -10,6 +10,10 @@ also be a 256-bit or 512-bit simd register, but support for this isn't complete 
 
 # Wednesday
 
+Implemented support for 256-bit SIMD slices. Also refactored the sbox implementation to use the macro logical
+operations, and thus the s box circuit works with __m256i slices. THen i started implementing an accelerated version of
+the slice() and unslice() methods.
+
 # Thursday
 
 # Friday
