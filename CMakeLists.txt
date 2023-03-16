@@ -12,6 +12,7 @@ add_executable(roundconstants_generator
         constants_generator.cpp)
 
 add_executable(forkskinny-plus64
+        src/forkskinny-plus/64bit_64_blocks/utils/slicing_accelerated.h
         src/forkskinny-plus/64bit_64_blocks/run.cpp
         src/forkskinny-plus/64bit_64_blocks/utils/skinny64_datatypes.h
         src/forkskinny-plus/64bit_64_blocks/keyschedule/fixsliced-keyschedule64.h

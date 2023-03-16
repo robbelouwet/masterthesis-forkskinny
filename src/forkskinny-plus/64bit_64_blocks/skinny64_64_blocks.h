@@ -14,7 +14,7 @@
 //
 //	#elif AVX2_acceleration
 //	for (int i = 0; i < 8; ++i)
-//		state->cells[i].avx2_simd_cell = _mm256_xor_si256(round_key.cells[i].avx2_simd_cell, state->cells[i].avx2_simd_cell);
+//		state->cells[i].avx2_simd_cell = _mm256_rotr_si256(round_key.cells[i].avx2_simd_cell, state->cells[i].avx2_simd_cell);
 //
 //	#else
 //	for (int i = 0; i < 8; ++i){

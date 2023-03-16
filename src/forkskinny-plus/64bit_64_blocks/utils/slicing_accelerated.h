@@ -1,9 +1,49 @@
-#ifndef FORKSKINNYPLUS_SLICING_H
-#define FORKSKINNYPLUS_SLICING_H
+#ifndef FORKSKINNYPLUS_ACCELERATED_SLICING_H
+#define FORKSKINNYPLUS_ACCELERATED_SLICING_H
 
 #include <cstdint>
 #include <x86intrin.h>
 #include "skinny64_datatypes.h"
+
+/**
+ * Perform a rotate-right bit rotation on a 256-bit __m256i value.
+ * @param v
+ * @param shift amount of bits to rotate.
+ * @return
+ */
+static inline __m256i mm256_rotr_si256(__m256i v, uint8_t shift) {
+	
+	// shift = x * 64 + y, so we can already rotate in x blocks of 64 bits
+	// by performing a permutation on 4x 64-bit blocks, then only y bit-shifts remain
+	if (shift >= 192) {
+		// rotate-right 192 bits, x = 3, so every block rotates 3 positions
+		v = _mm256_permute4x64_epi64(v, 0b10010011); // A, B, C, D -> B, C, D, A
+		shift ^= 192;
+	}
+	else if (shift >= 128) {
+		// rotate-right 128 bits, x = 2, every block rotates 2 positions
+		v = _mm256_permute4x64_epi64(v, 0b00111001); // A, B, C, D -> C, D, A, B
+		shift ^= 128;
+	}
+	else if (shift >= 64) {
+		// rotate-right 64 bits, x = 1, blocks rotate 1 position
+		v = _mm256_permute4x64_epi64(v, 0b00111001); // A, B, C, D -> D, A, B, C
+		shift ^= 64;
+	}
+	
+	if (shift == 0) return v;
+	
+	// mask & rotate the bits to be overflow, and rotate blocks 1 position to the right
+	uint64_t imask = (((uint64_t(0x1) << shift) - 1) << 1) | 1;
+	auto masked_bits = _mm256_and_si256(_mm256_set_epi64x(imask, imask, imask, imask), v);
+	masked_bits = _mm256_slli_epi64(masked_bits, 64 - shift);
+	masked_bits = _mm256_permute4x64_epi64(masked_bits, 0b00111001);
+	
+	auto segment = _mm256_srli_epi64(v, shift);
+	auto res = _mm256_or_si256(segment, masked_bits);
+	
+	return res;
+}
 
 /**
  *
@@ -11,7 +51,7 @@
  * @param significance LSB = 0, MSB = 63
  * @return
  */
-static inline Slice64_t slice_significance(const Blocks64_t blocks, uint8_t significance) {
+static inline Slice64_t slice_significance_accelerated(const Blocks64_t blocks, uint8_t significance) {
 	uint64_t mask = 1ULL << significance;
 	auto slice = Slice64_t();
 	
@@ -27,7 +67,7 @@ static inline Slice64_t slice_significance(const Blocks64_t blocks, uint8_t sign
 	return slice;
 }
 
-static inline State64Sliced_t *slice(Blocks64_t blocks) {
+static inline State64Sliced_t *slice_accelerated(Blocks64_t blocks) {
 	// make it 32-byte aligned for fast memory access
 	auto *result = (State64Sliced_t *) aligned_alloc(32, sizeof(State64Sliced_t));
 	
@@ -86,7 +126,7 @@ static inline State64Sliced_t *slice(Blocks64_t blocks) {
  * @param sb_index the index of the slice_t, what 'significance' are we talking about w.r.t. the slice.
  * 					E.g. the very first slice contains the *least* significant bits of 64 states
  */
-static inline void unslice_significance(const Slice64_t slice, Blocks64_t *blocks, uint8_t sb_index) {
+static inline void unslice_significance_accelerated(const Slice64_t slice, Blocks64_t *blocks, uint8_t sb_index) {
 #if slice_size == 256
 
 #elif slice_size == 512
@@ -97,7 +137,7 @@ static inline void unslice_significance(const Slice64_t slice, Blocks64_t *block
 	
 }
 
-static inline Blocks64_t unslice(State64Sliced_t state) {
+static inline Blocks64_t unslice_accelerated(State64Sliced_t state) {
 	Blocks64_t unsliced = Blocks64_t();
 	for (int i = 0; i < 64; ++i) {
 		unslice_significance(state.raw[i], &unsliced, i);
@@ -106,4 +146,4 @@ static inline Blocks64_t unslice(State64Sliced_t state) {
 	return unsliced;
 }
 
-#endif //FORKSKINNYPLUS_SLICING_H
+#endif //FORKSKINNYPLUS_ACCELERATED_SLICING_H

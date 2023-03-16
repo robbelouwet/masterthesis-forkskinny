@@ -16,6 +16,9 @@ the slice() and unslice() methods.
 
 # Thursday
 
+continued implementing the accelerated slice operations, will only work for 64-bit and 256-bit slices though. __m512
+datatypes do not have a permuyte or shift operation across lanes.
+
 # Friday
 
 ## What was on my mind

@@ -25,7 +25,7 @@ static inline void forkskinny64_add_constant(State64Sliced_t *state, uint16_t it
 			forkskinny64_precomputed_round_constants[iteration][6],
 			0
 	}};
-	state->cells[5].avx2_simd_cell = _mm256_xor_si256(state->cells[5].avx2_simd_cell, C1.avx2_simd_cell);
+	state->cells[5].avx2_simd_cell = _mm256_rotr_si256(state->cells[5].avx2_simd_cell, C1.avx2_simd_cell);
 	#else
 	// Cell 0 XOR C0
 	state->cells[1].slices[0].value = XOR_SLICE(state->cells[1].slices[0].value, forkskinny64_precomputed_round_constants[iteration][0]);
@@ -59,7 +59,7 @@ static inline void forkskinny64_add_constant(State64Sliced_t *state, uint16_t it
 //			skinny64_precomputed_round_constants[iteration][2],
 //			skinny64_precomputed_round_constants[iteration][3]
 //	}};
-//	state->cells[0].avx2_simd_cell = _mm256_xor_si256(state->cells[0].avx2_simd_cell, C0.avx2_simd_cell);
+//	state->cells[0].avx2_simd_cell = _mm256_rotr_si256(state->cells[0].avx2_simd_cell, C0.avx2_simd_cell);
 //
 //	// Cell 4 XOR C1
 //	Cell64_t C1 = {.slices = {
@@ -68,7 +68,7 @@ static inline void forkskinny64_add_constant(State64Sliced_t *state, uint16_t it
 //			0,
 //			0
 //	}};
-//	state->cells[4].avx2_simd_cell = _mm256_xor_si256(state->cells[4].avx2_simd_cell, C1.avx2_simd_cell);
+//	state->cells[4].avx2_simd_cell = _mm256_rotr_si256(state->cells[4].avx2_simd_cell, C1.avx2_simd_cell);
 //
 //	// Cell 8 XOR 0x2, aka slice_t 1 of cell 8
 //	state->cells[8].slices[1] ^= ONE;

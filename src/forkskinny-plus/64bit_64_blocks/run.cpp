@@ -4,6 +4,7 @@
 #include "keyschedule/keyschedule64.h"
 #include "skinny64_64_blocks.h"
 #include "forkskinny64_64_blocks.h"
+#include "utils/slicing_accelerated.h"
 
 void print_block(uint8_t *block, unsigned int n) {
 	for (unsigned int i = 0; i < n; i++)
@@ -89,5 +90,8 @@ void forkskinny_test(){
 //}
 
 int main() {
-	forkskinny_test();
+	//forkskinny_test();
+	
+	auto state = Blocks64_t{.values = {{.bytes = {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef}}}};
+	auto sliced_state = slice(state);
 }
