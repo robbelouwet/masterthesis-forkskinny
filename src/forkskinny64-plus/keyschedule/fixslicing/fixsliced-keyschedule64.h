@@ -1,7 +1,7 @@
 #ifndef FORKSKINNYPLUS_FIXSLICED_KEYSCHEDULE64_H
 #define FORKSKINNYPLUS_FIXSLICED_KEYSCHEDULE64_H
 
-#include "keyschedule64-internal.h"
+#include "../keyschedule64-internal.h"
 
 
 /**

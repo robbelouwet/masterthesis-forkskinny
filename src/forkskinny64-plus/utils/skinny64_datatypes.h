@@ -28,7 +28,7 @@ typedef union {
 	uint32_t raw[2];
 	#endif
 	
-	unsigned char bytes[16];
+	unsigned char bytes[8];
 } Block64_t;
 
 typedef union {

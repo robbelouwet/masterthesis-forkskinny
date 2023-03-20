@@ -87,10 +87,10 @@ static inline State64Sliced_t *slice_accelerated(Blocks64_t blocks) {
 		uint64_t mask = 0x8000000000000000ULL >> i;
 		int j = 0;
 		for (; j < slice_size; ++j) {
-			slice |= (blocks.values[i].raw & mask);
+			slice.value |= (blocks.values[i].raw & mask);
 			mask = _rotr(mask, 1);
 		}
-		result->raw[j].value = _rotl(slice, i);
+		result->raw[j].value = _rotl(slice.value, i);
 		#elif slice_size == 256
 		uint64_t mask = 0x8000000000000000ULL >> i;
 		int j = 0;
