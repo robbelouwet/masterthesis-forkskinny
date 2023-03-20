@@ -15,15 +15,15 @@ void forkskinny_test(){
 	auto sliced_state = slice(state);
 	
 	// Set TK1
-	auto tk1_blocks = Blocks64_t{.values = {{.bytes = {0, 0, 0, 0, 0, 0, 0, 0}}}};
+	auto tk1_blocks = Blocks64_t{.values = {{.bytes = {0xf1, 0x11, 0x00, 0x22, 0x00, 0x33, 0x00, 0x44,}}}};
 	auto sliced_TK1 = slice(tk1_blocks);
 	
 	// Set TK2
-	auto tk2_blocks = Blocks64_t{.values = {{.bytes = {0x10, 0x32, 0x54, 0x76, 0x98, 0xba, 0xdc, 0xfe}}}};
+	auto tk2_blocks = Blocks64_t{.values = {{.bytes = {0xf2, 0x55, 0x00, 0x66, 0x00, 0x77, 0x00, 0x88,}}}};
 	auto sliced_TK2 = slice(tk2_blocks);
 	
 	// Set TK3
-	auto tk3_blocks = Blocks64_t{.values = {{.bytes = {0, 0, 0, 0, 0, 0, 0, 0}}}};
+	auto tk3_blocks = Blocks64_t{.values = {{.bytes = {0xf3, 0x99, 0x00, 0xaa, 0x00, 0xbb, 0x00, 0xcc}}}};
 	auto sliced_TK3 = slice(tk3_blocks);
 	
 	// Calculate TK schedule
@@ -43,7 +43,11 @@ void forkskinny_test(){
 	auto recovered_pt = forkskinny64_decrypt_64_blocks(keyschedule, &ciphertext, '1', 'i');
 
 	auto recovered_M = unslice(recovered_pt.M).values[0];
+	
+	// ff64f1b910932a50
 	auto recovered_C0 = unslice(recovered_pt.C0).values[0].raw;
+	
+	// f3ec5473d2205505
 	auto recovered_C1 = unslice(recovered_pt.C1).values[0].raw;
 	
 	std::cout << "\nrecovered M: ";

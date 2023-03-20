@@ -3,9 +3,9 @@
 
 // @formatter:off
 // -- CONFIG --
-#define slice_size 256 // 32, 64, 256 or 512
+#define slice_size 512 // 32, 64, 256 or 512
 #define AVX2_support true
-#define AVX512_support false
+#define AVX512_support true
 // ------------
 
 /* Define SKINNY_64BIT to 1 if the CPU is natively 64-bit */
@@ -58,7 +58,7 @@
 #elif slice_size == 512
 #define slice_t __m512i
 #define ONE _mm512_set1_epi64(-1)
-#define ZER _mm512_setzero()
+#define ZER _mm512_setzero_si512()
 
 #define XOR_SLICE(s1, s2) _mm512_xor_si512(s1, s2)
 #define OR_SLICE(s1, s2) _mm512_or_si512(s1, s2)

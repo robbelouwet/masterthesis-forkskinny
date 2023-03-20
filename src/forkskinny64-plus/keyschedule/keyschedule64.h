@@ -64,7 +64,10 @@ static inline KeySchedule64Sliced_t forkskinny_64_init_tk123(State64Sliced_t tk1
 		
 		// LFSR TK2 & TK3
 		tk2_lfsr(&tk2);
+		auto utk2 = unslice(tk2).values[0].raw;  // 0x660055F20FF10001
 		tk3_lfsr(&tk3);
+		auto utk3 = unslice(tk3).values[0].raw;  // 0xAA0099F3055E000E
+		int appel = 1;
 	}
 	
 	return schedule;

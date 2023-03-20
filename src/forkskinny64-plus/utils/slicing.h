@@ -88,7 +88,7 @@ static inline void unslice_significance(const Slice64_t slice, Blocks64_t *block
 		}
 	}
 	#elif slice_size == 512
-	uint8_t segments[4] = {0, 64, 128, 192, 256, 320, 384, 448};
+	uint16_t segments[8] = {0, 64, 128, 192, 256, 320, 384, 448};
 	
 	// loop over every segment, __m512i has 8x 64-bit segments
 	for (auto &segment : segments) {
