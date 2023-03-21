@@ -7,11 +7,11 @@ on whether it
 will be actually faster. Fixed also some code relating to the 512-bit slices, encryption and decryption now also work
 with AVX512 slices, so 512 blocks in parallel.
 
-# Wednesday
+# Tuesday
 
-# Thursday
-
-# Friday
+Refactored some code, implemented the fixsliced keyschedule for forkskinny64 and started implementing the forkskinny128
+version. Although, that just comes down to copying the forkskinny64 folder and adjusting all the parameters and change
+some operations.
 
 ## What was on my mind
 

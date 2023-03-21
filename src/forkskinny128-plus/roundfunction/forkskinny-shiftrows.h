@@ -1,16 +1,16 @@
-#ifndef FORKSKINNYPLUS_SKINNY64_SHIFTROWS_H
-#define FORKSKINNYPLUS_SKINNY64_SHIFTROWS_H
+#ifndef FORKSKINNYPLUS_FORKSKINNY_SHIFTROWS_H
+#define FORKSKINNYPLUS_FORKSKINNY_SHIFTROWS_H
 
-#include "../utils/skinny64_datatypes.h"
+#include "../utils/forkskinny-datatypes.h"
 
 /**
  * This ShiftRows implementation conceptually does the correct ShiftRows operation towards the C0 according to the paper,
  * but produces wrong ciphertexts.
  * @param state
  */
-static inline void skinny64_shiftrows(State64Sliced_t *state) {
+static inline void skinny64_shiftrows(StateSliced_t *state) {
 	// 0xFEDC BA98 7654 3210
-//	auto test_blocks = Blocks64_t();
+//	auto test_blocks = Blocks_t();
 //	test_blocks.values[0].raw = 0xFEDCBA9876543210;
 //	*state = slice_t(test_blocks);
 	
@@ -41,8 +41,8 @@ static inline void skinny64_shiftrows(State64Sliced_t *state) {
 //	int appel = 1;
 }
 
-static inline void skinny64_shiftrows_inv(State64Sliced_t *state){
-//	auto ct = Blocks64_t{.values = {0xEDCF98BA47653210}};
+static inline void skinny64_shiftrows_inv(StateSliced_t *state){
+//	auto ct = Blocks_t{.values = {0xEDCF98BA47653210}};
 //	*state = slice_t(ct);
 	
 	auto temp = state->cells[7];
@@ -69,4 +69,4 @@ static inline void skinny64_shiftrows_inv(State64Sliced_t *state){
 //	auto test_res = unslice(*state).values[0].raw;
 //	int appel = 1;
 }
-#endif //FORKSKINNYPLUS_SKINNY64_SHIFTROWS_H
+#endif //FORKSKINNYPLUS_FORKSKINNY_SHIFTROWS_H

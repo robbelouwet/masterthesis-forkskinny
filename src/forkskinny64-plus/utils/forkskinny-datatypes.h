@@ -1,5 +1,5 @@
-#ifndef FORKSKINNYPLUS_SKINNY64_DATATYPES_H
-#define FORKSKINNYPLUS_SKINNY64_DATATYPES_H
+#ifndef FORKSKINNYPLUS_FORKSKINNY_DATATYPES_H
+#define FORKSKINNYPLUS_FORKSKINNY_DATATYPES_H
 
 #define FORKSKINNY_ROUNDS_BEFORE 17
 #define FORKSKINNY_ROUNDS_AFTER 23
@@ -19,7 +19,7 @@ typedef union {
 	uint64_t segments[8];
 	#endif
 	
-} Slice64_t;
+} Slice_t;
 
 typedef union {
 	#if SKINNY_64BIT
@@ -29,57 +29,56 @@ typedef union {
 	#endif
 	
 	unsigned char bytes[8];
-} Block64_t;
+} Block_t;
 
 typedef union {
-	Block64_t values[slice_size];
-} Blocks64_t;
+	Block_t values[slice_size];
+} Blocks_t;
 
 typedef union {
-	Slice64_t slices[4];
+	Slice_t slices[4];
 	#if AVX2_acceleration || AVX512_acceleration
 	__m256i avx2_simd_cell;
 	#endif
-} Cell64_t;
+} Cell_t;
 
 typedef union {
 	#if AVX512_acceleration
 	__m512i avx512_simd_pair;
 	#endif
-	Cell64_t cells[2];
-	
-} Pair64_t;
+	Cell_t cells[2];
+} Pair_t;
 
 typedef union {
-	Cell64_t cols[4];
+	Cell_t cols[4];
 	#if AVX512_acceleration
-	Pair64_t pairs[2];
+	Pair_t pairs[2];
 	#endif
-} Row64_t;
+} Row_t;
 
 typedef union {
-	Slice64_t raw[32];
-	Cell64_t cells[8];
-	Pair64_t pairs[4];
-} HalfState64Sliced_t;
+	Slice_t raw[32];
+	Cell_t cells[8];
+	Pair_t pairs[4];
+} HalfStateSliced_t;
 
 typedef union {
-	Slice64_t raw[64];
-	Cell64_t cells[16];
-	Row64_t rows[4];
-	Pair64_t pairs[8];
-	HalfState64Sliced_t halves[2];
-} State64Sliced_t;
+	Slice_t raw[64];
+	Cell_t cells[16];
+	Row_t rows[4];
+	Pair_t pairs[8];
+	HalfStateSliced_t halves[2];
+} StateSliced_t;
 
 typedef union {
 	/** All words of the key keys */
-	HalfState64Sliced_t keys[FORKSKINNY64_MAX_ROUNDS];
-} KeySchedule64Sliced_t;
+	HalfStateSliced_t keys[FORKSKINNY64_MAX_ROUNDS];
+} KeyScheduleSliced_t;
 
 typedef struct {
-	State64Sliced_t C1;  // <- branch constant
-	State64Sliced_t C0;
-	State64Sliced_t M;
+	StateSliced_t C1;  // <- branch constant
+	StateSliced_t C0;
+	StateSliced_t M;
 } SlicedCiphertext_t;
 
-#endif //FORKSKINNYPLUS_SKINNY64_DATATYPES_H
+#endif //FORKSKINNYPLUS_FORKSKINNY_DATATYPES_H

@@ -1,10 +1,10 @@
-#ifndef FORKSKINNYPLUS_SKINNY64_MIXCOLS_H
-#define FORKSKINNYPLUS_SKINNY64_MIXCOLS_H
+#ifndef FORKSKINNYPLUS_FORKSKINNY_MIXCOLS_H
+#define FORKSKINNYPLUS_FORKSKINNY_MIXCOLS_H
 
-#include "../utils/skinny64_datatypes.h"
+#include "../utils/forkskinny-datatypes.h"
 
-static inline Row64_t xor_row(Row64_t a, Row64_t b) {
-	auto res = Row64_t();
+static inline Row_t xor_row(Row_t a, Row_t b) {
+	auto res = Row_t();
 	
 	#if AVX512_acceleration
 	res.pairs[0].avx512_simd_pair = _mm512_xor_si512(a.pairs[0].avx512_simd_pair, b.pairs[0].avx512_simd_pair);
@@ -28,8 +28,8 @@ static inline Row64_t xor_row(Row64_t a, Row64_t b) {
 	return res;
 }
 
-static inline void skinny64_mixcols(State64Sliced_t *state) {
-//	auto test_blocks = Blocks64_t();
+static inline void skinny64_mixcols(StateSliced_t *state) {
+//	auto test_blocks = Blocks_t();
 //	test_blocks.values[0].raw = 0x55557555B6988DDF;
 //	*state = slice(test_blocks);
 	
@@ -47,8 +47,8 @@ static inline void skinny64_mixcols(State64Sliced_t *state) {
 //	int appel = 1;
 }
 
-static inline void skinny64_mixcols_inv(State64Sliced_t *state) {
-//	auto ct = Blocks64_t{.values = {0xF88AC3CD8DDFADDF}};
+static inline void skinny64_mixcols_inv(StateSliced_t *state) {
+//	auto ct = Blocks_t{.values = {0xF88AC3CD8DDFADDF}};
 //	*state = slice_t(ct);
 	
 	auto temp = state->rows[3];
@@ -65,4 +65,4 @@ static inline void skinny64_mixcols_inv(State64Sliced_t *state) {
 //	int appel = 1;
 }
 
-#endif //FORKSKINNYPLUS_SKINNY64_MIXCOLS_H
+#endif //FORKSKINNYPLUS_FORKSKINNY_MIXCOLS_H

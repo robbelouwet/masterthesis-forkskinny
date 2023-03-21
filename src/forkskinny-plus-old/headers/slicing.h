@@ -10,7 +10,7 @@
  * @param significance LSB = 0, MSB = 63
  * @return
  */
-static inline State64Sliced_t slice_significance(const uint64_t p_blocks[64], uint8_t significance) {
+static inline StateSliced_t slice_significance(const uint64_t p_blocks[64], uint8_t significance) {
 	uint64_t mask = 1 << significance;
 	uint64_t slice = 0;
 	
