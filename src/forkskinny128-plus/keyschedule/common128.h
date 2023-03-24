@@ -1,23 +1,25 @@
-#ifndef FORKSKINNYPLUS_COMMON_H
-#define FORKSKINNYPLUS_COMMON_H
+#ifndef FORKSKINNYPLUS128_COMMON_H
+#define FORKSKINNYPLUS128_COMMON_H
 
-#include "../utils/forkskinny-datatypes.h"
+#include "../utils/forkskinny128-datatypes.h"
 
 /**
  * XOR's cells of top 2 rows of 2 keys together, and stores them in res
  * @param a
  * @param b
  */
-static inline HalfStateSliced_t xor_half_keys(HalfStateSliced_t a, HalfStateSliced_t b) {
-	auto res = HalfStateSliced_t();
+static inline HalfState128Sliced_t xor_half_keys(HalfState128Sliced_t a, HalfState128Sliced_t b) {
+	auto res = HalfState128Sliced_t();
 	
 	#if AVX512_acceleration
 	for (int i = 0; i < 4; ++i)
-		res.pairs[i].avx512_simd_pair = _mm512_xor_si512(a.pairs[i].avx512_simd_pair, b.pairs[i].avx512_simd_pair);
+		res.pairs[i].avx512_simd_cell = _mm512_xor_si512(a.pairs[i].avx512_simd_cell, b.pairs[i].avx512_simd_cell);
 	
 	#elif AVX2_acceleration
-	for (int i = 0; i < 8; ++i)
-		res.cells[i].avx2_simd_cell = _mm256_xor_si256(a.cells[i].avx2_simd_cell, b.cells[i].avx2_simd_cell);
+	for (int i = 0; i < 8; ++i){
+		res.cells[i].avx2_simd_cells[0] = _mm256_xor_si256(a.cells[i].avx2_simd_cells[0], b.cells[i].avx2_simd_cells[0]);
+		res.cells[i].avx2_simd_cells[1] = _mm256_xor_si256(a.cells[i].avx2_simd_cells[1], b.cells[i].avx2_simd_cells[1]);
+	}
 	
 	#else
 	for (int i = 0; i < 8; ++i) {
@@ -37,16 +39,19 @@ static inline HalfStateSliced_t xor_half_keys(HalfStateSliced_t a, HalfStateSlic
  * @param b
  * @param stop amount of cells to xor
  */
-static inline StateSliced_t xor_keys(StateSliced_t a, StateSliced_t b) {
-	auto res = StateSliced_t();
+static inline State128Sliced_t xor_keys(State128Sliced_t a, State128Sliced_t b) {
+	auto res = State128Sliced_t();
 	
 	#if AVX512_acceleration
 	for (int i = 0; i < 8; ++i)
 		res.pairs[i].avx512_simd_pair = _mm512_xor_si512(a.pairs[i].avx512_simd_pair, b.pairs[i].avx512_simd_pair);
 	
 	#elif AVX2_acceleration
-	for (int i = 0; i < 16; ++i)
-		res.cells[i].avx2_simd_cell = _mm256_xor_si256(a.cells[i].avx2_simd_cell, b.cells[i].avx2_simd_cell);
+	for (int i = 0; i < 16; ++i){
+		res.cells[i].avx2_simd_cells[0] = _mm256_xor_si256(a.cells[i].avx2_simd_cells[0], b.cells[i].avx2_simd_cells[0]);
+		res.cells[i].avx2_simd_cells[1] = _mm256_xor_si256(a.cells[i].avx2_simd_cells[1], b.cells[i].avx2_simd_cells[1]);
+		
+	}
 	
 	#else
 	for (int i = 0; i < 16; ++i) {

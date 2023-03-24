@@ -1,4 +1,4 @@
-#ifndef FORKSKINNYPLUS_TK_PERMUTE_H
+#ifndef FORKSKINNYPLUS64_TK_PERMUTE_H
 #define FORKSKINNYPLUS_TK_PERMUTE_H
 
 #include "../headers/forkskinny64-plus.h"
@@ -13,8 +13,8 @@ uint8_t pt_10[] = {6, 4, 5, 0, 3, 1, 7, 2, 14, 12, 13, 8, 11, 9, 15, 10};
 uint8_t pt_12[] = {4, 2, 6, 1, 5, 7, 3, 0, 12, 10, 14, 9, 13, 15, 11, 8};
 uint8_t pt_14[] = {2, 0, 4, 7, 6, 3, 5, 1, 10, 8, 12, 15, 14, 11, 13, 9};
 
-static inline StateSliced_t tk_permute(StateSliced_t state) {
-	auto permuted_state = StateSliced_t();
+static inline State64Sliced_t tk_permute(State64Sliced_t state) {
+	auto permuted_state = State64Sliced_t();
 	
 	for (int i = 0; i < 16; ++i)
 		permuted_state.cells[i] = state.cells[pt[i]];
@@ -22,4 +22,4 @@ static inline StateSliced_t tk_permute(StateSliced_t state) {
 	return permuted_state;
 }
 
-#endif //FORKSKINNYPLUS_TK_PERMUTE_H
+#endif //FORKSKINNYPLUS64_TK_PERMUTE_H

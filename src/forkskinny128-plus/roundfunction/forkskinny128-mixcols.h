@@ -1,20 +1,24 @@
-#ifndef FORKSKINNYPLUS_FORKSKINNY_MIXCOLS_H
-#define FORKSKINNYPLUS_FORKSKINNY_MIXCOLS_H
+#ifndef FORKSKINNYPLUS128_FORKSKINNY_MIXCOLS_H
+#define FORKSKINNYPLUS128_FORKSKINNY_MIXCOLS_H
 
-#include "../utils/forkskinny-datatypes.h"
+#include "../utils/forkskinny128-datatypes.h"
 
-static inline Row_t xor_row(Row_t a, Row_t b) {
-	auto res = Row_t();
+static inline Row128_t xor_row(Row128_t a, Row128_t b) {
+	auto res = Row128_t();
 	
 	#if AVX512_acceleration
 	res.pairs[0].avx512_simd_pair = _mm512_xor_si512(a.pairs[0].avx512_simd_pair, b.pairs[0].avx512_simd_pair);
 	res.pairs[1].avx512_simd_pair = _mm512_xor_si512(a.pairs[1].avx512_simd_pair, b.pairs[1].avx512_simd_pair);
 	
 	#elif AVX2_acceleration
-	res.cols[0].avx2_simd_cell = _mm256_xor_si256(a.cols[0].avx2_simd_cell, b.cols[0].avx2_simd_cell);
-	res.cols[1].avx2_simd_cell = _mm256_xor_si256(a.cols[1].avx2_simd_cell, b.cols[1].avx2_simd_cell);
-	res.cols[2].avx2_simd_cell = _mm256_xor_si256(a.cols[2].avx2_simd_cell, b.cols[2].avx2_simd_cell);
-	res.cols[3].avx2_simd_cell = _mm256_xor_si256(a.cols[3].avx2_simd_cell, b.cols[3].avx2_simd_cell);
+	res.cols[0].avx2_simd_cells[0] = _mm256_xor_si256(a.cols[0].avx2_simd_cells[0], b.cols[0].avx2_simd_cells[0]);
+	res.cols[0].avx2_simd_cells[1] = _mm256_xor_si256(a.cols[0].avx2_simd_cells[1], b.cols[0].avx2_simd_cells[1]);
+	res.cols[1].avx2_simd_cells[0] = _mm256_xor_si256(a.cols[1].avx2_simd_cells[0], b.cols[1].avx2_simd_cells[0]);
+	res.cols[1].avx2_simd_cells[1] = _mm256_xor_si256(a.cols[1].avx2_simd_cells[1], b.cols[1].avx2_simd_cells[1]);
+	res.cols[2].avx2_simd_cells[0] = _mm256_xor_si256(a.cols[2].avx2_simd_cells[0], b.cols[2].avx2_simd_cells[0]);
+	res.cols[2].avx2_simd_cells[1] = _mm256_xor_si256(a.cols[2].avx2_simd_cells[1], b.cols[2].avx2_simd_cells[1]);
+	res.cols[3].avx2_simd_cells[0] = _mm256_xor_si256(a.cols[3].avx2_simd_cells[0], b.cols[3].avx2_simd_cells[0]);
+	res.cols[3].avx2_simd_cells[1] = _mm256_xor_si256(a.cols[3].avx2_simd_cells[1], b.cols[3].avx2_simd_cells[1]);
 	
 	#else
 	for (int i = 0; i < 4; ++i) {
@@ -28,8 +32,8 @@ static inline Row_t xor_row(Row_t a, Row_t b) {
 	return res;
 }
 
-static inline void skinny64_mixcols(StateSliced_t *state) {
-//	auto test_blocks = Blocks_t();
+static inline void skinny64_mixcols(State128Sliced_t *state) {
+//	auto test_blocks = Blocks128_t();
 //	test_blocks.values[0].raw = 0x55557555B6988DDF;
 //	*state = slice(test_blocks);
 	
@@ -47,8 +51,8 @@ static inline void skinny64_mixcols(StateSliced_t *state) {
 //	int appel = 1;
 }
 
-static inline void skinny64_mixcols_inv(StateSliced_t *state) {
-//	auto ct = Blocks_t{.values = {0xF88AC3CD8DDFADDF}};
+static inline void skinny64_mixcols_inv(State128Sliced_t *state) {
+//	auto ct = Blocks128_t{.values = {0xF88AC3CD8DDFADDF}};
 //	*state = slice_t(ct);
 	
 	auto temp = state->rows[3];

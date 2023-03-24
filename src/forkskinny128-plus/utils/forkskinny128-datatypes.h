@@ -1,5 +1,5 @@
-#ifndef FORKSKINNYPLUS_FORKSKINNY_DATATYPES_H
-#define FORKSKINNYPLUS_FORKSKINNY_DATATYPES_H
+#ifndef FORKSKINNYPLUS128_FORKSKINNY_DATATYPES_H
+#define FORKSKINNYPLUS128_FORKSKINNY_DATATYPES_H
 
 #define FORKSKINNY_128_256_ROUNDS_BEFORE 21
 #define FORKSKINNY_128_256_ROUNDS_AFTER 27
@@ -8,7 +8,7 @@
 #define FORKSKINNY128_MAX_ROUNDS (FORKSKINNY_128_384_ROUNDS_BEFORE + 2*FORKSKINNY_128_384_ROUNDS_AFTER)
 
 #include <cstdint>
-#include "config.h"
+#include "config128.h"
 #include "immintrin.h"
 
 /** ---- SKINNY128 ---- */
@@ -21,7 +21,7 @@ typedef union {
 	uint64_t segments[8];
 	#endif
 	
-} Slice_t;
+} Slice128_t;
 
 typedef union {
 	#if SKINNY_64BIT
@@ -30,46 +30,46 @@ typedef union {
 	uint32_t raw[4];
 	#endif
 	unsigned char bytes[16];
-} Block_t;
+} Block128_t;
 
 typedef union {
-	Block_t values[slice_size];
-} Blocks_t;
+	Block128_t values[slice_size];
+} Blocks128_t;
 
 typedef union {
-	Slice_t slices[8];
+	Slice128_t slices[8];
 	#if AVX512_acceleration
 	__m512i avx512_simd_cell;
 	#elif AVX2_acceleration
 	__m256i avx2_simd_cells[2];
 	#endif
-} Cell_t;
+} Cell128_t;
 
 typedef union {
-	Cell_t cols[4];
-} Row_t;
+	Cell128_t cols[4];
+} Row128_t;
 
 typedef union {
-	Slice_t raw[64];
-	Cell_t cells[8];
-} HalfStateSliced_t;
+	Slice128_t raw[64];
+	Cell128_t cells[8];
+} HalfState128Sliced_t;
 
 typedef union {
-	Slice_t raw[128];
-	Cell_t cells[16];
-	Row_t rows[4];
-	HalfStateSliced_t halves[2];
-} StateSliced_t;
+	Slice128_t raw[128];
+	Cell128_t cells[16];
+	Row128_t rows[4];
+	HalfState128Sliced_t halves[2];
+} State128Sliced_t;
 
 typedef union {
 	/** All words of the key keys */
-	HalfStateSliced_t keys[FORKSKINNY128_MAX_ROUNDS];
-} KeyScheduleSliced_t;
+	HalfState128Sliced_t keys[FORKSKINNY128_MAX_ROUNDS];
+} KeySchedule128Sliced_t;
 
 typedef struct {
-	StateSliced_t C1;  // <- branch constant
-	StateSliced_t C0;
-	StateSliced_t M;
-} SlicedCiphertext_t;
+	State128Sliced_t C1;  // <- branch constant
+	State128Sliced_t C0;
+	State128Sliced_t M;
+} SlicedCiphertext128_t;
 
 #endif //FORKSKINNYPLUS_FORKSKINNY_DATATYPES_H

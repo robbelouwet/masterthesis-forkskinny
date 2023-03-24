@@ -1,5 +1,5 @@
-#ifndef FORKSKINNYPLUS_FIXSLICING_PERMUTATIONS_H
-#define FORKSKINNYPLUS_FIXSLICING_PERMUTATIONS_H
+#ifndef FORKSKINNYPLUS128_FIXSLICING_PERMUTATIONS_H
+#define FORKSKINNYPLUS128_FIXSLICING_PERMUTATIONS_H
 
 // <editor-fold desc="PT 2"
 #define PT_2(input, output) {   \
@@ -141,4 +141,4 @@ output.cells[0xe] = input.cells[0x8];   \
 output.cells[0xf] = input.cells[0xc];   }
 // </editor-fold>
 
-#endif //FORKSKINNYPLUS_FIXSLICING_PERMUTATIONS_H
+#endif //FORKSKINNYPLUS128_FIXSLICING_PERMUTATIONS_H

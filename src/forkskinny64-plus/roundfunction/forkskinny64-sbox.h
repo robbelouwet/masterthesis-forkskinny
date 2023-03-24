@@ -1,7 +1,7 @@
-#ifndef FORKSKINNYPLUS_FORKSKINNY_SBOX_H
-#define FORKSKINNYPLUS_FORKSKINNY_SBOX_H
+#ifndef FORKSKINNYPLUS64_FORKSKINNY_SBOX_H
+#define FORKSKINNYPLUS64_FORKSKINNY_SBOX_H
 
-#include "../utils/forkskinny-datatypes.h"
+#include "../utils/forkskinny64-datatypes.h"
 
 // for readability:
 #define x0 cell.slices[0].value
@@ -14,9 +14,9 @@
 #define y2 state->cells[i].slices[2].value
 #define y3 state->cells[i].slices[3].value
 
-static inline void skinny64_sbox(StateSliced_t *state) {
-//	auto blocks = Blocks_t{.values = {0xFEDCBA9876543210}};
-//	*state = slice_t(blocks);
+static inline void skinny64_sbox(State64Sliced_t *state) {
+//	auto blocks = Blocks64_t{.values = {0xFEDCBA9876543210}};
+//	*state = Slice64_t(blocks);
 //	int appel = 1;
 	
 	for (int i = 0; i < 16; ++i) {
@@ -36,9 +36,9 @@ static inline void skinny64_sbox(StateSliced_t *state) {
 //	int banaan = 1;
 }
 
-static inline void skinny64_sbox_inv(StateSliced_t *state) {
-//	auto blocks = Blocks_t{.values = {0xF7E4D583B2A1096C}};
-//	*state = slice_t(blocks);
+static inline void skinny64_sbox_inv(State64Sliced_t *state) {
+//	auto blocks = Blocks64_t{.values = {0xF7E4D583B2A1096C}};
+//	*state = Slice64_t(blocks);
 //	int appel = 1;
 	
 	for (int i = 0; i < 16; ++i) {
@@ -56,4 +56,4 @@ static inline void skinny64_sbox_inv(StateSliced_t *state) {
 //	int banaan = 1;
 }
 
-#endif //FORKSKINNYPLUS_FORKSKINNY_SBOX_H
+#endif //FORKSKINNYPLUS64_FORKSKINNY_SBOX_H

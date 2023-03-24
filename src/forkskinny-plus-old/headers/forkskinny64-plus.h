@@ -1,4 +1,4 @@
-#ifndef FORKSKINNYPLUS_FORKSKINNY_DATATYPES_H
+#ifndef FORKSKINNYPLUS64_FORKSKINNY_DATATYPES_H
 #define FORKSKINNYPLUS_FORKSKINNY64_PLUS_H
 
 #define FORKSKINNY64_BLOCK_SIZE 8
@@ -22,13 +22,13 @@ typedef union {
 typedef union {
 	uint64_t cell[4];
 	__m256i simd_cell;
-} Cell_t;
+} Cell64_t;
 
 typedef union {
-	Cell_t cells[16];
-	Cell_t half_cells[8][2];
+	Cell64_t cells[16];
+	Cell64_t half_cells[8][2];
 	uint64_t raw[64];
-} StateSliced_t;
+} State64Sliced_t;
 
 typedef union {
 	uint64_t cells[8][16];
@@ -41,9 +41,9 @@ typedef union {
  */
 typedef struct {
 	/** All words of the key keys */
-	StateSliced_t keys[FORKSKINNY128_MAX_ROUNDS];
+	State64Sliced_t keys[FORKSKINNY128_MAX_ROUNDS];
 	
-} KeyScheduleSliced_t;
+} KeySchedule64Sliced_t;
 
 ///*static inline State64Sliced_8_t lsfr_64_tk2_4bit(State64Sliced_8_t state) {
 //	auto x0 = state.slices[0];
@@ -130,4 +130,4 @@ typedef struct {
 //void forkskinny_c_64_192_decrypt(const KeySchedule64_t *tks1, const KeySchedule64_t *tks2,
 //                                 uint8_t *output_left, uint8_t *output_right, const uint8_t *input_right);
 //
-#endif //FORKSKINNYPLUS_FORKSKINNY_DATATYPES_H
+#endif //FORKSKINNYPLUS64_FORKSKINNY_DATATYPES_H

@@ -1,9 +1,8 @@
 #include <cstdio>
 #include <iostream>
-#include "utils/slicing.h"
-#include "keyschedule/keyschedule.h"
+#include "utils/slicing64.h"
+#include "keyschedule/keyschedule64.h"
 #include "forkskinny64.h"
-#include "keyschedule/fixslicing/fixsliced-keyschedule.h"
 
 void print_block(uint8_t *block, unsigned int n) {
 	for (unsigned int i = 0; i < n; i++)
@@ -12,19 +11,19 @@ void print_block(uint8_t *block, unsigned int n) {
 
 void forkskinny64_test(){
 	// Set 64 state blocks, with only the first one containing A's
-	auto state = Blocks_t{.values = {{.bytes = {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef}}}};
+	auto state = Blocks64_t{.values = {{.bytes = {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef}}}};
 	auto sliced_state = slice(state);
 	
 	// Set TK1
-	auto tk1_blocks = Blocks_t{.values = {{.bytes = {0xf1, 0x11, 0x00, 0x22, 0x00, 0x33, 0x00, 0x44,}}}};
+	auto tk1_blocks = Blocks64_t{.values = {{.bytes = {0xf1, 0x11, 0x00, 0x22, 0x00, 0x33, 0x00, 0x44,}}}};
 	auto sliced_TK1 = slice(tk1_blocks);
 	
 	// Set TK2
-	auto tk2_blocks = Blocks_t{.values = {{.bytes = {0xf2, 0x55, 0x00, 0x66, 0x00, 0x77, 0x00, 0x88,}}}};
+	auto tk2_blocks = Blocks64_t{.values = {{.bytes = {0xf2, 0x55, 0x00, 0x66, 0x00, 0x77, 0x00, 0x88,}}}};
 	auto sliced_TK2 = slice(tk2_blocks);
 	
 	// Set TK3
-	auto tk3_blocks = Blocks_t{.values = {{.bytes = {0xf3, 0x99, 0x00, 0xaa, 0x00, 0xbb, 0x00, 0xcc}}}};
+	auto tk3_blocks = Blocks64_t{.values = {{.bytes = {0xf3, 0x99, 0x00, 0xaa, 0x00, 0xbb, 0x00, 0xcc}}}};
 	auto sliced_TK3 = slice(tk3_blocks);
 	
 	// Calculate TK schedule

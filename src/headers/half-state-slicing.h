@@ -1,4 +1,4 @@
-#ifndef FORKSKINNYPLUS_HALF_STATE_SLICING_H
+#ifndef FORKSKINNYPLUS64_HALF_STATE_SLICING_H
 #define FORKSKINNYPLUS_HALF_STATE_SLICING_H
 
 #include <cstdint>
@@ -80,4 +80,4 @@ static inline uint32_t unslice(uint32_t state) {
 	       | unslice_index(((state & 0xFF000000) >> 24), 3);
 }
 
-#endif //FORKSKINNYPLUS_HALF_STATE_SLICING_H
+#endif //FORKSKINNYPLUS64_HALF_STATE_SLICING_H

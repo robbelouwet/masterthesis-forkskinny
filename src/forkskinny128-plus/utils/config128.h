@@ -1,9 +1,9 @@
-#ifndef FORKSKINNYPLUS_CONFIG_H
-#define FORKSKINNYPLUS_CONFIG_H
+#ifndef FORKSKINNYPLUS128_CONFIG_H
+#define FORKSKINNYPLUS128_CONFIG_H
 
 // @formatter:off
 // -- CONFIG --
-#define slice_size 512 // 32, 64, 256 or 512
+#define slice_size 64 // 32, 64, 256 or 512
 #define AVX2_support true
 #define AVX512_support false
 // ------------

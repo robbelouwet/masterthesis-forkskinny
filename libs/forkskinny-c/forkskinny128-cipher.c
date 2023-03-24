@@ -173,11 +173,20 @@ void forkskinny_c_128_384_init_tk2
           ks->keys[index].row[1] = tk.row[1];
         #endif
         /* Permute TK2 for the next round */
+		// [0]: 9AC99F33632E5A76
+		// [1]: 1805831B70D3266
+//		tk.lrow[0] = 0x0011223344556677;
+//		tk.lrow[1] = 0xffeeddccbbaa9988;
         skinny128_permute_tk(&tk);
+		// [0]: B731800D58660132
+		// [1]: 9AC99F33632E5A76
 
         /* Apply LFSR2 to the first two rows of TK2 */
         #if SKINNY_64BIT
           tk.lrow[0] = skinny128_LFSR2(tk.lrow[0]);
+		  // lrow[0] = 0x6E63011AB0CD0265
+		  // lrow[1] = 0x9AC99F33632E5A76
+		  int appel = 1;
         #else
           tk.row[0] = skinny128_LFSR2(tk.row[0]);
           tk.row[1] = skinny128_LFSR2(tk.row[1]);
@@ -217,6 +226,7 @@ void forkskinny_c_128_384_init_tk3(ForkSkinny128Key_t *ks, const uint8_t *key, u
         /* Apply LFSR3 to the first two rows of TK2 */
         #if SKINNY_64BIT
           tk.lrow[0] = skinny128_LFSR3(tk.lrow[0]);
+		  int appel = 1;
         #else
           tk.row[0] = skinny128_LFSR3(tk.row[0]);
           tk.row[1] = skinny128_LFSR3(tk.row[1]);
@@ -460,7 +470,8 @@ ForkSkinny128Cells_t forkskinny_128_384_encrypt_round(
 	
 	/* Apply the subkey for this round */
 	#if SKINNY_64BIT
-	state.lrow[0] ^= schedule1->lrow ^ schedule2->lrow ^ schedule3->lrow;
+	uint64_t round_key = schedule1->lrow ^ schedule2->lrow ^ schedule3->lrow;
+	state.lrow[0] ^= round_key;
 	state.lrow[1] ^= 0x02;
 	#else
 	state.row[0] ^= schedule1->row[0] ^ schedule2->row[0] ^ schedule3->row[0];

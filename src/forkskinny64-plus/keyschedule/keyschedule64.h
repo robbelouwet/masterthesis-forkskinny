@@ -1,15 +1,15 @@
-#ifndef FORKSKINNYPLUS_KEYSCHEDULE_H
-#define FORKSKINNYPLUS_KEYSCHEDULE_H
+#ifndef FORKSKINNYPLUS64_KEYSCHEDULE_H
+#define FORKSKINNYPLUS64_KEYSCHEDULE_H
 
-#include "keyschedule-internal.h"
-#include "../utils/forkskinny-datatypes.h"
-#include "../roundfunction/forkskinny-addconstant.h"
-#include "common.h"
+#include "keyschedule64-internal.h"
+#include "../utils/forkskinny64-datatypes.h"
+#include "../roundfunction/forkskinny64-addconstant.h"
+#include "common64.h"
 
-static inline KeyScheduleSliced_t forkskinny_128_init_tk2(StateSliced_t tk1, StateSliced_t tk2) {
-	auto schedule = KeyScheduleSliced_t();
+static inline KeySchedule64Sliced_t forkskinny_64_init_tk2(State64Sliced_t tk1, State64Sliced_t tk2) {
+	auto schedule = KeySchedule64Sliced_t();
 	
-	for (int i = 0; i < FORKSKINNY128_MAX_ROUNDS; ++i) {
+	for (int i = 0; i < FORKSKINNY64_MAX_ROUNDS; ++i) {
 		auto res = xor_half_keys(tk2.halves[0], tk1.halves[0]);
 		//auto test_tks = unslice(res);
 		
@@ -30,11 +30,11 @@ static inline KeyScheduleSliced_t forkskinny_128_init_tk2(StateSliced_t tk1, Sta
 	return schedule;
 }
 
-static inline KeyScheduleSliced_t forkskinny_128_init_tk23(StateSliced_t tk1, StateSliced_t tk2,
-                                                          StateSliced_t tk3) {
-	auto schedule = KeyScheduleSliced_t();
+static inline KeySchedule64Sliced_t forkskinny_64_init_tk23(State64Sliced_t tk1, State64Sliced_t tk2,
+                                                            State64Sliced_t tk3) {
+	auto schedule = KeySchedule64Sliced_t();
 	
-	for (int i = 0; i < FORKSKINNY128_MAX_ROUNDS; ++i) {
+	for (int i = 0; i < FORKSKINNY64_MAX_ROUNDS; ++i) {
 		auto res = xor_half_keys(xor_half_keys(tk2.halves[0], tk3.halves[0]), tk1.halves[0]);
 		//auto test_tks = unslice(res);
 		
@@ -63,4 +63,4 @@ static inline KeyScheduleSliced_t forkskinny_128_init_tk23(StateSliced_t tk1, St
 }
 
 
-#endif //FORKSKINNYPLUS_KEYSCHEDULE_H
+#endif //FORKSKINNYPLUS64_KEYSCHEDULE_H

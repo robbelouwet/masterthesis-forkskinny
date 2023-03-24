@@ -1,4 +1,4 @@
-#ifndef FORKSKINNYPLUS_FULL_STATE_SLICING_H
+#ifndef FORKSKINNYPLUS64_FULL_STATE_SLICING_H
 #define FORKSKINNYPLUS_FULL_STATE_SLICING_H
 
 #include <cstdint>
@@ -99,4 +99,4 @@ static inline uint64_t unslice(uint64_t state) {
 	return s0 | s1 | s2 | s3;
 }
 
-#endif //FORKSKINNYPLUS_FULL_STATE_SLICING_H
+#endif //FORKSKINNYPLUS64_FULL_STATE_SLICING_H

@@ -1,11 +1,11 @@
-#ifndef FORKSKINNYPLUS_CONSTANTS_H
-#define FORKSKINNYPLUS_CONSTANTS_H
+#ifndef FORKSKINNYPLUS128_CONSTANTS_H
+#define FORKSKINNYPLUS128_CONSTANTS_H
 
 #include <cstdint>
-#include "forkskinny128-plus/utils/forkskinny-datatypes.h"
+#include "forkskinny128-datatypes.h"
 
 //<editor-fold desc="forkskinny64 sliced branch constant"
-slice_t branchconstant_128[128] = {
+State128Sliced_t const branch_constant = {
 		ZER, ONE, ZER, ZER, ZER, ZER, ZER, ZER,  // 2
 		ONE, ZER, ZER, ZER, ZER, ZER, ZER, ZER,  // 1
 		ZER, ZER, ZER, ONE, ZER, ZER, ZER, ZER,  // 8
@@ -21,29 +21,7 @@ slice_t branchconstant_128[128] = {
 		ZER, ZER, ZER, ZER, ZER, ZER, ZER, ZER,  // a2
 		ZER, ZER, ZER, ZER, ZER, ZER, ZER, ZER,  // 51
 		ZER, ZER, ZER, ZER, ZER, ZER, ZER, ZER,  // 88
-		ZER, ZER, ZER, ZER, ZER, ZER, ZER, ZER,  // 44
-};
-//</editor-fold>
-
-//<editor-fold desc="forkskinny64 sliced branch constant"
-StateSliced_t const branch_constant = {
-		// LSB         MSB
-		ZER, ONE, ZER, ZER,  // 2
-		ONE, ZER, ZER, ZER,  // 1
-		ONE, ZER, ZER, ONE,  // 9
-		ZER, ZER, ONE, ZER,  // 4
-		ZER, ONE, ONE, ZER,  // 6
-		ONE, ONE, ZER, ZER,  // 3
-		ZER, ONE, ZER, ONE,  // A
-		ONE, ZER, ONE, ONE,  // D
-		ONE, ONE, ZER, ONE,  // B
-		ONE, ZER, ONE, ZER,  // 5
-		ONE, ONE, ONE, ONE,  // F
-		ONE, ONE, ONE, ZER,  // 7
-		ZER, ZER, ONE, ONE,  // C
-		ZER, ONE, ONE, ONE,  // E
-		ONE, ZER, ZER, ZER,  //  1
-		ZER, ZER, ZER, ONE,  // 8
+		ZER, ZER, ZER, ZER, ZER, ZER, ZER, ZER  // 44
 };
 //</editor-fold>
 
@@ -141,4 +119,4 @@ slice_t forkskinny_precomputed_round_constants[88][7] = {
 };
 //</editor-fold>
 
-#endif //FORKSKINNYPLUS_CONSTANTS_H
+#endif //FORKSKINNYPLUS128_CONSTANTS_H

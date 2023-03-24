@@ -18,7 +18,10 @@ some operations.
 generated more pre-computed round constants for fs128-384, which has the most amount of rounds. Also generated the
 pre-computed fs128 branch constant (so implemented the script that generates this). Also implemented lfsr's for tk2 and
 tk3. Now I can start implementing the key schedule of fs128 which I couldn't start with because the add-constant step is
-intertwined with the key schedule.
+intertwined with the key schedule. I then did this and implemented the keyschedule for tk1, tk2 & tk3 for forkskinny128. The
+permutation wasn't working because memory layout is not the same as fs64, so the add constant and permutations tep
+needed to be refactored, but now a correct key schedule is derived for fs128-384 so probably for the others as well it's
+correct.
 
 ## What was on my mind
 

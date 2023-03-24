@@ -38,10 +38,10 @@
 typedef union{
 	uint8_t halves[2];
 	uint16_t value;
-} Slice_t;
+} Slice128_t;
 
 typedef union {
-	Slice_t slices[4];  // [p³o³...b³a³, ... , p⁰o⁰...b⁰a⁰], where there are 16 4-bit cells named a through p
+	Slice128_t slices[4];  // [p³o³...b³a³, ... , p⁰o⁰...b⁰a⁰], where there are 16 4-bit cells named a through p
 	uint64_t state;
 	//__m64 m64state;  // SIMD 64-bit register
 } State64Sliced2_16_t;

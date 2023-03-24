@@ -1,9 +1,9 @@
-#ifndef FORKSKINNYPLUS_ACCELERATED_SLICING_H
-#define FORKSKINNYPLUS_ACCELERATED_SLICING_H
+#ifndef FORKSKINNYPLUS128_ACCELERATED_SLICING_H
+#define FORKSKINNYPLUS128_ACCELERATED_SLICING_H
 
 #include <cstdint>
 #include <x86intrin.h>
-#include "forkskinny-datatypes.h"
+#include "forkskinny128-datatypes.h"
 
 /**
  * Perform a rotate-right bit rotation on a 256-bit __m256i value.
@@ -51,9 +51,9 @@ static inline __m256i mm256_rotr_si256(__m256i v, uint8_t shift) {
  * @param significance LSB = 0, MSB = 63
  * @return
  */
-static inline Slice_t slice_significance_accelerated(const Blocks_t blocks, uint8_t significance) {
+static inline Slice128_t slice_significance_accelerated(const Blocks128_t blocks, uint8_t significance) {
 	uint64_t mask = 1ULL << significance;
-	auto slice = Slice_t();
+	auto slice = Slice128_t();
 	
 	#if slice_size == 256
 	
@@ -67,9 +67,9 @@ static inline Slice_t slice_significance_accelerated(const Blocks_t blocks, uint
 	return slice;
 }
 
-static inline StateSliced_t *slice_accelerated(Blocks_t blocks) {
+static inline State128Sliced_t *slice_accelerated(Blocks128_t blocks) {
 	// make it 32-byte aligned for fast memory access
-	auto *result = (StateSliced_t *) aligned_alloc(32, sizeof(StateSliced_t));
+	auto *result = (State128Sliced_t *) aligned_alloc(32, sizeof(State128Sliced_t));
 	
 	// align the blocks
 	for (uint i = 1; i < slice_size; ++i) {
@@ -81,7 +81,7 @@ static inline StateSliced_t *slice_accelerated(Blocks_t blocks) {
 	}
 	
 	for (int i = 0; i < 64; ++i) {
-		auto slice = Slice_t();
+		auto slice = Slice128_t();
 		
 		#if slice_size == 64
 		uint64_t mask = 0x8000000000000000ULL >> i;
@@ -126,7 +126,7 @@ static inline StateSliced_t *slice_accelerated(Blocks_t blocks) {
  * @param sb_index the index of the slice_t, what 'significance' are we talking about w.r.t. the slice.
  * 					E.g. the very first slice contains the *least* significant bits of 64 states
  */
-static inline void unslice_significance_accelerated(const Slice_t slice, Blocks_t *blocks, uint8_t sb_index) {
+static inline void unslice_significance_accelerated(const Slice128_t slice, Blocks128_t *blocks, uint8_t sb_index) {
 #if slice_size == 256
 
 #elif slice_size == 512
@@ -137,8 +137,8 @@ static inline void unslice_significance_accelerated(const Slice_t slice, Blocks_
 	
 }
 
-static inline Blocks_t unslice_accelerated(StateSliced_t state) {
-	Blocks_t unsliced = Blocks_t();
+static inline Blocks128_t unslice_accelerated(State128Sliced_t state) {
+	Blocks128_t unsliced = Blocks128_t();
 	for (int i = 0; i < 64; ++i) {
 		unslice_significance(state.raw[i], &unsliced, i);
 	}

@@ -1,10 +1,10 @@
-#ifndef FORKSKINNYPLUS_KEYSCHEDULE_INTERNAL_H
-#define FORKSKINNYPLUS_KEYSCHEDULE_INTERNAL_H
+#ifndef FORKSKINNYPLUS64_KEYSCHEDULE_INTERNAL_H
+#define FORKSKINNYPLUS64_KEYSCHEDULE_INTERNAL_H
 
 #include <immintrin.h>
-#include "../utils/forkskinny-datatypes.h"
+#include "../utils/forkskinny64-datatypes.h"
 
-static inline void tk2_lfsr(StateSliced_t *state) {
+static inline void tk2_lfsr(State64Sliced_t *state) {
 	// 2 1 0 (3+2)
 	#if AVX512_acceleration
 	for (int i = 0; i < 4; ++i) {
@@ -21,21 +21,17 @@ static inline void tk2_lfsr(StateSliced_t *state) {
 	
 	#else
 	for (int i = 0; i < 8; i++) {
-		auto temp = state->cells[i].slices[7];
-		state->cells[i].slices[7] = state->cells[i].slices[6];
-		state->cells[i].slices[6] = state->cells[i].slices[5];
-		state->cells[i].slices[5] = state->cells[i].slices[4];
-		state->cells[i].slices[4] = state->cells[i].slices[3];
+		auto temp = state->cells[i].slices[3];
 		state->cells[i].slices[3] = state->cells[i].slices[2];
 		state->cells[i].slices[2] = state->cells[i].slices[1];
 		state->cells[i].slices[1] = state->cells[i].slices[0];
-		state->cells[i].slices[0].value = XOR_SLICE(temp.value, state->cells[i].slices[6].value);
+		state->cells[i].slices[0].value = XOR_SLICE(temp.value, state->cells[i].slices[3].value);
 	}
 	#endif
 	
 }
 
-static inline void tk3_lfsr(StateSliced_t *state) {
+static inline void tk3_lfsr(State64Sliced_t *state) {
 	#if AVX512_acceleration
 	
 	for (int i = 0; i < 4; ++i) {
@@ -52,25 +48,22 @@ static inline void tk3_lfsr(StateSliced_t *state) {
 	
 	#else
 	for (int i = 0; i < 8; i++) {
+		// 0b00111001 = 0 3 2 1 -> lanes for the simd permutation
 		auto temp = state->cells[i].slices[0];
 		state->cells[i].slices[0] = state->cells[i].slices[1];
 		state->cells[i].slices[1] = state->cells[i].slices[2];
 		state->cells[i].slices[2] = state->cells[i].slices[3];
-		state->cells[i].slices[3] = state->cells[i].slices[4];
-		state->cells[i].slices[4] = state->cells[i].slices[5];
-		state->cells[i].slices[5] = state->cells[i].slices[6];
-		state->cells[i].slices[6] = state->cells[i].slices[7];
-		state->cells[i].slices[7].value = XOR_SLICE(temp.value, state->cells[i].slices[5].value);
+		state->cells[i].slices[3].value = XOR_SLICE(temp.value, state->cells[i].slices[2].value);
 	}
 	#endif
 }
 
-static inline StateSliced_t permute(StateSliced_t input) {
-//	auto test_blocks = Blocks_t();
+static inline State64Sliced_t permute(State64Sliced_t input) {
+//	auto test_blocks = Blocks64_t();
 //	test_blocks.values[0].raw = 0xFEDCBA9876543210;
-//	input = slice_t(test_blocks);
+//	input = Slice64_t(test_blocks);
 	
-	auto output = StateSliced_t();
+	auto output = State64Sliced_t();
 	
 	output.halves[1] = input.halves[0];
 	

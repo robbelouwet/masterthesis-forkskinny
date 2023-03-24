@@ -1,13 +1,13 @@
-#ifndef FORKSKINNYPLUS_FORKSKINNY128_384_H
-#define FORKSKINNYPLUS_FORKSKINNY128_384_H
+#ifndef FORKSKINNYPLUS128_FORKSKINNY128_384_H
+#define FORKSKINNYPLUS128_FORKSKINNY128_384_H
 
-#include "utils/forkskinny-datatypes.h"
-#include "roundfunction/forkskinny-sbox.h"
-#include "roundfunction/forkskinny-addconstant.h"
-#include "roundfunction/forkskinny-shiftrows.h"
-#include "roundfunction/forkskinny-mixcols.h"
+#include "utils/forkskinny128-datatypes.h"
+#include "roundfunction/forkskinny128-sbox.h"
+#include "roundfunction/forkskinny128-addconstant.h"
+#include "roundfunction/forkskinny128-shiftrows.h"
+#include "roundfunction/forkskinny128-mixcols.h"
 
-static inline void add_branch_constant(StateSliced_t *state) {
+static inline void add_branch_constant(State128Sliced_t *state) {
 	// <editor-fold desc="branch constant">
 	// @formatter:off
 	#if AVX512_acceleration
@@ -15,8 +15,10 @@ static inline void add_branch_constant(StateSliced_t *state) {
 		state->pairs[i].avx512_simd_pair = _mm512_xor_si512(state->pairs[i].avx512_simd_pair, branch_constant.pairs[i].avx512_simd_pair);
 	
 	#elif AVX2_acceleration
-	for (int i = 0; i < 16; ++i)
-		state->cells[i].avx2_simd_cell   = _mm256_xor_si256(state->cells[i].avx2_simd_cell,   branch_constant.cells[i].avx2_simd_cell);
+	for (int i = 0; i < 16; ++i){
+		state->cells[i].avx2_simd_cells[0]   = _mm256_xor_si256(state->cells[i].avx2_simd_cells[0],   branch_constant.cells[i].avx2_simd_cells[0]);
+		state->cells[i].avx2_simd_cells[1]   = _mm256_xor_si256(state->cells[i].avx2_simd_cells[1],   branch_constant.cells[i].avx2_simd_cells[1]);
+	}
 	
 	#else
 	for (int i = 0; i < 16; ++i) {
@@ -35,7 +37,7 @@ static inline void add_branch_constant(StateSliced_t *state) {
 	// </editor-fold>
 }
 
-static inline void apply_roundkey(HalfStateSliced_t round_key, StateSliced_t *state) {
+static inline void apply_roundkey(HalfState128Sliced_t round_key, State128Sliced_t *state) {
 	// <editor-fold desc="xor first 8 least significant cells">
 	#if AVX512_acceleration
 	for (int i = 0; i < 4; ++i)
@@ -43,9 +45,10 @@ static inline void apply_roundkey(HalfStateSliced_t round_key, StateSliced_t *st
 															round_key.pairs[i].avx512_simd_pair);
 	
 	#elif AVX2_acceleration
-	for (int i = 0; i < 8; ++i)
-		state->cells[i].avx2_simd_cell = _mm256_xor_si256(state->cells[i].avx2_simd_cell,
-		                                                  round_key.cells[i].avx2_simd_cell);
+	for (int i = 0; i < 8; ++i){
+		state->cells[i].avx2_simd_cells[0] = _mm256_xor_si256(state->cells[i].avx2_simd_cells[0], round_key.cells[i].avx2_simd_cells[0]);
+		state->cells[i].avx2_simd_cells[1] = _mm256_xor_si256(state->cells[i].avx2_simd_cells[1], round_key.cells[i].avx2_simd_cells[1]);
+	}
 	
 	#else
 	for (int i = 0; i < 8; ++i) {
@@ -66,8 +69,8 @@ static inline void apply_roundkey(HalfStateSliced_t round_key, StateSliced_t *st
 	state->cells[9].slices[1].value = XOR_SLICE(state->cells[9].slices[1].value, ONE);
 }
 
-static inline void forkskinny128_encrypt_round(KeyScheduleSliced_t schedule, StateSliced_t *state,
-                                              uint16_t iteration) {
+static inline void forkskinny128_encrypt_round(KeySchedule128Sliced_t schedule, State128Sliced_t *state,
+                                               uint16_t iteration) {
 	// i: 0, 0x76541200
 //	auto roundkey = unslice({.halves= {schedule.keys[iteration], {}}}).values[0].raw;
 
@@ -95,13 +98,13 @@ static inline void forkskinny128_encrypt_round(KeyScheduleSliced_t schedule, Sta
  * @param mode 'b', '0', or '1'
  * @return
  */
-static inline SlicedCiphertext_t forkskinny128_384_encrypt(KeyScheduleSliced_t schedule,
-                                                      StateSliced_t *state, unsigned char mode) {
+static inline SlicedCiphertext128_t forkskinny128_384_encrypt(KeySchedule128Sliced_t schedule,
+                                                              State128Sliced_t *state, unsigned char mode) {
 //	auto initial_state = unslice(*state).values[0].raw;
 	
 	// default values of branches
-	auto C0 = StateSliced_t();
-	auto C1 = StateSliced_t();
+	auto C0 = State128Sliced_t();
+	auto C1 = State128Sliced_t();
 	
 	// ### INITIAL ROUNDS ###
 	int i = 0;
@@ -140,11 +143,11 @@ static inline SlicedCiphertext_t forkskinny128_384_encrypt(KeyScheduleSliced_t s
 	return {C1, C0};
 }
 
-static inline void forkskinny64_decrypt_round(KeyScheduleSliced_t schedule, StateSliced_t *state,
+static inline void forkskinny64_decrypt_round(KeySchedule128Sliced_t schedule, State128Sliced_t *state,
                                               uint16_t iteration) {
 //	auto roundkey = unslice({.halves= {schedule.keys[iteration], {}}}).values[0].raw;
 
-//	auto ct = Blocks_t{.values = {0x9A9BFD8982C66E7C}};
+//	auto ct = Blocks128_t{.values = {0x9A9BFD8982C66E7C}};
 //	*state = slice_t(ct);
 
 //	auto test_sbox_before = unslice(*state).values[0].raw;
@@ -163,10 +166,10 @@ static inline void forkskinny64_decrypt_round(KeyScheduleSliced_t schedule, Stat
 //	int appel = 1;
 }
 
-static inline SlicedCiphertext_t forkskinny64_decrypt_C0(KeyScheduleSliced_t schedule,
-                                                         StateSliced_t *state, unsigned char mode) {
-	auto M = StateSliced_t();
-	auto C1 = StateSliced_t();
+static inline SlicedCiphertext128_t forkskinny64_decrypt_C0(KeySchedule128Sliced_t schedule,
+                                                            State128Sliced_t *state, unsigned char mode) {
+	auto M = State128Sliced_t();
+	auto C1 = State128Sliced_t();
 	
 	auto initial_state = unslice(*state).values[0].raw;
 	
@@ -194,14 +197,14 @@ static inline SlicedCiphertext_t forkskinny64_decrypt_C0(KeyScheduleSliced_t sch
 			forkskinny128_encrypt_round(schedule, &C1, i);
 	}
 	
-	return {C1, StateSliced_t(), M};
+	return {C1, State128Sliced_t(), M};
 	
 }
 
-static inline SlicedCiphertext_t forkskinny64_decrypt_C1(KeyScheduleSliced_t schedule,
-                                                         StateSliced_t *state, unsigned char mode) {
-	auto M = StateSliced_t();
-	auto C0 = StateSliced_t();
+static inline SlicedCiphertext128_t forkskinny64_decrypt_C1(KeySchedule128Sliced_t schedule,
+                                                            State128Sliced_t *state, unsigned char mode) {
+	auto M = State128Sliced_t();
+	auto C0 = State128Sliced_t();
 	
 	// decrypt C1 branch
 	int c1_i = FORKSKINNY128_MAX_ROUNDS - 1;
@@ -224,12 +227,12 @@ static inline SlicedCiphertext_t forkskinny64_decrypt_C1(KeyScheduleSliced_t sch
 			forkskinny128_encrypt_round(schedule, &C0, i);
 	}
 	
-	return {StateSliced_t(), C0, M};
+	return {State128Sliced_t(), C0, M};
 	
 }
 
-static inline SlicedCiphertext_t forkskinny128_decrypt(KeyScheduleSliced_t schedule, SlicedCiphertext_t *ct,
-                                                      unsigned char input_label, unsigned char mode) {
+static inline SlicedCiphertext128_t forkskinny128_decrypt(KeySchedule128Sliced_t schedule, SlicedCiphertext128_t *ct,
+                                                          unsigned char input_label, unsigned char mode) {
 	if (input_label == '0')
 		return forkskinny64_decrypt_C0(schedule, &(ct->C0), mode);
 	return forkskinny64_decrypt_C1(schedule, &(ct->C1), mode);

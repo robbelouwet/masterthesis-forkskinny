@@ -1,8 +1,8 @@
-#ifndef FORKSKINNYPLUS_SLICING_H
-#define FORKSKINNYPLUS_SLICING_H
+#ifndef FORKSKINNYPLUS128_SLICING_H
+#define FORKSKINNYPLUS128_SLICING_H
 
 #include <cstdint>
-#include "forkskinny-datatypes.h"
+#include "forkskinny128-datatypes.h"
 
 /**
  *
@@ -10,9 +10,9 @@
  * @param significance LSB = 0, MSB = 63
  * @return
  */
-static inline Slice_t slice_significance(const Blocks_t blocks, uint8_t significance, bool low) {
+static inline Slice128_t slice_significance(const Blocks128_t blocks, uint8_t significance, bool low) {
 	uint64_t mask = 1ULL << significance;
-	auto slice = Slice_t();
+	auto slice = Slice128_t();
 	
 	#if slice_size == 256
 	for (uint i = 0; i < 64; ++i) {
@@ -77,8 +77,8 @@ static inline Slice_t slice_significance(const Blocks_t blocks, uint8_t signific
 	return slice;
 }
 
-static inline StateSliced_t slice(const Blocks_t blocks) {
-	StateSliced_t result = StateSliced_t();
+static inline State128Sliced_t slice(const Blocks128_t blocks) {
+	State128Sliced_t result = State128Sliced_t();
 	for (uint i = 0; i < 128; ++i) {
 		result.raw[i] = slice_significance(blocks, i ^ 64, i < 64);
 	}
@@ -93,7 +93,7 @@ static inline StateSliced_t slice(const Blocks_t blocks) {
  * @param sb_index the index of the slice_t, what 'significance' are we talking about w.r.t. the slice.
  * 					E.g. the very first slice contains the *least* significant bits of 64 states
  */
-static inline void unslice_significance(const Slice_t slice, Blocks_t *blocks, uint8_t sb_index, bool low) {
+static inline void unslice_significance(const Slice128_t slice, Blocks128_t *blocks, uint8_t sb_index, bool low) {
 	#if slice_size == 256
 	uint8_t segments[4] = {0, 64, 128, 192};
 	
@@ -127,9 +127,9 @@ static inline void unslice_significance(const Slice_t slice, Blocks_t *blocks, u
 	
 }
 
-static inline Blocks_t unslice(StateSliced_t state) {
+static inline Blocks128_t unslice(State128Sliced_t state) {
 	
-	Blocks_t unsliced = Blocks_t();
+	Blocks128_t unsliced = Blocks128_t();
 	for (int i = 0; i < 128; ++i) {
 		unslice_significance(state.raw[i], &unsliced, i ^ 64, i < 64);
 	}
