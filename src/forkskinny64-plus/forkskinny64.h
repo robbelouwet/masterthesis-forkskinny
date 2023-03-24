@@ -1,4 +1,4 @@
-#ifndef FORKSKINNYPLUS_FORKSKINNY64_H
+#ifndef FORKSKINNYPLUS_FORKSKINNY128_384_H
 #define FORKSKINNYPLUS_FORKSKINNY64_H
 
 #include "utils/forkskinny-datatypes.h"
@@ -228,4 +228,4 @@ static inline SlicedCiphertext_t forkskinny64_decrypt(KeyScheduleSliced_t schedu
 	return forkskinny64_decrypt_C1(schedule, &(ct->C1), mode);
 }
 
-#endif //FORKSKINNYPLUS_FORKSKINNY64_H
+#endif //FORKSKINNYPLUS_FORKSKINNY128_384_H

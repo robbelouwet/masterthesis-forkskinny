@@ -21,11 +21,15 @@ static inline void tk2_lfsr(StateSliced_t *state) {
 	
 	#else
 	for (int i = 0; i < 8; i++) {
-		auto temp = state->cells[i].slices[3];
+		auto temp = state->cells[i].slices[7];
+		state->cells[i].slices[7] = state->cells[i].slices[6];
+		state->cells[i].slices[6] = state->cells[i].slices[5];
+		state->cells[i].slices[5] = state->cells[i].slices[4];
+		state->cells[i].slices[4] = state->cells[i].slices[3];
 		state->cells[i].slices[3] = state->cells[i].slices[2];
 		state->cells[i].slices[2] = state->cells[i].slices[1];
 		state->cells[i].slices[1] = state->cells[i].slices[0];
-		state->cells[i].slices[0].value = XOR_SLICE(temp.value, state->cells[i].slices[3].value);
+		state->cells[i].slices[0].value = XOR_SLICE(temp.value, state->cells[i].slices[6].value);
 	}
 	#endif
 	
@@ -48,12 +52,15 @@ static inline void tk3_lfsr(StateSliced_t *state) {
 	
 	#else
 	for (int i = 0; i < 8; i++) {
-		// 0b00111001 = 0 3 2 1 -> lanes for the simd permutation
 		auto temp = state->cells[i].slices[0];
 		state->cells[i].slices[0] = state->cells[i].slices[1];
 		state->cells[i].slices[1] = state->cells[i].slices[2];
 		state->cells[i].slices[2] = state->cells[i].slices[3];
-		state->cells[i].slices[3].value = XOR_SLICE(temp.value, state->cells[i].slices[2].value);
+		state->cells[i].slices[3] = state->cells[i].slices[4];
+		state->cells[i].slices[4] = state->cells[i].slices[5];
+		state->cells[i].slices[5] = state->cells[i].slices[6];
+		state->cells[i].slices[6] = state->cells[i].slices[7];
+		state->cells[i].slices[7].value = XOR_SLICE(temp.value, state->cells[i].slices[5].value);
 	}
 	#endif
 }

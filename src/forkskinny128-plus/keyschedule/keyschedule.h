@@ -6,10 +6,10 @@
 #include "../roundfunction/forkskinny-addconstant.h"
 #include "common.h"
 
-static inline KeyScheduleSliced_t forkskinny_64_init_tk2(StateSliced_t tk1, StateSliced_t tk2) {
+static inline KeyScheduleSliced_t forkskinny_128_init_tk2(StateSliced_t tk1, StateSliced_t tk2) {
 	auto schedule = KeyScheduleSliced_t();
 	
-	for (int i = 0; i < FORKSKINNY64_MAX_ROUNDS; ++i) {
+	for (int i = 0; i < FORKSKINNY128_MAX_ROUNDS; ++i) {
 		auto res = xor_half_keys(tk2.halves[0], tk1.halves[0]);
 		//auto test_tks = unslice(res);
 		
@@ -30,11 +30,11 @@ static inline KeyScheduleSliced_t forkskinny_64_init_tk2(StateSliced_t tk1, Stat
 	return schedule;
 }
 
-static inline KeyScheduleSliced_t forkskinny_64_init_tk23(StateSliced_t tk1, StateSliced_t tk2,
+static inline KeyScheduleSliced_t forkskinny_128_init_tk23(StateSliced_t tk1, StateSliced_t tk2,
                                                           StateSliced_t tk3) {
 	auto schedule = KeyScheduleSliced_t();
 	
-	for (int i = 0; i < FORKSKINNY64_MAX_ROUNDS; ++i) {
+	for (int i = 0; i < FORKSKINNY128_MAX_ROUNDS; ++i) {
 		auto res = xor_half_keys(xor_half_keys(tk2.halves[0], tk3.halves[0]), tk1.halves[0]);
 		//auto test_tks = unslice(res);
 		

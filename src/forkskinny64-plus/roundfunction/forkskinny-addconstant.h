@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include "../utils/forkskinny-datatypes.h"
-#include "../utils/constants.h"
+#include "../../constants.h"
 
 static inline void forkskinny64_add_constant(HalfStateSliced_t *state, uint16_t iteration) {
 	// The beauty of unions:
@@ -11,18 +11,18 @@ static inline void forkskinny64_add_constant(HalfStateSliced_t *state, uint16_t 
 	#if AVX2_acceleration || AVX512_acceleration
 	// Cell 0 XOR C0
 	Cell_t C0 = {.slices = {
-			forkskinny64_precomputed_round_constants[iteration][0],
-			forkskinny64_precomputed_round_constants[iteration][1],
-			forkskinny64_precomputed_round_constants[iteration][2],
-			forkskinny64_precomputed_round_constants[iteration][3]
+			forkskinny_precomputed_round_constants[iteration][0],
+			forkskinny_precomputed_round_constants[iteration][1],
+			forkskinny_precomputed_round_constants[iteration][2],
+			forkskinny_precomputed_round_constants[iteration][3]
 	}};
 	state->cells[1].avx2_simd_cell = _mm256_xor_si256(state->cells[1].avx2_simd_cell, C0.avx2_simd_cell);
 	
 	// Cell 4 XOR C1
 	Cell_t C1 = {.slices = {
-			forkskinny64_precomputed_round_constants[iteration][4],
-			forkskinny64_precomputed_round_constants[iteration][5],
-			forkskinny64_precomputed_round_constants[iteration][6],
+			forkskinny_precomputed_round_constants[iteration][4],
+			forkskinny_precomputed_round_constants[iteration][5],
+			forkskinny_precomputed_round_constants[iteration][6],
 			0
 	}};
 	state->cells[5].avx2_simd_cell = _mm256_xor_si256(state->cells[5].avx2_simd_cell, C1.avx2_simd_cell);

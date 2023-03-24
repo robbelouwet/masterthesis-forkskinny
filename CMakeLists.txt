@@ -11,6 +11,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx512f -mavx512dq")
 
 add_executable(forkskinny64-plus src/forkskinny64-plus/run.cpp)
 add_executable(forkskinny128-plus src/forkskinny128-plus/run.cpp)
-add_executable(demo libs/forkskinny-c/demo.c)
+add_executable(demo
+        libs/forkskinny-c/demo.c
+        libs/forkskinny-c/forkskinny64-cipher.c
+        libs/forkskinny-c/forkskinny128-cipher.c)
+
+add_executable(constants_generator constants_generator.cpp)
 
 

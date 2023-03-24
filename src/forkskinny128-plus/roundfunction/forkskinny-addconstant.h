@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include "../utils/forkskinny-datatypes.h"
-#include "../utils/constants.h"
+#include "../../constants.h"
 
 static inline void forkskinny64_add_constant(HalfStateSliced_t *state, uint16_t iteration) {
 	// The beauty of unions:
@@ -28,15 +28,15 @@ static inline void forkskinny64_add_constant(HalfStateSliced_t *state, uint16_t 
 	state->cells[5].avx2_simd_cell = _mm256_xor_si256(state->cells[5].avx2_simd_cell, C1.avx2_simd_cell);
 	#else
 	// Cell 0 XOR C0
-	state->cells[1].slices[0].value = XOR_SLICE(state->cells[1].slices[0].value, forkskinny64_precomputed_round_constants[iteration][0]);
-	state->cells[1].slices[1].value = XOR_SLICE(state->cells[1].slices[1].value, forkskinny64_precomputed_round_constants[iteration][1]);
-	state->cells[1].slices[2].value = XOR_SLICE(state->cells[1].slices[2].value, forkskinny64_precomputed_round_constants[iteration][2]);
-	state->cells[1].slices[3].value = XOR_SLICE(state->cells[1].slices[3].value, forkskinny64_precomputed_round_constants[iteration][3]);
-	
+	state->cells[1].slices[0].value = XOR_SLICE(state->cells[1].slices[0].value, forkskinny_precomputed_round_constants[iteration][0]);
+	state->cells[1].slices[1].value = XOR_SLICE(state->cells[1].slices[1].value, forkskinny_precomputed_round_constants[iteration][1]);
+	state->cells[1].slices[2].value = XOR_SLICE(state->cells[1].slices[2].value, forkskinny_precomputed_round_constants[iteration][2]);
+	state->cells[1].slices[3].value = XOR_SLICE(state->cells[1].slices[3].value, forkskinny_precomputed_round_constants[iteration][3]);
+
 	// Cell 4 XOR C1
-	state->cells[5].slices[0].value = XOR_SLICE(state->cells[5].slices[0].value, forkskinny64_precomputed_round_constants[iteration][4]);
-	state->cells[5].slices[1].value = XOR_SLICE(state->cells[5].slices[1].value, forkskinny64_precomputed_round_constants[iteration][5]);
-	state->cells[5].slices[2].value = XOR_SLICE(state->cells[5].slices[2].value, forkskinny64_precomputed_round_constants[iteration][6]);
+	state->cells[5].slices[0].value = XOR_SLICE(state->cells[5].slices[0].value, forkskinny_precomputed_round_constants[iteration][4]);
+	state->cells[5].slices[1].value = XOR_SLICE(state->cells[5].slices[1].value, forkskinny_precomputed_round_constants[iteration][5]);
+	state->cells[5].slices[2].value = XOR_SLICE(state->cells[5].slices[2].value, forkskinny_precomputed_round_constants[iteration][6]);
 	#endif
 	
 	// only for TK2 and TK3
