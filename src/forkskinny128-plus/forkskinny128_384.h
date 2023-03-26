@@ -12,24 +12,24 @@ static inline void add_branch_constant(State128Sliced_t *state) {
 	// @formatter:off
 	#if AVX512_acceleration
 	for (int i = 0; i < 8; ++i)
-		state->pairs[i].avx512_simd_pair = _mm512_xor_si512(state->pairs[i].avx512_simd_pair, branch_constant.pairs[i].avx512_simd_pair);
+		state->pairs[i].avx512_simd_pair = _mm512_xor_si512(state->pairs[i].avx512_simd_pair, branch_constant128.pairs[i].avx512_simd_pair);
 	
 	#elif AVX2_acceleration
 	for (int i = 0; i < 16; ++i){
-		state->cells[i].avx2_simd_cells[0]   = _mm256_xor_si256(state->cells[i].avx2_simd_cells[0],   branch_constant.cells[i].avx2_simd_cells[0]);
-		state->cells[i].avx2_simd_cells[1]   = _mm256_xor_si256(state->cells[i].avx2_simd_cells[1],   branch_constant.cells[i].avx2_simd_cells[1]);
+		state->cells[i].avx2_simd_cells[0]   = _mm256_xor_si256(state->cells[i].avx2_simd_cells[0],   branch_constant128.cells[i].avx2_simd_cells[0]);
+		state->cells[i].avx2_simd_cells[1]   = _mm256_xor_si256(state->cells[i].avx2_simd_cells[1],   branch_constant128.cells[i].avx2_simd_cells[1]);
 	}
 	
 	#else
 	for (int i = 0; i < 16; ++i) {
-//		state->cells[i].slices[0].value = XOR_SLICE(state->cells[i].slices[0].value, branch_constant.cells[i].slices[0].value);
-//		state->cells[i].slices[1].value = XOR_SLICE(state->cells[i].slices[1].value, branch_constant.cells[i].slices[1].value);
-//		state->cells[i].slices[2].value = XOR_SLICE(state->cells[i].slices[2].value, branch_constant.cells[i].slices[2].value);
-//		state->cells[i].slices[3].value = XOR_SLICE(state->cells[i].slices[3].value, branch_constant.cells[i].slices[3].value);
-//		state->cells[i].slices[4].value = XOR_SLICE(state->cells[i].slices[4].value, branch_constant.cells[i].slices[4].value);
-//		state->cells[i].slices[5].value = XOR_SLICE(state->cells[i].slices[5].value, branch_constant.cells[i].slices[5].value);
-//		state->cells[i].slices[6].value = XOR_SLICE(state->cells[i].slices[6].value, branch_constant.cells[i].slices[6].value);
-//		state->cells[i].slices[7].value = XOR_SLICE(state->cells[i].slices[7].value, branch_constant.cells[i].slices[7].value);
+//		state->cells[i].slices[0].value = XOR_SLICE(state->cells[i].slices[0].value, branch_constant128.cells[i].slices[0].value);
+//		state->cells[i].slices[1].value = XOR_SLICE(state->cells[i].slices[1].value, branch_constant128.cells[i].slices[1].value);
+//		state->cells[i].slices[2].value = XOR_SLICE(state->cells[i].slices[2].value, branch_constant128.cells[i].slices[2].value);
+//		state->cells[i].slices[3].value = XOR_SLICE(state->cells[i].slices[3].value, branch_constant128.cells[i].slices[3].value);
+//		state->cells[i].slices[4].value = XOR_SLICE(state->cells[i].slices[4].value, branch_constant128.cells[i].slices[4].value);
+//		state->cells[i].slices[5].value = XOR_SLICE(state->cells[i].slices[5].value, branch_constant128.cells[i].slices[5].value);
+//		state->cells[i].slices[6].value = XOR_SLICE(state->cells[i].slices[6].value, branch_constant128.cells[i].slices[6].value);
+//		state->cells[i].slices[7].value = XOR_SLICE(state->cells[i].slices[7].value, branch_constant128.cells[i].slices[7].value);
 	}
 	
 	#endif
@@ -75,7 +75,7 @@ static inline void forkskinny128_encrypt_round(KeySchedule128Sliced_t schedule, 
 //	auto roundkey = unslice({.halves= {schedule.keys[iteration], {}}}).values[0].raw;
 
 //	auto test_sbox_before = unslice(*state).values[0].raw; // 0x EFCD AB89 6745 2301
-	skinny64_sbox(state);
+	skinny128_sbox(state);
 //	auto test_state = unslice(*state).values[0].raw; // 0x 7F4E 5D38 2B1A 90C6
 	
 	/* round constant is added during pre computation of key schedule and added to the roundkey */
@@ -85,7 +85,7 @@ static inline void forkskinny128_encrypt_round(KeySchedule128Sliced_t schedule, 
 	skinny64_shiftrows(state);
 //	test_state = unslice(*state).values[0].raw; // 0x F4E7 185D E5D4 82C6
 	
-	skinny64_mixcols(state);
+	skinny128_mixcols(state);
 //	test_state = unslice(*state).values[0].raw; // 0x 9A9B FD89 82C6 6E7C
 
 //	int appel = 1;
@@ -151,7 +151,7 @@ static inline void forkskinny64_decrypt_round(KeySchedule128Sliced_t schedule, S
 //	*state = slice_t(ct);
 
 //	auto test_sbox_before = unslice(*state).values[0].raw;
-	skinny64_mixcols_inv(state);
+	skinny128_mixcols_inv(state);
 //	auto test_state = unslice(*state).values[0].raw;
 	
 	skinny64_shiftrows_inv(state);
@@ -160,7 +160,7 @@ static inline void forkskinny64_decrypt_round(KeySchedule128Sliced_t schedule, S
 	apply_roundkey(schedule.keys[iteration], state);
 //	test_state = unslice(*state).values[0].raw;
 	
-	skinny64_sbox_inv(state);
+	skinny128_sbox_inv(state);
 //	test_state = unslice(*state).values[0].raw;
 
 //	int appel = 1;

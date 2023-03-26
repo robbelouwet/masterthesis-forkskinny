@@ -13,7 +13,7 @@ static inline KeySchedule128Sliced_t forkskinny_128_init_tk2(State128Sliced_t tk
 		auto res = xor_half_keys(tk2.halves[0], tk1.halves[0]);
 		//auto test_tks = unslice(res);
 		
-		forkskinny64_add_constant(&res, i);
+		forkskinny128_add_constant(&res, i);
 		
 		// Keep in mind: the C2 constant relating to the 9nth cell is part of the 2nd 'half'!
 		// So we add 0x2 at the key injection step
@@ -42,7 +42,7 @@ static inline KeySchedule128Sliced_t forkskinny_128_init_tk23(State128Sliced_t t
 		
 		// Keep in mind: the C2 constant relating to the 9nth cell is part of the 2nd 'half'!
 		// So we add 0x2 at the key injection step
-		forkskinny64_add_constant(&res, i);
+		forkskinny128_add_constant(&res, i);
 		schedule.keys[i] = res;
 		
 		// 0x76541200, 0xa57e182c, 0xb46f097d

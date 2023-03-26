@@ -4,8 +4,9 @@
 #include <cstdint>
 #include "../utils/forkskinny128-datatypes.h"
 #include "../utils/constants128.h"
+#include "../../constants.h"
 
-static inline void forkskinny64_add_constant(HalfState128Sliced_t *state, uint16_t iteration) {
+static inline void forkskinny128_add_constant(HalfState128Sliced_t *state, uint16_t iteration) {
 	// The beauty of unions:
 	
 	#if AVX2_acceleration || AVX512_acceleration

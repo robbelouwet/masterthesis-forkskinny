@@ -6,24 +6,25 @@
 #include "roundfunction/forkskinny64-addconstant.h"
 #include "roundfunction/forkskinny64-shiftrows.h"
 #include "roundfunction/forkskinny64-mixcols.h"
+#include "../constants.h"
 
 static inline void add_branch_constant(State64Sliced_t *state) {
 	// <editor-fold desc="branch constant">
 	// @formatter:off
 	#if AVX512_acceleration
 	for (int i = 0; i < 8; ++i)
-		state->pairs[i].avx512_simd_pair = _mm512_xor_si512(state->pairs[i].avx512_simd_pair, branch_constant.pairs[i].avx512_simd_pair);
+		state->pairs[i].avx512_simd_pair = _mm512_xor_si512(state->pairs[i].avx512_simd_pair, branch_constant128.pairs[i].avx512_simd_pair);
 	
 	#elif AVX2_acceleration
 	for (int i = 0; i < 16; ++i)
-		state->cells[i].avx2_simd_cell   = _mm256_xor_si256(state->cells[i].avx2_simd_cell,   branch_constant.cells[i].avx2_simd_cell);
+		state->cells[i].avx2_simd_cell   = _mm256_xor_si256(state->cells[i].avx2_simd_cell,   branch_constant64.cells[i].avx2_simd_cell);
 	
 	#else
 	for (int i = 0; i < 16; ++i) {
-		state->cells[i].slices[0].value = XOR_SLICE(state->cells[i].slices[0].value, branch_constant.cells[i].slices[0].value);
-		state->cells[i].slices[1].value = XOR_SLICE(state->cells[i].slices[1].value, branch_constant.cells[i].slices[1].value);
-		state->cells[i].slices[2].value = XOR_SLICE(state->cells[i].slices[2].value, branch_constant.cells[i].slices[2].value);
-		state->cells[i].slices[3].value = XOR_SLICE(state->cells[i].slices[3].value, branch_constant.cells[i].slices[3].value);
+		state->cells[i].slices[0].value = XOR_SLICE(state->cells[i].slices[0].value, branch_constant128.cells[i].slices[0].value);
+		state->cells[i].slices[1].value = XOR_SLICE(state->cells[i].slices[1].value, branch_constant128.cells[i].slices[1].value);
+		state->cells[i].slices[2].value = XOR_SLICE(state->cells[i].slices[2].value, branch_constant128.cells[i].slices[2].value);
+		state->cells[i].slices[3].value = XOR_SLICE(state->cells[i].slices[3].value, branch_constant128.cells[i].slices[3].value);
 	}
 	
 	#endif

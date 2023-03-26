@@ -32,7 +32,7 @@ static inline Row128_t xor_row(Row128_t a, Row128_t b) {
 	return res;
 }
 
-static inline void skinny64_mixcols(State128Sliced_t *state) {
+static inline void skinny128_mixcols(State128Sliced_t *state) {
 //	auto test_blocks = Blocks128_t();
 //	test_blocks.values[0].raw = 0x55557555B6988DDF;
 //	*state = slice(test_blocks);
@@ -51,7 +51,7 @@ static inline void skinny64_mixcols(State128Sliced_t *state) {
 //	int appel = 1;
 }
 
-static inline void skinny64_mixcols_inv(State128Sliced_t *state) {
+static inline void skinny128_mixcols_inv(State128Sliced_t *state) {
 //	auto ct = Blocks128_t{.values = {0xF88AC3CD8DDFADDF}};
 //	*state = slice_t(ct);
 	

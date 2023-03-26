@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include "../utils/forkskinny64-datatypes.h"
-#include "../../forkskinny128-plus/utils/constants128.h"
+#include "../../constants.h"
 
 static inline void forkskinny64_add_constant(HalfState64Sliced_t *state, uint16_t iteration) {
 	// The beauty of unions:
