@@ -23,29 +23,30 @@
 #define y7 state->cells[i].slices[7].value
 
 static inline void skinny128_sbox(State128Sliced_t *state) {
-//	auto blocks = Blocks128_t{.values = {0xFEDCBA9876543210}};
-//	*state = slice_t(blocks);
-//	int appel = 1;
+//	auto blocks = Blocks128_t{.values = {{.raw = {0xEC4AFF517369C667, 0x80}}}};
+//	*state = slice(blocks);
 	
 	for (int i = 0; i < 16; ++i) {
 		auto cell = state->cells[i];
 		
 		// @formatter:off
-		y6 = XOR_SLICE( x4 , XOR_SLICE( AND_SLICE( x7 , x6 ), ONE ) );
-		y5 = XOR_SLICE( x0 , XOR_SLICE( AND_SLICE( x2 , x3 ), ONE ) );
-		y7 = XOR_SLICE( x5 , XOR_SLICE( AND_SLICE( y6 , y5 ), ONE ) );
+		y6 = XOR_SLICE( x4 , XOR_SLICE( OR_SLICE( x7 , x6 ), ONE ) );
+		y5 = XOR_SLICE( x0 , XOR_SLICE( OR_SLICE( x2 , x3 ), ONE ) );
+		y7 = XOR_SLICE( x5 , XOR_SLICE( OR_SLICE( y6 , y5 ), ONE ) );
 		
-		y4 = XOR_SLICE( x3 , XOR_SLICE( AND_SLICE( y7 , y6 ), ONE ) );
-		y3 = XOR_SLICE( x1 , XOR_SLICE( AND_SLICE( y5 , x3 ), ONE ) );
-		y2 = XOR_SLICE( x6 , XOR_SLICE( AND_SLICE( x1 , x2 ), ONE ) );
-		y1 = XOR_SLICE( x7 , XOR_SLICE( AND_SLICE( y7 , y2 ), ONE ) );
-		y0 = XOR_SLICE( x2 , XOR_SLICE( AND_SLICE( y1 , y3 ), ONE ) );
+		y4 = XOR_SLICE( x3 , XOR_SLICE( OR_SLICE( y7 , y6 ), ONE ) );
+		y3 = XOR_SLICE( x1 , XOR_SLICE( OR_SLICE( y5 , x3 ), ONE ) );
+		y2 = XOR_SLICE( x6 , XOR_SLICE( OR_SLICE( x1 , x2 ), ONE ) );
+		y1 = XOR_SLICE( x7 , XOR_SLICE( OR_SLICE( y7 , y2 ), ONE ) );
+		y0 = XOR_SLICE( x2 , XOR_SLICE( OR_SLICE( y1 , y3 ), ONE ) );
 		// @formatter:on
 	}
 	
-	// INPUT:   0x FEDC BA98 7654 3210
-	// OUTPUT:  0x F7E4 D583 B2A1 096C
-//	auto test_res = unslice(*state).values[0].raw;
+	// INPUT:   0x FEDC BA98 7654 3210 | 0x 0000 0000 0000 0080 ---- 0xFE = 0b 1111 1110
+	// Erik :   0x 079C FF4A C5B1 87AD | 0x 6565 6565 6565 6536 ---- 0x07 = 0b 0000 0111
+	// Us:      0x 086A FF9A 134A B656 | 0x
+//	auto test_res0 = unslice(*state).values[0].raw[0];
+//	auto test_res1 = unslice(*state).values[0].raw[1];
 //	int banaan = 1;
 }
 
@@ -68,14 +69,14 @@ static inline void skinny128_sbox_inv(State128Sliced_t *state) {
 		y4 = x6 ^ ~(y7 & y6);
 		*/
 		
-		y2 = XOR_SLICE( x0 , XOR_SLICE( AND_SLICE( x1 , x3 ), ONE ) );
-		y7 = XOR_SLICE( x1 , XOR_SLICE( AND_SLICE( x7 , x2 ), ONE ) );
-		y5 = XOR_SLICE( x7 , XOR_SLICE( AND_SLICE( x6 , x5 ), ONE ) );
-		y3 = XOR_SLICE( x4 , XOR_SLICE( AND_SLICE( x7 , x6 ), ONE ) );
-		y1 = XOR_SLICE( x3 , XOR_SLICE( AND_SLICE( x5 , y3 ), ONE ) );
-		y6 = XOR_SLICE( x2 , XOR_SLICE( AND_SLICE( y1 , y2 ), ONE ) );
-		y0 = XOR_SLICE( x5 , XOR_SLICE( AND_SLICE( y2 , y3 ), ONE ) );
-		y4 = XOR_SLICE( x6 , XOR_SLICE( AND_SLICE( y7 , y6 ), ONE ) );
+		y2 = XOR_SLICE( x0 , XOR_SLICE( OR_SLICE( x1 , x3 ), ONE ) );
+		y7 = XOR_SLICE( x1 , XOR_SLICE( OR_SLICE( x7 , x2 ), ONE ) );
+		y5 = XOR_SLICE( x7 , XOR_SLICE( OR_SLICE( x6 , x5 ), ONE ) );
+		y3 = XOR_SLICE( x4 , XOR_SLICE( OR_SLICE( x7 , x6 ), ONE ) );
+		y1 = XOR_SLICE( x3 , XOR_SLICE( OR_SLICE( x5 , y3 ), ONE ) );
+		y6 = XOR_SLICE( x2 , XOR_SLICE( OR_SLICE( y1 , y2 ), ONE ) );
+		y0 = XOR_SLICE( x5 , XOR_SLICE( OR_SLICE( y2 , y3 ), ONE ) );
+		y4 = XOR_SLICE( x6 , XOR_SLICE( OR_SLICE( y7 , y6 ), ONE ) );
 	}
 	
 	// INPUT:   0x F7E4 D583 B2A1 096C

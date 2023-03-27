@@ -3,7 +3,6 @@
 
 #include <cstdint>
 #include "../utils/forkskinny128-datatypes.h"
-#include "../utils/constants128.h"
 #include "../../constants.h"
 
 static inline void forkskinny128_add_constant(HalfState128Sliced_t *state, uint16_t iteration) {

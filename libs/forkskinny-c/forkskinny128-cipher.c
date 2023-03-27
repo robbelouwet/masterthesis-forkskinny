@@ -480,6 +480,8 @@ ForkSkinny128Cells_t forkskinny_128_384_encrypt_round(
 	#endif
 	
 	/* Shift the rows */
+//	state.lrow[0] = 0x7766554433221100;
+//	state.lrow[1] = 0xffeeddccbbaa9988;
 	state.row[1] = skinny128_rotate_right(state.row[1], 8);
 	state.row[2] = skinny128_rotate_right(state.row[2], 16);
 	state.row[3] = skinny128_rotate_right(state.row[3], 24);
@@ -544,8 +546,11 @@ static ForkSkinny128Cells_t forkskinny_128_384_encrypt_rounds
 //        state.row[1] = state.row[0];
 //        state.row[0] = temp;
 	    //</editor-fold>
-		
+		// 0xA69DDDDAA6CCDDDA, 0xC3A9B8BF30541CF8
+		// 0xBC9A3E1BD7CC2D80, 0x2C4A9B5615321F37
+		// 0xB28BA9B609C7732D, 0x16A7C817056FF223
 		state = forkskinny_128_384_encrypt_round(state, schedule1, schedule2, schedule3, index, &temp);
+		int appel = 1;
     }
     return state;
 }

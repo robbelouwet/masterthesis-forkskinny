@@ -41,22 +41,22 @@ void demo_forkskinny_64_192() {
 	forkskinny_c_64_192_init_tk2_tk3(&tk23, key + FORKSKINNY64_BLOCK_SIZE, FORKSKINNY64_MAX_ROUNDS);
 	
 	// forward one leg
-	uint8_t output_right_oneleg[FORKSKINNY64_BLOCK_SIZE];
-	forkskinny_c_64_192_encrypt(&tk1, &tk23, NULL, output_right_oneleg, message, c_buff);
-	
+//	uint8_t output_right_oneleg[FORKSKINNY64_BLOCK_SIZE];
+//	forkskinny_c_64_192_encrypt(&tk1, &tk23, NULL, output_right_oneleg, message, c_buff);
+//
 	// forward both legs
 	uint8_t output_left[FORKSKINNY64_BLOCK_SIZE];
 	uint8_t output_right[FORKSKINNY64_BLOCK_SIZE];
 	forkskinny_c_64_192_encrypt(&tk1, &tk23, output_left, output_right, message, c_buff);
-	
+
 	// inverse one leg
-	uint8_t inverse_message_oneleg[FORKSKINNY64_BLOCK_SIZE];
-	forkskinny_c_64_192_decrypt(&tk1, &tk23, NULL, inverse_message_oneleg, output_right_oneleg);
-	
+//	uint8_t inverse_message_oneleg[FORKSKINNY64_BLOCK_SIZE];
+//	forkskinny_c_64_192_decrypt(&tk1, &tk23, NULL, inverse_message_oneleg, output_right_oneleg);
+//
 	// inverse/output both legs
-	uint8_t inverse_message[FORKSKINNY64_BLOCK_SIZE];
-	uint8_t output_left2[FORKSKINNY64_BLOCK_SIZE];
-	forkskinny_c_64_192_decrypt(&tk1, &tk23, output_left2, inverse_message, output_right);
+//	uint8_t inverse_message[FORKSKINNY64_BLOCK_SIZE];
+//	uint8_t output_left2[FORKSKINNY64_BLOCK_SIZE];
+//	forkskinny_c_64_192_decrypt(&tk1, &tk23, output_left2, inverse_message, output_right);
 
 //	printf("Forkskinny-64-192 Forward s=0\n");
 //	printf("Tweakey: ");

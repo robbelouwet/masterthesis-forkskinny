@@ -14,9 +14,9 @@ void forkskinny128_test() {
 	auto state = Blocks128_t{.values = {{.bytes = {
 			0x67, 0xc6, 0x69, 0x73, 0x51, 0xff, 0x4a, 0xec, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}}}};
 	auto sliced_state = slice(state);
-	auto unsliced_idk0 = unslice(sliced_state).values[0].raw[0];
-	auto unsliced_idk1 = unslice(sliced_state).values[0].raw[1];
-	int appel = 1;
+//	auto unsliced_idk0 = unslice(sliced_state).values[0].raw[0];
+//	auto unsliced_idk1 = unslice(sliced_state).values[0].raw[1];
+//	int appel = 1;
 	
 	// Set TK1
 	auto tk1_blocks = Blocks128_t{.values = {{.bytes =
@@ -44,24 +44,26 @@ void forkskinny128_test() {
 	// encrypt Forkskinny-128-192 with s=b mode
 	auto ciphertext = forkskinny128_384_encrypt(keyschedule, &sliced_state, 'b');
 	
+	// 168cdc774187d87273d21fa18ea46d26
 	auto C0 = unslice(ciphertext.C0).values[0];
 	std::cout << "\nC0: ";
-	print_block(C0.bytes, 8);
+	print_block(C0.bytes, 16);
 	
+	// 062fa2a6e88c314f45691ccd8edde209
 	auto C1 = unslice(ciphertext.C1).values[0];
 	std::cout << "\nC1: ";
-	print_block(C1.bytes, 8);
+	print_block(C1.bytes, 16);
 	
 	auto recovered_pt = forkskinny128_decrypt(keyschedule, &ciphertext, '1', 'i');
 	
+	// 67c6697351ff4aec8000000000000000
 	auto recovered_M = unslice(recovered_pt.M).values[0];
 	
 	auto recovered_C0 = unslice(recovered_pt.C0).values[0].raw;
-	
 	auto recovered_C1 = unslice(recovered_pt.C1).values[0].raw;
 	
 	std::cout << "\nrecovered M: ";
-	print_block(recovered_M.bytes, 8);
+	print_block(recovered_M.bytes, 16);
 	
 	//int appel = 1;
 }

@@ -8,18 +8,16 @@
  * but produces wrong ciphertexts.
  * @param state
  */
-static inline void skinny64_shiftrows(State128Sliced_t *state) {
-	// 0xFEDC BA98 7654 3210
-//	auto test_blocks = Blocks128_t();
-//	test_blocks.values[0].raw = 0xFEDCBA9876543210;
-//	*state = slice_t(test_blocks);
+static inline void skinny128_shiftrows(State128Sliced_t *state) {
+//	auto test_blocks = Blocks128_t{.values = {{.raw = {0x7766554433221100, 0xffeeddccbbaa9988}}}};
+//	*state = slice(test_blocks);
 	
 	// shift second row
-	auto temp = state->cells[4];
-	state->cells[4] = state->cells[5];
-	state->cells[5] = state->cells[6];
-	state->cells[6] = state->cells[7];
-	state->cells[7] = temp;
+	auto temp = state->cells[7];
+	state->cells[7] = state->cells[6];
+	state->cells[6] = state->cells[5];
+	state->cells[5] = state->cells[4];
+	state->cells[4] = temp;
 	
 	// shift third row
 	temp = state->cells[8];
@@ -30,18 +28,21 @@ static inline void skinny64_shiftrows(State128Sliced_t *state) {
 	state->cells[0xB] = temp;
 	
 	// shift fourth row
-	temp = state->cells[0xC];
-	state->cells[0xC] = state->cells[0xF];
-	state->cells[0xF] = state->cells[0xE];
-	state->cells[0xE] = state->cells[0xD];
-	state->cells[0xD] = temp;
+	temp = state->cells[0xF];
+	state->cells[0xF] = state->cells[0xC];
+	state->cells[0xC] = state->cells[0xD];
+	state->cells[0xD] = state->cells[0xE];
+	state->cells[0xE] = temp;
 	
-	// 0x EDCF 98BA 4765 3210
-//	auto test_res = unslice(*state).values[0].raw;
+	// Input:   0x  FFEE DDCC | BBAA 9988 | 7766 5544 | 3322 1100
+	// Erik:    0x  CCFF EEDD | 9988 BBAA | 6655 4477 | 3322 1100
+	// Us:      0x  EEDD CCFF | 9988 BBAA | 6655 4477 | 3322 1100
+//	auto test_res0 = unslice(*state).values[0].raw[0];
+//	auto test_res1 = unslice(*state).values[0].raw[1];
 //	int appel = 1;
 }
 
-static inline void skinny64_shiftrows_inv(State128Sliced_t *state){
+static inline void skinny128_shiftrows_inv(State128Sliced_t *state){
 //	auto ct = Blocks128_t{.values = {0xEDCF98BA47653210}};
 //	*state = slice_t(ct);
 	

@@ -8,7 +8,7 @@
 static inline std::vector<uint64_t> to_slices(uint64_t value, uint8_t width) {
 	auto res = std::vector<uint64_t>();
 	for (uint8_t i = 0; i < width; ++i) {
-		if ((value & (1 << i)) >> i) res.push_back(0xFFFFFFFFFFFFFFFF);
+		if ((value & (1ULL << i)) >> i) res.push_back(0xFFFFFFFFFFFFFFFF);
 		else res.push_back(0x0);
 	}
 	
@@ -19,7 +19,7 @@ void forkskinny64_branch_constant(){
 	uint64_t bc = 0x81ec7f5bda364912;
 	auto slices = to_slices(bc, 64);
 	
-	std::cout << "uint64_t branchconstant_64[64] = {\n\t";
+	std::cout << "State64Sliced_t const branch_constant64 = {\n\t";
 	for (int i = 0; i < 64; ++i) {
 		if (i % 4 == 0 && i != 0) {
 			uint8_t val = ((bc & (0xFUL << (i - 4))) >> (i - 4));
@@ -29,37 +29,37 @@ void forkskinny64_branch_constant(){
 		if (slices.at(i) == 0) std::cout << "ZER, ";
 		else std::cout << "ONE, ";
 	}
-	std::cout << " // " << std::hex << unsigned(((bc & (0xFUL << (60))) >> (60))) << "\n};\n\n";
+	std::cout << " // 0x" << std::hex << unsigned(((bc & (0xFUL << (60))) >> (60))) << "\n};\n\n";
 }
 
 void forkskinny128_branch_constant(){
-	uint64_t bc[2] = {0x4182102004080102, 0x448851a21428050a};
+	uint64_t bc[2] = {0x8241201008040201ULL, 0x8844a25128140a05ULL};
 	auto slices = to_slices(bc[0], 64);
 	
-	std::cout << "uint64_t branchconstant_128[128] = {\n\t";
+	std::cout << "State128Sliced_t const branch_constant128 = {\n\t";
 	
 	for (int i = 0; i < 64; ++i) {
 		if (i % 8 == 0 && i != 0) {
-			uint8_t val = ((bc[0] & (0xFFUL << (i - 8))) >> (i - 8));
-			std::cout << " // " << std::hex << unsigned(val) << "\n\t";
+			uint8_t val = (bc[0] & (0xFFUL << (i-8))) >> (i-8);
+			std::cout << " // 0x" << std::hex << unsigned(val) << "\n\t";
 		}
 		
 		if (slices.at(i) == 0) std::cout << "ZER, ";
 		else std::cout << "ONE, ";
 	}
-	std::cout << " // " << std::hex << unsigned(((bc[0] & (0xFFUL << 56)) >> 56)) << "\n\t";
+	std::cout << " // 0x" << std::hex << unsigned(((bc[0] & (0xFFUL << 56)) >> 56)) << "\n\t";
 	
 	slices = to_slices(bc[1], 64);
 	for (int i = 0; i < 64; ++i) {
 		if (i % 8 == 0 && i != 0) {
 			uint8_t val = ((bc[1] & (0xFFUL << (i - 8))) >> (i - 8));
-			std::cout << " // " << std::hex << unsigned(val) << "\n\t";
+			std::cout << " // 0x" << std::hex << unsigned(val) << "\n\t";
 		}
 		
 		if (slices.at(i) == 0) std::cout << "ZER, ";
 		else std::cout << "ONE, ";
 	}
-	std::cout << " // " << std::hex << unsigned(((bc[1] & (0xFFUL << 56)) >> 56)) << "\n};\n\n";
+	std::cout << " // 0x" << std::hex << unsigned(((bc[1] & (0xFFUL << 56)) >> 56)) << "\n};\n\n";
 }
 
 void forkskinny_round_constants(){
@@ -105,11 +105,8 @@ void skinny64_round_constants(){
 
 int main() {
 //	forkskinny64_branch_constant();
-
 	forkskinny128_branch_constant();
-	
 //	forkskinny_round_constants();
-	
 //	skinny64_round_constants();
 	
 }

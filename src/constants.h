@@ -5,6 +5,9 @@
 #include "forkskinny128-plus/utils/forkskinny128-datatypes.h"
 
 //<editor-fold desc="forkskinny64 sliced branch constant"
+// When comparing to the bc in the paper, the cells inside consecutive pairs of cells are swapped with each other to account
+// for a swapped order of significance of 2 nibbles within a single byte of plaintext.
+// See the README or publication for more info on memory layout
 State64Sliced_t const branch_constant64 = {
 		// LSB         MSB
 		ZER, ONE, ZER, ZER,  // 2
@@ -27,23 +30,26 @@ State64Sliced_t const branch_constant64 = {
 //</editor-fold>
 
 //<editor-fold desc="forkskinny128 sliced branch constant"
+// the branch constant in forkskinny128 doesn't have 'swapped nibbles' within a byte like forkskinny64 has,
+// because cells are already 8-bit and are definable datatypes with a specified order of significance.
+// So we don't need to account for this and so, the order of branch constant cells is the same as in the paper
 State128Sliced_t const branch_constant128 = {
-		ZER, ONE, ZER, ZER, ZER, ZER, ZER, ZER,  // 2
-		ONE, ZER, ZER, ZER, ZER, ZER, ZER, ZER,  // 1
-		ZER, ZER, ZER, ONE, ZER, ZER, ZER, ZER,  // 8
-		ZER, ZER, ONE, ZER, ZER, ZER, ZER, ONE,  // 4
-		ZER, ZER, ZER, ZER, ZER, ZER, ZER, ZER,  // 20
-		ZER, ZER, ZER, ZER, ZER, ZER, ZER, ZER,  // 10
-		ZER, ZER, ZER, ZER, ZER, ZER, ZER, ZER,  // 82
-		ZER, ZER, ZER, ZER, ZER, ZER, ZER, ZER,  // 41
-		ZER, ONE, ZER, ONE, ZER, ZER, ZER, ZER,  // a
-		ONE, ZER, ONE, ZER, ZER, ZER, ZER, ZER,  // 5
-		ZER, ZER, ZER, ONE, ZER, ONE, ZER, ZER,  // 28
-		ZER, ZER, ONE, ZER, ONE, ZER, ZER, ONE,  // 14
-		ZER, ZER, ZER, ZER, ZER, ZER, ZER, ZER,  // a2
-		ZER, ZER, ZER, ZER, ZER, ZER, ZER, ZER,  // 51
-		ZER, ZER, ZER, ZER, ZER, ZER, ZER, ZER,  // 88
-		ZER, ZER, ZER, ZER, ZER, ZER, ZER, ZER  // 44
+		ONE, ZER, ZER, ZER, ZER, ZER, ZER, ZER,  // 0x1
+		ZER, ONE, ZER, ZER, ZER, ZER, ZER, ZER,  // 0x2
+		ZER, ZER, ONE, ZER, ZER, ZER, ZER, ZER,  // 0x4
+		ZER, ZER, ZER, ONE, ZER, ZER, ZER, ZER,  // 0x8
+		ZER, ZER, ZER, ZER, ONE, ZER, ZER, ZER,  // 0x10
+		ZER, ZER, ZER, ZER, ZER, ONE, ZER, ZER,  // 0x20
+		ONE, ZER, ZER, ZER, ZER, ZER, ONE, ZER,  // 0x41
+		ZER, ONE, ZER, ZER, ZER, ZER, ZER, ONE,  // 0x82
+		ONE, ZER, ONE, ZER, ZER, ZER, ZER, ZER,  // 0x5
+		ZER, ONE, ZER, ONE, ZER, ZER, ZER, ZER,  // 0xa
+		ZER, ZER, ONE, ZER, ONE, ZER, ZER, ZER,  // 0x14
+		ZER, ZER, ZER, ONE, ZER, ONE, ZER, ZER,  // 0x28
+		ONE, ZER, ZER, ZER, ONE, ZER, ONE, ZER,  // 0x51
+		ZER, ONE, ZER, ZER, ZER, ONE, ZER, ONE,  // 0xa2
+		ZER, ZER, ONE, ZER, ZER, ZER, ONE, ZER,  // 0x44
+		ZER, ZER, ZER, ONE, ZER, ZER, ZER, ONE,  // 0x88
 };
 //</editor-fold>
 
