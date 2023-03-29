@@ -22,7 +22,7 @@
 #define y6 state->cells[i].slices[6].value
 #define y7 state->cells[i].slices[7].value
 
-static inline void skinny128_sbox(State128Sliced_t *state) {
+static inline void forkskinny128_sbox(State128Sliced_t *state) {
 //	auto blocks = Blocks128_t{.values = {{.raw = {0xEC4AFF517369C667, 0x80}}}};
 //	*state = slice(blocks);
 	
@@ -50,7 +50,7 @@ static inline void skinny128_sbox(State128Sliced_t *state) {
 //	int banaan = 1;
 }
 
-static inline void skinny128_sbox_inv(State128Sliced_t *state) {
+static inline void forkskinny128_sbox_inv(State128Sliced_t *state) {
 //	auto blocks = Blocks128_t{.values = {0xF7E4D583B2A1096C}};
 //	*state = slice_t(blocks);
 //	int appel = 1;

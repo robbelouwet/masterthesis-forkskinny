@@ -289,7 +289,7 @@ STATIC_INLINE uint64_t skinny128_inv_sbox(uint64_t x)
 
 #else
 
-STATIC_INLINE uint32_t skinny128_sbox(uint32_t x)
+STATIC_INLINE uint32_t forkskinny128_sbox(uint32_t x)
 {
     /* Original version from the specification is equivalent to:
      *
@@ -423,7 +423,7 @@ static ForkSkinny128Cells_t forkskinny_128_encrypt_rounds
           state.row[0] = skinny128_sbox(state.row[0]);
           state.row[1] = skinny128_sbox(state.row[1]);
           state.row[2] = skinny128_sbox(state.row[2]);
-          state.row[3] = skinny128_sbox(state.row[3]);
+          state.row[3] = forkskinny128_sbox(state.row[3]);
         #endif
 
         /* Apply the subkey for this round */
@@ -465,7 +465,7 @@ ForkSkinny128Cells_t forkskinny_128_384_encrypt_round(
 	state.row[0] = skinny128_sbox(state.row[0]);
           state.row[1] = skinny128_sbox(state.row[1]);
           state.row[2] = skinny128_sbox(state.row[2]);
-          state.row[3] = skinny128_sbox(state.row[3]);
+          state.row[3] = forkskinny128_sbox(state.row[3]);
 	#endif
 	
 	/* Apply the subkey for this round */
@@ -513,13 +513,13 @@ static ForkSkinny128Cells_t forkskinny_128_384_encrypt_rounds
 		//<editor-fold>
 //        /* Apply the S-box to all bytes in the state */
 //        #if SKINNY_64BIT
-//          state.lrow[0] = skinny128_sbox(state.lrow[0]);
-//          state.lrow[1] = skinny128_sbox(state.lrow[1]);
+//          state.lrow[0] = forkskinny128_sbox(state.lrow[0]);
+//          state.lrow[1] = forkskinny128_sbox(state.lrow[1]);
 //        #else
-//          state.row[0] = skinny128_sbox(state.row[0]);
-//          state.row[1] = skinny128_sbox(state.row[1]);
-//          state.row[2] = skinny128_sbox(state.row[2]);
-//          state.row[3] = skinny128_sbox(state.row[3]);
+//          state.row[0] = forkskinny128_sbox(state.row[0]);
+//          state.row[1] = forkskinny128_sbox(state.row[1]);
+//          state.row[2] = forkskinny128_sbox(state.row[2]);
+//          state.row[3] = forkskinny128_sbox(state.row[3]);
 //        #endif
 //
 //        /* Apply the subkey for this round */

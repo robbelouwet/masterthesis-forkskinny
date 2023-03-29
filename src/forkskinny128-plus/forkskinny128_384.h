@@ -74,7 +74,7 @@ static inline void forkskinny128_encrypt_round(KeySchedule128Sliced_t schedule, 
 	auto roundkey = unslice({.halves= {schedule.keys[iteration], {}}}).values[0].raw[0];
 
 	auto test_sbox_before = unslice(*state).values[0].raw; // 0x EC4A FF51 7369 C667 | 0x 80
-	skinny128_sbox(state);
+	forkskinny128_sbox(state);
 	auto test_state0 = unslice(*state).values[0].raw[0]; // 0x 079C FF4A C5B1 87AD | 0x 6565 6565 6565 6536
 	auto test_state1 = unslice(*state).values[0].raw[1]; // 0x 079C FF4A C5B1 87AD | 0x 6565 6565 6565 6536
 	
@@ -83,11 +83,11 @@ static inline void forkskinny128_encrypt_round(KeySchedule128Sliced_t schedule, 
 	test_state0 = unslice(*state).values[0].raw[0]; // 0x 9D55 6079 A69D DDDA | 0x 6565 6565 6565 6534
 	test_state1 = unslice(*state).values[0].raw[1]; // 0x 9D55 6079 A69D DDDA | 0x 6565 6565 6565 6534
 	
-	skinny128_shiftrows(state);
+	forkskinny128_shiftrows(state);
 	test_state0 = unslice(*state).values[0].raw[0]; // 0x 5560 799D A69D DDDA | 0x 6565 6565 6534 6565
 	test_state1 = unslice(*state).values[0].raw[1]; // 0x 5560 799D A69D DDDA | 0x 6565 6565 6534 6565
 	
-	skinny128_mixcols(state);
+	forkskinny128_mixcols(state);
 	test_state0 = unslice(*state).values[0].raw[0]; // 0x A69D DDDA A6CC DDDA | 0x C3A9 B8BF 3054 1CF8
 	test_state1 = unslice(*state).values[0].raw[1]; // 0x A69D DDDA A6CC DDDA | 0x C3A9 B8BF 3054 1CF8
 
@@ -164,16 +164,16 @@ static inline void forkskinny64_decrypt_round(KeySchedule128Sliced_t schedule, S
 //	*state = slice_t(ct);
 
 //	auto test_sbox_before = unslice(*state).values[0].raw;
-	skinny128_mixcols_inv(state);
+	forkskinny128_mixcols_inv(state);
 //	auto test_state = unslice(*state).values[0].raw;
 	
-	skinny128_shiftrows_inv(state);
+	forkskinny128_shiftrows_inv(state);
 //	test_state = unslice(*state).values[0].raw;
 	
 	apply_roundkey(schedule.keys[iteration], state);
 //	test_state = unslice(*state).values[0].raw;
 	
-	skinny128_sbox_inv(state);
+	forkskinny128_sbox_inv(state);
 //	test_state = unslice(*state).values[0].raw;
 
 //	int appel = 1;
