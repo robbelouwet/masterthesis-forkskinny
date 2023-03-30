@@ -10,14 +10,14 @@ void print_block(uint8_t *block, unsigned int n) {
 		printf("%02x", block[i]);
 }
 
-void forkskinny128_test() {
+void forkskinny128_test(unsigned char tk_mode) {
 	auto state = Blocks128_t{.values = {{.bytes = {
 			0x67, 0xc6, 0x69, 0x73, 0x51, 0xff, 0x4a, 0xec, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}}}};
 	auto sliced_state = slice(state);
-	auto unsliced_idk0 = unslice(sliced_state).values[0].raw[0];
-	auto unsliced_idk1 = unslice(sliced_state).values[0].raw[1];
-	int appel = 1;
-	
+//	auto unsliced_idk0 = unslice(sliced_state).values[0].raw[0];
+//	auto unsliced_idk1 = unslice(sliced_state).values[0].raw[1];
+//	int appel = 1;
+//
 	// Set TK1
 	auto tk1_blocks = Blocks128_t{.values = {{.bytes =
 			{0x29, 0xcd, 0xba, 0xab, 0xf2, 0xfb, 0xe3, 0x46, 0x7c, 0xc2, 0x54, 0xf8, 0x1b, 0xe8, 0xe7, 0x8d}}}};
@@ -36,10 +36,11 @@ void forkskinny128_test() {
 	// Calculate TK schedule
 	// should be:
 	// 0x9AC99F33632C5A77, 0x6AF595E4AC0D4945, 0xB96C01BAB952D018
-	auto keyschedule = forkskinny_128_init_tk23(sliced_TK1, sliced_TK2, sliced_TK3);
-	auto testk0 = unslice({.halves = {keyschedule.keys[0], {}}}).values[0].raw[0];
-	auto testk1 = unslice({.halves = {keyschedule.keys[1], {}}}).values[0].raw[0];
-	auto testk2 = unslice({.halves = {keyschedule.keys[2], {}}}).values[0].raw[0];
+	auto keyschedule = KeySchedule128Sliced_t();
+	forkskinny_128_init_tk23(sliced_TK1, sliced_TK2, sliced_TK3);
+//	auto testk0 = unslice({.halves = {keyschedule.keys[0], {}}}).values[0].raw[0];
+//	auto testk1 = unslice({.halves = {keyschedule.keys[1], {}}}).values[0].raw[0];
+//	auto testk2 = unslice({.halves = {keyschedule.keys[2], {}}}).values[0].raw[0];
 	
 	// encrypt Forkskinny-128-192 with s=b mode
 	auto ciphertext = forkskinny128_384_encrypt(keyschedule, &sliced_state, 'b');

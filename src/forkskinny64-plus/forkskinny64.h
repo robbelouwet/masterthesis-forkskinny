@@ -85,7 +85,9 @@ static inline void forkskinny64_encrypt_round(KeySchedule64Sliced_t schedule, St
  *
  * @param schedule
  * @param state
- * @param mode 'b', '0', or '1'
+ * @param mode '0': M -> C0
+ * 			   '1': m -> C1
+ * 			   'b': m -> (C0, C1)
  * @return
  */
 static inline SlicedCiphertext64_t forkskinny64_encrypt(KeySchedule64Sliced_t schedule,
@@ -222,6 +224,16 @@ static inline SlicedCiphertext64_t forkskinny64_decrypt_C1(KeySchedule64Sliced_t
 	
 }
 
+/**
+ *
+ * @param schedule
+ * @param ct
+ * @param input_label '0': input C0
+ * 					  '1': input C1
+ * @param mode 'o': CX -> CY
+ * 			   'b': CX -> (CY, M)
+ * @return
+ */
 static inline SlicedCiphertext64_t forkskinny64_decrypt(KeySchedule64Sliced_t schedule, SlicedCiphertext64_t *ct,
                                                         unsigned char input_label, unsigned char mode) {
 	if (input_label == '0')

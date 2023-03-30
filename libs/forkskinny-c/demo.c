@@ -41,30 +41,30 @@ void demo_forkskinny_64_192() {
 	forkskinny_c_64_192_init_tk2_tk3(&tk23, key + FORKSKINNY64_BLOCK_SIZE, FORKSKINNY64_MAX_ROUNDS);
 	
 	// forward one leg
-//	uint8_t output_right_oneleg[FORKSKINNY64_BLOCK_SIZE];
-//	forkskinny_c_64_192_encrypt(&tk1, &tk23, NULL, output_right_oneleg, message, c_buff);
-//
+	uint8_t output_right_oneleg[FORKSKINNY64_BLOCK_SIZE];
+	forkskinny_c_64_192_encrypt(&tk1, &tk23, NULL, output_right_oneleg, message, c_buff);
+
 	// forward both legs
 	uint8_t output_left[FORKSKINNY64_BLOCK_SIZE];
 	uint8_t output_right[FORKSKINNY64_BLOCK_SIZE];
 	forkskinny_c_64_192_encrypt(&tk1, &tk23, output_left, output_right, message, c_buff);
 
 	// inverse one leg
-//	uint8_t inverse_message_oneleg[FORKSKINNY64_BLOCK_SIZE];
-//	forkskinny_c_64_192_decrypt(&tk1, &tk23, NULL, inverse_message_oneleg, output_right_oneleg);
-//
-	// inverse/output both legs
-//	uint8_t inverse_message[FORKSKINNY64_BLOCK_SIZE];
-//	uint8_t output_left2[FORKSKINNY64_BLOCK_SIZE];
-//	forkskinny_c_64_192_decrypt(&tk1, &tk23, output_left2, inverse_message, output_right);
+	uint8_t inverse_message_oneleg[FORKSKINNY64_BLOCK_SIZE];
+	forkskinny_c_64_192_decrypt(&tk1, &tk23, NULL, inverse_message_oneleg, output_right_oneleg);
 
-//	printf("Forkskinny-64-192 Forward s=0\n");
-//	printf("Tweakey: ");
-//	print_block(key, 3 * FORKSKINNY64_BLOCK_SIZE);
-//	printf("\nMessage: ");
-//	print_block(message, FORKSKINNY64_BLOCK_SIZE);
-//	printf("\nC0: ");
-//	print_block(output_right_oneleg, FORKSKINNY64_BLOCK_SIZE);
+	// inverse/output both legs
+	uint8_t inverse_message[FORKSKINNY64_BLOCK_SIZE];
+	uint8_t output_left2[FORKSKINNY64_BLOCK_SIZE];
+	forkskinny_c_64_192_decrypt(&tk1, &tk23, output_left2, inverse_message, output_right);
+
+	printf("Forkskinny-64-192 Forward s=0\n");
+	printf("Tweakey: ");
+	print_block(key, 3 * FORKSKINNY64_BLOCK_SIZE);
+	printf("\nMessage: ");
+	print_block(message, FORKSKINNY64_BLOCK_SIZE);
+	printf("\nC0: ");
+	print_block(output_right_oneleg, FORKSKINNY64_BLOCK_SIZE);
 	
 	printf("\n\nForskinny-64-192 Forward s=b\n");
 	printf("Tweakey: ");
@@ -76,24 +76,24 @@ void demo_forkskinny_64_192() {
 	printf("\nC1: ");
 	print_block(output_left, FORKSKINNY64_BLOCK_SIZE);
 
-//	printf("\n\nForskinny-64-192 Inverse s=i\n");
-//	printf("Tweakey: ");
-//	print_block(key, 3 * FORKSKINNY64_BLOCK_SIZE);
-//	printf("\nC0: ");
-//	print_block(output_right_oneleg, FORKSKINNY64_BLOCK_SIZE);
-//	printf("\nMessage: ");
-//	print_block(inverse_message_oneleg, FORKSKINNY64_BLOCK_SIZE);
+	printf("\n\nForskinny-64-192 Inverse s=i\n");
+	printf("Tweakey: ");
+	print_block(key, 3 * FORKSKINNY64_BLOCK_SIZE);
+	printf("\nC0: ");
+	print_block(output_right_oneleg, FORKSKINNY64_BLOCK_SIZE);
+	printf("\nMessage: ");
+	print_block(inverse_message_oneleg, FORKSKINNY64_BLOCK_SIZE);
 
-//	printf("\n\nForskinny-64-192 Inverse s=b\n");
-//	printf("Tweakey: ");
-//	print_block(key, 3 * FORKSKINNY64_BLOCK_SIZE);
-//	printf("\nC0: ");
-//	print_block(output_right, FORKSKINNY64_BLOCK_SIZE);
-//	printf("\nMessage: ");
-//	print_block(inverse_message, FORKSKINNY64_BLOCK_SIZE);
-//	printf("\nC1: ");
-//	print_block(output_left2, FORKSKINNY64_BLOCK_SIZE);
-//	printf("\n");
+	printf("\n\nForskinny-64-192 Inverse s=b\n");
+	printf("Tweakey: ");
+	print_block(key, 3 * FORKSKINNY64_BLOCK_SIZE);
+	printf("\nC0: ");
+	print_block(output_right, FORKSKINNY64_BLOCK_SIZE);
+	printf("\nMessage: ");
+	print_block(inverse_message, FORKSKINNY64_BLOCK_SIZE);
+	printf("\nC1: ");
+	print_block(output_left2, FORKSKINNY64_BLOCK_SIZE);
+	printf("\n");
 }
 
 void demo_forkskinny_128_256() {
@@ -126,13 +126,13 @@ void demo_forkskinny_128_256() {
 	uint8_t output_left2[FORKSKINNY128_BLOCK_SIZE];
 	forkskinny_c_128_256_decrypt(&tk1, &tk2, output_left2, inverse_message, output_right);
 
-//	printf("\nForkskinny-128-256 Forward s=0\n");
-//	printf("Tweakey: ");
-//	print_block(key, 2 * FORKSKINNY128_BLOCK_SIZE);
-//	printf("\nMessage: ");
-//	print_block(message, FORKSKINNY128_BLOCK_SIZE);
-//	printf("\nC0: ");
-//	print_block(output_right_oneleg, FORKSKINNY128_BLOCK_SIZE);
+	printf("\nForkskinny-128-256 Forward s=0\n");
+	printf("Tweakey: ");
+	print_block(key, 2 * FORKSKINNY128_BLOCK_SIZE);
+	printf("\nMessage: ");
+	print_block(message, FORKSKINNY128_BLOCK_SIZE);
+	printf("\nC0: ");
+	print_block(output_right_oneleg, FORKSKINNY128_BLOCK_SIZE);
 	
 	printf("\n\nForskinny-128-256 Forward s=b\n");
 	printf("Tweakey: ");
@@ -143,24 +143,24 @@ void demo_forkskinny_128_256() {
 	print_block(output_right, FORKSKINNY128_BLOCK_SIZE);
 	printf("\nC1: ");
 	print_block(output_left, FORKSKINNY128_BLOCK_SIZE);
-//
-//	printf("\n\nForskinny-128-256 Inverse s=i\n");
-//	printf("Tweakey: ");
-//	print_block(key, 2 * FORKSKINNY128_BLOCK_SIZE);
-//	printf("\nC0: ");
-//	print_block(output_right_oneleg, FORKSKINNY128_BLOCK_SIZE);
-//	printf("\nMessage: ");
-//	print_block(inverse_message_oneleg, FORKSKINNY128_BLOCK_SIZE);
-//
-//	printf("\n\nForskinny-128-256 Inverse s=b\n");
-//	printf("Tweakey: ");
-//	print_block(key, 2 * FORKSKINNY128_BLOCK_SIZE);
-//	printf("\nC0: ");
-//	print_block(output_right, FORKSKINNY128_BLOCK_SIZE);
-//	printf("\nMessage: ");
-//	print_block(inverse_message, FORKSKINNY128_BLOCK_SIZE);
-//	printf("\nC1: ");
-//	print_block(output_left2, FORKSKINNY128_BLOCK_SIZE);
+
+	printf("\n\nForskinny-128-256 Inverse s=i\n");
+	printf("Tweakey: ");
+	print_block(key, 2 * FORKSKINNY128_BLOCK_SIZE);
+	printf("\nC0: ");
+	print_block(output_right_oneleg, FORKSKINNY128_BLOCK_SIZE);
+	printf("\nMessage: ");
+	print_block(inverse_message_oneleg, FORKSKINNY128_BLOCK_SIZE);
+
+	printf("\n\nForskinny-128-256 Inverse s=b\n");
+	printf("Tweakey: ");
+	print_block(key, 2 * FORKSKINNY128_BLOCK_SIZE);
+	printf("\nC0: ");
+	print_block(output_right, FORKSKINNY128_BLOCK_SIZE);
+	printf("\nMessage: ");
+	print_block(inverse_message, FORKSKINNY128_BLOCK_SIZE);
+	printf("\nC1: ");
+	print_block(output_left2, FORKSKINNY128_BLOCK_SIZE);
 	printf("\n");
 }
 
@@ -186,31 +186,31 @@ void demo_forkskinny_128_384() {
 	forkskinny_c_128_384_init_tk2(&tk2, key + FORKSKINNY128_BLOCK_SIZE, FORKSKINNY128_MAX_ROUNDS);
 	forkskinny_c_128_384_init_tk3(&tk3, key + 2 * FORKSKINNY128_BLOCK_SIZE, FORKSKINNY128_MAX_ROUNDS);
 
-//	// forward one leg
-//	uint8_t output_right_oneleg[FORKSKINNY128_BLOCK_SIZE];
-//	forkskinny_c_128_384_encrypt(&tk1, &tk2, &tk3, NULL, output_right_oneleg, message);
+	// forward one leg
+	uint8_t output_right_oneleg[FORKSKINNY128_BLOCK_SIZE];
+	forkskinny_c_128_384_encrypt(&tk1, &tk2, &tk3, NULL, output_right_oneleg, message);
 	
 	// forward both legs
 	uint8_t output_left[FORKSKINNY128_BLOCK_SIZE];
 	uint8_t output_right[FORKSKINNY128_BLOCK_SIZE];
 	forkskinny_c_128_384_encrypt(&tk1, &tk2, &tk3, output_left, output_right, message);
 
-//	// inverse one leg
-//	uint8_t inverse_message_oneleg[FORKSKINNY128_BLOCK_SIZE];
-//	forkskinny_c_128_384_decrypt(&tk1, &tk2, &tk3, NULL, inverse_message_oneleg, output_right_oneleg);
-//
-//	// inverse/output both legs
-//	uint8_t inverse_message[FORKSKINNY128_BLOCK_SIZE];
-//	uint8_t output_left2[FORKSKINNY128_BLOCK_SIZE];
-//	forkskinny_c_128_384_decrypt(&tk1, &tk2, &tk3, output_left2, inverse_message, output_right);
+	// inverse one leg
+	uint8_t inverse_message_oneleg[FORKSKINNY128_BLOCK_SIZE];
+	forkskinny_c_128_384_decrypt(&tk1, &tk2, &tk3, NULL, inverse_message_oneleg, output_right_oneleg);
 
-//	printf("\nForkskinny-128-384 Forward s=0\n");
-//	printf("Tweakey: ");
-//	print_block(key, 3 * FORKSKINNY128_BLOCK_SIZE);
-//	printf("\nMessage: ");
-//	print_block(message, FORKSKINNY128_BLOCK_SIZE);
-//	printf("\nC0: ");
-//	print_block(output_right_oneleg, FORKSKINNY128_BLOCK_SIZE);
+	// inverse/output both legs
+	uint8_t inverse_message[FORKSKINNY128_BLOCK_SIZE];
+	uint8_t output_left2[FORKSKINNY128_BLOCK_SIZE];
+	forkskinny_c_128_384_decrypt(&tk1, &tk2, &tk3, output_left2, inverse_message, output_right);
+
+	printf("\nForkskinny-128-384 Forward s=0\n");
+	printf("Tweakey: ");
+	print_block(key, 3 * FORKSKINNY128_BLOCK_SIZE);
+	printf("\nMessage: ");
+	print_block(message, FORKSKINNY128_BLOCK_SIZE);
+	printf("\nC0: ");
+	print_block(output_right_oneleg, FORKSKINNY128_BLOCK_SIZE);
 	
 	printf("\n\nForskinny-128-384 Forward s=b\n");
 	printf("Tweakey: ");
