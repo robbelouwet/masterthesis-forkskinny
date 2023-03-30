@@ -14,9 +14,9 @@ void forkskinny128_test() {
 	auto state = Blocks128_t{.values = {{.bytes = {
 			0x67, 0xc6, 0x69, 0x73, 0x51, 0xff, 0x4a, 0xec, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}}}};
 	auto sliced_state = slice(state);
-//	auto unsliced_idk0 = unslice(sliced_state).values[0].raw[0];
-//	auto unsliced_idk1 = unslice(sliced_state).values[0].raw[1];
-//	int appel = 1;
+	auto unsliced_idk0 = unslice(sliced_state).values[0].raw[0];
+	auto unsliced_idk1 = unslice(sliced_state).values[0].raw[1];
+	int appel = 1;
 	
 	// Set TK1
 	auto tk1_blocks = Blocks128_t{.values = {{.bytes =
@@ -62,17 +62,17 @@ void forkskinny128_test() {
 	// 67c6697351ff4aec8000000000000000
 	auto recovered_M = unslice(decryption.M).values[0];
 	
-	auto recovered_C0 = unslice(decryption.C0).values[0].bytes;
-	auto recovered_C1 = unslice(decryption.C1).values[0].bytes;
+	auto recovered_C0 = unslice(decryption.C0).values[0];
+	auto recovered_C1 = unslice(decryption.C1).values[0];
 	
 	std::cout << "\n\nrecovered M: ";
 	print_block(recovered_M.bytes, 16);
 	
 	std::cout << "\nrecovered C0: ";
-	print_block(recovered_C0, 16);
+	print_block(recovered_C0.bytes, 16);
 	
 	std::cout << "\nrecovered C1: ";
-	print_block(recovered_C1, 16);
+	print_block(recovered_C1.bytes, 16);
 	
 	//int appel = 1;
 }

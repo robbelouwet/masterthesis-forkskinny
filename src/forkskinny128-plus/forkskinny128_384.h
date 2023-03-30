@@ -156,8 +156,8 @@ static inline SlicedCiphertext128_t forkskinny128_384_encrypt(KeySchedule128Slic
 	return {C1, C0};
 }
 
-static inline void forkskinny64_decrypt_round(KeySchedule128Sliced_t schedule, State128Sliced_t *state,
-                                              uint16_t iteration) {
+static inline void forkskinny128_decrypt_round(KeySchedule128Sliced_t schedule, State128Sliced_t *state,
+                                               uint16_t iteration) {
 //	auto roundkey = unslice({.halves= {schedule.keys[iteration], {}}}).values[0].raw;
 
 //	auto ct = Blocks128_t{.values = {0x9A9BFD8982C66E7C}};
@@ -179,8 +179,8 @@ static inline void forkskinny64_decrypt_round(KeySchedule128Sliced_t schedule, S
 //	int appel = 1;
 }
 
-static inline SlicedCiphertext128_t forkskinny64_decrypt_C0(KeySchedule128Sliced_t schedule,
-                                                            State128Sliced_t *state, unsigned char mode) {
+static inline SlicedCiphertext128_t forkskinny128_decrypt_C0(KeySchedule128Sliced_t schedule,
+                                                             State128Sliced_t *state, unsigned char mode) {
 	auto M = State128Sliced_t();
 	auto C1 = State128Sliced_t();
 	
@@ -190,7 +190,7 @@ static inline SlicedCiphertext128_t forkskinny64_decrypt_C0(KeySchedule128Sliced
 	// decrypt C0 branch
 	int c0_i = FORKSKINNY_128_384_ROUNDS_BEFORE + FORKSKINNY_128_384_ROUNDS_AFTER - 1;
 	for (; c0_i > FORKSKINNY_128_384_ROUNDS_BEFORE - 1; --c0_i) {
-		forkskinny64_decrypt_round(schedule, state, c0_i);
+		forkskinny128_decrypt_round(schedule, state, c0_i);
 //		test2 = unslice(*state).values[0].raw;
 //		int appel = 1;
 	}
@@ -199,7 +199,7 @@ static inline SlicedCiphertext128_t forkskinny64_decrypt_C0(KeySchedule128Sliced
 	if (mode == 'i' || mode == 'b') {
 		M = *state;
 		for (int i = c0_i; i >= 0; --i)
-			forkskinny64_decrypt_round(schedule, &M, i);
+			forkskinny128_decrypt_round(schedule, &M, i);
 	}
 	
 	// Re-encrypt to C1
@@ -214,15 +214,15 @@ static inline SlicedCiphertext128_t forkskinny64_decrypt_C0(KeySchedule128Sliced
 	
 }
 
-static inline SlicedCiphertext128_t forkskinny64_decrypt_C1(KeySchedule128Sliced_t schedule,
-                                                            State128Sliced_t *state, unsigned char mode) {
+static inline SlicedCiphertext128_t forkskinny128_decrypt_C1(KeySchedule128Sliced_t schedule,
+                                                             State128Sliced_t *state, unsigned char mode) {
 	auto M = State128Sliced_t();
 	auto C0 = State128Sliced_t();
 	
 	// decrypt C1 branch
 	int c1_i = FORKSKINNY128_MAX_ROUNDS - 1;
 	for (; c1_i > FORKSKINNY_128_384_ROUNDS_BEFORE + FORKSKINNY_128_384_ROUNDS_AFTER - 1; --c1_i)
-		forkskinny64_decrypt_round(schedule, state, c1_i);
+		forkskinny128_decrypt_round(schedule, state, c1_i);
 	
 	add_branch_constant(state);
 	
@@ -230,7 +230,7 @@ static inline SlicedCiphertext128_t forkskinny64_decrypt_C1(KeySchedule128Sliced
 	if (mode == 'i' || mode == 'b') {
 		M = *state;
 		for (int i = c1_i - FORKSKINNY_128_384_ROUNDS_AFTER; i >= 0; --i)
-			forkskinny64_decrypt_round(schedule, &M, i);
+			forkskinny128_decrypt_round(schedule, &M, i);
 	}
 	
 	// Re-encrypt to C0
@@ -247,8 +247,8 @@ static inline SlicedCiphertext128_t forkskinny64_decrypt_C1(KeySchedule128Sliced
 static inline SlicedCiphertext128_t forkskinny128_decrypt(KeySchedule128Sliced_t schedule, SlicedCiphertext128_t *ct,
                                                           unsigned char input_label, unsigned char mode) {
 	if (input_label == '0')
-		return forkskinny64_decrypt_C0(schedule, &(ct->C0), mode);
-	return forkskinny64_decrypt_C1(schedule, &(ct->C1), mode);
+		return forkskinny128_decrypt_C0(schedule, &(ct->C0), mode);
+	return forkskinny128_decrypt_C1(schedule, &(ct->C1), mode);
 }
 
 #endif //FORKSKINNYPLUS_FORKSKINNY128_384_H

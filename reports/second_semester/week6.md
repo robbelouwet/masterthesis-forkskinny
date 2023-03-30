@@ -5,7 +5,8 @@
 Fixed the fs128 s-box, ShiftRows and AddConstant step. Sew it together and can now encrypt fs128-384 in s=b mode,
 decryption is up next.
 
-# Tuesday
+# Thursday
+Fixed decryption and wrote some text for paper. Can now also decrypt fs128-384 in any mode.
 
 # Friday
 
