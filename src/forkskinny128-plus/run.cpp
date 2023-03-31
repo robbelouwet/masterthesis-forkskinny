@@ -10,7 +10,7 @@ void print_block(uint8_t *block, unsigned int n) {
 		printf("%02x", block[i]);
 }
 
-void forkskinny128_test(unsigned char tk_mode) {
+void forkskinny128_test() {
 	auto state = Blocks128_t{.values = {{.bytes = {
 			0x67, 0xc6, 0x69, 0x73, 0x51, 0xff, 0x4a, 0xec, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}}}};
 	auto sliced_state = slice(state);
@@ -36,8 +36,7 @@ void forkskinny128_test(unsigned char tk_mode) {
 	// Calculate TK schedule
 	// should be:
 	// 0x9AC99F33632C5A77, 0x6AF595E4AC0D4945, 0xB96C01BAB952D018
-	auto keyschedule = KeySchedule128Sliced_t();
-	forkskinny_128_init_tk23(sliced_TK1, sliced_TK2, sliced_TK3);
+	auto keyschedule = forkskinny_128_init_tk23(sliced_TK1, sliced_TK2, sliced_TK3);
 //	auto testk0 = unslice({.halves = {keyschedule.keys[0], {}}}).values[0].raw[0];
 //	auto testk1 = unslice({.halves = {keyschedule.keys[1], {}}}).values[0].raw[0];
 //	auto testk2 = unslice({.halves = {keyschedule.keys[2], {}}}).values[0].raw[0];

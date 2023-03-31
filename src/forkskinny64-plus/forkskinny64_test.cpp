@@ -17,39 +17,35 @@ auto sliced_TK2 = slice(tk2_blocks);
 
 // Set TK3
 auto tk3_blocks = Blocks64_t{.values = {{.bytes = {0xf3, 0x99, 0x00, 0xaa, 0x00, 0xbb, 0x00, 0xcc}}}};
-auto sliced_TK3 = slice(tk3_blocks);
+auto sliced_TK3_128 = slice(tk3_blocks);
 
-bool test_forkskinny64(KeySchedule64Sliced_t schedule, ) {
+bool test_forkskinny64(KeySchedule64Sliced_t schedule, uint64_t c0, uint64_t c1) {
 	
 	// Ensure correct test vectors
-	auto ciphertext1 = forkskinny64_encrypt(schedule, &sliced_state, 'b');
-	auto decryption1 = forkskinny64_decrypt(schedule, &ciphertext1, '1', 'i');
-	assert(ciphertext1.C0.raw[0].value == 0x502A9310B9F164FF);
-	assert(ciphertext1.C1.raw[0].value == 0x55520D27354ECF3);
+	auto ct = forkskinny64_encrypt(schedule, &sliced_state, 'b');
+	auto result_c0 = unslice(ct.C0).values[0].raw;
+	auto result_c1 = unslice(ct.C1).values[0].raw;
 	
-	// 1) Decryption of encryption results back in M
-	assert(ciphertext1.M.raw[0].value == state.values[0].raw);
+	assert(result_c0 == c0);
+	assert(result_c1 == c1);
 	
-	// 2) E⁻¹(C0, 1) -> {M, C1}
-	auto ciphertext2 = forkskinny64_encrypt(schedule, &sliced_state, '1');
-	auto decryption2 = forkskinny64_decrypt(schedule, &ciphertext2, '1', 'i');
+	auto pt = forkskinny64_decrypt(schedule, &ct, '1', 'b');
+	auto result_M = unslice(pt.M).values[0].raw;
+	auto result_C0 = unslice(pt.C0).values[0].raw;
+	
+	assert(result_M == state.values[0].raw);
+	assert(result_C0 == c0);
 }
 
-bool test_forkskinny_64_64() {
+void test_forkskinny_64_192() {
 	// Calculate TK schedule
-	auto keyschedule = forkskinny_64_init_tk23(sliced_TK1, sliced_TK2, sliced_TK3);
-}
-
-bool test_forkskinny_64_128() {
-
-}
-
-bool test_forkskinny_64_192() {
-
+	test_forkskinny64(
+			forkskinny_64_init_tk23(sliced_TK1, sliced_TK2, sliced_TK3_128),
+			0x502A9310B9F164FF,
+			0x55520D27354ECF3
+	);
 }
 
 int main() {
-	test_forkskinny_64_64();
-	test_forkskinny_64_128();
 	test_forkskinny_64_192();
 }

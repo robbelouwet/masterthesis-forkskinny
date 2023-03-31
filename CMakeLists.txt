@@ -18,4 +18,7 @@ add_executable(demo
 
 add_executable(constants_generator constants_generator.cpp)
 
+add_executable(forkskinny64-plus-test src/forkskinny64-plus/forkskinny64_test.cpp)
+add_executable(forkskinny128-plus-test src/forkskinny128-plus/forkskinny128_test.cpp)
+
 

@@ -23,7 +23,7 @@ void forkskinny64_branch_constant(){
 	for (int i = 0; i < 64; ++i) {
 		if (i % 4 == 0 && i != 0) {
 			uint8_t val = ((bc & (0xFUL << (i - 4))) >> (i - 4));
-			std::cout << " // " << std::hex << unsigned(val) << "\n\t";
+			std::cout << " // 0x" << std::hex << unsigned(val) << "\n\t";
 		}
 		
 		if (slices.at(i) == 0) std::cout << "ZER, ";
@@ -76,37 +76,14 @@ void forkskinny_round_constants(){
 			if (value == 0) std::cout << "ZER, ";
 			else std::cout << "ONE, ";
 		}
-		std::cout << "}, // " << std::hex << unsigned(lfsr);
-	}
-	
-	std::cout << "\n};";
-}
-
-void skinny64_round_constants(){
-	std::cout << "uint64_t skinny64_precomputed_round_constants[56][6] = {";
-	uint8_t lfsr = 0;
-	for (int i = 0; i < 87; ++i) { // 56 = max number of rounds, aka with skinny128-192
-		auto rc5 = (lfsr & 0b100000) >> 5;
-		auto rc4 = (lfsr & 0b010000) >> 4;
-		lfsr = ((lfsr & 0b011111) << 1) | (rc5 ^ rc4 ^ 1);
-		
-		auto res = to_slices(lfsr, 6);
-		
-		std::cout << "\n\t{";
-		for (auto &value: res) {
-			if (value == 0) std::cout << "ZER, ";
-			else std::cout << "ONE, ";
-		}
-		std::cout << "}, // " << unsigned(lfsr);
+		std::cout << "}, // 0x" << std::hex << unsigned(lfsr);
 	}
 	
 	std::cout << "\n};";
 }
 
 int main() {
-//	forkskinny64_branch_constant();
+	forkskinny64_branch_constant();
 	forkskinny128_branch_constant();
-//	forkskinny_round_constants();
-//	skinny64_round_constants();
-	
+	forkskinny_round_constants();
 }
