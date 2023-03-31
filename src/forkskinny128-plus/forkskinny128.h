@@ -101,9 +101,9 @@ static inline void forkskinny128_encrypt_round(KeySchedule128Sliced_t schedule, 
  * @param mode 'b', '0', or '1'
  * @return
  */
-static inline SlicedCiphertext128_t forkskinny128_384_encrypt(KeySchedule128Sliced_t schedule,
-                                                              State128Sliced_t *state, unsigned char mode, uint8_t r_init,
-															  uint8_t r_after) {
+static inline SlicedCiphertext128_t forkskinny128_encrypt(KeySchedule128Sliced_t schedule,
+                                                          State128Sliced_t *state, unsigned char mode, uint8_t r_init,
+                                                          uint8_t r_after) {
 //	auto initial_state = unslice(*state).values[0].raw;
 	
 	// default values of branches
@@ -114,28 +114,29 @@ static inline SlicedCiphertext128_t forkskinny128_384_encrypt(KeySchedule128Slic
 	int i = 0;
 	for (; i < r_init; i++){
 		forkskinny128_encrypt_round(schedule, state, i);
-//		auto test0 = unslice(*state).values[0].raw[0];
-//		auto test1 = unslice(*state).values[0].raw[1];
-//		int appel = 1;
+		auto test0 = unslice(*state).values[0].raw[0];
+		auto test1 = unslice(*state).values[0].raw[1];
+		int appel = 1;
 	}
 
-//	auto test1_0 = unslice(*state).values[0].raw[0];
-//	auto test1_1 = unslice(*state).values[0].raw[1];
+	auto test1_0 = unslice(*state).values[0].raw[0];
+	auto test1_1 = unslice(*state).values[0].raw[1];
 	
 	// ### C0 ###
 	if (mode == '0' || mode == 'b') {
 		C0 = *state;
 		for (int c0_i = i; c0_i < r_init + r_after; c0_i++) {
 			forkskinny128_encrypt_round(schedule, &C0, c0_i);
-//			auto test2a = unslice(C0).values[0].raw[0];
-//			int appel = 1;
+			auto test2a = unslice(C0).values[0].raw[0];
+			auto test2b = unslice(C0).values[0].raw[1];
+			int appel = 1;
 		}
 	}
 
-//	auto test2b0 = unslice(*state).values[0].raw[0];
-//	auto test2b1 = unslice(*state).values[0].raw[1];
-//	uint64_t test3_bc0 = 0x0;
-//	uint64_t test3_bc1 = 0x0;
+	auto test2b0 = unslice(*state).values[0].raw[0];
+	auto test2b1 = unslice(*state).values[0].raw[1];
+	uint64_t test3_bc0 = 0x0;
+	uint64_t test3_bc1 = 0x0;
 	
 	// ### C1 ###
 	if (mode == '1' || mode == 'b') {
@@ -143,16 +144,18 @@ static inline SlicedCiphertext128_t forkskinny128_384_encrypt(KeySchedule128Slic
 		// 0xB28BA9B609C7732D | 0x16A7C817056FF223
 		add_branch_constant(&C1);
 		// 0x30CA89A601C3712C | 0x9EE36A462D7BF826
-//		test3_bc0 = unslice(C1).values[0].raw[0];
-//		test3_bc1 = unslice(C1).values[0].raw[1];
+		test3_bc0 = unslice(C1).values[0].raw[0];
+		test3_bc1 = unslice(C1).values[0].raw[1];
 		for (int c1_i = r_init + r_after; c1_i < (r_init + 2 * r_after); c1_i++) {
 			forkskinny128_encrypt_round(schedule, &C1, c1_i);
-//			auto test3a = unslice(C1).values[0].raw;
-//			int appel = 1;
+			auto test3a = unslice(C1).values[0].raw[0];
+			auto test3b = unslice(C1).values[0].raw[1];
+			int appel = 1;
 		}
 	}
 
-//	auto test3 = unslice(C1).values[0].raw;
+	auto test4a = unslice(C1).values[0].raw[0];
+	auto test4b = unslice(C1).values[0].raw[1];
 	
 	return {C1, C0};
 }

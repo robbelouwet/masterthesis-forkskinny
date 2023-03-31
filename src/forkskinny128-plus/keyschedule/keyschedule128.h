@@ -6,7 +6,7 @@
 #include "../roundfunction/forkskinny128-addconstant.h"
 #include "common128.h"
 
-static inline KeySchedule128Sliced_t forkskinny_128_init_tk2(State128Sliced_t tk1, State128Sliced_t tk2) {
+static inline KeySchedule128Sliced_t forkskinny_128_keyschedule_tk2(State128Sliced_t tk1, State128Sliced_t tk2) {
 	auto schedule = KeySchedule128Sliced_t();
 	
 	for (int i = 0; i < FORKSKINNY128_MAX_ROUNDS; ++i) {
@@ -30,8 +30,8 @@ static inline KeySchedule128Sliced_t forkskinny_128_init_tk2(State128Sliced_t tk
 	return schedule;
 }
 
-static inline KeySchedule128Sliced_t forkskinny_128_init_tk23(State128Sliced_t tk1, State128Sliced_t tk2,
-                                                              State128Sliced_t tk3) {
+static inline KeySchedule128Sliced_t forkskinny_128_keyschedule_tk23(State128Sliced_t tk1, State128Sliced_t tk2,
+                                                                     State128Sliced_t tk3) {
 	auto schedule = KeySchedule128Sliced_t();
 	
 	for (int i = 0; i < FORKSKINNY128_MAX_ROUNDS; ++i) {

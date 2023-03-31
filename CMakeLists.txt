@@ -4,13 +4,9 @@ project(forkskinnyplus)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse4.1")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx2")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx512f -mavx512dq")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx2 -mavx512f -mavx512dq")
 
-add_executable(forkskinny64-plus src/forkskinny64-plus/run.cpp)
-add_executable(forkskinny128-plus src/forkskinny128-plus/run.cpp)
 add_executable(demo
         libs/forkskinny-c/demo.c
         libs/forkskinny-c/forkskinny64-cipher.c
@@ -21,4 +17,8 @@ add_executable(constants_generator constants_generator.cpp)
 add_executable(forkskinny64-plus-test src/forkskinny64-plus/forkskinny64_test.cpp)
 add_executable(forkskinny128-plus-test src/forkskinny128-plus/forkskinny128_test.cpp)
 
-
+# Create a custom target that depends on both executable targets
+#add_custom_target(Test
+#        DEPENDS forkskinny64-plus-test forkskinny128-plus-test
+#        COMMAND $<TARGET_FILE:forkskinny64-plus-test>
+#        COMMAND $<TARGET_FILE:forkskinny128-plus-test>)

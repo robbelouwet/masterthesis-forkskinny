@@ -13,5 +13,8 @@ primitive version in every mode and mailed with Erik.
 
 # Friday
 
+refactored main() startpoints to neat unit tests so everything is tested automatically. Also refactored the
+forkskinny128.h file to allow a variable amount rounds so it can be reused by fs128-256 and fs128-384.
+
 ## What was on my mind
 

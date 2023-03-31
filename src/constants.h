@@ -1,13 +1,9 @@
-#ifndef FORKSKINNYPLUS_CONSTANTS64_H
-#define FORKSKINNYPLUS_CONSTANTS64_H
+#ifndef FORKSKINNYPLUS_CONSTANTS_H
+#define FORKSKINNYPLUS_CONSTANTS_H
 
 #include <cstdio>
-#include "forkskinny64-datatypes.h"
-
-void print_block(uint8_t *block, unsigned int n) {
-	for (unsigned int i = 0; i < n; i++)
-		printf("%02x", block[i]);
-}
+#include "forkskinny64-plus/utils/forkskinny64-datatypes.h"
+#include "forkskinny128-plus/utils/forkskinny128-datatypes.h"
 
 //<editor-fold desc="forkskinny64 sliced branch constant"
 // When comparing to the bc in the paper, the cells inside consecutive pairs of cells are swapped with each other to account
@@ -34,7 +30,31 @@ State64Sliced_t const branch_constant64 = {
 };
 //</editor-fold>
 
-//<editor-fold desc="88 pre-computed forkskinny sliced round constant lsfrs"
+//<editor-fold desc="forkskinny128 sliced branch constant"
+// the branch constant in forkskinny128 doesn't have 'swapped nibbles' within a byte like forkskinny64 has,
+// because cells are already 8-bit and are definable datatypes with a specified order of significance.
+// So we don't need to account for this and so, the order of branch constant cells is the same as in the paper
+State128Sliced_t const branch_constant128 = {
+		ONE, ZER, ZER, ZER, ZER, ZER, ZER, ZER,  // 0x1
+		ZER, ONE, ZER, ZER, ZER, ZER, ZER, ZER,  // 0x2
+		ZER, ZER, ONE, ZER, ZER, ZER, ZER, ZER,  // 0x4
+		ZER, ZER, ZER, ONE, ZER, ZER, ZER, ZER,  // 0x8
+		ZER, ZER, ZER, ZER, ONE, ZER, ZER, ZER,  // 0x10
+		ZER, ZER, ZER, ZER, ZER, ONE, ZER, ZER,  // 0x20
+		ONE, ZER, ZER, ZER, ZER, ZER, ONE, ZER,  // 0x41
+		ZER, ONE, ZER, ZER, ZER, ZER, ZER, ONE,  // 0x82
+		ONE, ZER, ONE, ZER, ZER, ZER, ZER, ZER,  // 0x5
+		ZER, ONE, ZER, ONE, ZER, ZER, ZER, ZER,  // 0xa
+		ZER, ZER, ONE, ZER, ONE, ZER, ZER, ZER,  // 0x14
+		ZER, ZER, ZER, ONE, ZER, ONE, ZER, ZER,  // 0x28
+		ONE, ZER, ZER, ZER, ONE, ZER, ONE, ZER,  // 0x51
+		ZER, ONE, ZER, ZER, ZER, ONE, ZER, ONE,  // 0xa2
+		ZER, ZER, ONE, ZER, ZER, ZER, ONE, ZER,  // 0x44
+		ZER, ZER, ZER, ONE, ZER, ZER, ZER, ONE,  // 0x88
+};
+//</editor-fold>
+
+//<editor-fold desc="88 pre-computed forkskinny sliced round constants"
 // the first 88 states of the addconstant lfsr containing rc⁰, rc¹, ..., rc⁶
 slice_t forkskinny_precomputed_round_constants[88][7] = {
 		{ONE, ZER, ZER, ZER, ZER, ZER, ZER, }, // 1
@@ -128,4 +148,4 @@ slice_t forkskinny_precomputed_round_constants[88][7] = {
 };
 //</editor-fold>
 
-#endif //FORKSKINNYPLUS_CONSTANTS64_H
+#endif //FORKSKINNYPLUS_CONSTANTS_H

@@ -3,6 +3,7 @@
 
 // @formatter:off
 // -- CONFIG --
+#include <cstdio>
 #define slice_size 64 // 32, 64, 256 or 512
 #define AVX2_support true
 #define AVX512_support false
@@ -69,5 +70,10 @@
 #ifndef slice_t
 #error "Please specify a valid configuration"
 #endif
+
+void print_block(uint8_t *block, unsigned int n) {
+	for (unsigned int i = 0; i < n; i++)
+		printf("%02x", block[i]);
+}
 
 #endif //FORKSKINNYPLUS_CONFIG_H
