@@ -25,8 +25,8 @@
 //	while (i < FORKSKINNY128_MAX_ROUNDS) {
 //		// RTK 0
 //		schedule.keys[i++] = xor_half_keys(xor_half_keys(tk1.halves[0], tk2.halves[0]), tk3.halves[0]);
-//		fs_tk2_lfsr(&tk2);
-//		fs_tk3_lfsr(&tk3);
+//		tk2_lfsr_full(&tk2);
+//		tk3_lfsr_full(&tk3);
 //
 //		// RTK 1 & 2
 //		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
@@ -35,8 +35,8 @@
 //		PT_2(rtk12_temp, rtk12)
 //		schedule.keys[i++] = rtk12.halves[1];
 //		schedule.keys[i++] = rtk12.halves[0];
-//		fs_tk2_lfsr(&tk2);
-//		fs_tk3_lfsr(&tk3);
+//		tk2_lfsr_full(&tk2);
+//		tk3_lfsr_full(&tk3);
 //
 //		// RTK 3 & 4
 //		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
@@ -45,8 +45,8 @@
 //		PT_4(rtk34_temp, rtk34)
 //		schedule.keys[i++] = rtk34.halves[1];
 //		schedule.keys[i++] = rtk34.halves[0];
-//		fs_tk2_lfsr(&tk2);
-//		fs_tk3_lfsr(&tk3);
+//		tk2_lfsr_full(&tk2);
+//		tk3_lfsr_full(&tk3);
 //
 //		// RTK 5 & 6
 //		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
@@ -55,8 +55,8 @@
 //		PT_6(rtk56_temp, rtk56)
 //		schedule.keys[i++] = rtk56.halves[1];
 //		schedule.keys[i++] = rtk56.halves[0];
-//		fs_tk2_lfsr(&tk2);
-//		fs_tk3_lfsr(&tk3);
+//		tk2_lfsr_full(&tk2);
+//		tk3_lfsr_full(&tk3);
 //
 //		// RTK 7 & 8
 //		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
@@ -65,8 +65,8 @@
 //		PT_8(rtk78_temp, rtk78)
 //		schedule.keys[i++] = rtk78.halves[1];
 //		schedule.keys[i++] = rtk78.halves[0];
-//		fs_tk2_lfsr(&tk2);
-//		fs_tk3_lfsr(&tk3);
+//		tk2_lfsr_full(&tk2);
+//		tk3_lfsr_full(&tk3);
 //
 //		// RTK 9 & 10
 //		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
@@ -75,8 +75,8 @@
 //		PT_10(rtk910_temp, rtk910)
 //		schedule.keys[i++] = rtk910.halves[1];
 //		schedule.keys[i++] = rtk910.halves[0];
-//		fs_tk2_lfsr(&tk2);
-//		fs_tk3_lfsr(&tk3);
+//		tk2_lfsr_full(&tk2);
+//		tk3_lfsr_full(&tk3);
 //
 //		// RTK 11 & 12
 //		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
@@ -85,8 +85,8 @@
 //		PT_12(rtk1112_temp, rtk1112)
 //		schedule.keys[i++] = rtk1112.halves[1];
 //		schedule.keys[i++] = rtk1112.halves[0];
-//		fs_tk2_lfsr(&tk2);
-//		fs_tk3_lfsr(&tk3);
+//		tk2_lfsr_full(&tk2);
+//		tk3_lfsr_full(&tk3);
 //
 //		// RTK 13 & 14
 //		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
@@ -95,14 +95,14 @@
 //		PT_14(rtk1314_temp, rtk1314)
 //		schedule.keys[i++] = rtk1314.halves[1];
 //		schedule.keys[i++] = rtk1314.halves[0];
-//		fs_tk2_lfsr(&tk2);
-//		fs_tk3_lfsr(&tk3);
+//		tk2_lfsr_full(&tk2);
+//		tk3_lfsr_full(&tk3);
 //
 //		// RTK 15
 //		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
 //		schedule.keys[i++] = xor_half_keys(xor_half_keys(tk1.halves[1], tk2.halves[1]), tk3.halves[1]);
-//		fs_tk2_lfsr(&tk2);
-//		fs_tk3_lfsr(&tk3);
+//		tk2_lfsr_full(&tk2);
+//		tk3_lfsr_full(&tk3);
 //	}
 //
 //	return schedule;
@@ -125,7 +125,7 @@
 //	while (i < FORKSKINNY128_MAX_ROUNDS) {
 //		// RTK 0
 //		schedule.keys[i++] = xor_half_keys(tk1.halves[0], tk2.halves[0]);
-//		fs_tk2_lfsr(&tk2);
+//		tk2_lfsr_full(&tk2);
 //
 //		// RTK 1 & 2
 //		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
@@ -134,7 +134,7 @@
 //		PT_2(rtk12_temp, rtk12)
 //		schedule.keys[i++] = rtk12.halves[1];
 //		schedule.keys[i++] = rtk12.halves[0];
-//		fs_tk2_lfsr(&tk2);
+//		tk2_lfsr_full(&tk2);
 //
 //		// RTK 3 & 4
 //		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
@@ -143,7 +143,7 @@
 //		PT_4(rtk34_temp, rtk34)
 //		schedule.keys[i++] = rtk34.halves[1];
 //		schedule.keys[i++] = rtk34.halves[0];
-//		fs_tk2_lfsr(&tk2);
+//		tk2_lfsr_full(&tk2);
 //
 //		// RTK 5 & 6
 //		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
@@ -152,7 +152,7 @@
 //		PT_6(rtk56_temp, rtk56)
 //		schedule.keys[i++] = rtk56.halves[1];
 //		schedule.keys[i++] = rtk56.halves[0];
-//		fs_tk2_lfsr(&tk2);
+//		tk2_lfsr_full(&tk2);
 //
 //		// RTK 7 & 8
 //		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
@@ -161,7 +161,7 @@
 //		PT_8(rtk78_temp, rtk78)
 //		schedule.keys[i++] = rtk78.halves[1];
 //		schedule.keys[i++] = rtk78.halves[0];
-//		fs_tk2_lfsr(&tk2);
+//		tk2_lfsr_full(&tk2);
 //
 //		// RTK 9 & 10
 //		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
@@ -170,7 +170,7 @@
 //		PT_10(rtk910_temp, rtk910)
 //		schedule.keys[i++] = rtk910.halves[1];
 //		schedule.keys[i++] = rtk910.halves[0];
-//		fs_tk2_lfsr(&tk2);
+//		tk2_lfsr_full(&tk2);
 //
 //		// RTK 11 & 12
 //		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
@@ -179,7 +179,7 @@
 //		PT_12(rtk1112_temp, rtk1112)
 //		schedule.keys[i++] = rtk1112.halves[1];
 //		schedule.keys[i++] = rtk1112.halves[0];
-//		fs_tk2_lfsr(&tk2);
+//		tk2_lfsr_full(&tk2);
 //
 //		// RTK 13 & 14
 //		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
@@ -188,12 +188,12 @@
 //		PT_14(rtk1314_temp, rtk1314)
 //		schedule.keys[i++] = rtk1314.halves[1];
 //		schedule.keys[i++] = rtk1314.halves[0];
-//		fs_tk2_lfsr(&tk2);
+//		tk2_lfsr_full(&tk2);
 //
 //		// RTK 15
 //		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
 //		schedule.keys[i++] = xor_half_keys(tk1.halves[1], tk2.halves[1]);
-//		fs_tk2_lfsr(&tk2);
+//		tk2_lfsr_full(&tk2);
 //	}
 //
 //	return schedule;

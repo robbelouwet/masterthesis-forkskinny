@@ -288,9 +288,11 @@ static State64_t forkskinny64_encrypt_rounds(
 		#endif
 		
 		/* Shift the rows */
+		uint64_t state_before = state.llrow;
 		state.row[1] = skinny64_rotate_right(state.row[1], 4);
 		state.row[2] = skinny64_rotate_right(state.row[2], 8);
 		state.row[3] = skinny64_rotate_right(state.row[3], 12);
+		uint64_t state_after = state.llrow;
 		// state after:  0x F4E7 185D E5D4 82C6
 		
 		/* Mix the columns */

@@ -1,10 +1,9 @@
 #ifndef FORKSKINNYPLUS64_KEYSCHEDULE_H
 #define FORKSKINNYPLUS64_KEYSCHEDULE_H
 
-#include "keyschedule64-internal.h"
+#include "internal.h"
 #include "../utils/forkskinny64-datatypes.h"
 #include "../roundfunction/forkskinny64-addconstant.h"
-#include "common64.h"
 
 static inline KeySchedule64Sliced_t forkskinny_64_init_tk2(State64Sliced_t tk1, State64Sliced_t tk2) {
 	auto schedule = KeySchedule64Sliced_t();
@@ -40,10 +39,9 @@ static inline KeySchedule64Sliced_t forkskinny_64_init_tk23(State64Sliced_t tk1,
 		
 		// Keep in mind: the C2 constant relating to the 9nth cell is part of the 2nd 'half'!
 		// So we add 0x2 at the key injection step
-		forkskinny64_add_constant(&res, i);
+		forkskinny64_add_constant(&res, i); // 1, 3, 7
 		schedule.keys[i] = res;
 		
-		// 0x76541200, 0xa57e182c, 0xb46f097d
 //		auto round_key = unslice({.halves = {schedule.keys[i], {}}}).values[0].raw;
 		
 		// Permute TK's
@@ -52,11 +50,12 @@ static inline KeySchedule64Sliced_t forkskinny_64_init_tk23(State64Sliced_t tk1,
 		tk3 = permute(tk3);
 		
 		// LFSR TK2 & TK3
+		auto utk2_before = unslice(tk2).values[0].raw;  // 0x660055F20FF10001
 		tk2_lfsr(&tk2);
-//		auto utk2 = unslice(tk2).values[0].raw;  // 0x660055F20FF10001
+		auto utk2 = unslice(tk2).values[0].raw;  // 0x660055F20FF10001
 		tk3_lfsr(&tk3);
-//		auto utk3 = unslice(tk3).values[0].raw;  // 0xAA0099F3055E000E
-//		int appel = 1;
+		auto utk3 = unslice(tk3).values[0].raw;  // 0xAA0099F3055E000E
+		int appel = 1;
 	}
 	
 	return schedule;

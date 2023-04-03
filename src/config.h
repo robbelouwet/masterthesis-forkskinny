@@ -1,9 +1,10 @@
-#ifndef FORKSKINNYPLUS64_CONFIG_H
-#define FORKSKINNYPLUS64_CONFIG_H
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#include <cstdio>
 
 // @formatter:off
 // -- CONFIG --
-#include <cstdio>
 #define slice_size 64 // 32, 64, 256 or 512
 #define AVX2_support true
 #define AVX512_support false
@@ -76,4 +77,4 @@ void print_block(uint8_t *block, unsigned int n) {
 		printf("%02x", block[i]);
 }
 
-#endif //FORKSKINNYPLUS_CONFIG_H
+#endif //CONFIG_H

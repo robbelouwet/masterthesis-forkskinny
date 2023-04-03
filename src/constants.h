@@ -1,5 +1,5 @@
-#ifndef FORKSKINNYPLUS_CONSTANTS_H
-#define FORKSKINNYPLUS_CONSTANTS_H
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
 
 #include <cstdio>
 #include "forkskinny64-plus/utils/forkskinny64-datatypes.h"
@@ -11,22 +11,22 @@
 // See the README or publication for more info on memory layout
 State64Sliced_t const branch_constant64 = {
 		// LSB         MSB
-		ZER, ONE, ZER, ZER,  // 2
 		ONE, ZER, ZER, ZER,  // 1
-		ONE, ZER, ZER, ONE,  // 9
+		ZER, ONE, ZER, ZER,  // 2
 		ZER, ZER, ONE, ZER,  // 4
-		ZER, ONE, ONE, ZER,  // 6
+		ONE, ZER, ZER, ONE,  // 9
 		ONE, ONE, ZER, ZER,  // 3
-		ZER, ONE, ZER, ONE,  // A
+		ZER, ONE, ONE, ZER,  // 6
 		ONE, ZER, ONE, ONE,  // D
-		ONE, ONE, ZER, ONE,  // B
+		ZER, ONE, ZER, ONE,  // A
 		ONE, ZER, ONE, ZER,  // 5
-		ONE, ONE, ONE, ONE,  // F
+		ONE, ONE, ZER, ONE,  // B
 		ONE, ONE, ONE, ZER,  // 7
-		ZER, ZER, ONE, ONE,  // C
+		ONE, ONE, ONE, ONE,  // F
 		ZER, ONE, ONE, ONE,  // E
-		ONE, ZER, ZER, ZER,  //  1
+		ZER, ZER, ONE, ONE,  // C
 		ZER, ZER, ZER, ONE,  // 8
+		ONE, ZER, ZER, ZER,  //  1
 };
 //</editor-fold>
 
@@ -55,7 +55,7 @@ State128Sliced_t const branch_constant128 = {
 //</editor-fold>
 
 //<editor-fold desc="88 pre-computed forkskinny sliced round constants"
-// the first 88 states of the addconstant lfsr containing rc⁰, rc¹, ..., rc⁶
+// the first 88 states of the addconstant lfsr containing {rc⁰, rc¹, ..., rc⁶} each
 slice_t forkskinny_precomputed_round_constants[88][7] = {
 		{ONE, ZER, ZER, ZER, ZER, ZER, ZER, }, // 1
 		{ONE, ONE, ZER, ZER, ZER, ZER, ZER, }, // 3
@@ -148,4 +148,4 @@ slice_t forkskinny_precomputed_round_constants[88][7] = {
 };
 //</editor-fold>
 
-#endif //FORKSKINNYPLUS_CONSTANTS_H
+#endif //CONSTANTS_H

@@ -3,7 +3,7 @@
 //
 //#include "../../utils/forkskinny-datatypes.h"
 //
-//static inline void fs_tk2_lfsr(State128Sliced_t *state) {
+//static inline void tk2_lfsr_full(State128Sliced_t *state) {
 //	// 2 1 0 (3+2)
 //	#if AVX512_acceleration
 //	for (int i = 0; i < 8; ++i) {
@@ -30,7 +30,7 @@
 //
 //}
 //
-//static inline void fs_tk3_lfsr(State128Sliced_t *state) {
+//static inline void tk3_lfsr_full(State128Sliced_t *state) {
 //	#if AVX512_acceleration
 //	for (int i = 0; i < 8; ++i) {
 //		state->pairs[i].avx512_simd_pair = _mm512_permutex_epi64(state->pairs[i].avx512_simd_pair, 0b00111001);

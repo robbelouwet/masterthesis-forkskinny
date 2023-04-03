@@ -13,7 +13,7 @@ def flip(arr):
 if __name__ == "__main__":
 
     # choose the iteration you want to print
-    iteration = 14
+    iteration = 2
 
     pt_i = [
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],  # PT 0

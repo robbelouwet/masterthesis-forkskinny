@@ -41,8 +41,8 @@ static inline void apply_roundkey(HalfState64Sliced_t round_key, State64Sliced_t
 	
 	#elif AVX2_acceleration
 	for (int i = 0; i < 8; ++i)
-		state->cells[i].avx2_simd_cell = _mm256_xor_si256(state->cells[i].avx2_simd_cell,
-		                                                  round_key.cells[i].avx2_simd_cell);
+		state->cells[i].avx2_simd_cell =
+				_mm256_xor_si256(state->cells[i].avx2_simd_cell,round_key.cells[i].avx2_simd_cell);
 	
 	#else
 	for (int i = 0; i < 8; ++i) {
@@ -55,30 +55,29 @@ static inline void apply_roundkey(HalfState64Sliced_t round_key, State64Sliced_t
 	// </editor-fold
 	
 	// AddConstant: Cell 8 XOR 0x2, aka Slice64_t 1 of cell 8, because C2 is on the third row and not present in the round key!
-	// cell 8 is at position 9
-	state->cells[9].slices[1].value = XOR_SLICE(state->cells[9].slices[1].value, ONE);
+	state->cells[8].slices[1].value = XOR_SLICE(state->cells[8].slices[1].value, ONE);
 }
 
 static inline void forkskinny64_encrypt_round(KeySchedule64Sliced_t schedule, State64Sliced_t *state,
                                               uint16_t iteration) {
 	// i: 0, 0x76541200
-//	auto roundkey = unslice({.halves= {schedule.keys[iteration], {}}}).values[0].raw;
+	auto roundkey = unslice({.halves= {schedule.keys[iteration], {}}}).values[0].raw;
 
-//	auto test_sbox_before = unslice(*state).values[0].raw; // 0x EFCD AB89 6745 2301
+	auto test_sbox_before = unslice(*state).values[0].raw; // 0x EFCD AB89 6745 2301
 	skinny64_sbox(state);
-//	auto test_state = unslice(*state).values[0].raw; // 0x 7F4E 5D38 2B1A 90C6
+	auto test_state = unslice(*state).values[0].raw; // 0x 7F4E 5D38 2B1A 90C6
 	
 	/* round constant is added during pre computation of key schedule and added to the roundkey */
 	apply_roundkey(schedule.keys[iteration], state);
-//	test_state = unslice(*state).values[0].raw; // 0x 7F4E 5D18 5D4E 82C6
+	test_state = unslice(*state).values[0].raw; // 0x 7F4E 5D18 C51A 6D26
 	
 	skinny64_shiftrows(state);
-//	test_state = unslice(*state).values[0].raw; // 0x F4E7 185D E5D4 82C6
+	test_state = unslice(*state).values[0].raw; // 0x F4E7 185D AC51 6D26
 	
 	skinny64_mixcols(state);
-//	test_state = unslice(*state).values[0].raw; // 0x 9A9B FD89 82C6 6E7C
+	test_state = unslice(*state).values[0].raw; // 0x 757B B40C 6D26 819C
 
-//	int appel = 1;
+	int appel = 1;
 }
 
 /**
