@@ -8,11 +8,11 @@
  * but produces wrong ciphertexts.
  * @param state
  */
-static inline void skinny64_shiftrows(State64Sliced_t *state) {
-	// 0xFEDC BA98 7654 3210
+static inline void forkskinny64_shiftrows(State64Sliced_t *state) {
+//	 0xFEDC BA98 7654 3210
 //	auto test_blocks = Blocks64_t();
 //	test_blocks.values[0].raw = 0xFEDCBA9876543210;
-//	*state = Slice64_t(test_blocks);
+//	*state = slice(test_blocks);
 	
 	// shift second row
 	auto temp = state->cells[4];
@@ -36,13 +36,14 @@ static inline void skinny64_shiftrows(State64Sliced_t *state) {
 	state->cells[0xE] = state->cells[0xD];
 	state->cells[0xD] = temp;
 	
-	// 0x EDCF 98BA 4765 3210
+	// Erik: 0x EDCF 98BA 4765 3210
+	// Us:   0x
 //	auto test_res = unslice(*state).values[0].raw;
 //	int appel = 1;
 }
 
-static inline void skinny64_shiftrows_inv(State64Sliced_t *state){
-//	auto ct = Blocks64_t{.values = {0xEDCF98BA47653210}};
+static inline void forkskinny64_shiftrows_inv(State64Sliced_t *state){
+//	auto ct = Blocks64_t{.values = {0xfedcba9876543210}};
 //	*state = Slice64_t(ct);
 	
 	auto temp = state->cells[7];
@@ -66,6 +67,7 @@ static inline void skinny64_shiftrows_inv(State64Sliced_t *state){
 	state->cells[0xD] = state->cells[0xE];
 	state->cells[0xE] = temp;
 	
+
 //	auto test_res = unslice(*state).values[0].raw;
 //	int appel = 1;
 }

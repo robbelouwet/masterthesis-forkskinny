@@ -63,16 +63,16 @@ static inline void forkskinny64_encrypt_round(KeySchedule64Sliced_t schedule, St
 	// i: 0, 0x76541200
 	auto roundkey = unslice({.halves= {schedule.keys[iteration], {}}}).values[0].raw;
 
-	auto test_sbox_before = unslice(*state).values[0].raw; // 0x EFCD AB89 6745 2301
+	auto test_sbox_before = unslice(*state).values[0].raw; // 0x FEDC BA98 7654 3210
 	skinny64_sbox(state);
-	auto test_state = unslice(*state).values[0].raw; // 0x 7F4E 5D38 2B1A 90C6
+	auto test_state = unslice(*state).values[0].raw; // 0x F7E4 D583 B2A1 096C
 	
 	/* round constant is added during pre computation of key schedule and added to the roundkey */
 	apply_roundkey(schedule.keys[iteration], state);
-	test_state = unslice(*state).values[0].raw; // 0x 7F4E 5D18 C51A 6D26
+	test_state = unslice(*state).values[0].raw; // 0x F7E4 D581 5CA1 D662
 	
-	skinny64_shiftrows(state);
-	test_state = unslice(*state).values[0].raw; // 0x F4E7 185D AC51 6D26
+	forkskinny64_shiftrows(state);
+	test_state = unslice(*state).values[0].raw; // 0x 7E4F
 	
 	skinny64_mixcols(state);
 	test_state = unslice(*state).values[0].raw; // 0x 757B B40C 6D26 819C
@@ -145,7 +145,7 @@ static inline void forkskinny64_decrypt_round(KeySchedule64Sliced_t schedule, St
 	skinny64_mixcols_inv(state);
 //	auto test_state = unslice(*state).values[0].raw;
 	
-	skinny64_shiftrows_inv(state);
+	forkskinny64_shiftrows_inv(state);
 //	test_state = unslice(*state).values[0].raw;
 	
 	apply_roundkey(schedule.keys[iteration], state);
