@@ -55,7 +55,7 @@ static inline void apply_roundkey(HalfState64Sliced_t round_key, State64Sliced_t
 	// </editor-fold
 	
 	// AddConstant: Cell 8 XOR 0x2, aka Slice64_t 1 of cell 8, because C2 is on the third row and not present in the round key!
-	state->cells[8].slices[1].value = XOR_SLICE(state->cells[8].slices[1].value, ONE);
+	state->cells[9].slices[1].value = XOR_SLICE(state->cells[9].slices[1].value, ONE);
 }
 
 static inline void forkskinny64_encrypt_round(KeySchedule64Sliced_t schedule, State64Sliced_t *state,
@@ -102,7 +102,7 @@ static inline SlicedCiphertext64_t forkskinny64_encrypt(KeySchedule64Sliced_t sc
 	for (; i < FORKSKINNY_ROUNDS_BEFORE; i++)
 		forkskinny64_encrypt_round(schedule, state, i);
 
-//	auto test1 = unslice(*state).values[0].raw;
+//	auto test1 = unslice(*state).values[0].raw; // 0xE86B7E7E22F3BA92
 	
 	// ### C0 ###
 	if (mode == '0' || mode == 'b') {

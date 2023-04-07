@@ -11,22 +11,22 @@
 // See the README or publication for more info on memory layout
 State64Sliced_t const branch_constant64 = {
 		// LSB         MSB
-		ONE, ZER, ZER, ZER,  // 1
 		ZER, ONE, ZER, ZER,  // 2
-		ZER, ZER, ONE, ZER,  // 4
+		ONE, ZER, ZER, ZER,  // 1
 		ONE, ZER, ZER, ONE,  // 9
-		ONE, ONE, ZER, ZER,  // 3
+		ZER, ZER, ONE, ZER,  // 4
 		ZER, ONE, ONE, ZER,  // 6
-		ONE, ZER, ONE, ONE,  // D
+		ONE, ONE, ZER, ZER,  // 3
 		ZER, ONE, ZER, ONE,  // A
-		ONE, ZER, ONE, ZER,  // 5
+		ONE, ZER, ONE, ONE,  // D
 		ONE, ONE, ZER, ONE,  // B
-		ONE, ONE, ONE, ZER,  // 7
+		ONE, ZER, ONE, ZER,  // 5
 		ONE, ONE, ONE, ONE,  // F
-		ZER, ONE, ONE, ONE,  // E
+		ONE, ONE, ONE, ZER,  // 7
 		ZER, ZER, ONE, ONE,  // C
-		ZER, ZER, ZER, ONE,  // 8
+		ZER, ONE, ONE, ONE,  // E
 		ONE, ZER, ZER, ZER,  //  1
+		ZER, ZER, ZER, ONE,  // 8
 };
 //</editor-fold>
 

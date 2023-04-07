@@ -42,7 +42,8 @@ static inline KeySchedule64Sliced_t forkskinny_64_init_tk23(State64Sliced_t tk1,
 		forkskinny64_add_constant(&res, i); // 1, 3, 7
 		schedule.keys[i] = res;
 		
-//		auto round_key = unslice({.halves = {schedule.keys[i], {}}}).values[0].raw;
+		// 0x660075E2,
+		auto round_key = unslice({.halves = {schedule.keys[i], {}}}).values[0].raw;
 		
 		// Permute TK's
 		tk1 = permute(tk1);
@@ -50,12 +51,12 @@ static inline KeySchedule64Sliced_t forkskinny_64_init_tk23(State64Sliced_t tk1,
 		tk3 = permute(tk3);
 		
 		// LFSR TK2 & TK3
-		auto utk2_before = unslice(tk2).values[0].raw;  // 0x660055F20FF10001
+//		auto utk2_before = unslice(tk2).values[0].raw;  // 0x660055F20FF10001
 		tk2_lfsr(&tk2);
-		auto utk2 = unslice(tk2).values[0].raw;  // 0x660055F20FF10001
+//		auto utk2 = unslice(tk2).values[0].raw;  // 0x660055F20FF10001
 		tk3_lfsr(&tk3);
-		auto utk3 = unslice(tk3).values[0].raw;  // 0xAA0099F3055E000E
-		int appel = 1;
+//		auto utk3 = unslice(tk3).values[0].raw;  // 0xAA0099F3055E000E
+//		int appel = 1;
 	}
 	
 	return schedule;

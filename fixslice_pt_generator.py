@@ -16,8 +16,8 @@ if __name__ == "__main__":
     iteration = 2
 
     pt_i = [
-        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],  # PT 0
-        [9, 15, 8, 13, 10, 14, 12, 11, 0, 1, 2, 3, 4, 5, 6, 7]   # PT 1
+        [0x1, 0x0, 0x3, 0x2, 0x5, 0x4, 0x7, 0x6, 0x9, 0x8, 0xb, 0xa, 0xd, 0xc, 0xf, 0xe],  # PT 0 (nibble-swapped state)
+        [0xE, 0x8, 0xC, 0x9, 0xF, 0xB, 0xA, 0xD, 0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7]  # PT 1 lanes of swapped nibbles (e.g., 0xF is at index 0xE in PT0)
         # ...
     ]
     flipped_start = flip(pt_i[0])
@@ -29,7 +29,7 @@ if __name__ == "__main__":
             pt_i[i].append(pt_i[i - 1][pt_i[1][j]])
 
     # because of how we laid out the state in memory, flip every 2 cells
-    lanes = flip(pt_i[iteration])
+    lanes = pt_i[iteration]
 
     # print the specified iteration
     print(f"PT_{iteration}\n", pt_i[iteration])
