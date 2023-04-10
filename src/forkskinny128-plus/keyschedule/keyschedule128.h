@@ -1,10 +1,9 @@
 #ifndef FORKSKINNYPLUS128_KEYSCHEDULE_H
 #define FORKSKINNYPLUS128_KEYSCHEDULE_H
 
-#include "keyschedule128-internal.h"
+#include "internal128.h"
 #include "../utils/forkskinny128-datatypes.h"
 #include "../roundfunction/forkskinny128-addconstant.h"
-#include "common128.h"
 
 static inline KeySchedule128Sliced_t forkskinny_128_keyschedule_tk2(State128Sliced_t tk1, State128Sliced_t tk2) {
 	auto schedule = KeySchedule128Sliced_t();
@@ -30,7 +29,7 @@ static inline KeySchedule128Sliced_t forkskinny_128_keyschedule_tk2(State128Slic
 	return schedule;
 }
 
-static inline KeySchedule128Sliced_t forkskinny_128_keyschedule_tk23(State128Sliced_t tk1, State128Sliced_t tk2,
+static inline KeySchedule128Sliced_t forkskinny_128_init_tk23(State128Sliced_t tk1, State128Sliced_t tk2,
                                                                      State128Sliced_t tk3) {
 	auto schedule = KeySchedule128Sliced_t();
 	

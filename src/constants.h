@@ -148,4 +148,276 @@ slice_t forkskinny_precomputed_round_constants[88][7] = {
 };
 //</editor-fold>
 
+// <editor-fold desc="PT²"
+#define PT64_2(input, output) {   \
+output.cells[0x0] = input.cells[0x6];   \
+output.cells[0x1] = input.cells[0x0];   \
+output.cells[0x2] = input.cells[0x4];   \
+output.cells[0x3] = input.cells[0x1];   \
+output.cells[0x4] = input.cells[0x7];   \
+output.cells[0x5] = input.cells[0x3];   \
+output.cells[0x6] = input.cells[0x2];   \
+output.cells[0x7] = input.cells[0x5];   \
+output.cells[0x8] = input.cells[0xe];   \
+output.cells[0x9] = input.cells[0x8];   \
+output.cells[0xa] = input.cells[0xc];   \
+output.cells[0xb] = input.cells[0x9];   \
+output.cells[0xc] = input.cells[0xf];   \
+output.cells[0xd] = input.cells[0xb];   \
+output.cells[0xe] = input.cells[0xa];   \
+output.cells[0xf] = input.cells[0xd];   }
+// </editor-fold>
+
+// <editor-fold desc="PT⁴"
+#define PT64_4(input, output) {   \
+output.cells[0x0] = input.cells[0x2];   \
+output.cells[0x1] = input.cells[0x6];   \
+output.cells[0x2] = input.cells[0x7];   \
+output.cells[0x3] = input.cells[0x0];   \
+output.cells[0x4] = input.cells[0x5];   \
+output.cells[0x5] = input.cells[0x1];   \
+output.cells[0x6] = input.cells[0x4];   \
+output.cells[0x7] = input.cells[0x3];   \
+output.cells[0x8] = input.cells[0xa];   \
+output.cells[0x9] = input.cells[0xe];   \
+output.cells[0xa] = input.cells[0xf];   \
+output.cells[0xb] = input.cells[0x8];   \
+output.cells[0xc] = input.cells[0xd];   \
+output.cells[0xd] = input.cells[0x9];   \
+output.cells[0xe] = input.cells[0xc];   \
+output.cells[0xf] = input.cells[0xb];   }
+// </editor-fold>
+
+// <editor-fold desc="PT⁶"
+#define PT64_6(input, output) {   \
+output.cells[0x0] = input.cells[0x4];   \
+output.cells[0x1] = input.cells[0x2];   \
+output.cells[0x2] = input.cells[0x5];   \
+output.cells[0x3] = input.cells[0x6];   \
+output.cells[0x4] = input.cells[0x3];   \
+output.cells[0x5] = input.cells[0x0];   \
+output.cells[0x6] = input.cells[0x7];   \
+output.cells[0x7] = input.cells[0x1];   \
+output.cells[0x8] = input.cells[0xc];   \
+output.cells[0x9] = input.cells[0xa];   \
+output.cells[0xa] = input.cells[0xd];   \
+output.cells[0xb] = input.cells[0xe];   \
+output.cells[0xc] = input.cells[0xb];   \
+output.cells[0xd] = input.cells[0x8];   \
+output.cells[0xe] = input.cells[0xf];   \
+output.cells[0xf] = input.cells[0x9];   }
+// </editor-fold>
+
+// <editor-fold desc="PT⁸"
+#define PT64_8(input, output) {   \
+output.cells[0x0] = input.cells[0x7];   \
+output.cells[0x1] = input.cells[0x4];   \
+output.cells[0x2] = input.cells[0x3];   \
+output.cells[0x3] = input.cells[0x2];   \
+output.cells[0x4] = input.cells[0x1];   \
+output.cells[0x5] = input.cells[0x6];   \
+output.cells[0x6] = input.cells[0x5];   \
+output.cells[0x7] = input.cells[0x0];   \
+output.cells[0x8] = input.cells[0xf];   \
+output.cells[0x9] = input.cells[0xc];   \
+output.cells[0xa] = input.cells[0xb];   \
+output.cells[0xb] = input.cells[0xa];   \
+output.cells[0xc] = input.cells[0x9];   \
+output.cells[0xd] = input.cells[0xe];   \
+output.cells[0xe] = input.cells[0xd];   \
+output.cells[0xf] = input.cells[0x8];   }
+// </editor-fold>
+
+// <editor-fold desc="PT¹⁰"
+#define PT64_10(input, output) {   \
+output.cells[0x0] = input.cells[0x5];   \
+output.cells[0x1] = input.cells[0x7];   \
+output.cells[0x2] = input.cells[0x1];   \
+output.cells[0x3] = input.cells[0x4];   \
+output.cells[0x4] = input.cells[0x0];   \
+output.cells[0x5] = input.cells[0x2];   \
+output.cells[0x6] = input.cells[0x3];   \
+output.cells[0x7] = input.cells[0x6];   \
+output.cells[0x8] = input.cells[0xd];   \
+output.cells[0x9] = input.cells[0xf];   \
+output.cells[0xa] = input.cells[0x9];   \
+output.cells[0xb] = input.cells[0xc];   \
+output.cells[0xc] = input.cells[0x8];   \
+output.cells[0xd] = input.cells[0xa];   \
+output.cells[0xe] = input.cells[0xb];   \
+output.cells[0xf] = input.cells[0xe];   }
+// </editor-fold>
+
+// <editor-fold desc="PT¹²"
+#define PT64_12(input, output) {   \
+output.cells[0x0] = input.cells[0x3];   \
+output.cells[0x1] = input.cells[0x5];   \
+output.cells[0x2] = input.cells[0x0];   \
+output.cells[0x3] = input.cells[0x7];   \
+output.cells[0x4] = input.cells[0x6];   \
+output.cells[0x5] = input.cells[0x4];   \
+output.cells[0x6] = input.cells[0x1];   \
+output.cells[0x7] = input.cells[0x2];   \
+output.cells[0x8] = input.cells[0xb];   \
+output.cells[0x9] = input.cells[0xd];   \
+output.cells[0xa] = input.cells[0x8];   \
+output.cells[0xb] = input.cells[0xf];   \
+output.cells[0xc] = input.cells[0xe];   \
+output.cells[0xd] = input.cells[0xc];   \
+output.cells[0xe] = input.cells[0x9];   \
+output.cells[0xf] = input.cells[0xa];   }
+// </editor-fold>
+
+// <editor-fold desc="PT¹⁴"
+#define PT64_14(input, output) {   \
+output.cells[0x0] = input.cells[0x1];   \
+output.cells[0x1] = input.cells[0x3];   \
+output.cells[0x2] = input.cells[0x6];   \
+output.cells[0x3] = input.cells[0x5];   \
+output.cells[0x4] = input.cells[0x2];   \
+output.cells[0x5] = input.cells[0x7];   \
+output.cells[0x6] = input.cells[0x0];   \
+output.cells[0x7] = input.cells[0x4];   \
+output.cells[0x8] = input.cells[0x9];   \
+output.cells[0x9] = input.cells[0xb];   \
+output.cells[0xa] = input.cells[0xe];   \
+output.cells[0xb] = input.cells[0xd];   \
+output.cells[0xc] = input.cells[0xa];   \
+output.cells[0xd] = input.cells[0xf];   \
+output.cells[0xe] = input.cells[0x8];   \
+output.cells[0xf] = input.cells[0xc];   }
+// </editor-fold>
+
+#define PT128_2(input, output){  \
+output.cells[0x0] = input.cells[0x1];   \
+output.cells[0x1] = input.cells[0x7];   \
+output.cells[0x2] = input.cells[0x0];   \
+output.cells[0x3] = input.cells[0x5];   \
+output.cells[0x4] = input.cells[0x2];   \
+output.cells[0x5] = input.cells[0x6];   \
+output.cells[0x6] = input.cells[0x4];   \
+output.cells[0x7] = input.cells[0x3];   \
+output.cells[0x8] = input.cells[0x9];   \
+output.cells[0x9] = input.cells[0xf];   \
+output.cells[0xa] = input.cells[0x8];   \
+output.cells[0xb] = input.cells[0xd];   \
+output.cells[0xc] = input.cells[0xa];   \
+output.cells[0xd] = input.cells[0xe];   \
+output.cells[0xe] = input.cells[0xc];   \
+output.cells[0xf] = input.cells[0xb];   }
+
+
+#define PT128_4(input, output){  \
+output.cells[0x0] = input.cells[0x7];   \
+output.cells[0x1] = input.cells[0x3];   \
+output.cells[0x2] = input.cells[0x1];   \
+output.cells[0x3] = input.cells[0x6];   \
+output.cells[0x4] = input.cells[0x0];   \
+output.cells[0x5] = input.cells[0x4];   \
+output.cells[0x6] = input.cells[0x2];   \
+output.cells[0x7] = input.cells[0x5];   \
+output.cells[0x8] = input.cells[0xf];   \
+output.cells[0x9] = input.cells[0xb];   \
+output.cells[0xa] = input.cells[0x9];   \
+output.cells[0xb] = input.cells[0xe];   \
+output.cells[0xc] = input.cells[0x8];   \
+output.cells[0xd] = input.cells[0xc];   \
+output.cells[0xe] = input.cells[0xa];   \
+output.cells[0xf] = input.cells[0xd];   }
+
+
+#define PT128_6(input, output){  \
+output.cells[0x0] = input.cells[0x3];   \
+output.cells[0x1] = input.cells[0x5];   \
+output.cells[0x2] = input.cells[0x7];   \
+output.cells[0x3] = input.cells[0x4];   \
+output.cells[0x4] = input.cells[0x1];   \
+output.cells[0x5] = input.cells[0x2];   \
+output.cells[0x6] = input.cells[0x0];   \
+output.cells[0x7] = input.cells[0x6];   \
+output.cells[0x8] = input.cells[0xb];   \
+output.cells[0x9] = input.cells[0xd];   \
+output.cells[0xa] = input.cells[0xf];   \
+output.cells[0xb] = input.cells[0xc];   \
+output.cells[0xc] = input.cells[0x9];   \
+output.cells[0xd] = input.cells[0xa];   \
+output.cells[0xe] = input.cells[0x8];   \
+output.cells[0xf] = input.cells[0xe];   }
+
+
+#define PT128_8(input, output){  \
+output.cells[0x0] = input.cells[0x5];   \
+output.cells[0x1] = input.cells[0x6];   \
+output.cells[0x2] = input.cells[0x3];   \
+output.cells[0x3] = input.cells[0x2];   \
+output.cells[0x4] = input.cells[0x7];   \
+output.cells[0x5] = input.cells[0x0];   \
+output.cells[0x6] = input.cells[0x1];   \
+output.cells[0x7] = input.cells[0x4];   \
+output.cells[0x8] = input.cells[0xd];   \
+output.cells[0x9] = input.cells[0xe];   \
+output.cells[0xa] = input.cells[0xb];   \
+output.cells[0xb] = input.cells[0xa];   \
+output.cells[0xc] = input.cells[0xf];   \
+output.cells[0xd] = input.cells[0x8];   \
+output.cells[0xe] = input.cells[0x9];   \
+output.cells[0xf] = input.cells[0xc];   }
+
+
+#define PT128_10(input, output){  \
+output.cells[0x0] = input.cells[0x6];   \
+output.cells[0x1] = input.cells[0x4];   \
+output.cells[0x2] = input.cells[0x5];   \
+output.cells[0x3] = input.cells[0x0];   \
+output.cells[0x4] = input.cells[0x3];   \
+output.cells[0x5] = input.cells[0x1];   \
+output.cells[0x6] = input.cells[0x7];   \
+output.cells[0x7] = input.cells[0x2];   \
+output.cells[0x8] = input.cells[0xe];   \
+output.cells[0x9] = input.cells[0xc];   \
+output.cells[0xa] = input.cells[0xd];   \
+output.cells[0xb] = input.cells[0x8];   \
+output.cells[0xc] = input.cells[0xb];   \
+output.cells[0xd] = input.cells[0x9];   \
+output.cells[0xe] = input.cells[0xf];   \
+output.cells[0xf] = input.cells[0xa];   }
+
+
+#define PT128_12(input, output){  \
+output.cells[0x0] = input.cells[0x4];   \
+output.cells[0x1] = input.cells[0x2];   \
+output.cells[0x2] = input.cells[0x6];   \
+output.cells[0x3] = input.cells[0x1];   \
+output.cells[0x4] = input.cells[0x5];   \
+output.cells[0x5] = input.cells[0x7];   \
+output.cells[0x6] = input.cells[0x3];   \
+output.cells[0x7] = input.cells[0x0];   \
+output.cells[0x8] = input.cells[0xc];   \
+output.cells[0x9] = input.cells[0xa];   \
+output.cells[0xa] = input.cells[0xe];   \
+output.cells[0xb] = input.cells[0x9];   \
+output.cells[0xc] = input.cells[0xd];   \
+output.cells[0xd] = input.cells[0xf];   \
+output.cells[0xe] = input.cells[0xb];   \
+output.cells[0xf] = input.cells[0x8];   }
+
+
+#define PT128_14(input, output){  \
+output.cells[0x0] = input.cells[0x2];   \
+output.cells[0x1] = input.cells[0x0];   \
+output.cells[0x2] = input.cells[0x4];   \
+output.cells[0x3] = input.cells[0x7];   \
+output.cells[0x4] = input.cells[0x6];   \
+output.cells[0x5] = input.cells[0x3];   \
+output.cells[0x6] = input.cells[0x5];   \
+output.cells[0x7] = input.cells[0x1];   \
+output.cells[0x8] = input.cells[0xa];   \
+output.cells[0x9] = input.cells[0x8];   \
+output.cells[0xa] = input.cells[0xc];   \
+output.cells[0xb] = input.cells[0xf];   \
+output.cells[0xc] = input.cells[0xe];   \
+output.cells[0xd] = input.cells[0xb];   \
+output.cells[0xe] = input.cells[0xd];   \
+output.cells[0xf] = input.cells[0x9];   }
+
 #endif //CONSTANTS_H

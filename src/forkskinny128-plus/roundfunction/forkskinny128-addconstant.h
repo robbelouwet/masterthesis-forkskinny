@@ -44,9 +44,6 @@ static inline void forkskinny128_add_constant(HalfState128Sliced_t *state, uint1
 	
 	//auto unsliced_res = unslice(*state).values[0].raw;
 	//int appel = 1;
-	
-//	 Cell 8 XOR 0x2, aka slice_t 1 of cell 8
-//	state->cells[9].slices[1] ^= ONE;
 }
 
 #endif //FORKSKINNYPLUS_FORKSKINNY_ADDCONSTANT_H

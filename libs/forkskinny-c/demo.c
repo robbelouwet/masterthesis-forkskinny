@@ -199,8 +199,8 @@ void demo_forkskinny_128_384() {
 	forkskinny_c_128_384_encrypt(&tk1, &tk2, &tk3, NULL, output_right_oneleg, message);
 	
 	// forward both legs
-	uint8_t output_left[FORKSKINNY128_BLOCK_SIZE];
-	uint8_t output_right[FORKSKINNY128_BLOCK_SIZE];
+	uint8_t output_left[FORKSKINNY128_BLOCK_SIZE]; //  0x4F318CE8A6A22F06, 0x09E2DD8ECD1C6945
+	uint8_t output_right[FORKSKINNY128_BLOCK_SIZE]; // 0x72D8874177DC8C16, 0x266DA48EA11FD273
 	forkskinny_c_128_384_encrypt(&tk1, &tk2, &tk3, output_left, output_right, message);
 
 //	// inverse one leg
@@ -251,7 +251,7 @@ void demo_forkskinny_128_384() {
 }
 
 int main() {
-	demo_forkskinny_64_192();
+//	demo_forkskinny_64_192();
 //	demo_forkskinny_128_256();
-//	demo_forkskinny_128_384();
+	demo_forkskinny_128_384();
 }

@@ -22,8 +22,14 @@ and the titles that generate the table of contents.
 
 I changed my mind again and decided to stay with the swapped nibbles implementation. This makes things a tidy bit more
 complicated, but I already had implemented almost everything, so it didn't really make sense to change the
-implementation. I also FINALLY implemented and fixed the fixsliced keyschedule and it produces the correct round keys. I
+implementation. I also FINALLY implemented and fixed the fixsliced keyschedule for fs64 and it produces the correct round keys. I
 didn't realize this, but the fixedslicing keyschedule actually *does* produce the same roundkeys, I initially thought
 this wasn't the case. In the beginning I thought this fixed slicing key schedule was going to derive completely
 different round keys than the original schedule, but this isn't the case. I drew it out on paper and now I fully
-understand it why and how it works.
+understand why and how it works.
+
+## Monday, april 10th
+
+Fixed/implemented the fixsliced keyschedule for fs128, which was a different implementation than with fs64. fixslicing
+for fs128 needs different permutations because there's no nibble swapping. I then started reading on the PAEF mode and
+study how it works so I can hopefully start implementing this first AEAD mode before the end of the easter holidays.

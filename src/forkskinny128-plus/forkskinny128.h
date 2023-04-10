@@ -71,27 +71,27 @@ static inline void apply_roundkey(HalfState128Sliced_t round_key, State128Sliced
 static inline void forkskinny128_encrypt_round(KeySchedule128Sliced_t schedule, State128Sliced_t *state,
                                                uint16_t iteration) {
 	// i: 0, rtk: 0x 9AC9 9F33 632C 5A77 (+ 0x02 @ injection step)
-//	auto roundkey = unslice({.halves= {schedule.keys[iteration], {}}}).values[0].raw[0];
+	auto roundkey = unslice({.halves= {schedule.keys[iteration], {}}}).values[0].raw[0];
 
-//	auto test_sbox_before = unslice(*state).values[0].raw; // 0x EC4A FF51 7369 C667 | 0x 80
+	auto test_sbox_before = unslice(*state).values[0].raw[0]; // 0x EC4A FF51 7369 C667 | 0x 80
 	forkskinny128_sbox(state);
-//	auto test_state0 = unslice(*state).values[0].raw[0]; // 0x 079C FF4A C5B1 87AD | 0x 6565 6565 6565 6536
-//	auto test_state1 = unslice(*state).values[0].raw[1]; // 0x 079C FF4A C5B1 87AD | 0x 6565 6565 6565 6536
+	auto test_state0 = unslice(*state).values[0].raw[0]; // 0x 079C FF4A C5B1 87AD | 0x 6565 6565 6565 6536
+	auto test_state1 = unslice(*state).values[0].raw[1];
 	
 	/* round constant is added during pre computation of key schedule and added to the roundkey */
 	apply_roundkey(schedule.keys[iteration], state);
-//	test_state0 = unslice(*state).values[0].raw[0]; // 0x 9D55 6079 A69D DDDA | 0x 6565 6565 6565 6534
-//	test_state1 = unslice(*state).values[0].raw[1]; // 0x 9D55 6079 A69D DDDA | 0x 6565 6565 6565 6534
+	test_state0 = unslice(*state).values[0].raw[0]; // 0x 9D55 6079 A69D DDDA | 0x 6565 6565 6565 6534
+	test_state1 = unslice(*state).values[0].raw[1];
 	
 	forkskinny128_shiftrows(state);
-//	test_state0 = unslice(*state).values[0].raw[0]; // 0x 5560 799D A69D DDDA | 0x 6565 6565 6534 6565
-//	test_state1 = unslice(*state).values[0].raw[1]; // 0x 5560 799D A69D DDDA | 0x 6565 6565 6534 6565
+	test_state0 = unslice(*state).values[0].raw[0]; // 0x 5560 799D A69D DDDA | 0x 6565 6565 6534 6565
+	test_state1 = unslice(*state).values[0].raw[1];
 	
 	forkskinny128_mixcols(state);
-//	test_state0 = unslice(*state).values[0].raw[0]; // 0x A69D DDDA A6CC DDDA | 0x C3A9 B8BF 3054 1CF8
-//	test_state1 = unslice(*state).values[0].raw[1]; // 0x A69D DDDA A6CC DDDA | 0x C3A9 B8BF 3054 1CF8
+	test_state0 = unslice(*state).values[0].raw[0]; // 0x A69D DDDA A6CC DDDA | 0x C3A9 B8BF 3054 1CF8
+	test_state1 = unslice(*state).values[0].raw[1];
 
-//	int appel = 1;
+	int appel = 1;
 }
 
 /**
