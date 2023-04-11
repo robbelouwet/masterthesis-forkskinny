@@ -35,7 +35,7 @@ Fixed/implemented the fixsliced keyschedule for fs128, which was a different imp
 for fs128 needs different permutations because there's no nibble swapping. I then started reading on the PAEF mode and
 study how it works so I can hopefully start implementing this first AEAD mode before the end of the easter holidays.
 
-## Tuesday
+## Tuesday, april 11th
 
 A long day today, for some reason I introduced a lot of bugs into the code the last couple of days, but I never noticed
 this. TO start with, I bugged the demo code of Erik, it was not producing the correct test vectors. This was due to an
