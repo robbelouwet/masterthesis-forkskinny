@@ -26,14 +26,16 @@ bool test_pt128(){
 }
 
 void test_forkskinny_128_256() {
-	auto vectors = sliced_test_vectors128();
-	auto original_pt = unslice(vectors[0]);
+	auto M = M_128();
+	auto TK1 = TK1_128();
+	auto TK2 = TK2_128();
+	auto original_pt = unslice(M);
 	
-	auto schedule = forkskinny_128_keyschedule_tk2(vectors[1], vectors[2]);
+	auto schedule = forkskinny_128_keyschedule_tk2(TK1, TK2);
 	
 	
 	// Ensure correct test vectors
-	auto ct = forkskinny128_encrypt(schedule, &(vectors[0]), 'b', FORKSKINNY_128_256_ROUNDS_BEFORE,
+	auto ct = forkskinny128_encrypt(schedule, &M, 'b', FORKSKINNY_128_256_ROUNDS_BEFORE,
 	                                FORKSKINNY_128_256_ROUNDS_AFTER);
 	auto result_c0 = unslice(ct.C0).values[0];
 	auto result_c1 = unslice(ct.C1).values[0];
@@ -67,10 +69,13 @@ void test_forkskinny_128_256() {
 }
 
 void test_forkskinny_128_384() {
-	auto vectors = sliced_test_vectors128();
-	auto original_pt = unslice(vectors[0]);
+	auto M = M_128();
+	auto TK1 = TK1_128();
+	auto TK2 = TK2_128();
+	auto TK3 = TK3_128();
+	auto original_pt = unslice(M);
 	
-	auto schedule = forkskinny_128_fixsliced_init_tk23(vectors[1], vectors[2], vectors[3]);
+	auto schedule = forkskinny_128_fixsliced_init_tk23(TK1, TK2, TK3);
 	
 	// fixsliced,           vanilla,            Erik
 	// 0x9AC99F33632C5A7B,  0x9AC99F33632C5A77, 0x9AC99F33632C5A77
@@ -81,7 +86,7 @@ void test_forkskinny_128_384() {
 	auto rtk2 = unslice({.halves = {schedule.keys[2], {}}}).values[0].raw[0];
 	
 	// Ensure correct test vectors
-	auto ct = forkskinny128_encrypt(schedule, &(vectors[0]), 'b', FORKSKINNY_128_384_ROUNDS_BEFORE,
+	auto ct = forkskinny128_encrypt(schedule, &M, 'b', FORKSKINNY_128_384_ROUNDS_BEFORE,
 	                                FORKSKINNY_128_384_ROUNDS_AFTER);
 	auto result_c0 = unslice(ct.C0).values[0];
 	auto result_c1 = unslice(ct.C1).values[0];

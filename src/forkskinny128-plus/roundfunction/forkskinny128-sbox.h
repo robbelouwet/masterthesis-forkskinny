@@ -31,14 +31,10 @@ static inline void forkskinny128_sbox(State128Sliced_t *state) {
 		auto cell = state->cells[i];
 		
 		// @formatter:off
-//		auto test = _mm256_or_si256(ONE, ONE);
-//		auto test2 = _mm256_xor_si256(ONE, ONE);
-//		auto test3 = _mm256_and_si256(ONE, ONE);
-		
 		y6 = XOR_SLICE( x4 , XOR_SLICE( OR_SLICE( x7 , x6 ), ONE ) );
 		y5 = XOR_SLICE( x0 , XOR_SLICE( OR_SLICE( x2 , x3 ), ONE ) );
 		y7 = XOR_SLICE( x5 , XOR_SLICE( OR_SLICE( y6 , y5 ), ONE ) );
-		
+
 		y4 = XOR_SLICE( x3 , XOR_SLICE( OR_SLICE( y7 , y6 ), ONE ) );
 		y3 = XOR_SLICE( x1 , XOR_SLICE( OR_SLICE( y5 , x3 ), ONE ) );
 		y2 = XOR_SLICE( x6 , XOR_SLICE( OR_SLICE( x1 , x2 ), ONE ) );
@@ -74,14 +70,14 @@ static inline void forkskinny128_sbox_inv(State128Sliced_t *state) {
 		y4 = x6 ^ ~(y7 & y6);
 		*/
 		
-		y2 = XOR_SLICE( x0 , XOR_SLICE( OR_SLICE( x1 , x3 ), ONE ) );
-		y7 = XOR_SLICE( x1 , XOR_SLICE( OR_SLICE( x7 , x2 ), ONE ) );
-		y5 = XOR_SLICE( x7 , XOR_SLICE( OR_SLICE( x6 , x5 ), ONE ) );
-		y3 = XOR_SLICE( x4 , XOR_SLICE( OR_SLICE( x7 , x6 ), ONE ) );
-		y1 = XOR_SLICE( x3 , XOR_SLICE( OR_SLICE( x5 , y3 ), ONE ) );
-		y6 = XOR_SLICE( x2 , XOR_SLICE( OR_SLICE( y1 , y2 ), ONE ) );
-		y0 = XOR_SLICE( x5 , XOR_SLICE( OR_SLICE( y2 , y3 ), ONE ) );
-		y4 = XOR_SLICE( x6 , XOR_SLICE( OR_SLICE( y7 , y6 ), ONE ) );
+		y2 = XOR_SLICE(x0, XOR_SLICE(OR_SLICE(x1, x3), ONE));
+		y7 = XOR_SLICE(x1, XOR_SLICE(OR_SLICE(x7, x2), ONE));
+		y5 = XOR_SLICE(x7, XOR_SLICE(OR_SLICE(x6, x5), ONE));
+		y3 = XOR_SLICE(x4, XOR_SLICE(OR_SLICE(x7, x6), ONE));
+		y1 = XOR_SLICE(x3, XOR_SLICE(OR_SLICE(x5, y3), ONE));
+		y6 = XOR_SLICE(x2, XOR_SLICE(OR_SLICE(y1, y2), ONE));
+		y0 = XOR_SLICE(x5, XOR_SLICE(OR_SLICE(y2, y3), ONE));
+		y4 = XOR_SLICE(x6, XOR_SLICE(OR_SLICE(y7, y6), ONE));
 	}
 	
 	// INPUT:   0x F7E4 D583 B2A1 096C
