@@ -7,7 +7,7 @@
 #include "roundfunction/forkskinny128-shiftrows.h"
 #include "roundfunction/forkskinny128-mixcols.h"
 
-static inline void add_branch_constant(State128Sliced_t *state) {
+static inline void add_branch_constant128(State128Sliced_t *state) {
 	// <editor-fold desc="branch constant">
 	// @formatter:off
 	#if AVX512_acceleration
@@ -22,14 +22,14 @@ static inline void add_branch_constant(State128Sliced_t *state) {
 	
 	#else
 	for (int i = 0; i < 16; ++i) {
-//		state->cells[i].slices[0].value = XOR_SLICE(state->cells[i].slices[0].value, branch_constant128.cells[i].slices[0].value);
-//		state->cells[i].slices[1].value = XOR_SLICE(state->cells[i].slices[1].value, branch_constant128.cells[i].slices[1].value);
-//		state->cells[i].slices[2].value = XOR_SLICE(state->cells[i].slices[2].value, branch_constant128.cells[i].slices[2].value);
-//		state->cells[i].slices[3].value = XOR_SLICE(state->cells[i].slices[3].value, branch_constant128.cells[i].slices[3].value);
-//		state->cells[i].slices[4].value = XOR_SLICE(state->cells[i].slices[4].value, branch_constant128.cells[i].slices[4].value);
-//		state->cells[i].slices[5].value = XOR_SLICE(state->cells[i].slices[5].value, branch_constant128.cells[i].slices[5].value);
-//		state->cells[i].slices[6].value = XOR_SLICE(state->cells[i].slices[6].value, branch_constant128.cells[i].slices[6].value);
-//		state->cells[i].slices[7].value = XOR_SLICE(state->cells[i].slices[7].value, branch_constant128.cells[i].slices[7].value);
+		state->cells[i].slices[0].value = XOR_SLICE(state->cells[i].slices[0].value, branch_constant128.cells[i].slices[0].value);
+		state->cells[i].slices[1].value = XOR_SLICE(state->cells[i].slices[1].value, branch_constant128.cells[i].slices[1].value);
+		state->cells[i].slices[2].value = XOR_SLICE(state->cells[i].slices[2].value, branch_constant128.cells[i].slices[2].value);
+		state->cells[i].slices[3].value = XOR_SLICE(state->cells[i].slices[3].value, branch_constant128.cells[i].slices[3].value);
+		state->cells[i].slices[4].value = XOR_SLICE(state->cells[i].slices[4].value, branch_constant128.cells[i].slices[4].value);
+		state->cells[i].slices[5].value = XOR_SLICE(state->cells[i].slices[5].value, branch_constant128.cells[i].slices[5].value);
+		state->cells[i].slices[6].value = XOR_SLICE(state->cells[i].slices[6].value, branch_constant128.cells[i].slices[6].value);
+		state->cells[i].slices[7].value = XOR_SLICE(state->cells[i].slices[7].value, branch_constant128.cells[i].slices[7].value);
 	}
 	
 	#endif
@@ -142,7 +142,7 @@ static inline SlicedCiphertext128_t forkskinny128_encrypt(KeySchedule128Sliced_t
 	if (mode == '1' || mode == 'b') {
 		C1 = *state;
 		// 0xB28BA9B609C7732D | 0x16A7C817056FF223
-		add_branch_constant(&C1);
+		add_branch_constant128(&C1);
 		// 0x30CA89A601C3712C | 0x9EE36A462D7BF826
 		test3_bc0 = unslice(C1).values[0].raw[0];
 		test3_bc1 = unslice(C1).values[0].raw[1];
@@ -210,7 +210,7 @@ static inline SlicedCiphertext128_t forkskinny128_decrypt_C0(KeySchedule128Slice
 	// Re-encrypt to C1
 	if (mode == 'o' || mode == 'b') {
 		C1 = *state;
-		add_branch_constant(&C1);
+		add_branch_constant128(&C1);
 		for (int i = r_init + r_after; i < (r_init + 2 * r_after); ++i)
 			forkskinny128_encrypt_round(schedule, &C1, i);
 	}
@@ -230,7 +230,7 @@ static inline SlicedCiphertext128_t forkskinny128_decrypt_C1(KeySchedule128Slice
 	for (; c1_i > r_init + r_after - 1; --c1_i)
 		forkskinny128_decrypt_round(schedule, state, c1_i);
 	
-	add_branch_constant(state);
+	add_branch_constant128(state);
 	
 	// Further decrypt to M
 	if (mode == 'i' || mode == 'b') {

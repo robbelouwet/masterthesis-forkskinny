@@ -2,6 +2,7 @@
 #define FORKSKINNYPLUS128_FORKSKINNY_SBOX_H
 
 #include "../utils/forkskinny128-datatypes.h"
+//#include "immintrin.h"
 
 // for readability:
 #define x0 cell.slices[0].value
@@ -30,6 +31,10 @@ static inline void forkskinny128_sbox(State128Sliced_t *state) {
 		auto cell = state->cells[i];
 		
 		// @formatter:off
+		auto test = _mm256_or_si256(ONE, ONE);
+		auto test2 = _mm256_xor_si256(ONE, ONE);
+		auto test3 = _mm256_and_si256(ONE, ONE);
+		
 		y6 = XOR_SLICE( x4 , XOR_SLICE( OR_SLICE( x7 , x6 ), ONE ) );
 		y5 = XOR_SLICE( x0 , XOR_SLICE( OR_SLICE( x2 , x3 ), ONE ) );
 		y7 = XOR_SLICE( x5 , XOR_SLICE( OR_SLICE( y6 , y5 ), ONE ) );

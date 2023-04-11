@@ -1,7 +1,7 @@
 #ifndef FORKSKINNYPLUS64_KEYSCHEDULE_INTERNAL_H
 #define FORKSKINNYPLUS64_KEYSCHEDULE_INTERNAL_H
 
-#include <immintrin.h>
+//#include <immintrin.h>
 #include "../utils/forkskinny64-datatypes.h"
 #include "../roundfunction/forkskinny64-addconstant.h"
 

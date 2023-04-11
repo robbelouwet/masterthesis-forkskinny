@@ -1,7 +1,7 @@
 #ifndef FORKSKINNYPLUS128_KEYSCHEDULE_INTERNAL_H
 #define FORKSKINNYPLUS128_KEYSCHEDULE_INTERNAL_H
 
-#include <immintrin.h>
+//#include <immintrin.h>
 #include "../utils/forkskinny128-datatypes.h"
 
 static inline void tk2_lfsr(State128Sliced_t *state) {

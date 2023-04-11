@@ -14,10 +14,16 @@ static inline Slice64_t slice_significance(const Blocks64_t blocks, uint8_t sign
 	uint64_t mask = 1ULL << significance;
 	auto slice = Slice64_t();
 	
-	#if slice_size == 256
+	#if slice_size == 128
 	for (uint i = 0; i < 64; ++i)
 		slice.segments[0] |= (blocks.values[i].raw & mask) >> significance << i;
-	for (uint i = 64; i < 125; ++i)
+	for (uint i = 64; i < 128; ++i)
+		slice.segments[1] |= (blocks.values[i].raw & mask) >> significance << (i - 64);
+	
+	#elif slice_size == 256
+	for (uint i = 0; i < 64; ++i)
+		slice.segments[0] |= (blocks.values[i].raw & mask) >> significance << i;
+	for (uint i = 64; i < 128; ++i)
 		slice.segments[1] |= (blocks.values[i].raw & mask) >> significance << (i - 64);
 	for (uint i = 128; i < 192; ++i)
 		slice.segments[2] |= (blocks.values[i].raw & mask) >> significance << (i - 128);
@@ -27,7 +33,7 @@ static inline Slice64_t slice_significance(const Blocks64_t blocks, uint8_t sign
 	#elif slice_size == 512
 	for (uint i = 0; i < 64; ++i)
 		slice.segments[0] |= (blocks.values[i].raw & mask) >> significance << i;
-	for (uint i = 64; i < 125; ++i)
+	for (uint i = 64; i < 128; ++i)
 		slice.segments[1] |= (blocks.values[i].raw & mask) >> significance << (i - 64);
 	for (uint i = 128; i < 192; ++i)
 		slice.segments[2] |= (blocks.values[i].raw & mask) >> significance << (i - 128);
@@ -68,7 +74,18 @@ static inline State64Sliced_t slice(const Blocks64_t blocks) {
  * 					E.g. the very first slice contains the *least* significant bits of 64 states
  */
 static inline void unslice_significance(const Slice64_t slice, Blocks64_t *blocks, uint8_t sb_index) {
-	#if slice_size == 256
+	#if slice_size == 128
+	uint8_t segments[4] = {0, 64};
+	
+	// loop over every segment, __m128i has 2x 64-bit segments
+	for (auto &segment : segments) {
+		for (int b_number = segment; b_number < segment + 64; ++b_number) {
+			uint64_t mask = 1ULL << (b_number - segment);
+			blocks->values[b_number].raw |= ((slice.segments[0] & mask) >> (b_number - segment)) << sb_index;
+		}
+	}
+	
+	#elif slice_size == 256
 	uint8_t segments[4] = {0, 64, 128, 192};
 	
 	// loop over every segment, __m256i has 4x 64-bit segments

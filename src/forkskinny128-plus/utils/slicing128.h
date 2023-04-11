@@ -14,12 +14,21 @@ static inline Slice128_t slice_significance(const Blocks128_t blocks, uint8_t si
 	uint64_t mask = 1ULL << significance;
 	auto slice = Slice128_t();
 	
-	#if slice_size == 256
+	#if slice_size == 128
 	for (uint i = 0; i < 64; ++i) {
 		if (low) slice.segments[0] |= (blocks.values[i].raw[0] & mask) >> significance << i;
 		else slice.segments[0] |= (blocks.values[i].raw[1] & mask) >> significance << i;
 	}
-	for (uint i = 64; i < 125; ++i){
+	for (uint i = 64; i < 128; ++i){
+		if (low) slice.segments[1] |= (blocks.values[i].raw[0] & mask) >> significance << i;
+		else slice.segments[1] |= (blocks.values[i].raw[1] & mask) >> significance << i;
+	}
+	#elif slice_size == 256
+	for (uint i = 0; i < 64; ++i) {
+		if (low) slice.segments[0] |= (blocks.values[i].raw[0] & mask) >> significance << i;
+		else slice.segments[0] |= (blocks.values[i].raw[1] & mask) >> significance << i;
+	}
+	for (uint i = 64; i < 128; ++i){
 		if (low) slice.segments[1] |= (blocks.values[i].raw[0] & mask) >> significance << i;
 		else slice.segments[1] |= (blocks.values[i].raw[1] & mask) >> significance << i;
 	}
@@ -37,7 +46,7 @@ static inline Slice128_t slice_significance(const Blocks128_t blocks, uint8_t si
 		if (low) slice.segments[0] |= (blocks.values[i].raw[0] & mask) >> significance << i;
 		else slice.segments[0] |= (blocks.values[i].raw[1] & mask) >> significance << i;
 	}
-	for (uint i = 64; i < 125; ++i) {
+	for (uint i = 64; i < 128; ++i) {
 		if (low) slice.segments[1] |= (blocks.values[i].raw[0] & mask) >> significance << i;
 		else slice.segments[1] |= (blocks.values[i].raw[1] & mask) >> significance << i;
 	}
@@ -94,7 +103,19 @@ static inline State128Sliced_t slice(const Blocks128_t blocks) {
  * 					E.g. the very first slice contains the *least* significant bits of 64 states
  */
 static inline void unslice_significance(const Slice128_t slice, Blocks128_t *blocks, uint8_t sb_index, bool low) {
-	#if slice_size == 256
+	#if slice_size == 128
+	uint8_t segments[4] = {0, 64};
+	
+	// loop over every segment, __m128i has 2x 64-bit segments
+	for (auto &segment : segments) {
+		for (int b_number = segment; b_number < segment + 64; ++b_number) {
+			uint64_t mask = 1ULL << (b_number - segment);
+			if (low) blocks->values[b_number].raw[0] |= ((slice.segments[0] & mask) >> (b_number - segment)) << sb_index;
+			else blocks->values[b_number].raw[1] |= ((slice.segments[0] & mask) >> (b_number - segment)) << sb_index;
+		}
+	}
+	
+	#elif slice_size == 256
 	uint8_t segments[4] = {0, 64, 128, 192};
 	
 	// loop over every segment, __m256i has 4x 64-bit segments

@@ -12,13 +12,13 @@ add_executable(demo
         libs/forkskinny-c/forkskinny64-cipher.c
         libs/forkskinny-c/forkskinny128-cipher.c)
 
+
 add_executable(constants_generator constants_generator.cpp)
 
-add_executable(forkskinny64-plus-test src/forkskinny64-plus/forkskinny64_test.cpp)
-add_executable(forkskinny128-plus-test src/forkskinny128-plus/forkskinny128_test.cpp)
+add_executable(forkskinny64-plus-test
+        src/forkskinny64-plus/forkskinny64_test.cpp
+        )
 
-# Create a custom target that depends on both executable targets
-#add_custom_target(Test
-#        DEPENDS forkskinny64-plus-test forkskinny128-plus-test
-#        COMMAND $<TARGET_FILE:forkskinny64-plus-test>
-#        COMMAND $<TARGET_FILE:forkskinny128-plus-test>)
+add_executable(forkskinny128-plus-test
+        src/forkskinny128-plus/forkskinny128_test.cpp
+        )

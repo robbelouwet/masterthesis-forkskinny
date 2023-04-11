@@ -7,13 +7,15 @@
 
 #include <cstdint>
 #include "../../config.h"
-#include "immintrin.h"
+//#include "immintrin.h"
 
 /** ---- SKINNY64 ---- */
 typedef union {
 	slice_t value;
 	
-	#if slice_size == 256
+	#if slice_size == 128
+	uint64_t segments[2];
+	#elif slice_size == 256
 	uint64_t segments[4];
 	#elif slice_size == 512
 	uint64_t segments[8];

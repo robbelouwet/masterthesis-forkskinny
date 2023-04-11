@@ -4,6 +4,7 @@
 #include "utils/slicing64.h"
 #include "forkskinny64.h"
 #include "keyschedule/fixsliced-keyschedule64.h"
+#include "keyschedule/keyschedule64.h"
 
 //bool test_pt64(){
 //	auto original_pt = Blocks64_t{.values = {{.bytes = {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef}}}};
@@ -24,19 +25,27 @@
 //}
 
 bool test_forkskinny64_192() {
-	auto original_pt = Blocks64_t{.values = {{.bytes = {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef}}}};
+	auto original_pt = Blocks64_t{.values = {{.bytes =
+			{0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef}}}};
 	auto sliced_state = slice(original_pt);
 	
 	// Set TK1
-	auto sliced_TK1 = slice(Blocks64_t{.values = {{.bytes = {0xf1, 0x11, 0x00, 0x22, 0x00, 0x33, 0x00, 0x44}}}});
+	auto sliced_TK1 = slice(Blocks64_t{.values = {{.bytes =
+			{0xf1, 0x11, 0x00, 0x22, 0x00, 0x33, 0x00, 0x44}}}});
 	
 	// Set TK2
-	auto sliced_TK2 = slice(Blocks64_t{.values = {{.bytes = {0xf2, 0x55, 0x00, 0x66, 0x00, 0x77, 0x00, 0x88}}}});
+	auto sliced_TK2 = slice(Blocks64_t{.values = {{.bytes =
+			{0xf2, 0x55, 0x00, 0x66, 0x00, 0x77, 0x00, 0x88}}}});
 	
 	// Set TK3
-	auto sliced_TK3 = slice(Blocks64_t{.values = {{.bytes = {0xf3, 0x99, 0x00, 0xaa, 0x00, 0xbb, 0x00, 0xcc}}}});
+	auto sliced_TK3 = slice(Blocks64_t{.values = {{.bytes =
+			{0xf3, 0x99, 0x00, 0xaa, 0x00, 0xbb, 0x00, 0xcc}}}});
 	
-	auto schedule = forkskinny_64_fixsliced_init_tk23(sliced_TK1, sliced_TK2, sliced_TK3);
+	auto schedule = forkskinny_64_init_tk23(sliced_TK1, sliced_TK2, sliced_TK3);
+	
+	// 0x EE00 FDE0
+	// 0x 099B 203B
+	// 0x 0EE2 40B2
 	auto rtk0 = unslice({.halves = {schedule.keys[0], {}}}).values[0].raw;
 	auto rtk1 = unslice({.halves = {schedule.keys[1], {}}}).values[0].raw;
 	auto rtk2 = unslice({.halves = {schedule.keys[2], {}}}).values[0].raw;

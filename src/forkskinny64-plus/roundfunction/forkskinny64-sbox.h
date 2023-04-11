@@ -23,10 +23,10 @@ static inline void skinny64_sbox(State64Sliced_t *state) {
 		auto cell = state->cells[i];
 		
 		// @formatter:off
-		y3 = XOR_SLICE(x0 , XOR_SLICE(OR_SLICE(x3 , x2) , ONE));
-		y2 = XOR_SLICE(x3 , XOR_SLICE(OR_SLICE(x2 , x1) , ONE));
-		y1 = XOR_SLICE(x2 , XOR_SLICE(OR_SLICE(x1 , y3) , ONE));
-		y0 = XOR_SLICE(x1 , XOR_SLICE(OR_SLICE(y3 , y2) , ONE));
+		y3 = XOR_SLICE( x0 , XOR_SLICE( OR_SLICE(x3 , x2 ) , ONE ));
+		y2 = XOR_SLICE( x3 , XOR_SLICE( OR_SLICE(x2 , x1 ) , ONE ));
+		y1 = XOR_SLICE( x2 , XOR_SLICE( OR_SLICE(x1 , y3 ) , ONE ));
+		y0 = XOR_SLICE( x1 , XOR_SLICE( OR_SLICE(y3 , y2 ) , ONE ));
 		// @formatter:on
 	}
 	
