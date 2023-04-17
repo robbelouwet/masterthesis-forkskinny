@@ -14,9 +14,15 @@ static inline KeySchedule128Sliced_t forkskinny_128_keyschedule_tk2(State128Slic
 		
 		forkskinny128_add_constant(&res, i);
 		
-		// Keep in mind: the C2 constant relating to the 9nth cell is part of the 2nd 'half'!
+		// Keep in mind: the C2 constant relating to the 8th cell is part of the 2nd 'half'!
 		// So we add 0x2 at the key injection step
+//		for (int j = 0; j < 64; ++j) {
+//			std::cout << "slice " << j << " -> " << schedule.keys[i].raw[j].value;
+//		}
 		schedule.keys[i] = res;
+//		for (int j = 0; j < 64; ++j) {
+//			std::cout << "slice " << j << " -> " << schedule.keys[i].raw[j].value;
+//		}
 		
 		// Permute TK's
 		tk1 = permute(tk1);

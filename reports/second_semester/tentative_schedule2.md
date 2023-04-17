@@ -31,6 +31,7 @@ What I'd like:
     - intro etc.: what and how does it work
     - performance & when should it be used
     - side channel resistence
+    - The slice and unslice operations
   - SIMD (8 pages)
     - What ist it? How does it work? When should it be used?
     - compiler intrinsics & platform support -> SSE vs AVX2 vs AVX512
