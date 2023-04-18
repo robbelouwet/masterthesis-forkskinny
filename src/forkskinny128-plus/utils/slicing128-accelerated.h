@@ -5,6 +5,7 @@
 #include <x86intrin.h>
 #include "forkskinny128-datatypes.h"
 
+
 /**
  * Perform a rotate-right bit rotation on a 256-bit __m256i value.
  * @param v

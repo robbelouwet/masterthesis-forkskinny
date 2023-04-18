@@ -16,14 +16,24 @@ typedef union {
 	slice_t value;
 	
 	#if slice_size == 128
-	uint64_t segments[2];
+	uint64_t chunks[2];
 	#elif slice_size == 256
-	uint64_t segments[4];
+	uint64_t chunks[4];
 	#elif slice_size == 512
-	uint64_t segments[8];
+	uint64_t chunks[8];
 	#endif
 	
 } Slice128_t;
+
+typedef union {
+	#if AVX512_acceleration
+	uint64_t slices[8];
+	__m512i lane;
+	#else
+	__m256i lane;
+	uint64_t slices[4];
+	#endif
+} Segment128_t;
 
 typedef union {
 	#if SKINNY_64BIT

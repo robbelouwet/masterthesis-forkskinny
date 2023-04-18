@@ -25,7 +25,7 @@
 //
 //}
 
-bool test_forkskinny64_192() {
+void test_forkskinny64_192() {
 	auto M = M_64();
 	auto TK1 = TK1_64();
 	auto TK2 = TK2_64();

@@ -14,11 +14,11 @@ typedef union {
 	slice_t value;
 	
 	#if slice_size == 128
-	uint64_t segments[2];
+	uint64_t chunks[2];
 	#elif slice_size == 256
-	uint64_t segments[4];
+	uint64_t chunks[4];
 	#elif slice_size == 512
-	uint64_t segments[8];
+	uint64_t chunks[8];
 	#endif
 	
 } Slice64_t;

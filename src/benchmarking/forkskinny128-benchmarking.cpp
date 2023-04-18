@@ -8,37 +8,36 @@
 #include "../forkskinny128-plus/keyschedule/keyschedule128.h"
 
 void benchmark_forkskinny128_384() {
-	#define ITERATIONS 10000
+	#define ITERATIONS 1000
+	#define ROUNDS_BEFORE FORKSKINNY_128_384_ROUNDS_BEFORE
+	#define ROUNDS_AFTER FORKSKINNY_128_384_ROUNDS_AFTER
 	
-	State128Sliced_t test_states[ITERATIONS];
-	State128Sliced_t test_tk1[ITERATIONS];
-	State128Sliced_t test_tk2[ITERATIONS];
-	State128Sliced_t test_tk3[ITERATIONS];
-	
-	for (int i = 0; i < ITERATIONS; ++i) {
-		test_states[i] = M_128();
-		test_tk1[i] = TK1_128();
-		test_tk2[i] = TK2_128();
-		test_tk3[i] = TK3_128();
-	}
+	std::cout << slice_size << " blocks in parallel\n";
+	std::cout << (ROUNDS_BEFORE + 2 * ROUNDS_AFTER) << " rounds per primitive call\n--------\n";
 	
 	auto before = _rdtsc();
 	for (int i = 0; i < ITERATIONS; ++i) {
-		auto state = test_states[i];
-		auto const schedule = forkskinny_128_init_tk23(test_tk1[i], test_tk2[i],test_tk3[i]);
-		forkskinny128_encrypt(schedule, &state, 'b', FORKSKINNY_128_384_ROUNDS_BEFORE, FORKSKINNY_128_384_ROUNDS_AFTER);
+		auto schedule = forkskinny_128_fixsliced_init_tk23(TK1_128(), TK2_128(), TK3_128());
+		
+		auto pt_block = M_128();
+		
+		auto ct = forkskinny128_encrypt(schedule, &pt_block, 'b', ROUNDS_BEFORE,
+		                      ROUNDS_AFTER);
+		
+		auto volatile res = unslice(ct.M);
 	}
 	auto after = _rdtsc();
 	
 	auto total = after - before;
-	auto total_per_primitive = total / slice_size;
-	auto cycles_per_round = total_per_primitive / (FORKSKINNY_128_384_ROUNDS_BEFORE + FORKSKINNY_128_384_ROUNDS_AFTER);
+	auto cycles_per_primitive = total / (ITERATIONS * slice_size);
+	auto cycles_per_round = cycles_per_primitive / (ROUNDS_BEFORE + 2 * ROUNDS_AFTER);
+	auto cycles_per_byte = cycles_per_primitive / 16;
 	
-	std::cout << slice_size << " blocks in parallel\n";
-	std::cout << (FORKSKINNY_128_384_ROUNDS_BEFORE + FORKSKINNY_128_384_ROUNDS_AFTER) << " rounds per primitive call";
-	std::cout << "on average " << cycles_per_round << " cycles per round";
+	std::cout << cycles_per_primitive << " cycles per PRIMITIVE\n" ;
+	std::cout << cycles_per_byte << " cycles per byte\n";
+	std::cout << cycles_per_round << " cycles per round";
 }
 
-int main(){
+int main() {
 	benchmark_forkskinny128_384();
 }

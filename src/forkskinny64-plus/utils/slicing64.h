@@ -16,37 +16,37 @@ static inline Slice64_t slice_significance(const Blocks64_t blocks, uint8_t sign
 	
 	#if slice_size == 128
 	for (uint i = 0; i < 64; ++i)
-		slice.segments[0] |= (blocks.values[i].raw & mask) >> significance << i;
+		slice.chunks[0] |= (blocks.values[i].raw & mask) >> significance << i;
 	for (uint i = 64; i < 128; ++i)
-		slice.segments[1] |= (blocks.values[i].raw & mask) >> significance << (i - 64);
+		slice.chunks[1] |= (blocks.values[i].raw & mask) >> significance << (i - 64);
 	
 	#elif slice_size == 256
 	for (uint i = 0; i < 64; ++i)
-		slice.segments[0] |= (blocks.values[i].raw & mask) >> significance << i;
+		slice.chunks[0] |= (blocks.values[i].raw & mask) >> significance << i;
 	for (uint i = 64; i < 128; ++i)
-		slice.segments[1] |= (blocks.values[i].raw & mask) >> significance << (i - 64);
+		slice.chunks[1] |= (blocks.values[i].raw & mask) >> significance << (i - 64);
 	for (uint i = 128; i < 192; ++i)
-		slice.segments[2] |= (blocks.values[i].raw & mask) >> significance << (i - 128);
+		slice.chunks[2] |= (blocks.values[i].raw & mask) >> significance << (i - 128);
 	for (uint i = 192; i < 256; ++i)
-		slice.segments[3] |= (blocks.values[i].raw & mask) >> significance << (i - 192);
+		slice.chunks[3] |= (blocks.values[i].raw & mask) >> significance << (i - 192);
 	
 	#elif slice_size == 512
 	for (uint i = 0; i < 64; ++i)
-		slice.segments[0] |= (blocks.values[i].raw & mask) >> significance << i;
+		slice.chunks[0] |= (blocks.values[i].raw & mask) >> significance << i;
 	for (uint i = 64; i < 128; ++i)
-		slice.segments[1] |= (blocks.values[i].raw & mask) >> significance << (i - 64);
+		slice.chunks[1] |= (blocks.values[i].raw & mask) >> significance << (i - 64);
 	for (uint i = 128; i < 192; ++i)
-		slice.segments[2] |= (blocks.values[i].raw & mask) >> significance << (i - 128);
+		slice.chunks[2] |= (blocks.values[i].raw & mask) >> significance << (i - 128);
 	for (uint i = 192; i < 256; ++i)
-		slice.segments[3] |= (blocks.values[i].raw & mask) >> significance << (i - 192);
+		slice.chunks[3] |= (blocks.values[i].raw & mask) >> significance << (i - 192);
 	for (uint i = 256; i < 320; ++i)
-		slice.segments[4] |= (blocks.values[i].raw & mask) >> significance << (i - 256);
+		slice.chunks[4] |= (blocks.values[i].raw & mask) >> significance << (i - 256);
 	for (uint i = 320; i < 384; ++i)
-		slice.segments[5] |= (blocks.values[i].raw & mask) >> significance << (i - 320);
+		slice.chunks[5] |= (blocks.values[i].raw & mask) >> significance << (i - 320);
 	for (uint i = 384; i < 448; ++i)
-		slice.segments[6] |= (blocks.values[i].raw & mask) >> significance << (i - 384);
+		slice.chunks[6] |= (blocks.values[i].raw & mask) >> significance << (i - 384);
 	for (uint i = 448; i < 512; ++i)
-		slice.segments[7] |= (blocks.values[i].raw & mask) >> significance << (i - 448);
+		slice.chunks[7] |= (blocks.values[i].raw & mask) >> significance << (i - 448);
 	
 	#else
 	for (uint i = 0; i < slice_size; ++i)
@@ -75,34 +75,34 @@ static inline State64Sliced_t slice(const Blocks64_t blocks) {
  */
 static inline void unslice_significance(const Slice64_t slice, Blocks64_t *blocks, uint8_t sb_index) {
 	#if slice_size == 128
-	uint8_t segments[4] = {0, 64};
+	uint8_t chunks[4] = {0, 64};
 	
-	// loop over every segment, __m128i has 2x 64-bit segments
-	for (auto &segment : segments) {
+	// loop over every segment, __m128i has 2x 64-bit chunks
+	for (auto &segment : chunks) {
 		for (int b_number = segment; b_number < segment + 64; ++b_number) {
 			uint64_t mask = 1ULL << (b_number - segment);
-			blocks->values[b_number].raw |= ((slice.segments[0] & mask) >> (b_number - segment)) << sb_index;
+			blocks->values[b_number].raw |= ((slice.chunks[0] & mask) >> (b_number - segment)) << sb_index;
 		}
 	}
 	
 	#elif slice_size == 256
-	uint8_t segments[4] = {0, 64, 128, 192};
+	uint8_t chunks[4] = {0, 64, 128, 192};
 	
-	// loop over every segment, __m256i has 4x 64-bit segments
-	for (auto &segment : segments) {
+	// loop over every segment, __m256i has 4x 64-bit chunks
+	for (auto &segment : chunks) {
 		for (int b_number = segment; b_number < segment + 64; ++b_number) {
 			uint64_t mask = 1ULL << (b_number - segment);
-			blocks->values[b_number].raw |= ((slice.segments[0] & mask) >> (b_number - segment)) << sb_index;
+			blocks->values[b_number].raw |= ((slice.chunks[0] & mask) >> (b_number - segment)) << sb_index;
 		}
 	}
 	#elif slice_size == 512
-	uint16_t segments[8] = {0, 64, 128, 192, 256, 320, 384, 448};
+	uint16_t chunks[8] = {0, 64, 128, 192, 256, 320, 384, 448};
 	
-	// loop over every segment, __m512i has 8x 64-bit segments
-	for (auto &segment : segments) {
+	// loop over every segment, __m512i has 8x 64-bit chunks
+	for (auto &segment : chunks) {
 		for (int b_number = segment; b_number < segment + 64; ++b_number) {
 			uint64_t mask = 1ULL << (b_number - segment);
-			blocks->values[b_number].raw |= ((slice.segments[0] & mask) >> (b_number - segment)) << sb_index;
+			blocks->values[b_number].raw |= ((slice.chunks[0] & mask) >> (b_number - segment)) << sb_index;
 		}
 	}
 	#else

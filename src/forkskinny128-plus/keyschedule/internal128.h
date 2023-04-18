@@ -133,13 +133,13 @@ static inline HalfState128Sliced_t xor_half_keys(HalfState128Sliced_t a, HalfSta
  * @param stop amount of cells to xor
  */
 static inline State128Sliced_t xor_keys(State128Sliced_t a, State128Sliced_t b) {
-	auto res = State128Sliced_t();
-	
 	#if AVX512_acceleration
-	for (int i = 0; i < 8; ++i)
+	auto res = State128Sliced_t();
+	for (int i = 0; i < 16; ++i)
 		res.cells[i].avx512_simd_cell = _mm512_xor_si512(a.cells[i].avx512_simd_cell, b.cells[i].avx512_simd_cell);
 	
 	#elif AVX2_acceleration
+	auto res = State128Sliced_t();
 	for (int i = 0; i < 16; ++i){
 		res.cells[i].avx2_simd_cells[0] = _mm256_xor_si256(a.cells[i].avx2_simd_cells[0], b.cells[i].avx2_simd_cells[0]);
 		res.cells[i].avx2_simd_cells[1] = _mm256_xor_si256(a.cells[i].avx2_simd_cells[1], b.cells[i].avx2_simd_cells[1]);
@@ -147,7 +147,8 @@ static inline State128Sliced_t xor_keys(State128Sliced_t a, State128Sliced_t b) 
 	}
 	
 	#else
-	for (int i = 0; i < 16; ++i) {
+	State128Sliced_t res = State128Sliced_t();
+	for (int volatile i = 0; i < 16; ++i) {
 		res.cells[i].slices[0].value = XOR_SLICE(a.cells[i].slices[0].value, b.cells[i].slices[0].value);
 		res.cells[i].slices[1].value = XOR_SLICE(a.cells[i].slices[1].value, b.cells[i].slices[1].value);
 		res.cells[i].slices[2].value = XOR_SLICE(a.cells[i].slices[2].value, b.cells[i].slices[2].value);
