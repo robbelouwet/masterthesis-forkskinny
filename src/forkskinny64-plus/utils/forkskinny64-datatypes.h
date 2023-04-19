@@ -62,6 +62,7 @@ typedef union {
 	Slice64_t raw[32];
 	Cell64_t cells[8];
 	Pair64_t pairs[4];
+	Row64_t rows[2];
 } HalfState64Sliced_t;
 
 typedef union {

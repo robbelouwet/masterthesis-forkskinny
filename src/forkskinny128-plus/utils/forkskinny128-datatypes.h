@@ -27,11 +27,11 @@ typedef union {
 
 typedef union {
 	#if AVX512_acceleration
-	uint64_t slices[8];
 	__m512i lane;
-	#else
+	uint64_t segments[8];
+	#elif AVX2_acceleration
 	__m256i lane;
-	uint64_t slices[4];
+	uint64_t segments[4];
 	#endif
 } Segment128_t;
 
@@ -64,6 +64,7 @@ typedef union {
 typedef union {
 	Slice128_t raw[64];
 	Cell128_t cells[8];
+	Row128_t rows[2];
 } HalfState128Sliced_t;
 
 typedef union {

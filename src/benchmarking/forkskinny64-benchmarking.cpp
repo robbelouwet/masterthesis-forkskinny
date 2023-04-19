@@ -1,36 +1,36 @@
 
 #include <iostream>
 #include <x86intrin.h>
-#include "../forkskinny128-plus/utils/forkskinny128-datatypes.h"
-#include "../forkskinny128-plus/keyschedule/fixsliced-keyschedule128.h"
-#include "../forkskinny128-plus/forkskinny128.h"
+#include "../config.h"
 #include "../test_vectors.h"
-#include "../forkskinny128-plus/keyschedule/keyschedule128.h"
+#include "../forkskinny64-plus/keyschedule/fixsliced-keyschedule64.h"
+#include "../forkskinny64-plus/forkskinny64.h"
 
-void benchmark_forkskinny128_384() {
+
+void benchmark_forkskinny64_192() {
 	#define ITERATIONS 100
-	#define ROUNDS_BEFORE FORKSKINNY_128_384_ROUNDS_BEFORE
-	#define ROUNDS_AFTER FORKSKINNY_128_384_ROUNDS_AFTER
+	#define ROUNDS_BEFORE FORKSKINNY_ROUNDS_BEFORE
+	#define ROUNDS_AFTER FORKSKINNY_ROUNDS_AFTER
 	
 	std::cout << slice_size << " blocks in parallel\n";
 	std::cout << (ROUNDS_BEFORE + 2 * ROUNDS_AFTER) << " rounds per primitive call\n--------\n";
 	
-	Blocks128_t unsliced_test_M[ITERATIONS];
-	Blocks128_t unsliced_test_TK1[ITERATIONS];
-	Blocks128_t unsliced_test_TK2[ITERATIONS];
-	Blocks128_t unsliced_test_TK3[ITERATIONS];
+	Blocks64_t unsliced_test_M[ITERATIONS];
+	Blocks64_t unsliced_test_TK1[ITERATIONS];
+	Blocks64_t unsliced_test_TK2[ITERATIONS];
+	Blocks64_t unsliced_test_TK3[ITERATIONS];
 	
-	State128Sliced_t test_M[ITERATIONS];
-	State128Sliced_t test_TK1[ITERATIONS];
-	State128Sliced_t test_TK2[ITERATIONS];
-	State128Sliced_t test_TK3[ITERATIONS];
+	State64Sliced_t test_M[ITERATIONS];
+	State64Sliced_t test_TK1[ITERATIONS];
+	State64Sliced_t test_TK2[ITERATIONS];
+	State64Sliced_t test_TK3[ITERATIONS];
 	
 	// Generate test vectors
 	for (int i = 0; i < ITERATIONS; ++i) {
-		unsliced_test_M[i] = M_128();
-		unsliced_test_TK1[i] = TK1_128();
-		unsliced_test_TK2[i] = TK2_128();
-		unsliced_test_TK3[i] = TK3_128();
+		unsliced_test_M[i] = M_64();
+		unsliced_test_TK1[i] = TK1_64();
+		unsliced_test_TK2[i] = TK2_64();
+		unsliced_test_TK3[i] = TK3_64();
 	}
 	
 	auto before0 = _rdtsc();
@@ -47,12 +47,11 @@ void benchmark_forkskinny128_384() {
 	
 	auto before = _rdtsc();
 	for (int i = 0; i < ITERATIONS; ++i) {
-		auto schedule = forkskinny_128_fixsliced_init_tk23(test_TK1[i], test_TK2[i], test_TK3[i]);
+		auto schedule = forkskinny_64_fixsliced_init_tk23(test_TK1[i], test_TK2[i], test_TK3[i]);
 		
 		auto pt_block = test_M[i];
 		
-		auto ct = forkskinny128_encrypt(schedule, &pt_block, 'b', ROUNDS_BEFORE,
-		                      ROUNDS_AFTER);
+		auto ct = forkskinny64_encrypt(schedule, &pt_block, 'b');
 		
 		auto volatile res = unslice(ct.M);
 	}
@@ -69,5 +68,5 @@ void benchmark_forkskinny128_384() {
 }
 
 int main() {
-	benchmark_forkskinny128_384();
+	benchmark_forkskinny64_192();
 }

@@ -27,9 +27,9 @@
 
 void test_forkskinny_128_256() {
 	std::cout << "\nforkskinny128-256\n";
-	auto M = M_128();
-	auto TK1 = TK1_128();
-	auto TK2 = TK2_128();
+	auto M = slice(M_128());
+	auto TK1 = slice(TK1_128());
+	auto TK2 = slice(TK2_128());
 	auto original_pt = unslice(M);
 	
 	auto schedule = forkskinny_128_keyschedule_tk2(TK1, TK2);
@@ -70,10 +70,10 @@ void test_forkskinny_128_256() {
 
 void test_forkskinny_128_384() {
 	std::cout << "\n\nforkskinny128-384\n";
-	auto M = M_128();
-	auto TK1 = TK1_128();
-	auto TK2 = TK2_128();
-	auto TK3 = TK3_128();
+	auto M = slice(M_128());
+	auto TK1 = slice(TK1_128());
+	auto TK2 = slice(TK2_128());
+	auto TK3 = slice(TK3_128());
 	auto original_pt = unslice(M);
 	
 	auto schedule = forkskinny_128_fixsliced_init_tk23(TK1, TK2, TK3);

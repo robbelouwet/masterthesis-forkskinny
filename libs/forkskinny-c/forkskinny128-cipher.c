@@ -131,7 +131,7 @@ void forkskinny_c_128_256_init_tk2(ForkSkinny128Key_t *ks, const uint8_t *key, u
           ks->keys[index].row[1] = tk.row[1];
         #endif
 
-        /* XOR in the round constants for the first two rows.
+        /* XOR_AVX2 in the round constants for the first two rows.
            The round constants for the 3rd and 4th rows are
            fixed and will be applied during encrypt/decrypt */
         ks->schedule[index].row[0] ^= (RC[index] & 0x0F) ^ 0x00020000;
@@ -214,7 +214,7 @@ void forkskinny_c_128_384_init_tk3(ForkSkinny128Key_t *ks, const uint8_t *key, u
           ks->keys[index].row[1] = tk.row[1];
         #endif
 
-        /* XOR in the round constants for the first two rows.
+        /* XOR_AVX2 in the round constants for the first two rows.
            The round constants for the 3rd and 4th rows are
            fixed and will be applied during encrypt/decrypt */
         ks->schedule[index].row[0] ^= (RC[index] & 0x0F) ^ 0x00020000;
@@ -321,7 +321,7 @@ STATIC_INLINE uint32_t forkskinny128_sbox(uint32_t x)
      *
      * We can further reduce the number of NOT operations from 7 to 2
      * using the technique from https://github.com/kste/skinny_avx to
-     * convert NOR-XOR operations into AND-XOR operations by converting
+     * convert NOR-XOR_AVX2 operations into AND-XOR_AVX2 operations by converting
      * the S-box into its NOT-inverse.
      */
     uint32_t y;
@@ -459,6 +459,8 @@ ForkSkinny128Cells_t forkskinny_128_384_encrypt_round(
 		unsigned index, unsigned *temp){
 	/* Apply the S-box to all bytes in the state */
 	#if SKINNY_64BIT
+//	state.lrow[0] = 0xFEDCBA9876543210;
+//	state.lrow[1] = 0x80;
 	state.lrow[0] = skinny128_sbox(state.lrow[0]);
 	state.lrow[1] = skinny128_sbox(state.lrow[1]);
 	#else

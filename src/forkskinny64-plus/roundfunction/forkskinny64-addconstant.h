@@ -9,7 +9,7 @@ static inline void forkskinny64_add_constant(HalfState64Sliced_t *state, uint16_
 	// The beauty of unions:
 	
 	#if AVX2_acceleration || AVX512_acceleration
-	// Cell 0 XOR C0
+	// Cell 0 XOR_AVX2 C0
 	Cell64_t C0 = {.slices = {
 			forkskinny_precomputed_round_constants[iteration][0],
 			forkskinny_precomputed_round_constants[iteration][1],
@@ -18,7 +18,7 @@ static inline void forkskinny64_add_constant(HalfState64Sliced_t *state, uint16_
 	}};
 	state->cells[1].avx2_simd_cell = _mm256_xor_si256(state->cells[1].avx2_simd_cell, C0.avx2_simd_cell);
 	
-	// Cell 4 XOR C1
+	// Cell 4 XOR_AVX2 C1
 	Cell64_t C1 = {.slices = {
 			forkskinny_precomputed_round_constants[iteration][4],
 			forkskinny_precomputed_round_constants[iteration][5],
@@ -27,13 +27,13 @@ static inline void forkskinny64_add_constant(HalfState64Sliced_t *state, uint16_
 	}};
 	state->cells[5].avx2_simd_cell = _mm256_xor_si256(state->cells[5].avx2_simd_cell, C1.avx2_simd_cell);
 	#else
-	// Cell 0 XOR C0
+	// Cell 0 XOR_AVX2 C0
 	state->cells[1].slices[0].value = XOR_SLICE(state->cells[1].slices[0].value, forkskinny_precomputed_round_constants[iteration][0]);
 	state->cells[1].slices[1].value = XOR_SLICE(state->cells[1].slices[1].value, forkskinny_precomputed_round_constants[iteration][1]);
 	state->cells[1].slices[2].value = XOR_SLICE(state->cells[1].slices[2].value, forkskinny_precomputed_round_constants[iteration][2]);
 	state->cells[1].slices[3].value = XOR_SLICE(state->cells[1].slices[3].value, forkskinny_precomputed_round_constants[iteration][3]);
 	
-	// Cell 4 XOR C1
+	// Cell 4 XOR_AVX2 C1
 	state->cells[5].slices[0].value = XOR_SLICE(state->cells[5].slices[0].value, forkskinny_precomputed_round_constants[iteration][4]);
 	state->cells[5].slices[1].value = XOR_SLICE(state->cells[5].slices[1].value, forkskinny_precomputed_round_constants[iteration][5]);
 	state->cells[5].slices[2].value = XOR_SLICE(state->cells[5].slices[2].value, forkskinny_precomputed_round_constants[iteration][6]);

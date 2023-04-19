@@ -54,7 +54,7 @@ static inline void apply_roundkey(HalfState64Sliced_t round_key, State64Sliced_t
 	#endif
 	// </editor-fold
 	
-	// AddConstant: Cell 8 XOR 0x2, aka Slice64_t 1 of cell 8, because C2 is on the third row and not present in the round key!
+	// AddConstant: Cell 8 XOR_AVX2 0x2, aka Slice64_t 1 of cell 8, because C2 is on the third row and not present in the round key!
 	state->cells[9].slices[1].value = XOR_SLICE(state->cells[9].slices[1].value, ONE);
 }
 

@@ -4,7 +4,7 @@ project(forkskinnyplus)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -g -funroll-all-loops")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx2")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx512f -mavx512dq")
 
@@ -26,3 +26,6 @@ add_executable(forkskinny128-plus-test
 
 add_executable(forkskinny128-384-benchmarking
         src/benchmarking/forkskinny128-benchmarking.cpp)
+
+add_executable(forkskinny64-192-benchmarking
+        src/benchmarking/forkskinny64-benchmarking.cpp)

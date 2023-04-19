@@ -1,6 +1,7 @@
 #ifndef FORKSKINNYPLUS128_FORKSKINNY128_384_H
 #define FORKSKINNYPLUS128_FORKSKINNY128_384_H
 
+#include <x86intrin.h>
 #include "utils/forkskinny128-datatypes.h"
 #include "roundfunction/forkskinny128-sbox.h"
 #include "roundfunction/forkskinny128-addconstant.h"
@@ -64,7 +65,7 @@ static inline void apply_roundkey(HalfState128Sliced_t round_key, State128Sliced
 	#endif
 	// </editor-fold
 	
-	// AddConstant: Cell 8 XOR 0x2, aka slice 1 of cell 8, because C2 is on the third row and not present in the round key!
+	// AddConstant: Cell 8 XOR_AVX2 0x2, aka slice 1 of cell 8, because C2 is on the third row and not present in the round key!
 	state->cells[8].slices[1].value = XOR_SLICE(state->cells[8].slices[1].value, ONE);
 }
 
@@ -74,34 +75,34 @@ static inline void forkskinny128_encrypt_round(KeySchedule128Sliced_t schedule, 
 //	auto roundkey = unslice({.halves= {schedule.keys[iteration], {}}}).values[0].raw[0];
 
 //	auto test_sbox_before = unslice(*state).values[0].raw[0]; // 0x EC4A FF51 7369 C667 | 0x 80
-	auto before = _rdtsc();
+//	auto before = _rdtsc();
 	forkskinny128_sbox(state);
-	auto after = _rdtsc();
-	std::cout << "fs128 sbox: " << after - before << "\n";
+//	auto after = _rdtsc();
+//	std::cout << "fs128 sbox: " << after - before << "\n";
 //	auto test_state0 = unslice(*state).values[0].raw[0]; // 0x 079C FF4A C5B1 87AD | 0x 6565 6565 6565 6536
 //	auto test_state1 = unslice(*state).values[0].raw[1];
 	
 	/* round constant is added during pre computation of key schedule and added to the roundkey */
-	auto before2 = _rdtsc();
+//	auto before2 = _rdtsc();
 	apply_roundkey(schedule.keys[iteration], state);
-	auto after2 = _rdtsc();
-	std::cout << "fs128 key injection: " <<  after2 - before2 << "\n";
+//	auto after2 = _rdtsc();
+//	std::cout << "fs128 key injection: " <<  after2 - before2 << "\n";
 //	test_state0 = unslice(*state).values[0].raw[0]; // 0x 9D55 6079 A69D DDDA | 0x 6565 6565 6565 6534
 //	test_state1 = unslice(*state).values[0].raw[1];
 	
-	auto before3 = _rdtsc();
+//	auto before3 = _rdtsc();
 	forkskinny128_shiftrows(state);
-	auto after3 = _rdtsc();
-	std::cout << "fs128 ShiftRows: " <<  after3 - before3 << "\n";
+//	auto after3 = _rdtsc();
+//	std::cout << "fs128 ShiftRows: " <<  after3 - before3 << "\n";
 //	test_state0 = unslice(*state).values[0].raw[0]; // 0x 5560 799D A69D DDDA | 0x 6565 6565 6534 6565
 //	test_state1 = unslice(*state).values[0].raw[1];
 	
-	auto before4 = _rdtsc();
+//	auto before4 = _rdtsc();
 	forkskinny128_mixcols(state);
-	auto after4 = _rdtsc();
-	std::cout << "fs128 MixCols: " <<  after4 - before4 << "\n";
+//	auto after4 = _rdtsc();
+//	std::cout << "fs128 MixCols: " <<  after4 - before4 << "\n";
 	
-	exit(0);
+//	exit(0);
 //	test_state0 = unslice(*state).values[0].raw[0]; // 0x A69D DDDA A6CC DDDA | 0x C3A9 B8BF 3054 1CF8
 //	test_state1 = unslice(*state).values[0].raw[1];
 

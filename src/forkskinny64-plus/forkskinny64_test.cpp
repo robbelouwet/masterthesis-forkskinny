@@ -26,10 +26,10 @@
 //}
 
 void test_forkskinny64_192() {
-	auto M = M_64();
-	auto TK1 = TK1_64();
-	auto TK2 = TK2_64();
-	auto TK3 = TK3_64();
+	auto M = slice(M_64());
+	auto TK1 = slice(TK1_64());
+	auto TK2 = slice(TK2_64());
+	auto TK3 = slice(TK3_64());
 	auto original_pt = unslice(M).values[0].raw;
 	
 	auto schedule = forkskinny_64_init_tk23(TK1, TK2, TK3);

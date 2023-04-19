@@ -12,11 +12,11 @@
  * in all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * OR_AVX2 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * AUTHORS OR_AVX2 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR_AVX2 OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR_AVX2 OTHERWISE, ARISING
+ * FROM, OUT OF OR_AVX2 IN CONNECTION WITH THE SOFTWARE OR_AVX2 THE USE OR_AVX2 OTHER
  * DEALINGS IN THE SOFTWARE.
  */
 
@@ -117,7 +117,7 @@ void forkskinny_c_64_192_init_tk2_tk3(KeySchedule64_t *ks, const uint8_t *key, u
 		/* Determine the subkey to use at this point in the key keys */
 		ks->schedule[index].lrow = tk2.lrow[0] ^ tk3.lrow[0];
 		
-		/* XOR in the round constants for the first two rows.
+		/* XOR_AVX2 in the round constants for the first two rows.
 		   The round constants for the 3rd and 4th rows are
 		   fixed and will be applied during encrypt/decrypt */
 		ks->schedule[index].row[0] ^= ((RC[index] & 0x0F) << 4) ^ 0x2000;
@@ -207,7 +207,7 @@ STATIC_INLINE uint32_t skinny64_sbox(uint32_t x)
 	 *
 	 * We can further reduce the number of NOT operations from 4 to 2
 	 * using the technique from https://github.com/kste/skinny_avx to
-	 * convert NOR-XOR operations into AND-XOR operations by converting
+	 * convert NOR-XOR_AVX2 operations into AND-XOR_AVX2 operations by converting
 	 * the S-box into its NOT-inverse.
 	 */
 	x = ~x;

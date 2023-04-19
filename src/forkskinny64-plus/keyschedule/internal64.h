@@ -143,7 +143,7 @@ static inline State64Sliced_t permute(State64Sliced_t input) {
 }
 
 /**
- * XOR's cells of top 2 rows of 2 keys together, and stores them in res
+ * XOR_AVX2's cells of top 2 rows of 2 keys together, and stores them in res
  * @param a
  * @param b
  */
@@ -171,7 +171,7 @@ static inline HalfState64Sliced_t xor_half_keys(HalfState64Sliced_t a, HalfState
 }
 
 /**
- * XOR's cells of 2 keys together, and stores them in res
+ * XOR_AVX2's cells of 2 keys together, and stores them in res
  * @param a
  * @param b
  * @param stop amount of cells to xor

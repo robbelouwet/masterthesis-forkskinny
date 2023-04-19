@@ -10,7 +10,7 @@
 #include "forkskinny128-plus/utils/forkskinny128-datatypes.h"
 #include "forkskinny128-plus/utils/slicing128.h"
 
-static inline State64Sliced_t M_64() {
+static inline Blocks64_t M_64() {
 	uint8_t pt[8] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef};
 	
 	auto M = Blocks64_t();
@@ -18,20 +18,20 @@ static inline State64Sliced_t M_64() {
 		for (int j = 0; j < 8; ++j)
 			value.bytes[j] = pt[j];
 	
-	return slice(M);
+	return M;
 }
 
-static inline State64Sliced_t TK1_64() {
+static inline Blocks64_t TK1_64() {
 	uint8_t ct_tk1[8] = {0xf1, 0x11, 0x00, 0x22, 0x00, 0x33, 0x00, 0x44};
 	// Set TK1
 	auto TK1 = Blocks64_t();
 	for (auto &value: TK1.values)
 		for (int j = 0; j < 8; ++j)
 			value.bytes[j] = ct_tk1[j];
-	return slice(TK1);
+	return TK1;
 }
 
-static inline State64Sliced_t TK2_64() {
+static inline Blocks64_t TK2_64() {
 	uint8_t ct_tk2[8] = {0xf2, 0x55, 0x00, 0x66, 0x00, 0x77, 0x00, 0x88};
 	
 	// Set TK2
@@ -39,10 +39,10 @@ static inline State64Sliced_t TK2_64() {
 	for (auto &value: TK2.values)
 		for (int j = 0; j < 8; ++j)
 			value.bytes[j] = ct_tk2[j];
-	return slice(TK2);
+	return TK2;
 }
 
-static inline State64Sliced_t TK3_64() {
+static inline Blocks64_t TK3_64() {
 	uint8_t ct_tk3[8] = {0xf3, 0x99, 0x00, 0xaa, 0x00, 0xbb, 0x00, 0xcc};
 	
 	// Set TK3
@@ -50,12 +50,12 @@ static inline State64Sliced_t TK3_64() {
 	for (auto &value: TK3.values)
 		for (int j = 0; j < 8; ++j)
 			value.bytes[j] = ct_tk3[j];
-	return slice(TK3);
+	return TK3;
 }
 
 // ----------------------------------------------
 
-static inline State128Sliced_t M_128() {
+static inline Blocks128_t M_128() {
 	uint8_t pt[16] = {
 			0x67, 0xc6, 0x69, 0x73, 0x51, 0xff, 0x4a, 0xec, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 	
@@ -63,11 +63,10 @@ static inline State128Sliced_t M_128() {
 	for (auto &value: M.values)
 		for (int j = 0; j < 16; ++j)
 			value.bytes[j] = pt[j];
-	
-	return slice(M);
+	return M;
 }
 
-static inline State128Sliced_t TK1_128() {
+static inline Blocks128_t TK1_128() {
 	uint8_t ct_tk1[16] =
 			{0x29, 0xcd, 0xba, 0xab, 0xf2, 0xfb, 0xe3, 0x46, 0x7c, 0xc2, 0x54, 0xf8, 0x1b, 0xe8, 0xe7, 0x8d};
 	// Set TK1
@@ -75,10 +74,10 @@ static inline State128Sliced_t TK1_128() {
 	for (auto &value: TK1.values)
 		for (int j = 0; j < 16; ++j)
 			value.bytes[j] = ct_tk1[j];
-	return slice(TK1);
+	return TK1;
 }
 
-static inline State128Sliced_t TK2_128() {
+static inline Blocks128_t TK2_128() {
 	uint8_t ct_tk2[16] = {
 			0x76, 0x5a, 0x2e, 0x63, 0x33, 0x9f, 0xc9, 0x9a, 0x66, 0x32, 0x0d, 0xb7, 0x31, 0x58, 0x80, 0x01};
 	
@@ -87,10 +86,10 @@ static inline State128Sliced_t TK2_128() {
 	for (auto &value: TK2.values)
 		for (int j = 0; j < 16; ++j)
 			value.bytes[j] = ct_tk2[j];
-	return slice(TK2);
+	return TK2;
 }
 
-static inline State128Sliced_t TK3_128() {
+static inline Blocks128_t TK3_128() {
 	uint8_t ct_tk3[16] = {
 			0x29, 0xcd, 0xba, 0xab, 0xf2, 0xfb, 0xe3, 0x46, 0x7c, 0xc2, 0x54, 0xf8, 0x1b, 0xe8, 0xe7, 0x8d};
 	
@@ -99,7 +98,7 @@ static inline State128Sliced_t TK3_128() {
 	for (auto &value: TK3.values)
 		for (int j = 0; j < 16; ++j)
 			value.bytes[j] = ct_tk3[j];
-	return slice(TK3);
+	return TK3;
 }
 
 #endif //FORKSKINNYPLUS_TEST_VECTORS_H

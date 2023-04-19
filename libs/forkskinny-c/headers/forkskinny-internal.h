@@ -12,11 +12,11 @@
  * in all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * OR_AVX2 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * AUTHORS OR_AVX2 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR_AVX2 OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR_AVX2 OTHERWISE, ARISING
+ * FROM, OUT OF OR_AVX2 IN CONNECTION WITH THE SOFTWARE OR_AVX2 THE USE OR_AVX2 OTHER
  * DEALINGS IN THE SOFTWARE.
  */
 
@@ -91,7 +91,7 @@
 #define SKINNY_VECTORU_ATTR(words, bytes) __attribute__((vector_size(bytes), aligned(1)))
 #endif
 
-/* XOR two blocks together of arbitrary size and alignment */
+/* XOR_AVX2 two blocks together of arbitrary size and alignment */
 STATIC_INLINE void skinny_xor
     (void *output, const void *input1, const void *input2, size_t size)
 {
@@ -102,7 +102,7 @@ STATIC_INLINE void skinny_xor
     }
 }
 
-/* XOR two 128-bit blocks together */
+/* XOR_AVX2 two 128-bit blocks together */
 STATIC_INLINE void skinny128_xor
     (void *output, const void *input1, const void *input2)
 {
@@ -129,7 +129,7 @@ STATIC_INLINE void skinny128_xor
 #endif
 }
 
-/* XOR two 64-bit blocks together */
+/* XOR_AVX2 two 64-bit blocks together */
 STATIC_INLINE void skinny64_xor
     (void *output, const void *input1, const void *input2)
 {
