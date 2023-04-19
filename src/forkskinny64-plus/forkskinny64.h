@@ -13,7 +13,7 @@ static inline void add_branch_constant64(State64Sliced_t *state) {
 	// @formatter:off
 	#if AVX512_acceleration
 	for (int i = 0; i < 8; ++i)
-		state->pairs[i].avx512_simd_pair = _mm512_xor_si512(state->pairs[i].avx512_simd_pair, branch_constant128.pairs[i].avx512_simd_pair);
+		state->pairs[i].avx512_simd_pair = _mm512_xor_si512(state->pairs[i].avx512_simd_pair, branch_constant64.pairs[i].avx512_simd_pair);
 	
 	#elif AVX2_acceleration
 	for (int i = 0; i < 16; ++i)

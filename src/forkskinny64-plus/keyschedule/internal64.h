@@ -148,26 +148,10 @@ static inline State64Sliced_t permute(State64Sliced_t input) {
  * @param b
  */
 static inline HalfState64Sliced_t xor_half_keys(HalfState64Sliced_t a, HalfState64Sliced_t b) {
-	auto res = HalfState64Sliced_t();
-	
-	#if AVX512_acceleration
-	for (int i = 0; i < 4; ++i)
-		res.pairs[i].avx512_simd_pair = _mm512_xor_si512(a.pairs[i].avx512_simd_pair, b.pairs[i].avx512_simd_pair);
-	
-	#elif AVX2_acceleration
-	for (int i = 0; i < 8; ++i)
-		res.cells[i].avx2_simd_cell = _mm256_xor_si256(a.cells[i].avx2_simd_cell, b.cells[i].avx2_simd_cell);
-	
-	#else
-	for (int i = 0; i < 8; ++i) {
-		res.cells[i].slices[0].value = XOR_SLICE(a.cells[i].slices[0].value, b.cells[i].slices[0].value);
-		res.cells[i].slices[1].value = XOR_SLICE(a.cells[i].slices[1].value, b.cells[i].slices[1].value);
-		res.cells[i].slices[2].value = XOR_SLICE(a.cells[i].slices[2].value, b.cells[i].slices[2].value);
-		res.cells[i].slices[3].value = XOR_SLICE(a.cells[i].slices[3].value, b.cells[i].slices[3].value);
-	}
-	#endif
-	
-	return res;
+	return {.rows={
+			xor_row(a.rows[0], b.rows[0]),
+			xor_row(a.rows[1], b.rows[1]),
+	}};
 }
 
 /**
@@ -177,26 +161,12 @@ static inline HalfState64Sliced_t xor_half_keys(HalfState64Sliced_t a, HalfState
  * @param stop amount of cells to xor
  */
 static inline State64Sliced_t xor_keys(State64Sliced_t a, State64Sliced_t b) {
-	auto res = State64Sliced_t();
-	
-	#if AVX512_acceleration
-	for (int i = 0; i < 8; ++i)
-		res.pairs[i].avx512_simd_pair = _mm512_xor_si512(a.pairs[i].avx512_simd_pair, b.pairs[i].avx512_simd_pair);
-	
-	#elif AVX2_acceleration
-	for (int i = 0; i < 16; ++i)
-		res.cells[i].avx2_simd_cell = _mm256_xor_si256(a.cells[i].avx2_simd_cell, b.cells[i].avx2_simd_cell);
-	
-	#else
-	for (int i = 0; i < 16; ++i) {
-		res.cells[i].slices[0].value = XOR_SLICE(a.cells[i].slices[0].value, b.cells[i].slices[0].value);
-		res.cells[i].slices[1].value = XOR_SLICE(a.cells[i].slices[1].value, b.cells[i].slices[1].value);
-		res.cells[i].slices[2].value = XOR_SLICE(a.cells[i].slices[2].value, b.cells[i].slices[2].value);
-		res.cells[i].slices[3].value = XOR_SLICE(a.cells[i].slices[3].value, b.cells[i].slices[3].value);
-	}
-	#endif
-	
-	return res;
+	return {.rows={
+			xor_row(a.rows[0], b.rows[0]),
+			xor_row(a.rows[1], b.rows[1]),
+			xor_row(a.rows[2], b.rows[2]),
+			xor_row(a.rows[3], b.rows[3]),
+	}};
 }
 
 #endif //FORKSKINNYPLUS_KEYSCHEDULE_INTERNAL_H
