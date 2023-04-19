@@ -8,7 +8,7 @@
 // -- CONFIG --
 #define slice_size 64 // 8, 32, 64, 128, 256 or 512
 #define AVX2_support true
-#define AVX512_support true
+#define AVX512_support false
 // ------------
 
 /* Define SKINNY_64BIT to 1 if the CPU is natively 64-bit */
