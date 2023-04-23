@@ -1,11 +1,10 @@
-
 #include <iostream>
 #include <x86intrin.h>
 #include "../config.h"
 #include "../test_vectors.h"
 #include "../forkskinny64-plus/keyschedule/fixsliced-keyschedule64.h"
 #include "../forkskinny64-plus/forkskinny64.h"
-
+#include <benchmark/benchmark.h>
 
 void benchmark_forkskinny64_192() {
 	#define ITERATIONS 100
@@ -62,11 +61,41 @@ void benchmark_forkskinny64_192() {
 	auto cycles_per_round = cycles_per_primitive / (ROUNDS_BEFORE + 2 * ROUNDS_AFTER);
 	auto cycles_per_byte = cycles_per_primitive / 16;
 	
-	std::cout << cycles_per_primitive + slicing_per_primitive << " total cycles per single PRIMITIVE call (slicing included)\n" ;
+	std::cout << cycles_per_primitive + slicing_per_primitive
+	          << " total cycles per single PRIMITIVE call (slicing included)\n";
 	std::cout << cycles_per_byte << " cycles per byte\n";
 	std::cout << cycles_per_round << " cycles per round";
+}
+
+Blocks64_t benchmark_single_forkskinny64_192(Blocks64_t unsliced_m, Blocks64_t unsliced_tk1, Blocks64_t unsliced_tk2,
+                                Blocks64_t unsliced_tk3) {
+	
+	#define ROUNDS_BEFORE FORKSKINNY_ROUNDS_BEFORE
+	#define ROUNDS_AFTER FORKSKINNY_ROUNDS_AFTER
+	
+	// SLICE
+	auto test_M = slice(unsliced_m);
+	auto test_TK1 = slice(unsliced_tk1);
+	auto test_TK2 = slice(unsliced_tk2);
+	auto test_TK3 = slice(unsliced_tk3);
+	
+	// PRIMITIVE
+	auto schedule = forkskinny_64_fixsliced_init_tk23(test_TK1, test_TK2, test_TK3);
+	auto ct = forkskinny64_encrypt(schedule, &test_M, 'b');
+	
+	// UNSLICE
+	return unslice(ct.M);
+}
+
+void run_benchmark_fs64(benchmark::State& state){
+	for (auto _ : state){
+		benchmark_single_forkskinny64_192(M_64(), TK1_64(), TK2_64(), TK3_64());
+	}
 }
 
 int main() {
 	benchmark_forkskinny64_192();
 }
+//BENCHMARK(run_benchmark_fs64);
+//BENCHMARK_MAIN();
+

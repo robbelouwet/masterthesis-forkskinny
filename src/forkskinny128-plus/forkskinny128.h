@@ -69,7 +69,7 @@ static inline void apply_roundkey(HalfState128Sliced_t round_key, State128Sliced
 	state->cells[8].slices[1].value = XOR_SLICE(state->cells[8].slices[1].value, ONE);
 }
 
-static inline void forkskinny128_encrypt_round(KeySchedule128Sliced_t schedule, State128Sliced_t *state,
+static inline void forkskinny128_encrypt_round(KeySchedule128Sliced_t *schedule, State128Sliced_t *state,
                                                uint16_t iteration) {
 	// i: 0, rtk: 0x 9AC9 9F33 632C 5A77 (+ 0x02 @ injection step)
 //	auto roundkey = unslice({.halves= {schedule.keys[iteration], {}}}).values[0].raw[0];
@@ -84,7 +84,7 @@ static inline void forkskinny128_encrypt_round(KeySchedule128Sliced_t schedule, 
 	
 	/* round constant is added during pre computation of key schedule and added to the roundkey */
 //	auto before2 = _rdtsc();
-	apply_roundkey(schedule.keys[iteration], state);
+	apply_roundkey(schedule->keys[iteration], state);
 //	auto after2 = _rdtsc();
 //	std::cout << "fs128 key injection: " <<  after2 - before2 << "\n";
 //	test_state0 = unslice(*state).values[0].raw[0]; // 0x 9D55 6079 A69D DDDA | 0x 6565 6565 6565 6534
@@ -118,7 +118,7 @@ static inline void forkskinny128_encrypt_round(KeySchedule128Sliced_t schedule, 
  * @param r_after
  * @return
  */
-static inline SlicedCiphertext128_t forkskinny128_encrypt(KeySchedule128Sliced_t schedule,
+static inline SlicedCiphertext128_t forkskinny128_encrypt(KeySchedule128Sliced_t *schedule,
                                                           State128Sliced_t *state, unsigned char mode, uint8_t r_init,
                                                           uint8_t r_after) {
 //	auto initial_state = unslice(*state).values[0].raw;
@@ -177,7 +177,7 @@ static inline SlicedCiphertext128_t forkskinny128_encrypt(KeySchedule128Sliced_t
 	return {C1, C0};
 }
 
-static inline void forkskinny128_decrypt_round(KeySchedule128Sliced_t schedule, State128Sliced_t *state,
+static inline void forkskinny128_decrypt_round(KeySchedule128Sliced_t *schedule, State128Sliced_t *state,
                                                uint16_t iteration) {
 //	auto roundkey = unslice({.halves= {schedule.keys[iteration], {}}}).values[0].raw;
 
@@ -191,7 +191,7 @@ static inline void forkskinny128_decrypt_round(KeySchedule128Sliced_t schedule, 
 	forkskinny128_shiftrows_inv(state);
 //	test_state = unslice(*state).values[0].raw;
 	
-	apply_roundkey(schedule.keys[iteration], state);
+	apply_roundkey(schedule->keys[iteration], state);
 //	test_state = unslice(*state).values[0].raw;
 	
 	forkskinny128_sbox_inv(state);
@@ -200,7 +200,7 @@ static inline void forkskinny128_decrypt_round(KeySchedule128Sliced_t schedule, 
 //	int appel = 1;
 }
 
-static inline SlicedCiphertext128_t forkskinny128_decrypt_C0(KeySchedule128Sliced_t schedule,
+static inline SlicedCiphertext128_t forkskinny128_decrypt_C0(KeySchedule128Sliced_t *schedule,
                                                              State128Sliced_t *state, unsigned char mode, uint8_t r_init,
 															 uint8_t r_after) {
 	auto M = State128Sliced_t();
@@ -236,7 +236,7 @@ static inline SlicedCiphertext128_t forkskinny128_decrypt_C0(KeySchedule128Slice
 	
 }
 
-static inline SlicedCiphertext128_t forkskinny128_decrypt_C1(KeySchedule128Sliced_t schedule,
+static inline SlicedCiphertext128_t forkskinny128_decrypt_C1(KeySchedule128Sliced_t *schedule,
                                                              State128Sliced_t *state, unsigned char mode, uint8_t r_init,
 															 uint8_t r_after) {
 	auto M = State128Sliced_t();
@@ -267,7 +267,7 @@ static inline SlicedCiphertext128_t forkskinny128_decrypt_C1(KeySchedule128Slice
 	
 }
 
-static inline SlicedCiphertext128_t forkskinny128_decrypt(KeySchedule128Sliced_t schedule, SlicedCiphertext128_t *ct,
+static inline SlicedCiphertext128_t forkskinny128_decrypt(KeySchedule128Sliced_t *schedule, SlicedCiphertext128_t *ct,
                                                           unsigned char input_label, unsigned char mode, uint8_t r_init,
 														  uint8_t r_after) {
 	if (input_label == '0')

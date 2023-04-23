@@ -22,4 +22,15 @@ skinny64 round function needing about 97 cycles, which is about the same as Erik
 correctly. I don't want to jump to conclusions, but at the moment a single round only needs 7-15 cycles in my
 implementation :)))
 
+# Sunday
+
+Before noon, I installed a [benchmarking tool](https://github.com/google/benchmark) to analyze cpu usage and inspect
+call stacks and see what symbols/functions require the most execution time. You can find the results under
+src/benchmarking/results. It's quite astonishing to see that a tremendous amount of execution time is spent on loading
+unaligned memory into or from AVX2 vectors. When inspecting the perf output, you really see a lot of execution time and
+percentage goes to the '__memmove_avx_unaligned_erms' symbol, which is called by libc's 'memcpy' and 'memmove' to
+optimize loading unaligned SIMD vectors. In other words, I'm going to have to refactor where and how I load the cipher state during
+the rounds. I already knew that SIMD really requires 32-byte alignment for fast optimizations, but I need to think on
+how I'm going to apply this.
+
 ## What was on my mind

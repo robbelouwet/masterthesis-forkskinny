@@ -4,6 +4,7 @@
 //#include <immintrin.h>
 #include "../utils/forkskinny64-datatypes.h"
 #include "../roundfunction/forkskinny64-addconstant.h"
+#include "../common.h"
 
 static inline void tk2_lfsr(State64Sliced_t *state) {
 	// 2 1 0 (3+2)

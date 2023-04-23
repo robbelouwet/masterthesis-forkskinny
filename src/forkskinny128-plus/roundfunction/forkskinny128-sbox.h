@@ -73,37 +73,37 @@ static inline void forkskinny128_sbox(State128Sliced_t *state) {
 	#elif AVX2_acceleration
 	for (int i = 0; i < 16; i += 4) {
 //		auto before0 = _rdtsc();
-		__m256i x0 = SLICE_SEGMENT_AVX2(state, i, 0);
-		__m256i x1 = SLICE_SEGMENT_AVX2(state, i, 1);
-		__m256i x2 = SLICE_SEGMENT_AVX2(state, i, 2);
-		__m256i x3 = SLICE_SEGMENT_AVX2(state, i, 3);
-		__m256i x4 = SLICE_SEGMENT_AVX2(state, i, 4);
-		__m256i x5 = SLICE_SEGMENT_AVX2(state, i, 5);
-		__m256i x6 = SLICE_SEGMENT_AVX2(state, i, 6);
-		__m256i x7 = SLICE_SEGMENT_AVX2(state, i, 7);
-
-
-		// @formatter:off
-		auto y6 = XOR_AVX2( x4 , XOR_AVX2( OR_AVX2( x7 , x6 ), ONE_AVX2 ) );
-		auto y5 = XOR_AVX2( x0 , XOR_AVX2( OR_AVX2( x2 , x3 ), ONE_AVX2 ) );
-		auto y7 = XOR_AVX2( x5 , XOR_AVX2( OR_AVX2( y6 , y5 ), ONE_AVX2 ) );
-
-		auto y4 = XOR_AVX2( x3 , XOR_AVX2( OR_AVX2( y7 , y6 ), ONE_AVX2 ) );
-		auto y3 = XOR_AVX2( x1 , XOR_AVX2( OR_AVX2( y5 , x3 ), ONE_AVX2 ) );
-		auto y2 = XOR_AVX2( x6 , XOR_AVX2( OR_AVX2( x1 , x2 ), ONE_AVX2 ) );
-		auto y1 = XOR_AVX2( x7 , XOR_AVX2( OR_AVX2( y7 , y2 ), ONE_AVX2 ) );
-		auto y0 = XOR_AVX2( x2 , XOR_AVX2( OR_AVX2( y1 , y3 ), ONE_AVX2 ) );
-		// @formatter:on
-
-		
-		UNSLICE_SEGMENT_AVX2(y0, i, 0, state);
-		UNSLICE_SEGMENT_AVX2(y1, i, 1, state);
-		UNSLICE_SEGMENT_AVX2(y2, i, 2, state);
-		UNSLICE_SEGMENT_AVX2(y3, i, 3, state);
-		UNSLICE_SEGMENT_AVX2(y4, i, 4, state);
-		UNSLICE_SEGMENT_AVX2(y5, i, 5, state);
-		UNSLICE_SEGMENT_AVX2(y6, i, 6, state);
-		UNSLICE_SEGMENT_AVX2(y7, i, 7, state);
+//		__m256i x0 = SLICE_SEGMENT_AVX2(state, i, 0);
+//		__m256i x1 = SLICE_SEGMENT_AVX2(state, i, 1);
+//		__m256i x2 = SLICE_SEGMENT_AVX2(state, i, 2);
+//		__m256i x3 = SLICE_SEGMENT_AVX2(state, i, 3);
+//		__m256i x4 = SLICE_SEGMENT_AVX2(state, i, 4);
+//		__m256i x5 = SLICE_SEGMENT_AVX2(state, i, 5);
+//		__m256i x6 = SLICE_SEGMENT_AVX2(state, i, 6);
+//		__m256i x7 = SLICE_SEGMENT_AVX2(state, i, 7);
+//
+//
+//		// @formatter:off
+//		auto y6 = XOR_AVX2( x4 , XOR_AVX2( OR_AVX2( x7 , x6 ), ONE_AVX2 ) );
+//		auto y5 = XOR_AVX2( x0 , XOR_AVX2( OR_AVX2( x2 , x3 ), ONE_AVX2 ) );
+//		auto y7 = XOR_AVX2( x5 , XOR_AVX2( OR_AVX2( y6 , y5 ), ONE_AVX2 ) );
+//
+//		auto y4 = XOR_AVX2( x3 , XOR_AVX2( OR_AVX2( y7 , y6 ), ONE_AVX2 ) );
+//		auto y3 = XOR_AVX2( x1 , XOR_AVX2( OR_AVX2( y5 , x3 ), ONE_AVX2 ) );
+//		auto y2 = XOR_AVX2( x6 , XOR_AVX2( OR_AVX2( x1 , x2 ), ONE_AVX2 ) );
+//		auto y1 = XOR_AVX2( x7 , XOR_AVX2( OR_AVX2( y7 , y2 ), ONE_AVX2 ) );
+//		auto y0 = XOR_AVX2( x2 , XOR_AVX2( OR_AVX2( y1 , y3 ), ONE_AVX2 ) );
+//		// @formatter:on
+//
+//
+//		UNSLICE_SEGMENT_AVX2(y0, i, 0, state);
+//		UNSLICE_SEGMENT_AVX2(y1, i, 1, state);
+//		UNSLICE_SEGMENT_AVX2(y2, i, 2, state);
+//		UNSLICE_SEGMENT_AVX2(y3, i, 3, state);
+//		UNSLICE_SEGMENT_AVX2(y4, i, 4, state);
+//		UNSLICE_SEGMENT_AVX2(y5, i, 5, state);
+//		UNSLICE_SEGMENT_AVX2(y6, i, 6, state);
+//		UNSLICE_SEGMENT_AVX2(y7, i, 7, state);
 		
 //		auto after0 = _rdtsc();
 //		std::cout << "4 sboxes: " << after0 - before0 << " cycles" << &y1 << "\n";
@@ -111,25 +111,25 @@ static inline void forkskinny128_sbox(State128Sliced_t *state) {
 	}
 	
 //	auto before0 = _rdtsc();
-//	for (int i = 0; i < 16; ++i) {
-//		auto cell = state->cells[i];
-//
-//		// @formatter:off
-////		auto before = _rdtsc();
-//		out6 = XOR_SLICE( in4 , XOR_SLICE( OR_SLICE( in7  , in6 ),  ONE ) );
-//		out5 = XOR_SLICE( in0 , XOR_SLICE( OR_SLICE( in2  , in3 ),  ONE ) );
-//		out7 = XOR_SLICE( in5 , XOR_SLICE( OR_SLICE( out6 , out5 ), ONE ) );
-//
-//		out4 = XOR_SLICE( in3 , XOR_SLICE( OR_SLICE( out7 , out6 ), ONE ) );
-//		out3 = XOR_SLICE( in1 , XOR_SLICE( OR_SLICE( out5 , in3  ), ONE ) );
-//		out2 = XOR_SLICE( in6 , XOR_SLICE( OR_SLICE( in1  , in2  ), ONE ) );
-//		out1 = XOR_SLICE( in7 , XOR_SLICE( OR_SLICE( out7 , out2 ), ONE ) );
-//		out0 = XOR_SLICE( in2 , XOR_SLICE( OR_SLICE( out1 , out3 ), ONE ) );
-////		auto after = _rdtsc();
-////		std::cout << "1 s box: " << after - before << " cycles";
-////		exit(0);
-//		// @formatter:on
-//	}
+	for (int i = 0; i < 16; ++i) {
+		auto cell = state->cells[i];
+
+		// @formatter:off
+//		auto before = _rdtsc();
+		out6 = XOR_SLICE( in4 , XOR_SLICE( OR_SLICE( in7  , in6 ),  ONE ) );
+		out5 = XOR_SLICE( in0 , XOR_SLICE( OR_SLICE( in2  , in3 ),  ONE ) );
+		out7 = XOR_SLICE( in5 , XOR_SLICE( OR_SLICE( out6 , out5 ), ONE ) );
+
+		out4 = XOR_SLICE( in3 , XOR_SLICE( OR_SLICE( out7 , out6 ), ONE ) );
+		out3 = XOR_SLICE( in1 , XOR_SLICE( OR_SLICE( out5 , in3  ), ONE ) );
+		out2 = XOR_SLICE( in6 , XOR_SLICE( OR_SLICE( in1  , in2  ), ONE ) );
+		out1 = XOR_SLICE( in7 , XOR_SLICE( OR_SLICE( out7 , out2 ), ONE ) );
+		out0 = XOR_SLICE( in2 , XOR_SLICE( OR_SLICE( out1 , out3 ), ONE ) );
+//		auto after = _rdtsc();
+//		std::cout << "1 s box: " << after - before << " cycles";
+//		exit(0);
+		// @formatter:on
+	}
 //	auto after0 = _rdtsc();
 //	std::cout << "16 sboxes: " << after0 - before0 << " cycles\n";
 //	exit(0);

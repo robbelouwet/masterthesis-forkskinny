@@ -35,7 +35,7 @@ void test_forkskinny_128_256() {
 	auto schedule = forkskinny_128_keyschedule_tk2(TK1, TK2);
 	
 	// Ensure correct test vectors
-	auto ct = forkskinny128_encrypt(schedule, &M, 'b', FORKSKINNY_128_256_ROUNDS_BEFORE,
+	auto ct = forkskinny128_encrypt(&schedule, &M, 'b', FORKSKINNY_128_256_ROUNDS_BEFORE,
 	                                FORKSKINNY_128_256_ROUNDS_AFTER);
 	auto result_c0 = unslice(ct.C0).values[0];
 	auto result_c1 = unslice(ct.C1).values[0];
@@ -55,7 +55,7 @@ void test_forkskinny_128_256() {
 	assert(result_c1.raw[0] == 0x3E60F9E2B65E49CB);
 	assert(result_c1.raw[1] == 0xD5CDDFBC9440EE51);
 	
-	auto pt = forkskinny128_decrypt(schedule, &ct, '1', 'b', FORKSKINNY_128_256_ROUNDS_BEFORE,
+	auto pt = forkskinny128_decrypt(&schedule, &ct, '1', 'b', FORKSKINNY_128_256_ROUNDS_BEFORE,
 	                                FORKSKINNY_128_256_ROUNDS_AFTER);
 	auto result_M = unslice(pt.M).values[0];
 	auto result_C0 = unslice(pt.C0).values[0];
@@ -87,7 +87,7 @@ void test_forkskinny_128_384() {
 //	auto rtk2 = unslice({.halves = {schedule.keys[2], {}}}).values[0].raw[0];
 	
 	// Ensure correct test vectors
-	auto ct = forkskinny128_encrypt(schedule, &M, 'b', FORKSKINNY_128_384_ROUNDS_BEFORE,
+	auto ct = forkskinny128_encrypt(&schedule, &M, 'b', FORKSKINNY_128_384_ROUNDS_BEFORE,
 	                                FORKSKINNY_128_384_ROUNDS_AFTER);
 	auto result_c0 = unslice(ct.C0).values[0];
 	auto result_c1 = unslice(ct.C1).values[0];
@@ -107,7 +107,7 @@ void test_forkskinny_128_384() {
 	assert(result_c1.raw[0] == 0x4F318CE8A6A22F06);
 	assert(result_c1.raw[1] == 0x09E2DD8ECD1C6945);
 
-	auto pt = forkskinny128_decrypt(schedule, &ct, '1', 'b', FORKSKINNY_128_384_ROUNDS_BEFORE,
+	auto pt = forkskinny128_decrypt(&schedule, &ct, '1', 'b', FORKSKINNY_128_384_ROUNDS_BEFORE,
 	                                FORKSKINNY_128_384_ROUNDS_AFTER);
 	auto result_M = unslice(pt.M).values[0];
 	auto result_C0 = unslice(pt.C0).values[0];

@@ -1,0 +1,164 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 3K of event 'cycles'
+# Event count (approx.): 3030380464
+#
+# Children      Self  Command          Shared Object                   Symbol                                                     
+# ........  ........  ...............  ..............................  ...........................................................
+#
+    99.79%     0.00%  forkskinny128-3  forkskinny128-384-benchmarking  [.] benchmark::internal::(anonymous namespace)::RunInThread
+            |
+            ---benchmark::internal::(anonymous namespace)::RunInThread
+               benchmark::internal::BenchmarkInstance::Run
+               run_benchmark_fs128
+               |          
+               |--50.40%--__memmove_avx_unaligned_erms
+               |          
+                --49.13%--benchmark_single_forkskinny128_384
+                          |          
+                          |--7.07%--forkskinny128_encrypt_round
+                          |          
+                           --5.72%--forkskinny_128_fixsliced_init_tk23
+
+    99.79%     0.00%  forkskinny128-3  forkskinny128-384-benchmarking  [.] benchmark::internal::BenchmarkInstance::Run
+            |
+            ---benchmark::internal::BenchmarkInstance::Run
+               run_benchmark_fs128
+               |          
+               |--50.40%--__memmove_avx_unaligned_erms
+               |          
+                --49.13%--benchmark_single_forkskinny128_384
+                          |          
+                          |--7.07%--forkskinny128_encrypt_round
+                          |          
+                           --5.72%--forkskinny_128_fixsliced_init_tk23
+
+    99.79%     0.20%  forkskinny128-3  forkskinny128-384-benchmarking  [.] run_benchmark_fs128
+            |          
+             --99.59%--run_benchmark_fs128
+                       |          
+                       |--50.40%--__memmove_avx_unaligned_erms
+                       |          
+                        --49.13%--benchmark_single_forkskinny128_384
+                                  |          
+                                  |--7.07%--forkskinny128_encrypt_round
+                                  |          
+                                   --5.72%--forkskinny_128_fixsliced_init_tk23
+
+    50.51%    50.49%  forkskinny128-3  libc-2.31.so                    [.] __memmove_avx_unaligned_erms
+            |          
+             --50.49%--benchmark::internal::(anonymous namespace)::RunInThread
+                       benchmark::internal::BenchmarkInstance::Run
+                       run_benchmark_fs128
+                       |          
+                        --50.37%--__memmove_avx_unaligned_erms
+
+    49.16%    35.88%  forkskinny128-3  forkskinny128-384-benchmarking  [.] benchmark_single_forkskinny128_384
+            |          
+            |--35.88%--benchmark::internal::(anonymous namespace)::RunInThread
+            |          benchmark::internal::BenchmarkInstance::Run
+            |          run_benchmark_fs128
+            |          |          
+            |           --35.86%--benchmark_single_forkskinny128_384
+            |          
+             --13.28%--benchmark_single_forkskinny128_384
+                       |          
+                       |--7.07%--forkskinny128_encrypt_round
+                       |          
+                        --5.72%--forkskinny_128_fixsliced_init_tk23
+
+     7.10%     7.10%  forkskinny128-3  forkskinny128-384-benchmarking  [.] forkskinny128_encrypt_round
+            |
+            ---benchmark::internal::(anonymous namespace)::RunInThread
+               benchmark::internal::BenchmarkInstance::Run
+               run_benchmark_fs128
+               |          
+                --7.07%--benchmark_single_forkskinny128_384
+                          forkskinny128_encrypt_round
+
+     5.72%     5.72%  forkskinny128-3  forkskinny128-384-benchmarking  [.] forkskinny_128_fixsliced_init_tk23
+            |
+            ---benchmark::internal::(anonymous namespace)::RunInThread
+               benchmark::internal::BenchmarkInstance::Run
+               run_benchmark_fs128
+               benchmark_fs128_encryption
+               forkskinny_128_fixsliced_init_tk23
+
+     0.37%     0.37%  forkskinny128-3  libc-2.31.so                    [.] __memset_avx2_erms
+     0.11%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffb0800099
+     0.11%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffb0765639
+     0.10%     0.00%  forkskinny128-3  [unknown]                       [k] 0000000000000000
+     0.05%     0.05%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffb07666f1
+     0.05%     0.00%  forkskinny128-3  [unknown]                       [k] 0x00007fb01f0e93f0
+     0.05%     0.00%  forkskinny128-3  ld-2.31.so                      [.] _dl_check_map_versions
+     0.05%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffb08014e0
+     0.05%     0.05%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafaa18aa
+     0.05%     0.00%  forkskinny128-3  [unknown]                       [k] 0x41e589480000b274
+     0.05%     0.00%  forkskinny128-3  ld-2.31.so                      [.] _dl_sysdep_start
+     0.05%     0.00%  forkskinny128-3  ld-2.31.so                      [.] dl_main
+     0.05%     0.00%  forkskinny128-3  ld-2.31.so                      [.] mprotect
+     0.05%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafd0119f
+     0.05%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafd00fd3
+     0.05%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafd00c6b
+     0.05%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafd00a6f
+     0.05%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafaa16ff
+     0.05%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafaa12a6
+     0.05%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafaa18af
+     0.05%     0.05%  forkskinny128-3  libc-2.31.so                    [.] _int_free
+     0.04%     0.00%  forkskinny128-3  [unknown]                       [k] 0x00007f4ef94cc17b
+     0.04%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafd8eae7
+     0.04%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafd8e817
+     0.04%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafd8e25d
+     0.04%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafd8cb77
+     0.03%     0.03%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffb00850f0
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafe08566
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafa05446
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafa05212
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafa050a7
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafcfec55
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafcfc839
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffb00850f3
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffb0800e30
+     0.03%     0.03%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffb08014b6
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffb08014b9
+     0.03%     0.00%  forkskinny128-3  forkskinny128-384-benchmarking  [.] 0x0000555f619a3c90
+     0.03%     0.03%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafcb90fb
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafac2978
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafac28f3
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafac208c
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafab8cd1
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafcfc4f2
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafcf06a9
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafcf001f
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafcefd74
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafcef10a
+     0.03%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafcb90fd
+     0.00%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafa9f270
+     0.00%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafe079fa
+     0.00%     0.00%  forkskinny128-3  [kernel.kallsyms]               [k] 0xffffffffafa9f275
+     0.00%     0.00%  perf-exec        [kernel.kallsyms]               [k] 0xffffffffafa94e86
+     0.00%     0.00%  perf-exec        [unknown]                       [k] 0x00007f4ef94cc17b
+     0.00%     0.00%  perf-exec        [kernel.kallsyms]               [k] 0xffffffffb0800099
+     0.00%     0.00%  perf-exec        [kernel.kallsyms]               [k] 0xffffffffb0765639
+     0.00%     0.00%  perf-exec        [kernel.kallsyms]               [k] 0xffffffffafd8eae7
+     0.00%     0.00%  perf-exec        [kernel.kallsyms]               [k] 0xffffffffafd8e817
+     0.00%     0.00%  perf-exec        [kernel.kallsyms]               [k] 0xffffffffafd8e25d
+     0.00%     0.00%  perf-exec        [kernel.kallsyms]               [k] 0xffffffffafd8cb77
+     0.00%     0.00%  perf-exec        [kernel.kallsyms]               [k] 0xffffffffafe0798e
+     0.00%     0.00%  perf-exec        [kernel.kallsyms]               [k] 0xffffffffafd8f5b5
+     0.00%     0.00%  perf-exec        [kernel.kallsyms]               [k] 0xffffffffafc99cda
+     0.00%     0.00%  perf-exec        [kernel.kallsyms]               [k] 0xffffffffafc9267e
+     0.00%     0.00%  perf-exec        [kernel.kallsyms]               [k] 0xffffffffafc8a3da
+     0.00%     0.00%  perf-exec        [kernel.kallsyms]               [k] 0xffffffffafa092e3
+     0.00%     0.00%  perf-exec        [kernel.kallsyms]               [k] 0xffffffffafa0f7c5
+     0.00%     0.00%  perf-exec        [kernel.kallsyms]               [k] 0xffffffffb0801741
+     0.00%     0.00%  perf-exec        [kernel.kallsyms]               [k] 0xffffffffafa89702
+     0.00%     0.00%  perf-exec        [kernel.kallsyms]               [k] 0xffffffffafa94e84
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

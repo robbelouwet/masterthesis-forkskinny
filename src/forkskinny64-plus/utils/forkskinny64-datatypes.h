@@ -40,13 +40,13 @@ typedef union {
 typedef union {
 	Slice64_t slices[4];
 	#if AVX2_acceleration || AVX512_acceleration
-	__m256i avx2_simd_cell;
+	__m256i __attribute__((aligned(32))) avx2_simd_cell;
 	#endif
 } Cell64_t;
 
 typedef union {
 	#if AVX512_acceleration
-	__m512i avx512_simd_pair;
+	__m512i __attribute__((aligned(32))) avx512_simd_pair;
 	#endif
 	Cell64_t cells[2];
 } Pair64_t;

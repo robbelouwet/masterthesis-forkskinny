@@ -27,10 +27,10 @@ typedef union {
 
 typedef union {
 	#if AVX512_acceleration
-	__m512i lane;
+	__m512i __attribute__((aligned(32))) lane;
 	uint64_t segments[8];
 	#elif AVX2_acceleration
-	__m256i lane;
+	__m256i __attribute__((aligned(32))) lane;
 	uint64_t segments[4];
 	#endif
 } Segment128_t;
@@ -51,9 +51,9 @@ typedef union {
 typedef union {
 	Slice128_t slices[8];
 	#if AVX512_acceleration
-	__m512i avx512_simd_cell;
+	__m512i __attribute__((aligned(32))) avx512_simd_cell;
 	#elif AVX2_acceleration
-	__m256i avx2_simd_cells[2];
+	__m256i __attribute__((aligned(32))) avx2_simd_cells[2];
 	#endif
 } Cell128_t;
 
