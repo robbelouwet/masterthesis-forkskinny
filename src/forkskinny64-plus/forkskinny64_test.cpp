@@ -32,7 +32,7 @@ void test_forkskinny64_192() {
 	auto TK3 = slice(TK3_64());
 	auto original_pt = unslice(M).values[0].raw;
 	
-	auto schedule = forkskinny_64_init_tk23(TK1, TK2, TK3);
+	auto schedule = forkskinny_64_fixsliced_init_tk23(TK1, TK2, TK3);
 	
 	// 0x EE00 FDE0
 	// 0x 099B 203B

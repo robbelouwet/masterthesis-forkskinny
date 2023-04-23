@@ -17,15 +17,15 @@ static inline Row128_t xor_row(Row128_t a, Row128_t b) {
 	auto res = Row128_t();
 	
 	#if AVX512_acceleration
-	STORE_512(COL_512(a, 0), XOR_512(LOAD_512(COL_512(a, 0)), LOAD_512(COL_512(b, 0)))); // cell 0
-	STORE_512(COL_512(a, 1), XOR_512(LOAD_512(COL_512(a, 1)), LOAD_512(COL_512(b, 1)))); // cell 1
-	STORE_512(COL_512(a, 2), XOR_512(LOAD_512(COL_512(a, 2)), LOAD_512(COL_512(b, 2)))); // cell 2
-	STORE_512(COL_512(a, 3), XOR_512(LOAD_512(COL_512(a, 3)), LOAD_512(COL_512(b, 3)))); // cell 3
+//	STORE_512(COL_512(a, 0), XOR_512(LOAD_512(COL_512(a, 0)), LOAD_512(COL_512(b, 0)))); // cell 0
+//	STORE_512(COL_512(a, 1), XOR_512(LOAD_512(COL_512(a, 1)), LOAD_512(COL_512(b, 1)))); // cell 1
+//	STORE_512(COL_512(a, 2), XOR_512(LOAD_512(COL_512(a, 2)), LOAD_512(COL_512(b, 2)))); // cell 2
+//	STORE_512(COL_512(a, 3), XOR_512(LOAD_512(COL_512(a, 3)), LOAD_512(COL_512(b, 3)))); // cell 3
 	
-//	res.cols[0].avx512_simd_cell = _mm512_xor_si512(a.cols[0].avx512_simd_cell, b.cols[0].avx512_simd_cell);
-//	res.cols[1].avx512_simd_cell = _mm512_xor_si512(a.cols[1].avx512_simd_cell, b.cols[1].avx512_simd_cell);
-//	res.cols[2].avx512_simd_cell = _mm512_xor_si512(a.cols[2].avx512_simd_cell, b.cols[2].avx512_simd_cell);
-//	res.cols[3].avx512_simd_cell = _mm512_xor_si512(a.cols[3].avx512_simd_cell, b.cols[3].avx512_simd_cell);
+	res.cols[0].avx512_simd_cell = _mm512_xor_si512(a.cols[0].avx512_simd_cell, b.cols[0].avx512_simd_cell);
+	res.cols[1].avx512_simd_cell = _mm512_xor_si512(a.cols[1].avx512_simd_cell, b.cols[1].avx512_simd_cell);
+	res.cols[2].avx512_simd_cell = _mm512_xor_si512(a.cols[2].avx512_simd_cell, b.cols[2].avx512_simd_cell);
+	res.cols[3].avx512_simd_cell = _mm512_xor_si512(a.cols[3].avx512_simd_cell, b.cols[3].avx512_simd_cell);
 	
 	#elif AVX2_acceleration
 //	STORE_2(COL_2(res, 0, 0), XOR_2(LOAD_2(COL_2(a, 0, 0)), LOAD_2(COL_2(b, 0, 0)))); // cell 0, lower half

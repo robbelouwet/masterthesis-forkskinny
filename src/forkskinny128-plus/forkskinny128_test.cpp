@@ -82,9 +82,9 @@ void test_forkskinny_128_384() {
 	// 0x9AC99F33632C5A7B,  0x9AC99F33632C5A77, 0x9AC99F33632C5A77
 	// 0xACE46A4946F70F9C,  0x6AF595E4AC0D4945, 0x6AF595E4AC0D4945
 	// 0xB9BAB9D01F6E5007,  0xB96C01BAB952D018, 0xB96C01BAB952D018
-//	auto rtk0 = unslice({.halves = {schedule.keys[0], {}}}).values[0].raw[0];
-//	auto rtk1 = unslice({.halves = {schedule.keys[1], {}}}).values[0].raw[0];
-//	auto rtk2 = unslice({.halves = {schedule.keys[2], {}}}).values[0].raw[0];
+	auto rtk0 = unslice({.halves = {schedule.keys[0], {}}}).values[0].raw[0];
+	auto rtk1 = unslice({.halves = {schedule.keys[1], {}}}).values[0].raw[0];
+	auto rtk2 = unslice({.halves = {schedule.keys[2], {}}}).values[0].raw[0];
 	
 	// Ensure correct test vectors
 	auto ct = forkskinny128_encrypt(&schedule, &M, 'b', FORKSKINNY_128_384_ROUNDS_BEFORE,

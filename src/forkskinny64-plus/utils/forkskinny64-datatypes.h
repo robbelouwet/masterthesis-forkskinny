@@ -11,7 +11,11 @@
 
 /** ---- SKINNY64 ---- */
 typedef union {
-	slice_t value;
+	slice_t
+	#if slice_size > 64
+	__attribute__((aligned(32)))
+	#endif
+	value;
 	
 	#if slice_size == 128
 	uint64_t chunks[2];
