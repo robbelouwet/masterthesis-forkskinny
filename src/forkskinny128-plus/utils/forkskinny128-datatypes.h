@@ -52,7 +52,8 @@ typedef union {
 	Slice128_t slices[8];
 	#if AVX512_acceleration
 	__m512i __attribute__((aligned(32))) avx512_simd_cell;
-	#elif AVX2_acceleration
+	#endif
+	#if AVX2_acceleration | AVX512_acceleration
 	__m256i __attribute__((aligned(32))) avx2_simd_cells[2];
 	#endif
 } Cell128_t;

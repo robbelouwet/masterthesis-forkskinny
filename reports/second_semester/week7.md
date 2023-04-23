@@ -29,8 +29,19 @@ call stacks and see what symbols/functions require the most execution time. You 
 src/benchmarking/results. It's quite astonishing to see that a tremendous amount of execution time is spent on loading
 unaligned memory into or from AVX2 vectors. When inspecting the perf output, you really see a lot of execution time and
 percentage goes to the '__memmove_avx_unaligned_erms' symbol, which is called by libc's 'memcpy' and 'memmove' to
-optimize loading unaligned SIMD vectors. In other words, I'm going to have to refactor where and how I load the cipher state during
+optimize loading unaligned SIMD vectors. In other words, I'm going to have to refactor where and how I load the cipher
+state during
 the rounds. I already knew that SIMD really requires 32-byte alignment for fast optimizations, but I need to think on
 how I'm going to apply this.
+
+After noon I experimented wth *__attribute__((aligned(32)))* attributes on some union struct datatypes, more
+specifically those that contained a AVX vector property (e.g.: Cell64_t because it has an *.avx2_simd_cell*). It did
+seem
+to speed up with a couple of cycles, maybe going
+from 19-17 or something, not quite sure that it even did something though. Because not only does the memory region need
+to be a multiple of 32 bytes, but the address needs to be as well. This last one is supposed to be done through this
+attribute, but reserving a multiple of 32 bytes as memory has to be done through posix_memalign to do this on the heap.
+Will try this tomorrow. I will closely keep track of the perf output to see what affects the percentage spent on the '__
+memmove_avx_unaligned_erms' symbol.
 
 ## What was on my mind
