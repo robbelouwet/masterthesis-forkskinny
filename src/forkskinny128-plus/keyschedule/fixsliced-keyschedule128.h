@@ -29,7 +29,7 @@ static inline KeySchedule128Sliced_t forkskinny_128_fixsliced_init_tk23(State128
 		schedule.keys[i++] = res0;
 		
 		// RTK 1 & 2
-		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
+		if (i >= FORKSKINNY128_MAX_ROUNDS) break;
 		tk2_lfsr_full(&tk2);
 		tk3_lfsr_full(&tk3);
 		auto rtk12_temp = xor_keys(xor_keys(tk1, tk2), tk3);
@@ -41,7 +41,7 @@ static inline KeySchedule128Sliced_t forkskinny_128_fixsliced_init_tk23(State128
 		schedule.keys[i++] = rtk12.halves[0];
 		
 		// RTK 3 & 4
-		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
+		if (i >= FORKSKINNY128_MAX_ROUNDS) break;
 		tk2_lfsr_full(&tk2);
 		tk3_lfsr_full(&tk3);
 		auto rtk34_temp = xor_keys(xor_keys(tk1, tk2), tk3);
@@ -53,7 +53,7 @@ static inline KeySchedule128Sliced_t forkskinny_128_fixsliced_init_tk23(State128
 		schedule.keys[i++] = rtk34.halves[0];
 		
 		// RTK 5 & 6
-		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
+		if (i >= FORKSKINNY128_MAX_ROUNDS) break;
 		tk2_lfsr_full(&tk2);
 		tk3_lfsr_full(&tk3);
 		auto rtk56_temp = xor_keys(xor_keys(tk1, tk2), tk3);
@@ -65,7 +65,7 @@ static inline KeySchedule128Sliced_t forkskinny_128_fixsliced_init_tk23(State128
 		schedule.keys[i++] = rtk56.halves[0];
 		
 		// RTK 7 & 8
-		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
+		if (i >= FORKSKINNY128_MAX_ROUNDS) break;
 		tk2_lfsr_full(&tk2);
 		tk3_lfsr_full(&tk3);
 		auto rtk78_temp = xor_keys(xor_keys(tk1, tk2), tk3);
@@ -77,7 +77,7 @@ static inline KeySchedule128Sliced_t forkskinny_128_fixsliced_init_tk23(State128
 		schedule.keys[i++] = rtk78.halves[0];
 		
 		// RTK 9 & 10
-		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
+		if (i >= FORKSKINNY128_MAX_ROUNDS) break;
 		tk2_lfsr_full(&tk2);
 		tk3_lfsr_full(&tk3);
 		auto rtk910_temp = xor_keys(xor_keys(tk1, tk2), tk3);
@@ -89,7 +89,7 @@ static inline KeySchedule128Sliced_t forkskinny_128_fixsliced_init_tk23(State128
 		schedule.keys[i++] = rtk910.halves[0];
 		
 		// RTK 11 & 12
-		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
+		if (i >= FORKSKINNY128_MAX_ROUNDS) break;
 		tk2_lfsr_full(&tk2);
 		tk3_lfsr_full(&tk3);
 		auto rtk1112_temp = xor_keys(xor_keys(tk1, tk2), tk3);
@@ -101,7 +101,7 @@ static inline KeySchedule128Sliced_t forkskinny_128_fixsliced_init_tk23(State128
 		schedule.keys[i++] = rtk1112.halves[0];
 		
 		// RTK 13 & 14
-		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
+		if (i >= FORKSKINNY128_MAX_ROUNDS) break;
 		tk2_lfsr_full(&tk2);
 		tk3_lfsr_full(&tk3);
 		auto rtk1314_temp = xor_keys(xor_keys(tk1, tk2), tk3);
@@ -113,7 +113,7 @@ static inline KeySchedule128Sliced_t forkskinny_128_fixsliced_init_tk23(State128
 		schedule.keys[i++] = rtk1314.halves[0];
 		
 		// RTK 15
-		if (i >= FORKSKINNY128_MAX_ROUNDS) return schedule;
+		if (i >= FORKSKINNY128_MAX_ROUNDS) break;
 		tk2_lfsr_full(&tk2);
 		tk3_lfsr_full(&tk3);
 		auto rtk15 = xor_half_keys(xor_half_keys(tk1.halves[1], tk2.halves[1]), tk3.halves[1]);

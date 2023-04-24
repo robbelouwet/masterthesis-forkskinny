@@ -252,7 +252,7 @@ void demo_forkskinny_128_384() {
 }
 
 int main() {
-//	demo_forkskinny_64_192();
+	demo_forkskinny_64_192();
 //	demo_forkskinny_128_256();
-	demo_forkskinny_128_384();
+//	demo_forkskinny_128_384();
 }

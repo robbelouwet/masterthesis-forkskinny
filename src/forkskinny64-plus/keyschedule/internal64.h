@@ -49,14 +49,13 @@ static inline void tk2_lfsr_full(State64Sliced_t *state) {
 		state->cells[i].slices[0].value = XOR_SLICE(state->cells[i].slices[0].value, state->cells[i].slices[3].value);
 	}
 	
-	
 	#else
-	for (auto &cell: state->cells) {
-		auto temp = cell.slices[3];
-		cell.slices[3] = cell.slices[2];
-		cell.slices[2] = cell.slices[1];
-		cell.slices[1] = cell.slices[0];
-		cell.slices[0].value = XOR_SLICE(temp.value, cell.slices[3].value);
+	for (int i = 0; i < 16; ++i) {
+		auto temp = state->cells[i].slices[3];
+		state->cells[i].slices[3] = state->cells[i].slices[2];
+		state->cells[i].slices[2] = state->cells[i].slices[1];
+		state->cells[i].slices[1] = state->cells[i].slices[0];
+		state->cells[i].slices[0].value = XOR_SLICE(temp.value, state->cells[i].slices[3].value);
 	}
 	#endif
 	

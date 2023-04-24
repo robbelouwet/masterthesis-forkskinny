@@ -41,4 +41,4 @@ static inline void skinny64_mixcols_inv(State64Sliced_t *state) {
 //	int appel = 1;
 }
 
-#endif //FORKSKINNYPLUS_FORKSKINNY_MIXCOLS_H
+#endif //FORKSKINNYPLUS64_FORKSKINNY_MIXCOLS_H
