@@ -27,6 +27,7 @@
 	#define slice_t uint8_t
 	#define ONE uint8_t(0xFF)
 	#define ZER uint8_t(0x0)
+	#define BIT_MASK(i) (1 << i)
 	#define XOR_SLICE(s1, s2) (s1 ^ s2)
 	#define OR_SLICE(s1, s2) (s1 | s2)
 	#define AND_SLICE(s1, s2) (s1 & s2)
@@ -47,6 +48,7 @@
 	#define slice_t uint64_t
 	#define ONE uint64_t(0xFFFFFFFFFFFFFFFF)
 	#define ZER uint64_t(0x0)
+	#define BIT_MASK(i) (1 << i)
 	#define XOR_SLICE(s1, s2) (s1 ^ s2)
 	#define OR_SLICE(s1, s2) (s1 | s2)
 	#define AND_SLICE(s1, s2) (s1 & s2)
@@ -57,6 +59,7 @@
 	#define slice_t __m128i
 	#define ONE _mm_set1_epi64x(-1)
 	#define ZER _mm_setzero_si128()
+	#define BIT_MASK(i) (1 << i)
 	#define XOR_SLICE(s1, s2) _mm_xor_si128(s1, s2)
 	#define OR_SLICE(s1, s2) _mm_or_si128(s1, s2)
 	#define AND_SLICE(s1, s2) _mm_and_si128(s1, s2)
