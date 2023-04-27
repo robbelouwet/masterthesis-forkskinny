@@ -2,6 +2,7 @@
 #define CONFIG_H
 
 #include <cstdio>
+#include <cstdint>
 #include "immintrin.h"
 
 // @formatter:off
