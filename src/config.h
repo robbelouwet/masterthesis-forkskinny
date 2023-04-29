@@ -9,7 +9,7 @@
 // -- CONFIG --
 #define slice_size 128 // 8, 32, 64, 128, 256 or 512
 #define AVX2_support true
-#define AVX512_support true
+#define AVX512_support false
 // ------------
 
 /* Define SKINNY_64BIT to 1 if the CPU is natively 64-bit */
@@ -21,6 +21,7 @@
 
 #define AVX2_acceleration (slice_size == 64 && AVX2_support)
 #define AVX512_acceleration (slice_size == 64 && AVX512_support)
+#define byte unsigned char
 
 
 // ----- 8-bit slices -----
@@ -61,7 +62,7 @@
 	#define slice_t __m128i
 	#define ONE _mm_set1_epi64x(-1)
 	#define ZER _mm_setzero_si128()
-	#define BIT_MASK(i) mm128_rotr_si128(_mm_set_epi64x(0, 1), slice_size - i)
+	#define BIT_MASK(i) mm128_rotr_si128(_mm_set_epi64x(0, 1), 128 - i)
 	#define XOR_SLICE(s1, s2) _mm_xor_si128(s1, s2)
 	#define OR_SLICE(s1, s2) _mm_or_si128(s1, s2)
 	#define AND_SLICE(s1, s2) _mm_and_si128(s1, s2)
@@ -72,7 +73,7 @@
 	#define slice_t __m256i
 	#define ONE _mm256_set1_epi64x(-1)
 	#define ZER _mm256_setzero_si256()
-	#define BIT_MASK(i) mm256_rotr_si256(_mm256_set_epi64x(0, 0, 0, 1), slice_size - i)
+	#define BIT_MASK(i) mm256_rotr_si256(_mm256_set_epi64x(0, 0, 0, 1), 256 - i)
 	#define XOR_SLICE(s1, s2) _mm256_xor_si256(s1, s2)
 	#define OR_SLICE(s1, s2) _mm256_or_si256(s1, s2)
 	#define AND_SLICE(s1, s2) _mm256_and_si256(s1, s2)
@@ -83,7 +84,7 @@
 	#define slice_t __m512i
 	#define ONE _mm512_set1_epi64(-1)
 	#define ZER _mm512_setzero_si512()
-	#define BIT_MASK(i) mm512_rotr_si512(_mm512_set_epi64x(0, 0, 0, 0, 0, 0, 0, 1), slice_size - i)
+	#define BIT_MASK(i) mm512_rotr_si512(_mm512_set_epi64x(0, 0, 0, 0, 0, 0, 0, 1), 512 - i)
 	#define XOR_SLICE(s1, s2) _mm512_xor_si512(s1, s2)
 	#define OR_SLICE(s1, s2) _mm512_or_si512(s1, s2)
 	#define AND_SLICE(s1, s2) _mm512_and_si512(s1, s2)

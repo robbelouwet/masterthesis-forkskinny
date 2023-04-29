@@ -39,7 +39,7 @@ static inline __m256i mm256_rotr_si256(__m256i v, uint8_t shift) {
 	if (shift >= 192) {
 		// rotate-right 192 bits, x = 3, so every block rotates 3 positions
 		v = _mm256_permute4x64_epi64(v, 0b10010011); // A, B, C, D -> B, C, D, A
-		shift &= 192;
+		shift ^= 192;
 	} else if (shift >= 128) {
 		// rotate-right 128 bits, x = 2, every block rotates 2 positions
 		v = _mm256_permute4x64_epi64(v, 0b01001110); // A, B, C, D -> C, D, A, B

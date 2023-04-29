@@ -28,3 +28,8 @@ has value 1, it's only 1 bit long, but when we reach 128th block, the ctr value 
 you provide as buffer for the counter? Again, things like these are ambiguities that only arise when you start
 implementing. For now I went with this approach: {N || f⁰f¹f² || 0⁶¹ || ctr} and designate TK3 for the counter value (so
 counter has TK3 as 64-bit buffer to hold its value). This does mean that you can only encrypt 2048 petabyte (2^64).
+
+# Saturday
+
+Continued implementing PAEF. I've implemented the first part where the associated data blocks are encrypted, but I still
+need to test.
