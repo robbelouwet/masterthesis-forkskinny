@@ -32,7 +32,7 @@ void test_forkskinny64_192() {
 	auto TK3 = slice(TK3_64());
 	auto original_pt = unslice(M).values[0].raw;
 	
-	auto schedule = forkskinny_64_fixsliced_init_tk23(TK1, TK2, TK3);
+	auto schedule = forkskinny_64_init_tk23(TK1, TK2, TK3);
 	
 	// 0x EE00 FDE0
 	// 0x 099B 203B
@@ -43,28 +43,31 @@ void test_forkskinny64_192() {
 	
 	// Ensure correct test vectors
 	auto ct = forkskinny64_encrypt(schedule, &M, 'b');
-	auto result_c0 = unslice(ct.C0).values[0];
-	auto result_c1 = unslice(ct.C1).values[0];
+	auto result_c0 = unslice(ct.C0);
+	auto result_c1 = unslice(ct.C1);
 	
-	std::cout << "M: ";
+	std::cout << "M [0]: ";
 	print_block(unslice(M).values[0].bytes, 8);
 	
-	std::cout << "\nC0: ";
-	print_block(result_c0.bytes, 8);
+	std::cout << "\nC0 [0]: ";
+	print_block(result_c0.values[0].bytes, 8);
 	
-	std::cout << "\nC1: ";
-	print_block(result_c1.bytes, 8);
+	std::cout << "\nC1 [0]: ";
+	print_block(result_c1.values[0].bytes, 8);
 	
-	
-	assert(result_c0.raw == 0x502A9310B9F164FF);
-	assert(result_c1.raw == 0x55520D27354ECF3);
+	for (int i = 0; i < slice_size; ++i) {
+		assert(result_c0.values[i].raw == 0x502A9310B9F164FF);
+		assert(result_c1.values[i].raw == 0x55520D27354ECF3);
+	}
 	
 	auto pt = forkskinny64_decrypt(schedule, &ct, '1', 'b');
-	auto result_M = unslice(pt.M).values[0].raw;
-	auto result_C0 = unslice(pt.C0).values[0].raw;
+	auto result_M = unslice(pt.M);
+	auto result_C0 = unslice(pt.C0);
 	
-	assert(result_M == original_pt);
-	assert(result_C0 == 0x502A9310B9F164FF);
+	for (int i = 0; i < slice_size; ++i) {
+		assert(result_M.values[i].raw == original_pt);
+		assert(result_C0.values[i].raw == 0x502A9310B9F164FF);
+	}
 }
 
 int main() {

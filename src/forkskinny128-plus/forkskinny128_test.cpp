@@ -37,34 +37,38 @@ void test_forkskinny_128_256() {
 	// Ensure correct test vectors
 	auto ct = forkskinny128_encrypt(&schedule, &M, 'b', FORKSKINNY_128_256_ROUNDS_BEFORE,
 	                                FORKSKINNY_128_256_ROUNDS_AFTER);
-	auto result_c0 = unslice(ct.C0).values[0];
-	auto result_c1 = unslice(ct.C1).values[0];
+	auto result_c0 = unslice(ct.C0);
+	auto result_c1 = unslice(ct.C1);
 	
-	std::cout << "\nM: ";
+	std::cout << "\nM [0]: ";
 	print_block(original_pt.values[0].bytes, 16);
 	
-	std::cout << "\nC0: ";
-	print_block(result_c0.bytes, 16);
+	std::cout << "\nC0 [0]: ";
+	print_block(result_c0.values[0].bytes, 16);
 	
-	std::cout << "\nC1: ";
-	print_block(result_c1.bytes, 16);
+	std::cout << "\nC1 [0]: ";
+	print_block(result_c1.values[0].bytes, 16);
 	
 	// verify test vectors
-	assert(result_c0.raw[0] == 0x7701F1FC783BF8DC);
-	assert(result_c0.raw[1] == 0x2DB6D34C76C0414D);
-	assert(result_c1.raw[0] == 0x3E60F9E2B65E49CB);
-	assert(result_c1.raw[1] == 0xD5CDDFBC9440EE51);
+	for (int i = 0; i < slice_size; ++i) {
+		assert(result_c0.values[i].raw[0] == 0x7701F1FC783BF8DC);
+		assert(result_c0.values[i].raw[1] == 0x2DB6D34C76C0414D);
+		assert(result_c1.values[i].raw[0] == 0x3E60F9E2B65E49CB);
+		assert(result_c1.values[i].raw[1] == 0xD5CDDFBC9440EE51);
+	}
 	
 	auto pt = forkskinny128_decrypt(&schedule, &ct, '1', 'b', FORKSKINNY_128_256_ROUNDS_BEFORE,
 	                                FORKSKINNY_128_256_ROUNDS_AFTER);
-	auto result_M = unslice(pt.M).values[0];
-	auto result_C0 = unslice(pt.C0).values[0];
+	auto result_M = unslice(pt.M);
+	auto result_C0 = unslice(pt.C0);
 	
 	// test C1 -> (C0, M)
-	assert(result_M.raw[0] == 0xEC4AFF517369C667);
-	assert(result_M.raw[1] == 0x80);
-	assert(result_C0.raw[0] == 0x7701F1FC783BF8DC);
-	assert(result_C0.raw[1] == 0x2DB6D34C76C0414D);
+	for (int i = 0; i < slice_size; ++i) {
+		assert(result_M.values[i].raw[0] == 0xEC4AFF517369C667);
+		assert(result_M.values[i].raw[1] == 0x80);
+		assert(result_C0.values[i].raw[0] == 0x7701F1FC783BF8DC);
+		assert(result_C0.values[i].raw[1] == 0x2DB6D34C76C0414D);
+	}
 	
 }
 
@@ -89,34 +93,38 @@ void test_forkskinny_128_384() {
 	// Ensure correct test vectors
 	auto ct = forkskinny128_encrypt(&schedule, &M, 'b', FORKSKINNY_128_384_ROUNDS_BEFORE,
 	                                FORKSKINNY_128_384_ROUNDS_AFTER);
-	auto result_c0 = unslice(ct.C0).values[0];
-	auto result_c1 = unslice(ct.C1).values[0];
+	auto result_c0 = unslice(ct.C0);
+	auto result_c1 = unslice(ct.C1);
 	
-	std::cout << "\nM: ";
+	std::cout << "\nM [0]: ";
 	print_block(original_pt.values[0].bytes, 16);
 	
-	std::cout << "\nC0: ";
-	print_block(result_c0.bytes, 16);
+	std::cout << "\nC0 [0]: ";
+	print_block(result_c0.values[0].bytes, 16);
 	
-	std::cout << "\nC1: ";
-	print_block(result_c1.bytes, 16);
+	std::cout << "\nC1 [0]: ";
+	print_block(result_c1.values[0].bytes, 16);
 	
 	// verify test vectors
-	assert(result_c0.raw[0] == 0x72D8874177DC8C16);
-	assert(result_c0.raw[1] == 0x266DA48EA11FD273);
-	assert(result_c1.raw[0] == 0x4F318CE8A6A22F06);
-	assert(result_c1.raw[1] == 0x09E2DD8ECD1C6945);
+	for (int i = 0; i < slice_size; ++i) {
+		assert(result_c0.values[i].raw[0] == 0x72D8874177DC8C16);
+		assert(result_c0.values[i].raw[1] == 0x266DA48EA11FD273);
+		assert(result_c1.values[i].raw[0] == 0x4F318CE8A6A22F06);
+		assert(result_c1.values[i].raw[1] == 0x09E2DD8ECD1C6945);
+	}
 
 	auto pt = forkskinny128_decrypt(&schedule, &ct, '1', 'b', FORKSKINNY_128_384_ROUNDS_BEFORE,
 	                                FORKSKINNY_128_384_ROUNDS_AFTER);
-	auto result_M = unslice(pt.M).values[0];
-	auto result_C0 = unslice(pt.C0).values[0];
+	auto result_M = unslice(pt.M);
+	auto result_C0 = unslice(pt.C0);
 
 	// test C1 -> (C0, M)
-	assert(result_M.raw[0] == 0xEC4AFF517369C667);
-	assert(result_M.raw[1] == 0x80);
-	assert(result_C0.raw[0] == 0x72D8874177DC8C16);
-	assert(result_C0.raw[1] == 0x266DA48EA11FD273);
+	for (int i = 0; i < slice_size; ++i) {
+		assert(result_M.values[i].raw[0] == 0xEC4AFF517369C667);
+		assert(result_M.values[i].raw[1] == 0x80);
+		assert(result_C0.values[i].raw[0] == 0x72D8874177DC8C16);
+		assert(result_C0.values[i].raw[1] == 0x266DA48EA11FD273);
+	}
 }
 
 

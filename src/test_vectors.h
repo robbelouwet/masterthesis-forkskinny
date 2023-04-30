@@ -10,6 +10,15 @@
 #include "forkskinny128-plus/utils/forkskinny128-datatypes.h"
 #include "forkskinny128-plus/utils/slicing128.h"
 
+static inline Blocks64_t M_rand_64() {
+	auto M = Blocks64_t();
+	srand(0);
+	for (auto &value: M.values)
+		for (int j = 0; j < 8; ++j)
+			value.bytes[j] = uint8_t(rand());
+	return M;
+}
+
 static inline Blocks64_t M_64() {
 	uint8_t pt[8] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef};
 	

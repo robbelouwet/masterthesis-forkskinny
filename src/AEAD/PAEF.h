@@ -71,17 +71,20 @@ static inline uint64_t paef_forkskinny64_192_encrypt_AD(
 			ct = paef_forkskinny64_192_encrypt_section(
 					pt[i], nonce_blocks, nonce_bit_length, &ctr, last, '0');
 		
-		else
-			ct = paef_forkskinny64_192_encrypt_section(
+		else ct = paef_forkskinny64_192_encrypt_section(
 					pt[i], nonce_blocks, nonce_bit_length, &ctr, -1, '0');
 		
 		uint64_t block_tag = 0;
 		for (int j = 0; j < 64; j++) {
 			uint64_t tag_bit = 0;
 			
-			# if slice_size >= 128
-			auto lanes_in_slice = (slice_size >> 6);
-			for (int k = 0; k < lanes_in_slice; ++k) tag_bit ^= __builtin_parity(ct.C0.raw[i].value[k]);
+			# if slice_size > 64
+			auto lanes_in_slice = slice_size >> 6;
+			for (int k = 0; k < lanes_in_slice; ++k) {
+				int banaan = __builtin_parity(0x888240AE684178D7);
+				int appel = __builtin_parity((uint64_t) ct.C0.raw[i].value[k]);
+				tag_bit ^= appel;
+			}
 			
 			#else
 			tag_bit = __builtin_parity(ct.C0.raw[i].value);
@@ -111,7 +114,7 @@ static inline SlicedCiphertext64_t paef_forkskinny64_192_encrypt(
 ) {
 	
 	// Let's take 61 blocks of AD plaintext
-	auto test_blocks = M_64();
+	auto test_blocks = M_rand_64();
 	test_blocks.values[slice_size - 3].raw = 0;
 	test_blocks.values[slice_size - 2].raw = 0;
 	test_blocks.values[slice_size - 1].raw = 0;

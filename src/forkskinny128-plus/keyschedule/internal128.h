@@ -22,16 +22,16 @@ static inline void tk2_lfsr(State128Sliced_t *state) {
 }
 
 static inline void tk2_lfsr_full(State128Sliced_t *state) {
-	for (int i = 0; i < 16; i++) {
-		auto temp = state->cells[i].slices[7];
-		state->cells[i].slices[7] = state->cells[i].slices[6];
-		state->cells[i].slices[6] = state->cells[i].slices[5];
-		state->cells[i].slices[5] = state->cells[i].slices[4];
-		state->cells[i].slices[4] = state->cells[i].slices[3];
-		state->cells[i].slices[3] = state->cells[i].slices[2];
-		state->cells[i].slices[2] = state->cells[i].slices[1];
-		state->cells[i].slices[1] = state->cells[i].slices[0];
-		state->cells[i].slices[0].value = XOR_SLICE(temp.value, state->cells[i].slices[6].value);
+	for (auto & cell : state->cells) {
+		auto temp = cell.slices[7];
+		cell.slices[7] = cell.slices[6];
+		cell.slices[6] = cell.slices[5];
+		cell.slices[5] = cell.slices[4];
+		cell.slices[4] = cell.slices[3];
+		cell.slices[3] = cell.slices[2];
+		cell.slices[2] = cell.slices[1];
+		cell.slices[1] = cell.slices[0];
+		cell.slices[0].value = XOR_SLICE(temp.value, cell.slices[6].value);
 	}
 }
 

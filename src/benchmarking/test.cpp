@@ -29,6 +29,7 @@ int main() {
 ////			64 + 4);
 //
 //	int appel = 1;
-
+	
+	auto appel = __builtin_parity(0x888240AE684178D7);
 	paef_forkskinny64_192_encrypt();
 }

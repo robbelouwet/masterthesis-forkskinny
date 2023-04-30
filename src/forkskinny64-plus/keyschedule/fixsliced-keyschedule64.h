@@ -33,9 +33,9 @@ static inline KeySchedule64Sliced_t forkskinny_64_fixsliced_init_tk23(State64Sli
 		auto rtk12_temp = xor_keys(xor_keys(tk1, tk2), tk3);
 		auto rtk12 = State64Sliced_t();
 		PT64_2(rtk12_temp, rtk12)
-		forkskinny64_add_constant(rtk12.halves + 1, i); // RTK N+1 is at [0], and RTK N is at [1]!
+		forkskinny64_add_constant(&(rtk12.halves[1]), i); // RTK N+1 is at [0], and RTK N is at [1]!
 		schedule.keys[i++] = rtk12.halves[1];
-		forkskinny64_add_constant(rtk12.halves + 0, i);
+		forkskinny64_add_constant(&(rtk12.halves[0]), i);
 		schedule.keys[i++] = rtk12.halves[0];
 		
 		// RTK 3 & 4
@@ -45,9 +45,9 @@ static inline KeySchedule64Sliced_t forkskinny_64_fixsliced_init_tk23(State64Sli
 		auto rtk34_temp = xor_keys(xor_keys(tk1, tk2), tk3);
 		auto rtk34 = State64Sliced_t();
 		PT64_4(rtk34_temp, rtk34)
-		forkskinny64_add_constant(rtk34.halves + 1, i); // RTK N+1 is at [0], and RTK N is at [1]!
+		forkskinny64_add_constant(&(rtk34.halves[1]), i); // RTK N+1 is at [0], and RTK N is at [1]!
 		schedule.keys[i++] = rtk34.halves[1];
-		forkskinny64_add_constant(rtk34.halves + 0, i);
+		forkskinny64_add_constant(&(rtk34.halves[0]), i);
 		schedule.keys[i++] = rtk34.halves[0];
 		
 		// RTK 5 & 6
@@ -57,9 +57,9 @@ static inline KeySchedule64Sliced_t forkskinny_64_fixsliced_init_tk23(State64Sli
 		auto rtk56_temp = xor_keys(xor_keys(tk1, tk2), tk3);
 		auto rtk56 = State64Sliced_t();
 		PT64_6(rtk56_temp, rtk56)
-		forkskinny64_add_constant(rtk56.halves + 1, i); // RTK N+1 is at [0], and RTK N is at [1]!
+		forkskinny64_add_constant(&(rtk56.halves[1]), i); // RTK N+1 is at [0], and RTK N is at [1]!
 		schedule.keys[i++] = rtk56.halves[1];
-		forkskinny64_add_constant(rtk56.halves + 0, i);
+		forkskinny64_add_constant(&(rtk56.halves[0]), i);
 		schedule.keys[i++] = rtk56.halves[0];
 		
 		// RTK 7 & 8
@@ -69,8 +69,8 @@ static inline KeySchedule64Sliced_t forkskinny_64_fixsliced_init_tk23(State64Sli
 		auto rtk78_temp = xor_keys(xor_keys(tk1, tk2), tk3);
 		auto rtk78 = State64Sliced_t();
 		PT64_8(rtk78_temp, rtk78)
-		forkskinny64_add_constant(rtk78.halves + 0, i+1);
-		forkskinny64_add_constant(rtk78.halves + 1, i);
+		forkskinny64_add_constant(&(rtk78.halves[0]), i+1);
+		forkskinny64_add_constant(&(rtk78.halves[1]), i);
 		schedule.keys[i++] = rtk78.halves[1];
 		schedule.keys[i++] = rtk78.halves[0];
 		
@@ -81,9 +81,9 @@ static inline KeySchedule64Sliced_t forkskinny_64_fixsliced_init_tk23(State64Sli
 		auto rtk910_temp = xor_keys(xor_keys(tk1, tk2), tk3);
 		auto rtk910 = State64Sliced_t();
 		PT64_10(rtk910_temp, rtk910)
-		forkskinny64_add_constant(rtk910.halves + 1, i); // RTK N+1 is at [0], and RTK N is at [1]!
+		forkskinny64_add_constant(&(rtk910.halves[1]), i); // RTK N+1 is at [0], and RTK N is at [1]!
 		schedule.keys[i++] = rtk910.halves[1];
-		forkskinny64_add_constant(rtk910.halves + 0, i);
+		forkskinny64_add_constant(&(rtk910.halves[0]), i);
 		schedule.keys[i++] = rtk910.halves[0];
 		
 		// RTK 11 & 12
@@ -93,9 +93,9 @@ static inline KeySchedule64Sliced_t forkskinny_64_fixsliced_init_tk23(State64Sli
 		auto rtk1112_temp = xor_keys(xor_keys(tk1, tk2), tk3);
 		auto rtk1112 = State64Sliced_t();
 		PT64_12(rtk1112_temp, rtk1112)
-		forkskinny64_add_constant(rtk1112.halves + 1, i); // RTK N+1 is at [0], and RTK N is at [1]!
+		forkskinny64_add_constant(&(rtk1112.halves[1]), i); // RTK N+1 is at [0], and RTK N is at [1]!
 		schedule.keys[i++] = rtk1112.halves[1];
-		forkskinny64_add_constant(rtk1112.halves + 0, i);
+		forkskinny64_add_constant(&(rtk1112.halves[0]), i);
 		schedule.keys[i++] = rtk1112.halves[0];
 		
 		// RTK 13 & 14
@@ -105,9 +105,9 @@ static inline KeySchedule64Sliced_t forkskinny_64_fixsliced_init_tk23(State64Sli
 		auto rtk1314_temp = xor_keys(xor_keys(tk1, tk2), tk3);
 		auto rtk1314 = State64Sliced_t();
 		PT64_14(rtk1314_temp, rtk1314)
-		forkskinny64_add_constant(rtk1314.halves + 1, i); // RTK N+1 is at [0], and RTK N is at [1]!
+		forkskinny64_add_constant(&(rtk1314.halves[1]), i); // RTK N+1 is at [0], and RTK N is at [1]!
 		schedule.keys[i++] = rtk1314.halves[1];
-		forkskinny64_add_constant(rtk1314.halves + 0, i);
+		forkskinny64_add_constant(&(rtk1314.halves[0]), i);
 		schedule.keys[i++] = rtk1314.halves[0];
 		
 		// RTK 15
