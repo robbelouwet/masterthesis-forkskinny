@@ -119,7 +119,7 @@ static inline SlicedCiphertext64_t forkskinny64_encrypt(KeySchedule64Sliced_t sc
 	}
 
 	auto test2b = unslice(C0).values[0].raw;
-	uint64_t test3_bc = 0x0;
+	u64 test3_bc = 0x0;
 	
 	// ### C1 ###
 	if (mode == '1' || mode == 'b') {
@@ -169,7 +169,7 @@ static inline SlicedCiphertext64_t forkskinny64_decrypt_C0(KeySchedule64Sliced_t
 	
 	auto initial_state = unslice(*state).values[0].raw;
 	
-	uint64_t test2 = 0;
+	u64 test2 = 0;
 	// decrypt C0 branch
 	int c0_i = FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER - 1;
 	for (; c0_i > FORKSKINNY_ROUNDS_BEFORE - 1; --c0_i) {

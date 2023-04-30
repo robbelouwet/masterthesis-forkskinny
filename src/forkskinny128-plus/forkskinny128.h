@@ -152,8 +152,8 @@ static inline SlicedCiphertext128_t forkskinny128_encrypt(KeySchedule128Sliced_t
 
 //	auto test2b0 = unslice(*state).values[0].raw[0];
 //	auto test2b1 = unslice(*state).values[0].raw[1];
-//	uint64_t test3_bc0 = 0x0;
-//	uint64_t test3_bc1 = 0x0;
+//	u64 test3_bc0 = 0x0;
+//	u64 test3_bc1 = 0x0;
 	
 	// ### C1 ###
 	if (mode == '1' || mode == 'b') {
@@ -208,7 +208,7 @@ static inline SlicedCiphertext128_t forkskinny128_decrypt_C0(KeySchedule128Slice
 	
 //	auto initial_state = unslice(*state).values[0].raw;
 	
-	uint64_t test2 = 0;
+	u64 test2 = 0;
 	// decrypt C0 branch
 	int c0_i = r_init + r_after - 1;
 	for (; c0_i > r_init - 1; --c0_i) {

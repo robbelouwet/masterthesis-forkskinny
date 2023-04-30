@@ -277,7 +277,7 @@ static inline void shift_rows_old(State64_t *state) {
 }
 
 int main(int argc, char **argv) {
-	uint64_t state = 0x0123456789abcdef;
+	u64 state = 0x0123456789abcdef;
 	
 	auto vanilla = State64_t();
 	vanilla.llrow = state;

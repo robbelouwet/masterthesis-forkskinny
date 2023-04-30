@@ -42,13 +42,13 @@ typedef union {
 
 typedef union {
   Slice128_t slices[4];  // [p³o³...b³a³, ... , p⁰o⁰...b⁰a⁰], where there are 16 4-bit cells named a through p
-  uint64_t state;
+  u64 state;
   //__m64 m64state;  // SIMD 64-bit register
 } State64Sliced2_16_t;
 
 typedef union {
   uint16_t slices[4];  // [p³o³...b³a³, ... , p⁰o⁰...b⁰a⁰], where there are 16 4-bit cells named a through p
-  uint64_t state;
+  u64 state;
   //__m64 m64state;  // SIMD 64-bit register
 } State64Sliced_16_t;
 
@@ -58,7 +58,7 @@ typedef union {
 typedef union {
   uint16_t row[4];   /// Stored as 4x 16-bit uint partitions (cccc cccc cccc cccc) [c = 4-bit state slices]
   uint32_t lrow[2];  /// Stored as 2x 32-bit uint partitions  (cccccccc cccccccc)
-  uint64_t llrow;    /// Stored as 1x 64-bit uint 			  (cccccccccccccccc)
+  u64 llrow;    /// Stored as 1x 64-bit uint 			  (cccccccccccccccc)
 } State64_t;
 
 /**
@@ -80,7 +80,7 @@ uint32_t slice_index(uint32_t x, uint8_t i) {
   assert(i <= 3);
 
   // the mask for the bit, on nibble level (so a 4-bit mask that will be shifted)
-  uint64_t m = 1 << i;
+  u64 m = 1 << i;
 
   return ((x & (m << 28)) >> 21 >> i) | ((x & (m << 24)) >> 18 >> i) | ((x & (m << 20)) >> 15 >> i) | ((x & (m << 16)) >> 12 >> i) | ((x & (m << 12)) >> 9 >> i) | ((x & (m << 8)) >> 6 >> i) | ((x & (m << 4)) >> 3 >> i) | ((x & m) >> i);
 }
@@ -106,7 +106,7 @@ uint32_t unslice_index(uint8_t value, uint8_t i) {
   // because uint4_t doesn't exist
   assert(i <= 3);
 
-  uint64_t x = value;
+  u64 x = value;
 
   return ((x & 0x1) << i)
          | ((x & 0x2) << i << 3)
@@ -438,7 +438,7 @@ void shift_rows_old(State64_t *state) {
 void run() {
   KIN1_InitCycleCounter(); /* enable DWT hardware */
 
-  uint64_t state = (((uint64_t)rand()) << 32) | ((uint64_t)rand());  // 2⁶⁴
+  u64 state = (((u64)rand()) << 32) | ((u64)rand());  // 2⁶⁴
   Serial.print("State: ");
   Serial.println(state);
 

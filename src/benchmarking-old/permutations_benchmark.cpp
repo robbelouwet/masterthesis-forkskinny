@@ -208,8 +208,8 @@ static inline void permute_old(State64_t *tk) {
 
 
 int main(int argc, char **argv) {
-	uint64_t state = 0x0123456789abcdef;
-	(((uint64_t) rand()) << 32) | ((uint64_t) rand());  // 2⁶⁴
+	u64 state = 0x0123456789abcdef;
+	(((u64) rand()) << 32) | ((u64) rand());  // 2⁶⁴
 	
 	auto sliced_step = State64Sliced_16_t();
 	sliced_step.state = slice(state);
@@ -232,10 +232,10 @@ int main(int argc, char **argv) {
 	permute_sliced_packed_16(&sliced_packed_16);
 	permute_sliced_packed_32(&sliced_packed_32);
 	
-	uint64_t unsliced_step = unslice(sliced_step.state);
-	uint64_t unsliced_packed_8 = unslice(sliced_packed_8.state);
-	uint64_t unsliced_packed_16 = unslice(sliced_packed_16.state);
-	uint64_t unsliced_packed_32 = unslice(sliced_packed_32.state);
+	u64 unsliced_step = unslice(sliced_step.state);
+	u64 unsliced_packed_8 = unslice(sliced_packed_8.state);
+	u64 unsliced_packed_16 = unslice(sliced_packed_16.state);
+	u64 unsliced_packed_32 = unslice(sliced_packed_32.state);
 	
 	assert(unsliced_packed_8 == unsliced_step);
 	assert(unsliced_packed_8 == vanilla.llrow);

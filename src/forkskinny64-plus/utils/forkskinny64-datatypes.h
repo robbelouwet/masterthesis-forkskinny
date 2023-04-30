@@ -18,18 +18,18 @@ typedef union {
 	value;
 	
 	#if slice_size == 128
-	uint64_t chunks[2];
+	u64 chunks[2];
 	#elif slice_size == 256
-	uint64_t chunks[4];
+	u64 chunks[4];
 	#elif slice_size == 512
-	uint64_t chunks[8];
+	u64 chunks[8];
 	#endif
 	
 } Slice64_t;
 
 typedef union {
 	#if SKINNY_64BIT
-	uint64_t raw;
+	u64 raw;
 	#else
 	uint32_t raw[2];
 	#endif

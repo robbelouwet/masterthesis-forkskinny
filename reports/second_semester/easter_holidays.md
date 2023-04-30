@@ -47,6 +47,6 @@ introduced a segfault because the vectors were created by value on the stack, bu
 addresses, essentially causing some kkind of use-after-free when accessing the cipher state in the round operations.
 
 The good news is I added config for 8 bit and 128 bit slices, so can now run the implementation on a 8-bit
-microcontroller (technically, although there still are some literal 'uint64_t' occurances in the code) and slices can
+microcontroller (technically, although there still are some literal 'u64' occurances in the code) and slices can
 now also be 128 bit (which is what you want, because then 1 run of the code
 encrypts 128 * 64 bits, which is 1 kilobyte, which is more or less the desired ct length for forkskinny according to Amit)

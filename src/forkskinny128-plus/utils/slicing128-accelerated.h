@@ -35,7 +35,7 @@ static inline __m256i mm256_rotr_si256(__m256i v, uint8_t shift) {
 	if (shift == 0) return v;
 	
 	// mask & rotate the bits to be overflow, and rotate blocks 1 position to the right
-	uint64_t imask = (((uint64_t(0x1) << shift) - 1) << 1) | 1;
+	u64 imask = (((0x1ULL << shift) - 1) << 1) | 1;
 	auto masked_bits = _mm256_and_si256(_mm256_set_epi64x(imask, imask, imask, imask), v);
 	masked_bits = _mm256_slli_epi64(masked_bits, 64 - shift);
 	masked_bits = _mm256_permute4x64_epi64(masked_bits, 0b00111001);
@@ -53,7 +53,7 @@ static inline __m256i mm256_rotr_si256(__m256i v, uint8_t shift) {
  * @return
  */
 static inline Slice128_t slice_significance_accelerated(const Blocks128_t blocks, uint8_t significance) {
-	uint64_t mask = 1ULL << significance;
+	u64 mask = 1ULL << significance;
 	auto slice = Slice128_t();
 	
 	#if slice_size == 256
@@ -85,7 +85,7 @@ static inline State128Sliced_t *slice_accelerated(Blocks128_t blocks) {
 		auto slice = Slice128_t();
 		
 		#if slice_size == 64
-		uint64_t mask = 0x8000000000000000ULL >> i;
+		u64 mask = 0x8000000000000000ULL >> i;
 		int j = 0;
 		for (; j < slice_size; ++j) {
 			slice.value |= (blocks.values[i].raw & mask);
@@ -93,7 +93,7 @@ static inline State128Sliced_t *slice_accelerated(Blocks128_t blocks) {
 		}
 		result->raw[j].value = _rotl(slice.value, i);
 		#elif slice_size == 256
-		uint64_t mask = 0x8000000000000000ULL >> i;
+		u64 mask = 0x8000000000000000ULL >> i;
 		int j = 0;
 		for (; j < 64; ++j) {
 			slice.segments[0] |= blocks.values[i].raw & mask;

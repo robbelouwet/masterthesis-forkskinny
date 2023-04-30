@@ -11,7 +11,7 @@
  * @return
  */
 static inline Slice128_t slice_significance(const Blocks128_t blocks, uint8_t significance, bool low) {
-	uint64_t mask = 1ULL << significance;
+	u64 mask = 1ULL << significance;
 	auto slice = Slice128_t();
 	
 	#if slice_size == 128
@@ -109,7 +109,7 @@ static inline void unslice_significance(const Slice128_t slice, Blocks128_t *blo
 	// loop over every segment, __m128i has 2x 64-bit chunks
 	for (auto &segment : chunks) {
 		for (int b_number = segment; b_number < segment + 64; ++b_number) {
-			uint64_t mask = 1ULL << (b_number - segment);
+			u64 mask = 1ULL << (b_number - segment);
 			if (low) blocks->values[b_number].raw[0] |= ((slice.chunks[0] & mask) >> (b_number - segment)) << sb_index;
 			else blocks->values[b_number].raw[1] |= ((slice.chunks[0] & mask) >> (b_number - segment)) << sb_index;
 		}
@@ -121,7 +121,7 @@ static inline void unslice_significance(const Slice128_t slice, Blocks128_t *blo
 	// loop over every segment, __m256i has 4x 64-bit chunks
 	for (auto &segment : chunks) {
 		for (int b_number = segment; b_number < segment + 64; ++b_number) {
-			uint64_t mask = 1ULL << (b_number - segment);
+			u64 mask = 1ULL << (b_number - segment);
 			if (low) blocks->values[b_number].raw[0] |= ((slice.chunks[0] & mask) >> (b_number - segment)) << sb_index;
 			else blocks->values[b_number].raw[1] |= ((slice.chunks[0] & mask) >> (b_number - segment)) << sb_index;
 		}
@@ -132,14 +132,14 @@ static inline void unslice_significance(const Slice128_t slice, Blocks128_t *blo
 	// loop over every segment, __m512i has 8x 64-bit chunks
 	for (auto &segment: chunks) {
 		for (int b_number = segment; b_number < segment + 64; ++b_number) {
-			uint64_t mask = 1ULL << (b_number - segment);
+			u64 mask = 1ULL << (b_number - segment);
 			if (low) blocks->values[b_number].raw[0] |= ((slice.chunks[0] & mask) >> (b_number - segment)) << sb_index;
 			else blocks->values[b_number].raw[1] |= ((slice.chunks[0] & mask) >> (b_number - segment)) << sb_index;
 		}
 	}
 	#else
 	for (uint b_number = 0; b_number < slice_size; ++b_number) {
-		uint64_t mask = 1ULL << b_number;
+		u64 mask = 1ULL << b_number;
 		if (low) blocks->values[b_number].raw[0] |= ((slice.value & mask) >> b_number) << sb_index;
 		else blocks->values[b_number].raw[1] |= ((slice.value & mask) >> b_number) << sb_index;
 	}

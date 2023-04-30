@@ -14,7 +14,7 @@
  * @return
  */
 static inline Slice64_t slice_significance_accelerated(const Blocks64_t blocks, uint8_t significance) {
-	uint64_t mask = 1ULL << significance;
+	u64 mask = 1ULL << significance;
 	auto slice = Slice64_t();
 	
 	#if slice_size == 256
@@ -46,7 +46,7 @@ static inline State64Sliced_t *slice_accelerated(Blocks64_t blocks) {
 		auto slice = Slice64_t();
 		
 		#if slice_size == 64
-		uint64_t mask = 0x8000000000000000ULL >> i;
+		u64 mask = 0x8000000000000000ULL >> i;
 		int j = 0;
 		for (; j < slice_size; ++j) {
 			slice.value |= (blocks.values[i].raw & mask);
@@ -54,7 +54,7 @@ static inline State64Sliced_t *slice_accelerated(Blocks64_t blocks) {
 		}
 		result->raw[j].value = _rotl(slice.value, i);
 		#elif slice_size == 256
-		uint64_t mask = 0x8000000000000000ULL >> i;
+		u64 mask = 0x8000000000000000ULL >> i;
 		int j = 0;
 		for (; j < 64; ++j) {
 			slice.segments[0] |= blocks.values[i].raw & mask;

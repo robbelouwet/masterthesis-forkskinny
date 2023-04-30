@@ -11,7 +11,7 @@
  *
  * In other words, a SlicedState64_t cipher state may look like this:
  * cell 0: [A, B, C, D], cell 1: [E, F, G, H], cell 2: [I, J, K, L], cell 3: [M, N, O, P]
- * where every cell contains 4 uint64_t slices (4 letters).
+ * where every cell contains 4 u64 slices (4 letters).
  *
  * A Segment then takes 4 sequential cells, and groups equally significant slices AGAIN into a segment:
  * segment 0: [A, E, I, M], segment 1: [B, F, J, N], ...

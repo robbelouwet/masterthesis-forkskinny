@@ -5,8 +5,8 @@
 // expand every bit of the raw to a 64bit slice_t
 // if bit == 0: return 0⁶⁴
 // if bit == 1: return 1⁶⁴
-static inline std::vector<uint64_t> to_slices(uint64_t value, uint8_t width) {
-	auto res = std::vector<uint64_t>();
+static inline std::vector<u64> to_slices(u64 value, uint8_t width) {
+	auto res = std::vector<u64>();
 	for (uint8_t i = 0; i < width; ++i) {
 		if ((value & (1ULL << i)) >> i) res.push_back(0xFFFFFFFFFFFFFFFF);
 		else res.push_back(0x0);
@@ -16,7 +16,7 @@ static inline std::vector<uint64_t> to_slices(uint64_t value, uint8_t width) {
 }
 
 void forkskinny64_branch_constant(){
-	uint64_t bc = 0x81ec7f5bda364912;
+	u64 bc = 0x81ec7f5bda364912;
 	auto slices = to_slices(bc, 64);
 	
 	std::cout << "State64Sliced_t const branch_constant64 = {\n\t";
@@ -33,7 +33,7 @@ void forkskinny64_branch_constant(){
 }
 
 void forkskinny128_branch_constant(){
-	uint64_t bc[2] = {0x8241201008040201ULL, 0x8844a25128140a05ULL};
+	u64 bc[2] = {0x8241201008040201ULL, 0x8844a25128140a05ULL};
 	auto slices = to_slices(bc[0], 64);
 	
 	std::cout << "State128Sliced_t const branch_constant128 = {\n\t";
@@ -63,7 +63,7 @@ void forkskinny128_branch_constant(){
 }
 
 void forkskinny_round_constants(){
-	std::cout << "uint64_t forkskinny_precomputed_round_constants[88][7] = {";
+	std::cout << "u64 forkskinny_precomputed_round_constants[88][7] = {";
 	uint8_t lfsr = 0;
 	for (int i = 0; i < 88; i++) {
 		auto rc6 = (lfsr & 0b1000000) >> 6;

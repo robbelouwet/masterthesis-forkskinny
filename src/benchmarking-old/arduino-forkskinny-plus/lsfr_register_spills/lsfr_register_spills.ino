@@ -1,16 +1,16 @@
 /* DWT (Data Watchpoint and Trace) registers, only exists on ARM Cortex with a DWT unit */
 
 /*!< DWT Control register */
-#define KIN1_DWT_CONTROL (*((volatile uint64_t*)0xE0001000))
+#define KIN1_DWT_CONTROL (*((volatile u64*)0xE0001000))
 
 /*!< CYCCNTENA bit in DWT_CONTROL register */
 #define KIN1_DWT_CYCCNTENA_BIT (1UL << 0)
 
 /*!< DWT Cycle Counter register */
-#define KIN1_DWT_CYCCNT (*((volatile uint64_t*)0xE0001004))
+#define KIN1_DWT_CYCCNT (*((volatile u64*)0xE0001004))
 
 /*!< DEMCR: Debug Exception and Monitor Control Register */
-#define KIN1_DEMCR (*((volatile uint64_t*)0xE000EDFC))
+#define KIN1_DEMCR (*((volatile u64*)0xE000EDFC))
 
 /*!< Trace enable bit in DEMCR register */
 #define KIN1_TRCENA_BIT (1UL << 24)
@@ -48,13 +48,13 @@
  * @param m: 0 <= m <= 3; the 0-based index that masks the relevant significant bit of every slices.
  * @return the input in a bit sliced_fghi manner
  */
-inline uint64_t slice_index(uint64_t x, uint8_t i) __attribute__((always_inline));
-uint64_t slice_index(uint64_t x, uint8_t i) {
+inline u64 slice_index(u64 x, uint8_t i) __attribute__((always_inline));
+u64 slice_index(u64 x, uint8_t i) {
   // because uint4_t doesn't exist
   assert(i <= 3);
 
   // the mask for the bit, on nibble level (so a 4-bit mask that will be shifted)
-  uint64_t m = 1 << i;
+  u64 m = 1 << i;
 
   return ((x & (m << 60)) >> 45 >> i) | ((x & (m << 56)) >> 42 >> i) | ((x & (m << 52)) >> 39 >> i) | ((x & (m << 48)) >> 36 >> i) | ((x & (m << 44)) >> 33 >> i) | ((x & (m << 40)) >> 30 >> i) | ((x & (m << 36)) >> 27 >> i) | ((x & (m << 32)) >> 24 >> i) | ((x & (m << 28)) >> 21 >> i) | ((x & (m << 24)) >> 18 >> i) | ((x & (m << 20)) >> 15 >> i) | ((x & (m << 16)) >> 12 >> i) | ((x & (m << 12)) >> 9 >> i) | ((x & (m << 8)) >> 6 >> i) | ((x & (m << 4)) >> 3 >> i) | ((x & m) >> i);
 }
@@ -75,12 +75,12 @@ uint64_t slice_index(uint64_t x, uint8_t i) {
  * @param i: 0-based index to identify to which significant bit of every nibble needs to be projected.
  * @return
  */
-inline uint64_t unslice_index(uint8_t value, uint8_t i) __attribute__((always_inline));
-uint64_t unslice_index(uint8_t value, uint8_t i) {
+inline u64 unslice_index(uint8_t value, uint8_t i) __attribute__((always_inline));
+u64 unslice_index(uint8_t value, uint8_t i) {
   // because uint4_t doesn't exist
   assert(i <= 3);
 
-  uint64_t x = value;
+  u64 x = value;
 
   return ((x & 0x1) << i)
          | ((x & 0x2) << i << 3)
@@ -100,16 +100,16 @@ uint64_t unslice_index(uint8_t value, uint8_t i) {
          | ((x & 0x8000) << i << 45);
 }
 
-inline uint64_t slice(uint64_t state) __attribute__((always_inline));
-uint64_t slice(uint64_t state) {
+inline u64 slice(u64 state) __attribute__((always_inline));
+u64 slice(u64 state) {
   return slice_index(state, 0)
          | (slice_index(state, 1) << 16)
          | (slice_index(state, 2) << 32)
          | (slice_index(state, 3) << 48);
 }
 
-inline uint64_t unslice(uint64_t state) __attribute__((always_inline));
-uint64_t unslice(uint64_t state) {
+inline u64 unslice(u64 state) __attribute__((always_inline));
+u64 unslice(u64 state) {
   auto s0 = unslice_index((state & 0x000000000000FFFF), 0);
   auto s1 = unslice_index(((state & 0x00000000FFFF0000) >> 16), 1);
   auto s2 = unslice_index(((state & 0x0000FFFF00000000) >> 32), 2);
@@ -122,11 +122,11 @@ void setup() {
 
   KIN1_InitCycleCounter(); /* enable DWT hardware */
 
-  uint64_t state = random();
+  u64 state = random();
   Serial.print("State: ");
   Serial.println(state);
 
-  uint64_t sliced = slice(state);
+  u64 sliced = slice(state);
 
   // --- Sliced LSFR ---
   KIN1_ResetCycleCounter();

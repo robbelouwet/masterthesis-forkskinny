@@ -104,19 +104,19 @@
 
 /* Load a big-endian 64-bit word from a byte buffer */
 #define be_load_word64(ptr) \
-    ((((uint64_t)((ptr)[0])) << 56) | \
-     (((uint64_t)((ptr)[1])) << 48) | \
-     (((uint64_t)((ptr)[2])) << 40) | \
-     (((uint64_t)((ptr)[3])) << 32) | \
-     (((uint64_t)((ptr)[4])) << 24) | \
-     (((uint64_t)((ptr)[5])) << 16) | \
-     (((uint64_t)((ptr)[6])) << 8) | \
-      ((uint64_t)((ptr)[7])))
+    ((((u64)((ptr)[0])) << 56) | \
+     (((u64)((ptr)[1])) << 48) | \
+     (((u64)((ptr)[2])) << 40) | \
+     (((u64)((ptr)[3])) << 32) | \
+     (((u64)((ptr)[4])) << 24) | \
+     (((u64)((ptr)[5])) << 16) | \
+     (((u64)((ptr)[6])) << 8) | \
+      ((u64)((ptr)[7])))
 
 /* Store a big-endian 64-bit word into a byte buffer */
 #define be_store_word64(ptr, x) \
     do { \
-        uint64_t _x = (x); \
+        u64 _x = (x); \
         (ptr)[0] = (uint8_t)(_x >> 56); \
         (ptr)[1] = (uint8_t)(_x >> 48); \
         (ptr)[2] = (uint8_t)(_x >> 40); \
@@ -129,19 +129,19 @@
 
 /* Load a little-endian 64-bit word from a byte buffer */
 #define le_load_word64(ptr) \
-    ((((uint64_t)((ptr)[7])) << 56) | \
-     (((uint64_t)((ptr)[6])) << 48) | \
-     (((uint64_t)((ptr)[5])) << 40) | \
-     (((uint64_t)((ptr)[4])) << 32) | \
-     (((uint64_t)((ptr)[3])) << 24) | \
-     (((uint64_t)((ptr)[2])) << 16) | \
-     (((uint64_t)((ptr)[1])) << 8) | \
-      ((uint64_t)((ptr)[0])))
+    ((((u64)((ptr)[7])) << 56) | \
+     (((u64)((ptr)[6])) << 48) | \
+     (((u64)((ptr)[5])) << 40) | \
+     (((u64)((ptr)[4])) << 32) | \
+     (((u64)((ptr)[3])) << 24) | \
+     (((u64)((ptr)[2])) << 16) | \
+     (((u64)((ptr)[1])) << 8) | \
+      ((u64)((ptr)[0])))
 
 /* Store a little-endian 64-bit word into a byte buffer */
 #define le_store_word64(ptr, x) \
     do { \
-        uint64_t _x = (x); \
+        u64 _x = (x); \
         (ptr)[0] = (uint8_t)_x; \
         (ptr)[1] = (uint8_t)(_x >> 8); \
         (ptr)[2] = (uint8_t)(_x >> 16); \
@@ -485,14 +485,14 @@
 /* Generic left rotate */
 #define leftRotate_64(a, bits) \
     (__extension__ ({ \
-        uint64_t _temp = (a); \
+        u64 _temp = (a); \
         (_temp << (bits)) | (_temp >> (64 - (bits))); \
     }))
 
 /* Generic right rotate */
 #define rightRotate_64(a, bits) \
     (__extension__ ({ \
-        uint64_t _temp = (a); \
+        u64 _temp = (a); \
         (_temp >> (bits)) | (_temp << (64 - (bits))); \
     }))
 

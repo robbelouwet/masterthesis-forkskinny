@@ -33,3 +33,9 @@ counter has TK3 as 64-bit buffer to hold its value). This does mean that you can
 
 Continued implementing PAEF. I've implemented the first part where the associated data blocks are encrypted, but I still
 need to test.
+
+# Sunday
+
+PAEF-forkskinny-64-192 (encryption only) implemented. PAEF-AD encryption takes less cycles than vanilla primitive
+encryption, because we slice less key material. Apparently I messed up my benchmarking calculations, it appears the
+implementation is a lot slower than I thought. Gonna have to look into this, still have my idea to accelerate slicing.

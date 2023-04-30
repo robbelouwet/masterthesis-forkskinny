@@ -129,7 +129,7 @@ void test_forkskinny_128_384() {
 
 
 int main() {
-//	test_forkskinny_128_256();
+	test_forkskinny_128_256();
 	test_forkskinny_128_384();
 //	test_pt128();
 }

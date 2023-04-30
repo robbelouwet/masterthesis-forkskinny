@@ -11,7 +11,7 @@
  * @return
  */
 static inline Slice64_t slice_significance(const Blocks64_t blocks, uint8_t significance) {
-	uint64_t mask = 1ULL << significance;
+	u64 mask = 1ULL << significance;
 	auto slice = Slice64_t();
 	
 	#if slice_size == 128
@@ -81,7 +81,7 @@ static inline void unslice_significance(const Slice64_t slice, Blocks64_t *block
 	for (int i = 0; i < 2; i++) {
 		auto chunk = chunks[i];
 		for (int bit_index = chunk; bit_index < chunk + 64; ++bit_index) {
-			uint64_t chunk_mask = 1ULL << (bit_index - chunk);
+			u64 chunk_mask = 1ULL << (bit_index - chunk);
 			blocks->values[bit_index].raw |= ((slice.chunks[i] & chunk_mask) >> (bit_index - chunk)) << significance;
 		}
 	}
@@ -93,7 +93,7 @@ static inline void unslice_significance(const Slice64_t slice, Blocks64_t *block
 	for (int i = 0; i < 4; i++) {
 		auto chunk = chunks[i];
 		for (int b_number = chunk; b_number < chunk + 64; ++b_number) {
-			uint64_t mask = 1ULL << (b_number - chunk);
+			u64 mask = 1ULL << (b_number - chunk);
 			blocks->values[b_number].raw |= ((slice.chunks[i] & mask) >> (b_number - chunk)) << significance;
 		}
 	}
@@ -104,13 +104,13 @@ static inline void unslice_significance(const Slice64_t slice, Blocks64_t *block
 	for (int i = 0; i < 8; i++) {
 		auto chunk = chunks[i];
 		for (int b_number = chunk; b_number < chunk + 64; ++b_number) {
-			uint64_t mask = 1ULL << (b_number - chunk);
+			u64 mask = 1ULL << (b_number - chunk);
 			blocks->values[b_number].raw |= ((slice.chunks[i] & mask) >> (b_number - chunk)) << significance;
 		}
 	}
 	#else
 	for (uint b_number = 0; b_number < slice_size; ++b_number) {
-		uint64_t mask = 1ULL << b_number;
+		u64 mask = 1ULL << b_number;
 		blocks->values[b_number].raw |= ((slice.value & mask) >> b_number) << significance;
 	}
 	

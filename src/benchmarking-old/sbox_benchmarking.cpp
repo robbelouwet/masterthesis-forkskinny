@@ -44,15 +44,15 @@ auto sliced_circuit_sbox(const uint16_t slices[4]) {
 }
 
 // +- 34
-uint64_t old_sbox(uint64_t x) {
+u64 old_sbox(u64 x) {
 	/* Splitting the bits out individually gives better performance on
 	   64-bit platforms because we have more spare registers to work with.
 	   This doesn't work as well on 32-bit platforms because register
 	   spills start to impact performance.  See below. */
-	uint64_t bit0 = ~x;
-	uint64_t bit1 = bit0 >> 1;
-	uint64_t bit2 = bit0 >> 2;
-	uint64_t bit3 = bit0 >> 3;
+	u64 bit0 = ~x;
+	u64 bit1 = bit0 >> 1;
+	u64 bit2 = bit0 >> 2;
+	u64 bit3 = bit0 >> 3;
 	bit0 ^= bit3 & bit2;
 	bit3 ^= bit1 & bit2;
 	bit2 ^= bit1 & bit0;
@@ -67,7 +67,7 @@ uint64_t old_sbox(uint64_t x) {
 
 int main(int argc, char **argv) {
 	// create state stochastically to prevent compiler optimizing the state to a constant
-	uint64_t state;
+	u64 state;
 	if (argc == 0) state = 0xFFEEFFEEFFEEFF;
 	else state = 0xABCDABCDABCDABCD;
 	
@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
 	
 	// unimportant
 	// prevent compiler from optimizing previous function calls due to dead code or unused function output
-	auto rres = std::vector<uint64_t>();
+	auto rres = std::vector<u64>();
 	if (old_sbox_res != 0) rres.push_back(old_sbox_res);
 	if (unsliced_sbox_res != 0) rres.push_back(unsliced_sbox_res);
 	if (unsliced_circuit_sbox_res != 0) rres.push_back(unsliced_circuit_sbox_res);

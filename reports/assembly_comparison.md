@@ -45,7 +45,7 @@ gain can primarily be seen in the second row's implementation, where we need onl
 <td>
 
 ```cpp
-uint64_t sequential_abcde(uint64_t state) {
+u64 sequential_abcde(u64 state) {
 	state = ((state << 1) & 0xEEEEEEEEEEEEEEEE)
 	        ^
 	        (((state >> 3) ^ (state >> 2)) & 0x1111111111111111);
@@ -76,7 +76,7 @@ uint64_t sequential_abcde(uint64_t state) {
 <td>
 
 ```cpp
-uint64_t sliced_fghi(uint64_t state) {
+u64 sliced_fghi(u64 state) {
 	state = _lrotl(state, 0x10);
 	state ^= (state & 0xFFFF000000000000) >> 0x30;
 	return state;

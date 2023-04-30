@@ -60,7 +60,7 @@ void benchmark_forkskinny128_384() {
 	}
 	auto after = _rdtsc();
 
-	auto total = after - before;
+	auto total = (after - before) + (after0 - before0);
 	auto cycles_per_primitive = total / (ITERATIONS * slice_size);
 	auto cycles_per_round = cycles_per_primitive / (ROUNDS_BEFORE + 2 * ROUNDS_AFTER);
 	auto cycles_per_byte = cycles_per_primitive / 16;
