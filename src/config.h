@@ -8,7 +8,7 @@
 // @formatter:off
 // -- CONFIG --
 #define slice_size 64 // 8, 32, 64, 128, 256 or 512
-#define AVX2_support true
+#define AVX2_support false
 #define AVX512_support false
 // ------------
 
@@ -40,7 +40,7 @@
 #elif slice_size == 32
 	#define slice_t uint32_t
 	#define ONE uint32_t(0xFFFFFFFF)
-	#define ZER uint32_t(0x0) \
+	#define ZER uint32_t(0x0)
 	#define BIT(i) (uint32_t(1) << i)
 	#define XOR_SLICE(s1, s2) (s1 ^ s2)
 	#define OR_SLICE(s1, s2) (s1 | s2)
@@ -63,6 +63,7 @@
 	#define slice_t __m128i
 	#define ONE _mm_set1_epi64x(-1)
 	#define ZER _mm_setzero_si128()
+	#defne ROR mm_rotr_si128
 	#define BIT(i) mm_rotr_si128(_mm_set_epi64x(0, 1), 128 - i)
 	#define XOR_SLICE(s1, s2) _mm_xor_si128(s1, s2)
 	#define OR_SLICE(s1, s2) _mm_or_si128(s1, s2)
@@ -74,6 +75,7 @@
 	#define slice_t __m256i
 	#define ONE _mm256_set1_epi64x(-1)
 	#define ZER _mm256_setzero_si256()
+	#define ROR mm256_rotr_si256
 	#define BIT(i) mm256_rotr_si256(_mm256_set_epi64x(0, 0, 0, 1), 256 - i)
 	#define XOR_SLICE(s1, s2) _mm256_xor_si256(s1, s2)
 	#define OR_SLICE(s1, s2) _mm256_or_si256(s1, s2)
@@ -93,6 +95,8 @@
 	#error "Please specify a valid configuration"
 #endif
 // @formatter:on
+// mask the end result to get correct result for small slice on larger-register platform
+#define ROR(v, i, regwidth) (((v >> i) | (v << (regwidth - i))) & -1)
 
 #if AVX2_support
 static inline __m128i mm_rotr_si128(__m128i v, uint8_t shift) {
@@ -183,7 +187,6 @@ static inline __m512i mm512_rotr_si512(__m512i v, uint16_t shift) {
 	return res;
 }
 #endif
-
 
 void print_block(uint8_t *block, unsigned int n) {
 	for (unsigned int i = 0; i < n; i++)

@@ -25,6 +25,16 @@
 //
 //}
 
+void test(){
+	Blocks64_t b = {.values = {
+			0b1,
+			0b1
+	}};
+	
+	auto res = slice(b);
+	int appel = 1;
+}
+
 void test_forkskinny64_192() {
 	auto M = slice(M_64());
 	auto TK1 = slice(TK1_64());
@@ -71,6 +81,7 @@ void test_forkskinny64_192() {
 }
 
 int main() {
-	test_forkskinny64_192();
+//	test_forkskinny64_192();
+	test();
 	std::cout << "\n\nSuccess!";
 }
