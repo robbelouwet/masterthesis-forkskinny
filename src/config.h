@@ -14,20 +14,20 @@
 
 /* Define SKINNY_64BIT to 1 if the CPU is natively 64-bit */
 #if defined(__WORDSIZE) && __WORDSIZE == 64
-	#define SKINNY_64BIT true
+#define SKINNY_64BIT true
 #else
-	#define SKINNY_64BIT false
+#define SKINNY_64BIT false
 #endif
 
 #define AVX2_acceleration (slice_size == 64 && AVX2_support)
 #define AVX512_acceleration (slice_size == 64 && AVX512_support)
 #define u64 uint64_t
-#define MASK_64(i) (((((0x1ULL) << i) - 1) << 1) | 1)
+#define MASK_64(i) (-1ULL >> (64 - i))
 
 
 // ----- 8-bit slices -----
 #if slice_size == 8
-	#define slice_t uint8_t
+#define slice_t uint8_t
 	#define ONE uint8_t(0xFF)
 	#define ZER uint8_t(0x0)
 	#define BIT(i) (uint8_t(1) << i)
@@ -38,7 +38,7 @@
 
 // ----- 32-bit slices -----
 #elif slice_size == 32
-	#define slice_t uint32_t
+#define slice_t uint32_t
 	#define ONE uint32_t(0xFFFFFFFF)
 	#define ZER uint32_t(0x0)
 	#define BIT(i) (uint32_t(1) << i)
@@ -49,18 +49,18 @@
 
 // ----- 64-bit slices -----
 #elif slice_size == 64
-	#define slice_t uint64_t
-	#define ONE 0xFFFFFFFFFFFFFFFFULL
-	#define ZER 0x0ULL
-	#define BIT(i) (0x1ULL << i)
-	#define XOR_SLICE(s1, s2) (s1 ^ s2)
-	#define OR_SLICE(s1, s2) (s1 | s2)
-	#define AND_SLICE(s1, s2) (s1 & s2)
+#define slice_t uint64_t
+#define ONE 0xFFFFFFFFFFFFFFFFULL
+#define ZER 0x0ULL
+#define BIT(i) (0x1ULL << i)
+#define XOR_SLICE(s1, s2) (s1 ^ s2)
+#define OR_SLICE(s1, s2) (s1 | s2)
+#define AND_SLICE(s1, s2) (s1 & s2)
 
 
 // ----- 128-bit slices -----
 #elif slice_size == 128
-	#define slice_t __m128i
+#define slice_t __m128i
 	#define ONE _mm_set1_epi64x(-1)
 	#define ZER _mm_setzero_si128()
 	#defne ROR mm_rotr_si128
@@ -96,7 +96,8 @@
 #endif
 // @formatter:on
 // mask the end result to get correct result for small slice on larger-register platform
-#define ROR(v, i, regwidth) (((v >> i) | (v << (regwidth - i))) & -1)
+#define ROR(v, i, regwidth) ((v >> i) | (v << (regwidth - i)))
+#define ROL(v, i, regwidth) ROR(v, (regwidth - i), regwidth)
 
 #if AVX2_support
 static inline __m128i mm_rotr_si128(__m128i v, uint8_t shift) {

@@ -3,7 +3,6 @@
 
 #include <cstdint>
 #include "forkskinny64-datatypes.h"
-#include "../../constants.h"
 
 /**
  *
@@ -11,7 +10,8 @@
  * @param significance LSB = 0, MSB = 63
  * @return
  */
-static inline Slice64_t slice_significance(const Block64_t *blocks) {
+static inline Slice64_t slice_significance(const Blocks64_t blocks, uint8_t significance) {
+	u64 mask = 1ULL << significance;
 	auto slice = Slice64_t();
 	
 	#if slice_size == 128
@@ -50,63 +50,18 @@ static inline Slice64_t slice_significance(const Block64_t *blocks) {
 	
 	#else
 	for (uint i = 0; i < slice_size; ++i)
-		slice.value |= (blocks[i].raw & bit_masks[i]);
+		slice.value |= (blocks.values[i].raw & mask) >> significance << i;
 	
 	#endif
 	
 	return slice;
 }
 
-static inline State64Sliced_t slice(Blocks64_t blocks) {
-	Block64_t b_blocks[128]; // buffer
-	Slice64_t slices[64];
+static inline State64Sliced_t slice(const Blocks64_t blocks) {
+	State64Sliced_t result = State64Sliced_t();
+	for (uint i = 0; i < 64; ++i)
+		result.raw[i] = slice_significance(blocks, i);
 	
-	// copy into extended buffer
-	for (int i = 0; i < 64; i++)
-		b_blocks[i] = blocks.values[i];
-	
-	// First rotate all blocks such that all equally significant bits are already aligned.
-	for (int i = 0; i < slice_size; ++i)
-		b_blocks[i].raw = ROR(b_blocks[i].raw, (64 - i), 64);
-	
-	// slice the blocks
-	for (uint i = 0; i < 64; ++i) {
-		auto res = slice_significance(b_blocks + i).value;
-		b_blocks[i+64] = b_blocks[i]; // feed back at the end
-		slices[i].value = ROR(res, i, slice_size); // rotate back into place
-	}
-	
-	// If AVX is enabled, pack 4 (AVX2) or 8 (AVX512) equally significant slices in the same segment
-	auto result = State64Sliced_t();
-	#if AVX512_support
-	for (int i = 0; i < 2; ++i) {
-		for (int j = 0; j < 4; ++j) {
-			result.segments512[i][j] = _mm512_set_epi64(
-					slices[(i << 5) + j + 28].value,
-					slices[(i << 5) + j + 24].value,
-					slices[(i << 5) + j + 20].value,
-					slices[(i << 5) + j + 16].value,
-					slices[(i << 5) + j + 12].value,
-					slices[(i << 5) + j + 8].value,
-					slices[(i << 5) + j + 4].value,
-					slices[(i << 5) + j].value
-					);
-		}
-	}
-	#elif AVX2_support
-	for (int i = 0; i < 4; ++i) {
-		for (int j = 0; j < 4; ++j) {
-			result.segments256[i][j] = _mm256_set_epi64x(
-					slices[(i << 4) + j + 12].value,
-					slices[(i << 4) + j + 8].value,
-					slices[(i << 4) + j + 4].value,
-					slices[(i << 4) + j].value
-					);
-		}
-	}
-	#else
-	for (int i = 0; i < 64; result.raw[i] = slices[i++]);
-	#endif
 	
 	return result;
 }
