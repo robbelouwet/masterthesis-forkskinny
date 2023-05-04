@@ -7,7 +7,7 @@
 
 // @formatter:off
 // -- CONFIG --
-#define slice_size 64 // 8, 32, 64, 128, 256 or 512
+#define slice_size 32 // 8, 32, 64, 128, 256 or 512
 #define AVX2_support false
 #define AVX512_support false
 // ------------
@@ -22,15 +22,18 @@
 #define AVX2_acceleration (slice_size == 64 && AVX2_support)
 #define AVX512_acceleration (slice_size == 64 && AVX512_support)
 #define u64 uint64_t
-#define MASK_64(i) (-1ULL >> (64 - i))
 
+#define ROR64(v, i) ((v >> i) | (v << (64 - i)))
+#define ROL64(v, i) ROR64(v, (64 - i))
 
 // ----- 8-bit slices -----
 #if slice_size == 8
-#define slice_t uint8_t
+	#define slice_t uint8_t
 	#define ONE uint8_t(0xFF)
 	#define ZER uint8_t(0x0)
 	#define BIT(i) (uint8_t(1) << i)
+	#define MASK(i) (slice_t(-1) >> (8 - i))
+	#define ROR(v, i) ((v >> i) | (v << (8 - i)))
 	#define XOR_SLICE(s1, s2) (s1 ^ s2)
 	#define OR_SLICE(s1, s2) (s1 | s2)
 	#define AND_SLICE(s1, s2) (s1 & s2)
@@ -38,10 +41,12 @@
 
 // ----- 32-bit slices -----
 #elif slice_size == 32
-#define slice_t uint32_t
+	#define slice_t uint32_t
 	#define ONE uint32_t(0xFFFFFFFF)
 	#define ZER uint32_t(0x0)
 	#define BIT(i) (uint32_t(1) << i)
+	#define MASK(i) (slice-t(-1) >> (32 - i))
+	#define ROR(v, i) ((v >> i) | (v << (32 - i)))
 	#define XOR_SLICE(s1, s2) (s1 ^ s2)
 	#define OR_SLICE(s1, s2) (s1 | s2)
 	#define AND_SLICE(s1, s2) (s1 & s2)
@@ -49,21 +54,22 @@
 
 // ----- 64-bit slices -----
 #elif slice_size == 64
-#define slice_t uint64_t
-#define ONE 0xFFFFFFFFFFFFFFFFULL
-#define ZER 0x0ULL
-#define BIT(i) (0x1ULL << i)
-#define XOR_SLICE(s1, s2) (s1 ^ s2)
-#define OR_SLICE(s1, s2) (s1 | s2)
-#define AND_SLICE(s1, s2) (s1 & s2)
+	#define slice_t uint64_t
+	#define ONE 0xFFFFFFFFFFFFFFFFULL
+	#define ZER 0x0ULL
+	#define BIT(i) (0x1ULL << i)
+	#define MASK(i) (slice_t(-1) >> (64 - i))
+	#define ROR(v, i) ((v >> i) | (v << (64 - i)))
+	#define XOR_SLICE(s1, s2) (s1 ^ s2)
+	#define OR_SLICE(s1, s2) (s1 | s2)
+	#define AND_SLICE(s1, s2) (s1 & s2)
 
 
 // ----- 128-bit slices -----
 #elif slice_size == 128
-#define slice_t __m128i
+	#define slice_t __m128i
 	#define ONE _mm_set1_epi64x(-1)
 	#define ZER _mm_setzero_si128()
-	#defne ROR mm_rotr_si128
 	#define BIT(i) mm_rotr_si128(_mm_set_epi64x(0, 1), 128 - i)
 	#define XOR_SLICE(s1, s2) _mm_xor_si128(s1, s2)
 	#define OR_SLICE(s1, s2) _mm_or_si128(s1, s2)
@@ -75,7 +81,6 @@
 	#define slice_t __m256i
 	#define ONE _mm256_set1_epi64x(-1)
 	#define ZER _mm256_setzero_si256()
-	#define ROR mm256_rotr_si256
 	#define BIT(i) mm256_rotr_si256(_mm256_set_epi64x(0, 0, 0, 1), 256 - i)
 	#define XOR_SLICE(s1, s2) _mm256_xor_si256(s1, s2)
 	#define OR_SLICE(s1, s2) _mm256_or_si256(s1, s2)
@@ -96,10 +101,9 @@
 #endif
 // @formatter:on
 // mask the end result to get correct result for small slice on larger-register platform
-#define ROR(v, i, regwidth) ((v >> i) | (v << (regwidth - i)))
-#define ROL(v, i, regwidth) ROR(v, (regwidth - i), regwidth)
+#define ROL(v, i, regwidth) ROR(v, (regwidth - i))
 
-#if AVX2_support
+#if slice_size == 128
 static inline __m128i mm_rotr_si128(__m128i v, uint8_t shift) {
 	if (shift == 0) return v;
 	shift &= 127;
@@ -113,7 +117,7 @@ static inline __m128i mm_rotr_si128(__m128i v, uint8_t shift) {
 	if (shift == 0) return v;
 	
 	// mask & rotate the bits to be overflow, and rotate blocks 1 position to the right
-	u64 imask = MASK_64(shift);
+	u64 imask = -1ULL >> (64 - shift);;
 	auto masked_bits = _mm_and_si128(_mm_set_epi64x(imask, imask), v);
 	masked_bits = _mm_slli_epi64(masked_bits, 64 - shift);
 	masked_bits = _mm_shuffle_epi32(masked_bits, 0b01001110);
@@ -123,7 +127,9 @@ static inline __m128i mm_rotr_si128(__m128i v, uint8_t shift) {
 	
 	return res;
 }
+#define ROR mm_rotr_si128
 
+#elif slice_size == 256
 static inline __m256i mm256_rotr_si256(__m256i v, uint8_t shift) {
 	if (shift == 0) return v;
 	shift &= 255;
@@ -147,7 +153,7 @@ static inline __m256i mm256_rotr_si256(__m256i v, uint8_t shift) {
 	if (shift == 0) return v;
 	
 	// mask & rotate the bits to be overflow, and rotate blocks 1 position to the right
-	u64 imask = MASK_64(shift);
+	u64 imask = -1ULL >> (64 - shift);
 	auto masked_bits = _mm256_and_si256(_mm256_set_epi64x(imask, imask, imask, imask), v);
 	masked_bits = _mm256_slli_epi64(masked_bits, 64 - shift);
 	masked_bits = _mm256_permute4x64_epi64(masked_bits, 0b00111001);
@@ -158,9 +164,9 @@ static inline __m256i mm256_rotr_si256(__m256i v, uint8_t shift) {
 	return res;
 }
 
-#endif
+#define ROR mm256_rotr_si256
 
-#if AVX512_support
+#elif slice_size == 512
 /// This one doesn't use simd operations because _mm512 operations can't move across the lower and upper 256-bit lanes.
 static inline __m512i mm512_rotr_si512(__m512i v, uint16_t shift) {
 	if (shift == 0) return v;
@@ -174,7 +180,7 @@ static inline __m512i mm512_rotr_si512(__m512i v, uint16_t shift) {
 	if (shift == 0) return dst;
 	
 	// mask & rotate the bits to be overflow, and rotate blocks 1 position to the right
-	u64 imask = MASK_64(shift);
+	u64 imask = -1ULL >> (64 - shift);;
 	auto masked_bits = _mm512_and_si512(_mm512_set_epi64(imask, imask, imask, imask, imask, imask, imask, imask), dst);
 	masked_bits = _mm512_slli_epi64(masked_bits, 64 - shift);
 	
@@ -187,8 +193,14 @@ static inline __m512i mm512_rotr_si512(__m512i v, uint16_t shift) {
 	
 	return res;
 }
+#define ROR mm512_rotr_si512
 #endif
 
+
+//#define MASK128(i) (i <= 64 ? _mm_set_epi64(0, -1ULL >> (64 - i)) : _mm_set_epi64(-1ULL >> (64 - (i & 63)), -1ULL))
+//#define MASK256(i) (i <= 128 ? _mm256_setr_m128i(MASK128(i), _mm_setzero_si128()) : _mm256_setr_m128i(_mm_setzero_si128(), MASK128(i - 128)))
+//#define MASK512(v, i) { \
+//if (i <= 256)}
 void print_block(uint8_t *block, unsigned int n) {
 	for (unsigned int i = 0; i < n; i++)
 		printf("%02x", block[i]);

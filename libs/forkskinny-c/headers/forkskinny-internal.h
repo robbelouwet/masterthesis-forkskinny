@@ -107,10 +107,10 @@ STATIC_INLINE void skinny128_xor
     (void *output, const void *input1, const void *input2)
 {
 #if SKINNY_UNALIGNED && SKINNY_64BIT
-    ((u64 *)output)[0] = ((const u64 *)input1)[0] ^
-                              ((const u64 *)input2)[0];
-    ((u64 *)output)[1] = ((const u64 *)input1)[1] ^
-                              ((const u64 *)input2)[1];
+    ((uint64_t *)output)[0] = ((const uint64_t *)input1)[0] ^
+                              ((const uint64_t *)input2)[0];
+    ((uint64_t *)output)[1] = ((const uint64_t *)input1)[1] ^
+                              ((const uint64_t *)input2)[1];
 #elif SKINNY_UNALIGNED
     ((uint32_t *)output)[0] = ((const uint32_t *)input1)[0] ^
                               ((const uint32_t *)input2)[0];
@@ -134,8 +134,8 @@ STATIC_INLINE void skinny64_xor
     (void *output, const void *input1, const void *input2)
 {
 #if SKINNY_UNALIGNED && SKINNY_64BIT
-    ((u64 *)output)[0] = ((const u64 *)input1)[0] ^
-                              ((const u64 *)input2)[0];
+    ((uint64_t *)output)[0] = ((const uint64_t *)input1)[0] ^
+                              ((const uint64_t *)input2)[0];
 #elif SKINNY_UNALIGNED
     ((uint32_t *)output)[0] = ((const uint32_t *)input1)[0] ^
                               ((const uint32_t *)input2)[0];
@@ -164,14 +164,14 @@ STATIC_INLINE void skinny64_xor
     (((uint32_t)(((const uint8_t *)(ptr))[(offset) + 3])) << 24))
 
 #define READ_WORD64(ptr,offset) \
-    (((u64)(((const uint8_t *)(ptr))[(offset)])) | \
-    (((u64)(((const uint8_t *)(ptr))[(offset) + 1])) << 8) | \
-    (((u64)(((const uint8_t *)(ptr))[(offset) + 2])) << 16) | \
-    (((u64)(((const uint8_t *)(ptr))[(offset) + 3])) << 24) | \
-    (((u64)(((const uint8_t *)(ptr))[(offset) + 4])) << 32) | \
-    (((u64)(((const uint8_t *)(ptr))[(offset) + 5])) << 40) | \
-    (((u64)(((const uint8_t *)(ptr))[(offset) + 6])) << 48) | \
-    (((u64)(((const uint8_t *)(ptr))[(offset) + 7])) << 56))
+    (((uint64_t)(((const uint8_t *)(ptr))[(offset)])) | \
+    (((uint64_t)(((const uint8_t *)(ptr))[(offset) + 1])) << 8) | \
+    (((uint64_t)(((const uint8_t *)(ptr))[(offset) + 2])) << 16) | \
+    (((uint64_t)(((const uint8_t *)(ptr))[(offset) + 3])) << 24) | \
+    (((uint64_t)(((const uint8_t *)(ptr))[(offset) + 4])) << 32) | \
+    (((uint64_t)(((const uint8_t *)(ptr))[(offset) + 5])) << 40) | \
+    (((uint64_t)(((const uint8_t *)(ptr))[(offset) + 6])) << 48) | \
+    (((uint64_t)(((const uint8_t *)(ptr))[(offset) + 7])) << 56))
 
 #define WRITE_WORD16(ptr,offset,value) \
     ((((uint8_t *)(ptr))[(offset)] = (uint8_t)(value)), \

@@ -11,45 +11,52 @@
  * @param significance LSB = 0, MSB = 63
  * @return
  */
-static inline Slice64_t slice_significance_accelerated(const Block64_t *blocks, uint16_t amount) {
+static inline Slice64_t slice_significance_accelerated(const Block64_t *blocks) {
 	auto slice = Slice64_t();
 	
 	#if slice_size == 128
 	for (uint i = 0; i < 64; ++i)
-		slice.chunks[0] |= (blocks.values[i].raw & mask) >> significance << i;
-	for (uint i = 64; i < 128; ++i)
-		slice.chunks[1] |= (blocks.values[i].raw & mask) >> significance << (i - 64);
+		slice.value = _mm_or_si128(
+				_mm_and_si128(
+						_mm_set_epi64x(
+								blocks[i + 64].raw,
+								blocks[i].raw
+						), _mm_set1_epi64x(bit_masks[i])
+				), slice.value
+		);
 	
 	#elif slice_size == 256
 	for (uint i = 0; i < 64; ++i)
-		slice.chunks[0] |= (blocks.values[i].raw & mask) >> significance << i;
-	for (uint i = 64; i < 128; ++i)
-		slice.chunks[1] |= (blocks.values[i].raw & mask) >> significance << (i - 64);
-	for (uint i = 128; i < 192; ++i)
-		slice.chunks[2] |= (blocks.values[i].raw & mask) >> significance << (i - 128);
-	for (uint i = 192; i < 256; ++i)
-		slice.chunks[3] |= (blocks.values[i].raw & mask) >> significance << (i - 192);
+		slice.value = _mm256_or_si256(
+				_mm256_and_si256(
+						_mm256_set_epi64x(
+								blocks[i + 192].raw,
+								blocks[i + 128].raw,
+								blocks[i + 64].raw,
+								blocks[i].raw
+						), _mm256_set1_epi64x(bit_masks[i])
+				), slice.value
+		);
 	
-	#elif slice_size == 512
+		#elif slice_size == 512
 	for (uint i = 0; i < 64; ++i)
-		slice.chunks[0] |= (blocks.values[i].raw & mask) >> significance << i;
-	for (uint i = 64; i < 128; ++i)
-		slice.chunks[1] |= (blocks.values[i].raw & mask) >> significance << (i - 64);
-	for (uint i = 128; i < 192; ++i)
-		slice.chunks[2] |= (blocks.values[i].raw & mask) >> significance << (i - 128);
-	for (uint i = 192; i < 256; ++i)
-		slice.chunks[3] |= (blocks.values[i].raw & mask) >> significance << (i - 192);
-	for (uint i = 256; i < 320; ++i)
-		slice.chunks[4] |= (blocks.values[i].raw & mask) >> significance << (i - 256);
-	for (uint i = 320; i < 384; ++i)
-		slice.chunks[5] |= (blocks.values[i].raw & mask) >> significance << (i - 320);
-	for (uint i = 384; i < 448; ++i)
-		slice.chunks[6] |= (blocks.values[i].raw & mask) >> significance << (i - 384);
-	for (uint i = 448; i < 512; ++i)
-		slice.chunks[7] |= (blocks.values[i].raw & mask) >> significance << (i - 448);
+		slice.value = _mm512_or_si512(
+				_mm512_and_si512(
+						_mm512_set_epi64(
+								blocks[i + 448].raw,
+								blocks[i + 384].raw,
+								blocks[i + 320].raw,
+								blocks[i + 256].raw,
+								blocks[i + 192].raw,
+								blocks[i + 128].raw,
+								blocks[i + 64].raw,
+								blocks[i].raw
+						), _mm512_set1_epi64(bit_masks[i])
+				), slice.value
+		);
 	
-	#else
-	for (uint i = 0; i < amount; ++i)
+		#else
+	for (uint i = 0; i < slice_size; ++i)
 		slice.value |= blocks[i].raw & bit_masks[i];
 	#endif
 	
@@ -62,32 +69,37 @@ static inline Slice64_t slice_significance_accelerated(const Block64_t *blocks, 
  * @param amount
  * @return
  */
-static inline State64Sliced_t slice_accelerated(Blocks64_t blocks, uint16_t const amount = slice_size) {
-	auto const double_amount = amount << 1;
-	Block64_t b_blocks[double_amount]; // buffer
-	Slice64_t slices[64];
-	auto range_mask = amount - 1;
-	auto block_mask = MASK_64(64);
-	
-	// rotate-align the blocks & copy into double-extended buffer
-	for (int i = amount; i < (amount << 1); i++){
-		b_blocks[i].raw = ROL(blocks.values[i & range_mask].raw, (i & range_mask), amount);
-		int appel = 1;
-	}
-	
-	// slice the blocks
-	for (int i = amount; i > 0; --i) {
-		// 0xA, 0b00111, 0b00111, 0b10001, 0b110110
-		// There will always be 64 slices, but a slice will be smaller if less blocks are sliced
-		auto res = slice_significance_accelerated(b_blocks + i, amount).value;
-		b_blocks[i - 1] = b_blocks[i + amount - 1]; // pull last block to the front and move iterator 1 back
-		
-		// 0b01110, 0b10011, 0b11001, 0b00110, 0b10101
-		slices[amount - i].value = ROR(res, (amount - i), amount) & block_mask; // rotate back into place
-	}
-	
-	// If AVX is enabled, pack 4 (AVX2) or 8 (AVX512) equally significant slices in the same segment
+static inline State64Sliced_t slice_accelerated(Blocks64_t blocks) {
 	auto result = State64Sliced_t();
+	
+	/* we iterate & re-queue 64 times because we have 64 bits per block.
+	 * If there are less blocks, make sure we still have room */
+	auto len = slice_size <= 64 ? 64 : slice_size;
+	Block64_t b_blocks[len << 1]; // double-length blocks buffer
+	Slice64_t slices[64];
+	auto range_mask = slice_size - 1;
+	
+	///////////////// IETS MET DE BUFFER, ALS KLEINE SLICESIZE, NI GENOEG RUILTE VOOR 64 ITERATIES
+	
+	/* rotate-align the blocks & copy into double-extended buffer at the upper half of the buffer */
+	for (int i = slice_size; i < (slice_size << 1); i++)
+		b_blocks[i].raw = ROL64(blocks.values[i & range_mask].raw, (i & range_mask));
+	
+	/* iterate over every 'significance' level the pt blocks have, which are 64 */
+	/* when iterating, slowly rotate the blocks towards the beginning on every iteration, aligning the next significance every time */
+	for (int i = 64; i > 0; --i) {
+		auto ind = 64 - i;
+		
+		/* construct the slice for this significance level */
+		auto res = slice_significance_accelerated(b_blocks + i).value;
+		
+		/* move the last block in the buffer to the front and decrement the blocks iterator by 1 */
+		b_blocks[i - 1] = b_blocks[double_len - 1 - ind];
+		
+		/* Now re-align the slice by rotating back and put it in the buffer */
+		slices[ind].value = ROR(res, ind); // rotate slices back into place
+	}
+	
 	#if AVX512_support
 	for (int i = 0; i < 2; ++i) {
 		for (int j = 0; j < 4; ++j) {
@@ -115,7 +127,7 @@ static inline State64Sliced_t slice_accelerated(Blocks64_t blocks, uint16_t cons
 		}
 	}
 	#else
-	for (int i = 0; i < 64; result.raw[i] = slices[i++]);
+	for (int i = 0; i < 64; i++) result.raw[i].value = slices[i].value;
 	#endif
 	
 	return result;

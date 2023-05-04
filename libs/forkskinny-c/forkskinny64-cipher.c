@@ -140,15 +140,15 @@ STATIC_INLINE uint16_t skinny64_rotate_right(uint16_t x, unsigned count) {
 
 #if SKINNY_64BIT
 
-STATIC_INLINE u64 skinny64_sbox(u64 x) {
+STATIC_INLINE uint64_t skinny64_sbox(uint64_t x) {
 	/* Splitting the bits out individually gives better performance on
 	   64-bit platforms because we have more spare registers to work with.
 	   This doesn't work as well on 32-bit platforms because register
 	   spills start to impact performance.  See below. */
-	u64 bit0 = ~x;
-	u64 bit1 = bit0 >> 1;
-	u64 bit2 = bit0 >> 2;
-	u64 bit3 = bit0 >> 3;
+	uint64_t bit0 = ~x;
+	uint64_t bit1 = bit0 >> 1;
+	uint64_t bit2 = bit0 >> 2;
+	uint64_t bit3 = bit0 >> 3;
 	bit0 ^= bit3 & bit2;
 	bit3 ^= bit1 & bit2;
 	bit2 ^= bit1 & bit0;
@@ -160,11 +160,11 @@ STATIC_INLINE u64 skinny64_sbox(u64 x) {
 	return ~x;
 }
 
-STATIC_INLINE u64 skinny64_inv_sbox(u64 x) {
-	u64 bit0 = ~x;
-	u64 bit1 = bit0 >> 1;
-	u64 bit2 = bit0 >> 2;
-	u64 bit3 = bit0 >> 3;
+STATIC_INLINE uint64_t skinny64_inv_sbox(uint64_t x) {
+	uint64_t bit0 = ~x;
+	uint64_t bit1 = bit0 >> 1;
+	uint64_t bit2 = bit0 >> 2;
+	uint64_t bit3 = bit0 >> 3;
 	bit0 ^= bit3 & bit2;
 	bit1 ^= bit3 & bit0;
 	bit2 ^= bit1 & bit0;
@@ -274,7 +274,7 @@ static State64_t forkskinny64_encrypt_rounds(
 		/* Apply the subkey for this round */
 		#if SKINNY_64BIT && SKINNY_LITTLE_ENDIAN
 		// 0x 7F4E 5D38 2B1A 90C6 | 0x BABD D1C4 2E92 3684
-		u64 key = (schedule1->lrow ^ schedule2->lrow) | 0x2000000000ULL;
+		uint64_t key = (schedule1->lrow ^ schedule2->lrow) | 0x2000000000ULL;
 		state.llrow ^= key;
 		
 		#else

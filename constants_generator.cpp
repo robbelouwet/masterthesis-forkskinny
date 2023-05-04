@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <iostream>
 #include <vector>
+#include "src/config.h"
 
 // expand every bit of the raw to a 64bit slice_t
 // if bit == 0: return 0⁶⁴

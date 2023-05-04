@@ -27,7 +27,7 @@ extern "C" {
 typedef union
 {
     uint32_t row[4];        /**< Cell rows in 32-bit units */
-    u64 lrow[2];       /**< Cell rows in 64-bit units */
+    uint64_t lrow[2];       /**< Cell rows in 64-bit units */
 
 } ForkSkinny128Cells_t;
 
@@ -37,7 +37,7 @@ typedef union
 typedef union
 {
     uint32_t row[2];        /**< Cell rows in 32-bit units */
-    u64 lrow;          /**< Cell rows in 64-bit units */
+    uint64_t lrow;          /**< Cell rows in 64-bit units */
 
 } ForkSkinny128HalfCells_t;
 

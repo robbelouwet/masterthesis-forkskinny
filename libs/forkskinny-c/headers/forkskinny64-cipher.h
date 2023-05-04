@@ -23,7 +23,7 @@ typedef union
 {
     uint16_t row[4];        /// Stored as 4x 16-bit uint partitions (cccc cccc cccc cccc) [c = 4-bit state slices]
     uint32_t lrow[2];       /// Stored as 2x 32-bit uint partitions  (cccccccc cccccccc)
-    u64 llrow;         /// Stored as 1x 64-bit uint 			  (cccccccccccccccc)
+    uint64_t llrow;         /// Stored as 1x 64-bit uint 			  (cccccccccccccccc)
 
 } State64_t;
 
