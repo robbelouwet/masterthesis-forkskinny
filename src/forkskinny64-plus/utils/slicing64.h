@@ -59,10 +59,9 @@ static inline Slice64_t slice_significance(const Blocks64_t blocks, uint8_t sign
 
 static inline State64Sliced_t slice(const Blocks64_t blocks) {
 	State64Sliced_t result = State64Sliced_t();
-	for (uint i = 0; i < 64; ++i)
+	for (uint i = 0; i < 64; ++i) {
 		result.raw[i] = slice_significance(blocks, i);
-	
-	
+	}
 	return result;
 }
 

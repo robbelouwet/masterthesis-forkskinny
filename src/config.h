@@ -23,8 +23,7 @@
 #define AVX512_acceleration (slice_size == 64 && AVX512_support)
 #define u64 uint64_t
 
-#define ROR64(v, i) ((v >> i) | (v << (64 - i)))
-#define ROL64(v, i) ROR64(v, (64 - i))
+#define ROL64(v, i) ((v << i) | (v >> (64 - i)))
 
 // ----- 8-bit slices -----
 #if slice_size == 8
@@ -45,7 +44,7 @@
 	#define ONE uint32_t(0xFFFFFFFF)
 	#define ZER uint32_t(0x0)
 	#define BIT(i) (uint32_t(1) << i)
-	#define MASK(i) (slice-t(-1) >> (32 - i))
+	#define MASK(i) (slice_t(-1) >> (32 - i))
 	#define ROR(v, i) ((v >> i) | (v << (32 - i)))
 	#define XOR_SLICE(s1, s2) (s1 ^ s2)
 	#define OR_SLICE(s1, s2) (s1 | s2)

@@ -5,6 +5,7 @@
 #include "../forkskinny64-plus/keyschedule/fixsliced-keyschedule64.h"
 #include "../forkskinny64-plus/forkskinny64.h"
 #include "../AEAD/PAEF.h"
+#include "../forkskinny64-plus/utils/slicing64-accelerated.h"
 #include <benchmark/benchmark.h>
 
 void benchmark_PAEF_forkskinny64_192() {
@@ -92,15 +93,12 @@ void benchmark_forkskinny64_192() {
 	
 	auto before0 = _rdtsc();
 	for (int i = 0; i < ITERATIONS; ++i) {
-		test_M[i] = slice(unsliced_test_M[i]);
-		test_TK1[i] = slice(unsliced_test_TK1[i]);
-		test_TK2[i] = slice(unsliced_test_TK2[i]);
-		test_TK3[i] = slice(unsliced_test_TK3[i]);
+		test_M[i] = slice_accelerated(unsliced_test_M[i]);
+		test_TK1[i] = slice_accelerated(unsliced_test_TK1[i]);
+		test_TK2[i] = slice_accelerated(unsliced_test_TK2[i]);
+		test_TK3[i] = slice_accelerated(unsliced_test_TK3[i]);
 	}
 	auto after0 = _rdtsc();
-	
-	auto slicing_per_primitive = (after0 - before0) / (ITERATIONS * slice_size);
-	std::cout << slicing_per_primitive << " spent on slicing per single PRIMITIVE call\n";
 	
 	SlicedCiphertext64_t cts[ITERATIONS];
 	auto before = _rdtsc();
@@ -127,6 +125,8 @@ void benchmark_forkskinny64_192() {
 	auto cycles_per_round = cycles_per_primitive / (ROUNDS_BEFORE + 2 * ROUNDS_AFTER);
 	auto cycles_per_byte = cycles_per_primitive / 8;
 	
+	auto slicing_per_primitive = ((after0 - before0) /*+ (after1 - before1)*/) / (ITERATIONS * slice_size);
+	std::cout << slicing_per_primitive << " spent on slicing per single PRIMITIVE call\n";
 	std::cout << cycles_per_primitive + slicing_per_primitive
 	          << " total cycles per single PRIMITIVE call (slicing included)\n";
 	std::cout << cycles_per_byte << " cycles per byte\n";

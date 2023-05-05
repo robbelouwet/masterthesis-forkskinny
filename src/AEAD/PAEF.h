@@ -10,6 +10,9 @@
 #include "../forkskinny64-plus/keyschedule/fixsliced-keyschedule64.h"
 #include "../test_vectors.h"
 
+// TODO: THIS IS NOT CONSTANT TIME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//  ----
+//  ----
 static inline void to_sliced(u64 in, State64Sliced_t *out) {
 	for (int i = 0; i < 64; ++i) {
 		u64 mask = 1 << i;
@@ -17,6 +20,8 @@ static inline void to_sliced(u64 in, State64Sliced_t *out) {
 		else out->raw[i].value = ZER;
 	}
 }
+//  ----
+//  ----
 
 static inline u64
 extract_segment_tag(SlicedCiphertext64_t ct, bool last_segment, int last_block_index, char tag_leg) {
@@ -35,7 +40,7 @@ extract_segment_tag(SlicedCiphertext64_t ct, bool last_segment, int last_block_i
 		auto lanes_in_slice = slice_size >> 6;
 		for (int k = 0; k < lanes_in_slice; ++k) {
 			if (last_segment && last_block_index != -1 && last_block_index < 64)
-				ct.C0.raw[j].value[k] &= MASK_64(last_block_index);
+				ct.C0.raw[j].value[k] &= -1ULL >> (64 - last_block_index); // PAS OP AANGEPAST
 			u64 bit = __builtin_parity((u64) ct.C0.raw[j].value[k]);
 			tag_bit ^= bit;
 			last_block_index -= 64;
