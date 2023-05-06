@@ -11,7 +11,7 @@
 // When comparing to the bc in the paper, the cells inside consecutive pairs of cells are swapped with each other to account
 // for a swapped order of significance of 2 nibbles within a single byte of plaintext.
 // See the README or publication for more info on memory layout
-slice_t const branch_constant64[64] = {
+State64Sliced_t const branch_constant64 = {
 		// LSB         MSB
 		ZER, ONE, ZER, ZER,  // 2
 		ONE, ZER, ZER, ZER,  // 1
@@ -36,7 +36,7 @@ slice_t const branch_constant64[64] = {
 // the branch constant in forkskinny128 doesn't have 'swapped nibbles' within a byte like forkskinny64 has,
 // because cells are already 8-bit and are definable datatypes with a specified order of significance.
 // So we don't need to account for this and so, the order of branch constant cells is the same as in the paper
-slice_t const branch_constant128[128] = {
+State128Sliced_t const branch_constant128 = {
 		ONE, ZER, ZER, ZER, ZER, ZER, ZER, ZER,  // 0x1
 		ZER, ONE, ZER, ZER, ZER, ZER, ZER, ZER,  // 0x2
 		ZER, ZER, ONE, ZER, ZER, ZER, ZER, ZER,  // 0x4

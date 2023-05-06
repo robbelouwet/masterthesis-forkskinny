@@ -117,11 +117,11 @@ static inline void unslice_significance(const Slice64_t slice, Blocks64_t *block
 	
 }
 
-static inline Blocks64_t unslice(Slice64_t *slices) {
+static inline Blocks64_t unslice(State64Sliced_t state) {
 	
 	Blocks64_t unsliced = Blocks64_t();
 	for (int i = 0; i < 64; ++i)
-		unslice_significance(slices[i], &unsliced, i);
+		unslice_significance(state.raw[i], &unsliced, i);
 	
 	
 	return unsliced;

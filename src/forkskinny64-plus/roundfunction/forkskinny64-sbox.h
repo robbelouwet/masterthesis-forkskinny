@@ -3,40 +3,20 @@
 
 #include "../utils/forkskinny64-datatypes.h"
 
+#define x0 cell.slices[0].value
+#define x1 cell.slices[1].value
+#define x2 cell.slices[2].value
+#define x3 cell.slices[3].value
+
+#define y0 state->cells[i].slices[0].value
+#define y1 state->cells[i].slices[1].value
+#define y2 state->cells[i].slices[2].value
+#define y3 state->cells[i].slices[3].value
+
 static inline void skinny64_sbox(State64Sliced_t *state) {
 //	auto blocks = Blocks64_t{.values = {0xFEDCBA9876543210}};
 //	*state = Slice64_t(blocks);
 //	int appel = 1;
-	
-	#if AVX512_support
-	#elif AVX2_support
-	#define x0 state->segments256[i][0]
-	#define x1 state->segments256[i][1]
-	#define x2 state->segments256[i][2]
-	#define x3 state->segments256[i][3]
-	
-	for (int i = 0; i < 4; ++i) {
-		auto r3 = XOR256(x0, XOR256(OR256(x3, x2), ONE256));
-		auto r2 = XOR256(x3, XOR256(OR256(x2, x1), ONE256));
-		auto r1 = XOR256(x2, XOR256(OR256(x1, r3), ONE256));
-		auto r0 = XOR256(x1, XOR256(OR256(r3, r2), ONE256));
-		
-		x0 = r0;
-		x1 = r1;
-		x2 = r2;
-		x3 = r3;
-	}
-	#else
-	#define x0 cell.slices[0].value
-	#define x1 cell.slices[1].value
-	#define x2 cell.slices[2].value
-	#define x3 cell.slices[3].value
-	
-	#define y0 state->cells[i].slices[0].value
-	#define y1 state->cells[i].slices[1].value
-	#define y2 state->cells[i].slices[2].value
-	#define y3 state->cells[i].slices[3].value
-	
 	for (int i = 0; i < 16; ++i) {
 		auto cell = state->cells[i];
 		
@@ -47,7 +27,6 @@ static inline void skinny64_sbox(State64Sliced_t *state) {
 		y0 = XOR_SLICE( x1 , XOR_SLICE( OR_SLICE(y3 , y2 ) , ONE ));
 		// @formatter:on
 	}
-	#endif
 	
 	// INPUT:   0x FEDC BA98 7654 3210
 	// OUTPUT:  0x F7E4 D583 B2A1 096C

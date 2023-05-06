@@ -97,17 +97,16 @@ void test(){
 			0x6666666666666666,0xBBBBBBBBBBBBBBBB,0x9999999999999999,0x5555555555555555,*/
 	}};
 	
-//	b = M_rand_64(9);
+	b = M_rand_64(9);
 	//auto res = slice(b);
 	auto res1 = slice_accelerated(b);
-	int appel = 1;
-	auto unsliced = unslice(res1);
+	auto unsliced = unslice_accelerated(res1);
 	
 //	for (int i = 0; i < slice_size; ++i)
 //		assert(res.raw[i].value == res1.raw[i].value);
 	
-//	for (int i = 0; i < slice_size; ++i)
-//		assert(unsliced.values[i].raw == b.values[i].raw);
+	for (int i = 0; i < slice_size; ++i)
+		assert(unsliced.values[i].raw == b.values[i].raw);
 }
 
 
@@ -116,24 +115,24 @@ void test_forkskinny64_192() {
 	auto TK1 = slice(TK1_64());
 	auto TK2 = slice(TK2_64());
 	auto TK3 = slice(TK3_64());
-	auto original_pt = unslice(M).values[0].raw;
+	auto original_pt = unslice_accelerated(M).values[0].raw;
 
 	auto schedule = forkskinny_64_init_tk23(TK1, TK2, TK3);
 
 	// 0x EE00 FDE0
 	// 0x 099B 203B
 	// 0x 0EE2 40B2
-	/*auto rtk0 = unslice({.halves = {schedule.keys[0], {}}}).values[0].raw;
-	auto rtk1 = unslice({.halves = {schedule.keys[1], {}}}).values[0].raw;
-	auto rtk2 = unslice({.halves = {schedule.keys[2], {}}}).values[0].raw;*/
+	auto rtk0 = unslice_accelerated({.halves = {schedule.keys[0], {}}}).values[0].raw;
+	auto rtk1 = unslice_accelerated({.halves = {schedule.keys[1], {}}}).values[0].raw;
+	auto rtk2 = unslice_accelerated({.halves = {schedule.keys[2], {}}}).values[0].raw;
 
 	// Ensure correct test vectors
 	auto ct = forkskinny64_encrypt(schedule, &M, 'b');
-	auto result_c0 = unslice(ct.C0);
-	auto result_c1 = unslice(ct.C1);
+	auto result_c0 = unslice_accelerated(ct.C0);
+	auto result_c1 = unslice_accelerated(ct.C1);
 
 	std::cout << "M [0]: ";
-	print_block(unslice(M).values[0].bytes, 8);
+	print_block(unslice_accelerated(M).values[0].bytes, 8);
 
 	std::cout << "\nC0 [0]: ";
 	print_block(result_c0.values[0].bytes, 8);
@@ -147,8 +146,8 @@ void test_forkskinny64_192() {
 	}
 
 	auto pt = forkskinny64_decrypt(schedule, &ct, '1', 'b');
-	auto result_M = unslice(pt.M);
-	auto result_C0 = unslice(pt.C0);
+	auto result_M = unslice_accelerated(pt.M);
+	auto result_C0 = unslice_accelerated(pt.C0);
 
 	for (int i = 0; i < slice_size; ++i) {
 		assert(result_M.values[i].raw == original_pt);
@@ -158,6 +157,6 @@ void test_forkskinny64_192() {
 
 int main() {
 	test_forkskinny64_192();
-//	test();
+	test();
 	std::cout << "\n\nSuccess!";
 }

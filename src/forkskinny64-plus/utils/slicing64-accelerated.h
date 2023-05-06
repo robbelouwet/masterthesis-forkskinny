@@ -94,7 +94,6 @@ static inline lane_t slice_significance_accelerated_64(const Block64_t *blocks) 
 
 static inline State64Sliced_t slice_accelerated(Blocks64_t blocks) {
 	auto result = State64Sliced_t();
-	Slice64_t slices[64];
 	
 	/* Buffer that holds all blocks AND the 64 spots that we use for the back-rotation */
 	#if slice_size >= 64
@@ -128,41 +127,9 @@ static inline State64Sliced_t slice_accelerated(Blocks64_t blocks) {
 		
 		/* Now re-align the slice by rotating back and put it in the slices buffer
 		 * (assign to result in 1 go if SIMD segmentation isn't needed) */
-		slices[i].value = ROR_LANES(res, i);
+		result.raw[i].value = ROR_LANES(res, i);
 		int appel = 1;
 	}
-	
-	#if AVX512_support
-	for (int i = 0; i < 2; ++i) {
-		for (int j = 0; j < 4; ++j) {
-			result.segments512[i][j] = _mm512_set_epi64(
-					slices[(i << 5) + j + 28].value,
-					slices[(i << 5) + j + 24].value,
-					slices[(i << 5) + j + 20].value,
-					slices[(i << 5) + j + 16].value,
-					slices[(i << 5) + j + 12].value,
-					slices[(i << 5) + j + 8].value,
-					slices[(i << 5) + j + 4].value,
-					slices[(i << 5) + j].value
-					);
-		}
-	}
-	#elif AVX2_support
-	for (int i = 0; i < 4; ++i) {
-		for (int j = 0; j < 4; ++j) {
-			result.segments256[i][j] = _mm256_set_epi64x(
-					slices[(i << 4) + j + 12].value,
-					slices[(i << 4) + j + 8].value,
-					slices[(i << 4) + j + 4].value,
-					slices[(i << 4) + j].value
-					);
-		}
-	}
-	#else
-	for (int i = 0; i < 64; i++) result.raw[i] = slices[i];
-	#endif
-	
-	
 	
 	return result;
 }
@@ -180,29 +147,8 @@ static inline void unslice_significance_accelerated(const Slice64_t slice, Block
 
 static inline Blocks64_t unslice_accelerated(State64Sliced_t state) {
 	Blocks64_t unsliced = Blocks64_t();
-	Slice64_t unpacked[64];
-	#if AVX512_support
-	for (int i = 0; i < 2; ++i) {
-		for (int j = 0; j < 4; ++j) {
-			for (int k = 0; k < 8; ++k) {
-				unpacked[(i * 16) + j + (k * 4)].value = state.segments256[i][j][k];
-			}
-		}
-	}
-	#elif AVX2_support
-	for (int i = 0; i < 4; ++i) {
-		for (int j = 0; j < 4; ++j) {
-			for (int k = 0; k < 4; ++k) {
-				unpacked[(i * 16) + j + (k * 4)].value = state.segments256[i][j][k];
-			}
-		}
-	}
-	
-	#else
-	
-	#endif
 	for (int i = 0; i < 64; ++i)
-		unslice_significance(unpacked[i], &unsliced, i);
+		unslice_significance(state.raw[i], &unsliced, i);
 	
 	return unsliced;
 }

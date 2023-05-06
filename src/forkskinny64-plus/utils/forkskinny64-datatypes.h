@@ -70,18 +70,11 @@ typedef union {
 } HalfState64Sliced_t;
 
 typedef union {
-	#if AVX512_support
-	__m512i segments512[2][4];
-	__m256i segments256[4][4];
-	#elif AVX2_support
-	__m256i segments256[4][4];
-	#else
 	Slice64_t raw[64];
 	Cell64_t cells[16];
 	Row64_t rows[4];
 	Pair64_t pairs[8];
 	HalfState64Sliced_t halves[2];
-	#endif
 } State64Sliced_t;
 
 typedef union {
