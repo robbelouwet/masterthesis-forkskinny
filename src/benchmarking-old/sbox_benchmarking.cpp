@@ -82,8 +82,8 @@ int main(int argc, char **argv) {
 	auto sliced_sbox_res = sliced_sbox(sliced_state).state;
 	
 	// unslice
-	auto unsliced_circuit_sbox_res = unslice(sliced_circuit_sbox_res.state);
-	auto unsliced_sbox_res = unslice(sliced_sbox_res);
+	auto unsliced_circuit_sbox_res = unslice_accelerated(sliced_circuit_sbox_res.state);
+	auto unsliced_sbox_res = unslice_accelerated(sliced_sbox_res);
 	
 	// double check LSFRs were computed correctly
 	assert(old_sbox_res == unsliced_circuit_sbox_res);

@@ -138,7 +138,7 @@ static inline State64Sliced_t permute(State64Sliced_t input) {
 	// Erik:    0x 7654 3210 DABF 9C8E
 	// Us:      0x 7654 3210 DABF 9C8E
 
-//	auto test_output = unslice(output).values[0].raw;
+//	auto test_output = unslice_accelerated(output).values[0].raw;
 	return output;
 }
 
@@ -154,12 +154,7 @@ static inline HalfState64Sliced_t xor_half_keys(HalfState64Sliced_t a, HalfState
 	}};
 }
 
-/**
- * XOR_AVX2's cells of 2 keys together, and stores them in res
- * @param a
- * @param b
- * @param stop amount of cells to xor
- */
+
 static inline State64Sliced_t xor_keys(State64Sliced_t a, State64Sliced_t b) {
 	return {.rows={
 			xor_row(a.rows[0], b.rows[0]),

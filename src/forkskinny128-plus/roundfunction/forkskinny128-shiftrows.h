@@ -28,7 +28,7 @@ static inline void forkskinny128_shiftrows_inv(State128Sliced_t *state){
 	state->cells[0xD] = state->cells[0xC];
 	state->cells[0xC] = temp;
 
-//	auto test_res = unslice(*state).values[0].raw;
+//	auto test_res = unslice_accelerated(*state).values[0].raw;
 //	int appel = 1;
 }
 
@@ -66,12 +66,12 @@ static inline void forkskinny128_shiftrows(State128Sliced_t *state) {
 	// Input:   0x  FFEE DDCC | BBAA 9988 | 7766 5544 | 3322 1100
 	// Erik:    0x  CCFF EEDD | 9988 BBAA | 6655 4477 | 3322 1100
 	// Us:      0x  EEDD CCFF | 9988 BBAA | 6655 4477 | 3322 1100
-//	auto test_res0 = unslice(*state).values[0].raw[0];
-//	auto test_res1 = unslice(*state).values[0].raw[1];
+//	auto test_res0 = unslice_accelerated(*state).values[0].raw[0];
+//	auto test_res1 = unslice_accelerated(*state).values[0].raw[1];
 //
 //	forkskinny128_shiftrows_inv(state);
-//	auto decr0 = unslice(*state).values[0].raw[0];
-//	auto decr1 = unslice(*state).values[0].raw[1];
+//	auto decr0 = unslice_accelerated(*state).values[0].raw[0];
+//	auto decr1 = unslice_accelerated(*state).values[0].raw[1];
 //
 //	int appel = 1;
 }

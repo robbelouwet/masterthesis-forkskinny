@@ -70,18 +70,22 @@ typedef union {
 } HalfState64Sliced_t;
 
 typedef union {
-	#if AVX512_support
+	/* !!! BEWARE !!!! */
+	/* These groups of members aren't used in the same context and assume different memory layout!*/
+	/* To save effort, these are both accessible in the same struct definition*/
+	// ----- Used for segmented cipher state:
+	uint64_t raw_segments[64];
 	__m512i segments512[2][4];
 	__m256i segments256[4][4];
-	#elif AVX2_support
-	__m256i segments256[4][4];
-	#else
+	
+	// ----- Used for accessing TK or non-segmented cipher state:
 	Slice64_t raw[64];
 	Cell64_t cells[16];
 	Row64_t rows[4];
 	Pair64_t pairs[8];
+	
 	HalfState64Sliced_t halves[2];
-	#endif
+	// -----
 } State64Sliced_t;
 
 typedef union {

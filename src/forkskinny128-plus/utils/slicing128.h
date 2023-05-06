@@ -148,7 +148,7 @@ static inline void unslice_significance(const Slice128_t slice, Blocks128_t *blo
 	
 }
 
-static inline Blocks128_t unslice(State128Sliced_t state) {
+static inline Blocks128_t unslice_accelerated(State128Sliced_t state) {
 	
 	Blocks128_t unsliced = Blocks128_t();
 	for (int i = 0; i < 128; ++i) {

@@ -29,6 +29,10 @@
 #define OR256 _mm256_or_si256
 #define ONE256 _mm256_set1_epi64x(-1)
 
+#define XOR512 _mm512_xor_si512
+#define OR512 _mm512_or_si512
+#define ONE512 _mm512_set1_epi64x(-1)
+
 // ----- 8-bit slices -----
 #if slice_size == 8
 	#define slice_t uint8_t

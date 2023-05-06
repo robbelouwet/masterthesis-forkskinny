@@ -38,7 +38,7 @@ static inline void forkskinny64_shiftrows(State64Sliced_t *state) {
 	
 	// Erik: 0x EDCF 98BA 4765 3210
 	// Us:   0x
-//	auto test_res = unslice(*state).values[0].raw;
+//	auto test_res = unslice_accelerated(*state).values[0].raw;
 //	int appel = 1;
 }
 
@@ -68,7 +68,7 @@ static inline void forkskinny64_shiftrows_inv(State64Sliced_t *state){
 	state->cells[0xE] = temp;
 	
 
-//	auto test_res = unslice(*state).values[0].raw;
+//	auto test_res = unslice_accelerated(*state).values[0].raw;
 //	int appel = 1;
 }
 #endif //FORKSKINNYPLUS64_FORKSKINNY_SHIFTROWS_H

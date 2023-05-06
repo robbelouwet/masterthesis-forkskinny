@@ -107,8 +107,8 @@ uint32_t slice(uint32_t state) {
 	       | (slice_index(state, 3) << 24);
 }
 
-inline uint32_t unslice(uint32_t state) __attribute__((always_inline));
-uint32_t unslice(uint32_t state) {
+inline uint32_t unslice_accelerated(uint32_t state) __attribute__((always_inline));
+uint32_t unslice_accelerated(uint32_t state) {
 	return unslice_index((state & 0x000000FF), 0)
 	       | unslice_index(((state & 0x0000FF00) >> 8), 1)
 	       | unslice_index(((state & 0x00FF0000) >> 16), 2)

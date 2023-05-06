@@ -53,8 +53,8 @@ int main(int argc, char **argv) {
 	auto sequential_res = sequential_abcde(state);
 	
 	// unslice
-	//auto unsliced_simd_res = unslice(sliced_simd_res.state);
-	auto unsliced_res = unslice(sliced_res);
+	//auto unsliced_simd_res = unslice_accelerated(sliced_simd_res.state);
+	auto unsliced_res = unslice_accelerated(sliced_res);
 	
 	// double check LSFRs were computed correctly
 	//assert(unsliced_res == unsliced_simd_res);

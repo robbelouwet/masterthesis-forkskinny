@@ -114,7 +114,7 @@ void benchmark_forkskinny64_192() {
 	Blocks64_t unsliced_cts[ITERATIONS];
 	auto before1 = _rdtsc();
 	for (int i = 0; i < ITERATIONS; ++i)
-		unsliced_cts[i] = unslice(cts[i].M);
+		unsliced_cts[i] = unslice_accelerated(cts[i].M);
 	auto after1 = _rdtsc();
 	
 	// will never happen but w
@@ -150,7 +150,7 @@ Blocks64_t benchmark_single_forkskinny64_192(Blocks64_t unsliced_m, Blocks64_t u
 	auto ct = forkskinny64_encrypt(schedule, &test_M, 'b');
 	
 	// UNSLICE
-	return unslice(ct.M);
+	return unslice_accelerated(ct.M);
 }
 
 void run_benchmark_fs64(benchmark::State &state) {

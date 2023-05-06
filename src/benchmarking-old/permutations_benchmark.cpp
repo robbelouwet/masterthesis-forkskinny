@@ -232,10 +232,10 @@ int main(int argc, char **argv) {
 	permute_sliced_packed_16(&sliced_packed_16);
 	permute_sliced_packed_32(&sliced_packed_32);
 	
-	u64 unsliced_step = unslice(sliced_step.state);
-	u64 unsliced_packed_8 = unslice(sliced_packed_8.state);
-	u64 unsliced_packed_16 = unslice(sliced_packed_16.state);
-	u64 unsliced_packed_32 = unslice(sliced_packed_32.state);
+	u64 unsliced_step = unslice_accelerated(sliced_step.state);
+	u64 unsliced_packed_8 = unslice_accelerated(sliced_packed_8.state);
+	u64 unsliced_packed_16 = unslice_accelerated(sliced_packed_16.state);
+	u64 unsliced_packed_32 = unslice_accelerated(sliced_packed_32.state);
 	
 	assert(unsliced_packed_8 == unsliced_step);
 	assert(unsliced_packed_8 == vanilla.llrow);

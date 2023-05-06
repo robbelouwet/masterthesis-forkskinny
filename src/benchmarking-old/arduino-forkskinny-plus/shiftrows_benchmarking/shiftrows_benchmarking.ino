@@ -126,8 +126,8 @@ uint32_t slice(uint32_t state) {
          | (slice_index(state, 3) << 24);
 }
 
-inline uint32_t unslice(uint32_t state) __attribute__((always_inline));
-uint32_t unslice(uint32_t state) {
+inline uint32_t unslice_accelerated(uint32_t state) __attribute__((always_inline));
+uint32_t unslice_accelerated(uint32_t state) {
   return unslice_index((state & 0x000000FF), 0)
          | unslice_index(((state & 0x0000FF00) >> 8), 1)
          | unslice_index(((state & 0x00FF0000) >> 16), 2)
@@ -486,9 +486,9 @@ void run() {
   shift_rows_sliced_lookup_half_slices(&sliced_lookup_8bit);
   auto cycles_lookup_8bit = KIN1_GetCycleCounter();
 
-  auto unsliced_packed_rows = unslice(sliced_packed_rows.state);
-  auto unsliced_lookup = unslice(sliced_lookup.state);
-  auto unsliced_lookup_8bit = unslice(sliced_lookup_8bit.state);
+  auto unsliced_packed_rows = unslice_accelerated(sliced_packed_rows.state);
+  auto unsliced_lookup = unslice_accelerated(sliced_lookup.state);
+  auto unsliced_lookup_8bit = unslice_accelerated(sliced_lookup_8bit.state);
 
 
   Serial.print("Old shift rows: ");

@@ -13,13 +13,13 @@
 //
 //	auto s_output = State128Sliced_t();
 //	PT128_4(sliced_state, s_output)
-//	auto output = unslice(s_output).values[0].raw[0];
+//	auto output = unslice_accelerated(s_output).values[0].raw[0];
 //
 //
 //	auto original_pt2 = Blocks64_t{.values = {{.bytes = {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef}}}};
 //	auto sliced_state2 = slice(original_pt);
 //	auto s_output2 = permute(permute(permute(permute(sliced_state2))));
-//	auto output2 = unslice(s_output2).values[0].raw[0];
+//	auto output2 = unslice_accelerated(s_output2).values[0].raw[0];
 //
 //	int appel = 1;
 //
@@ -30,15 +30,15 @@ void test_forkskinny_128_256() {
 	auto M = slice(M_128());
 	auto TK1 = slice(TK1_128());
 	auto TK2 = slice(TK2_128());
-	auto original_pt = unslice(M);
+	auto original_pt = unslice_accelerated(M);
 	
 	auto schedule = forkskinny_128_keyschedule_tk2(TK1, TK2);
 	
 	// Ensure correct test vectors
 	auto ct = forkskinny128_encrypt(&schedule, &M, 'b', FORKSKINNY_128_256_ROUNDS_BEFORE,
 	                                FORKSKINNY_128_256_ROUNDS_AFTER);
-	auto result_c0 = unslice(ct.C0);
-	auto result_c1 = unslice(ct.C1);
+	auto result_c0 = unslice_accelerated(ct.C0);
+	auto result_c1 = unslice_accelerated(ct.C1);
 	
 	std::cout << "\nM [0]: ";
 	print_block(original_pt.values[0].bytes, 16);
@@ -59,8 +59,8 @@ void test_forkskinny_128_256() {
 	
 	auto pt = forkskinny128_decrypt(&schedule, &ct, '1', 'b', FORKSKINNY_128_256_ROUNDS_BEFORE,
 	                                FORKSKINNY_128_256_ROUNDS_AFTER);
-	auto result_M = unslice(pt.M);
-	auto result_C0 = unslice(pt.C0);
+	auto result_M = unslice_accelerated(pt.M);
+	auto result_C0 = unslice_accelerated(pt.C0);
 	
 	// test C1 -> (C0, M)
 	for (int i = 0; i < slice_size; ++i) {
@@ -78,7 +78,7 @@ void test_forkskinny_128_384() {
 	auto TK1 = slice(TK1_128());
 	auto TK2 = slice(TK2_128());
 	auto TK3 = slice(TK3_128());
-	auto original_pt = unslice(M);
+	auto original_pt = unslice_accelerated(M);
 	
 	auto schedule = forkskinny_128_fixsliced_init_tk23(TK1, TK2, TK3);
 	
@@ -86,15 +86,15 @@ void test_forkskinny_128_384() {
 	// 0x9AC99F33632C5A7B,  0x9AC99F33632C5A77, 0x9AC99F33632C5A77
 	// 0xACE46A4946F70F9C,  0x6AF595E4AC0D4945, 0x6AF595E4AC0D4945
 	// 0xB9BAB9D01F6E5007,  0xB96C01BAB952D018, 0xB96C01BAB952D018
-	auto rtk0 = unslice({.halves = {schedule.keys[0], {}}}).values[0].raw[0];
-	auto rtk1 = unslice({.halves = {schedule.keys[1], {}}}).values[0].raw[0];
-	auto rtk2 = unslice({.halves = {schedule.keys[2], {}}}).values[0].raw[0];
+	auto rtk0 = unslice_accelerated({.halves = {schedule.keys[0], {}}}).values[0].raw[0];
+	auto rtk1 = unslice_accelerated({.halves = {schedule.keys[1], {}}}).values[0].raw[0];
+	auto rtk2 = unslice_accelerated({.halves = {schedule.keys[2], {}}}).values[0].raw[0];
 	
 	// Ensure correct test vectors
 	auto ct = forkskinny128_encrypt(&schedule, &M, 'b', FORKSKINNY_128_384_ROUNDS_BEFORE,
 	                                FORKSKINNY_128_384_ROUNDS_AFTER);
-	auto result_c0 = unslice(ct.C0);
-	auto result_c1 = unslice(ct.C1);
+	auto result_c0 = unslice_accelerated(ct.C0);
+	auto result_c1 = unslice_accelerated(ct.C1);
 	
 	std::cout << "\nM [0]: ";
 	print_block(original_pt.values[0].bytes, 16);
@@ -115,8 +115,8 @@ void test_forkskinny_128_384() {
 
 	auto pt = forkskinny128_decrypt(&schedule, &ct, '1', 'b', FORKSKINNY_128_384_ROUNDS_BEFORE,
 	                                FORKSKINNY_128_384_ROUNDS_AFTER);
-	auto result_M = unslice(pt.M);
-	auto result_C0 = unslice(pt.C0);
+	auto result_M = unslice_accelerated(pt.M);
+	auto result_C0 = unslice_accelerated(pt.C0);
 
 	// test C1 -> (C0, M)
 	for (int i = 0; i < slice_size; ++i) {

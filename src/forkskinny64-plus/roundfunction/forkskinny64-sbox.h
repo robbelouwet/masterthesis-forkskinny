@@ -26,6 +26,7 @@ static inline void skinny64_sbox(State64Sliced_t *state) {
 		x2 = r2;
 		x3 = r3;
 	}
+	int appel = 1;
 	#else
 	#define x0 cell.slices[0].value
 	#define x1 cell.slices[1].value
@@ -51,7 +52,7 @@ static inline void skinny64_sbox(State64Sliced_t *state) {
 	
 	// INPUT:   0x FEDC BA98 7654 3210
 	// OUTPUT:  0x F7E4 D583 B2A1 096C
-//	auto test_res = unslice(*state).values[0].raw;
+//	auto test_res = unslice_accelerated(*state).values[0].raw;
 //	int banaan = 1;
 }
 
@@ -60,18 +61,18 @@ static inline void skinny64_sbox_inv(State64Sliced_t *state) {
 //	*state = Slice64_t(blocks);
 //	int appel = 1;
 	
-	for (int i = 0; i < 16; ++i) {
-		auto cell = state->cells[i];
-		
-		y1 = XOR_SLICE(x0, XOR_SLICE(OR_SLICE(x3, x2), ONE));
-		y2 = XOR_SLICE(x1, XOR_SLICE(OR_SLICE(y1, x3), ONE));
-		y3 = XOR_SLICE(x2, XOR_SLICE(OR_SLICE(y2, y1), ONE));
-		y0 = XOR_SLICE(x3, XOR_SLICE(OR_SLICE(y3, y2), ONE));
-	}
+//	for (int i = 0; i < 16; ++i) {
+//		auto cell = state->cells[i];
+//
+//		y1 = XOR_SLICE(x0, XOR_SLICE(OR_SLICE(x3, x2), ONE));
+//		y2 = XOR_SLICE(x1, XOR_SLICE(OR_SLICE(y1, x3), ONE));
+//		y3 = XOR_SLICE(x2, XOR_SLICE(OR_SLICE(y2, y1), ONE));
+//		y0 = XOR_SLICE(x3, XOR_SLICE(OR_SLICE(y3, y2), ONE));
+//	}
 	
 	// INPUT:   0x F7E4 D583 B2A1 096C
 	// OUTPUT:  0x FEDC BA98 7654 3210
-//	auto test_res = unslice(*state).values[0].raw;
+//	auto test_res = unslice_accelerated(*state).values[0].raw;
 //	int banaan = 1;
 }
 
