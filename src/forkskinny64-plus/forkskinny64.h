@@ -61,23 +61,20 @@ static inline void apply_roundkey(HalfState64Sliced_t round_key, State64Sliced_t
 	for (int i = 0; i < 2; ++i) {
 		auto row = i * 16;
 		for (int j = 0; j < 4; ++j) {
-			auto a = state->segments256[i][j];
-			auto b = _mm256_set_epi64x(
-					round_key.raw[row + j + 12].value,
-					round_key.raw[row + j + 8].value,
-					round_key.raw[row + j + 4].value,
-					round_key.raw[row + j].value
-			);
-			auto t_before = unslice_accelerated(*state).values[0].raw;
-			state->segments256[i][j] = XOR256(a, b);
-			auto t_after = unslice_accelerated(*state).values[0].raw;
-			int appel = 1;
+			state->segments256[i][j] = XOR256(
+					state->segments256[i][j],
+					_mm256_set_epi64x(
+							round_key.raw[row + j + 12].value,
+							round_key.raw[row + j + 8].value,
+							round_key.raw[row + j + 4].value,
+							round_key.raw[row + j].value
+					));
 		}
 	}
 	
 	// AddConstant: M8 (in cell 9) 0x2, aka Slice64_t 1 of cell 8, because C2 is on the third row and not present in the round key!
-	// See the thesis on where index 41 comes from
-	state->raw_segments[41] ^= -1ULL;
+	// See the thesis on where index 34 comes from
+	state->raw_segments[37] ^= -1ULL;
 	
 	#else
 	for (int i = 0; i < 8; ++i) {
@@ -99,7 +96,7 @@ static inline void apply_roundkey(HalfState64Sliced_t round_key, State64Sliced_t
 static inline void forkskinny64_encrypt_round(KeySchedule64Sliced_t schedule, State64Sliced_t *state,
                                               uint16_t iteration) {
 	// i: 0, 0x76541200
-	auto roundkey = unslice_accelerated({.halves= {schedule.keys[iteration], {}}}).values[0].raw;
+	auto roundkey = unslice_accelerated({.halves= {schedule.keys[iteration], {}}}, false).values[0].raw;
 	
 	auto test_sbox_before = unslice_accelerated(*state).values[0].raw; // 0x EFCD AB89 6745 2301
 	skinny64_sbox(state);

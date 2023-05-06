@@ -125,9 +125,9 @@ void test_forkskinny64_192() {
 	// 0x EE00 FDE0
 	// 0x 099B 203B
 	// 0x 0EE2 40B2
-	auto rtk0 = unslice_accelerated({.halves = {schedule.keys[0], {}}}).values[0].raw;
-	auto rtk1 = unslice_accelerated({.halves = {schedule.keys[1], {}}}).values[0].raw;
-	auto rtk2 = unslice_accelerated({.halves = {schedule.keys[2], {}}}).values[0].raw;
+	auto rtk0 = unslice_accelerated({.halves = {schedule.keys[0], {}}}, false).values[0].raw;
+	auto rtk1 = unslice_accelerated({.halves = {schedule.keys[1], {}}}, false).values[0].raw;
+	auto rtk2 = unslice_accelerated({.halves = {schedule.keys[2], {}}}, false).values[0].raw;
 
 	// Ensure correct test vectors
 	auto ct = forkskinny64_encrypt(schedule, &M, 'b');
