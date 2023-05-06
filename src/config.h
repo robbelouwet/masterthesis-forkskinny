@@ -7,8 +7,8 @@
 
 // @formatter:off
 // -- CONFIG --
-#define slice_size 32 // 8, 32, 64, 128, 256 or 512
-#define AVX2_support false
+#define slice_size 64 // 8, 32, 64, 128, 256 or 512
+#define AVX2_support true
 #define AVX512_support false
 // ------------
 
@@ -25,14 +25,21 @@
 
 #define ROL64(v, i) ((v << i) | (v >> (64 - i)))
 
+#define XOR256 _mm256_xor_si256
+#define OR256 _mm256_or_si256
+#define ONE256 _mm256_set1_epi64x(-1)
+
 // ----- 8-bit slices -----
 #if slice_size == 8
 	#define slice_t uint8_t
+	#define lane_t uint64_t
 	#define ONE uint8_t(0xFF)
 	#define ZER uint8_t(0x0)
 	#define BIT(i) (uint8_t(1) << i)
 	#define MASK(i) (slice_t(-1) >> (8 - i))
 	#define ROR(v, i) ((v >> i) | (v << (8 - i)))
+	#define ROR_LANES(v, i) ((v >> i) | (v << (64 - i)))
+	#define ROL_LANES(v, i) ((v << i) | (v >> (64 - i)))
 	#define XOR_SLICE(s1, s2) (s1 ^ s2)
 	#define OR_SLICE(s1, s2) (s1 | s2)
 	#define AND_SLICE(s1, s2) (s1 & s2)
@@ -41,11 +48,14 @@
 // ----- 32-bit slices -----
 #elif slice_size == 32
 	#define slice_t uint32_t
+	#define lane_t uint64_t
 	#define ONE uint32_t(0xFFFFFFFF)
 	#define ZER uint32_t(0x0)
 	#define BIT(i) (uint32_t(1) << i)
 	#define MASK(i) (slice_t(-1) >> (32 - i))
 	#define ROR(v, i) ((v >> i) | (v << (32 - i)))
+	#define ROR_LANES(v, i) ((v >> i) | (v << (64 - i)))
+	#define ROL_LANES(v, i) ((v << i) | (v >> (64 - i)))
 	#define XOR_SLICE(s1, s2) (s1 ^ s2)
 	#define OR_SLICE(s1, s2) (s1 | s2)
 	#define AND_SLICE(s1, s2) (s1 & s2)
@@ -54,11 +64,13 @@
 // ----- 64-bit slices -----
 #elif slice_size == 64
 	#define slice_t uint64_t
+	#define lane_t slice_t
 	#define ONE 0xFFFFFFFFFFFFFFFFULL
 	#define ZER 0x0ULL
 	#define BIT(i) (0x1ULL << i)
 	#define MASK(i) (slice_t(-1) >> (64 - i))
-	#define ROR(v, i) ((v >> i) | (v << (64 - i)))
+	#define ROR_LANES(v, i) ((v >> i) | (v << (64 - i)))
+	#define ROL_LANES(v, i) ((v << i) | (v >> (64 - i)))
 	#define XOR_SLICE(s1, s2) (s1 ^ s2)
 	#define OR_SLICE(s1, s2) (s1 | s2)
 	#define AND_SLICE(s1, s2) (s1 & s2)
@@ -67,34 +79,43 @@
 // ----- 128-bit slices -----
 #elif slice_size == 128
 	#define slice_t __m128i
+	#define lane_t slice_t
 	#define ONE _mm_set1_epi64x(-1)
 	#define ZER _mm_setzero_si128()
 	#define BIT(i) mm_rotr_si128(_mm_set_epi64x(0, 1), 128 - i)
-	#define XOR_SLICE(s1, s2) _mm_xor_si128(s1, s2)
-	#define OR_SLICE(s1, s2) _mm_or_si128(s1, s2)
-	#define AND_SLICE(s1, s2) _mm_and_si128(s1, s2)
+	#define ROR_LANES(v, i) (_mm_or_si128(_mm_srli_epi64(v, i), _mm_slli_epi64(v, (64 - i))))
+	#define ROL_LANES(v, i) (_mm_or_si128(_mm_slli_epi64(v, i), _mm_srli_epi64(v, (64 - i))))
+	#define XOR_SLICE _mm_xor_si128
+	#define OR_SLICE _mm_or_si128
+	#define AND_SLICE _mm_and_si128
 
 
 // ----- 256-bit slices (AVX256 registers) -----
 #elif slice_size == 256
 	#define slice_t __m256i
+	#define lane_t slice_t
 	#define ONE _mm256_set1_epi64x(-1)
 	#define ZER _mm256_setzero_si256()
 	#define BIT(i) mm256_rotr_si256(_mm256_set_epi64x(0, 0, 0, 1), 256 - i)
-	#define XOR_SLICE(s1, s2) _mm256_xor_si256(s1, s2)
-	#define OR_SLICE(s1, s2) _mm256_or_si256(s1, s2)
-	#define AND_SLICE(s1, s2) _mm256_and_si256(s1, s2)
+	#define ROR_LANES(v, i) (_mm256_or_si256(_mm256_srli_epi64(v, i), _mm256_slli_epi64(v, (64 - i))))
+	#define ROL_LANES(v, i) (_mm256_or_si256(_mm256_slli_epi64(v, i), _mm256_srli_epi64(v, (64 - i))))
+	#define XOR_SLICE XOR256
+	#define OR_SLICE OR256
+	#define AND_SLICE _mm256_and_si256
 
 
 // ----- 512-bit slices (AVX512 registers) -----
 #elif slice_size == 512
 	#define slice_t __m512i
+	#define lane_t slice_t
 	#define ONE _mm512_set1_epi64(-1)
 	#define ZER _mm512_setzero_si512()
 	#define BIT(i) mm512_rotr_si512(_mm512_set_epi64x(0, 0, 0, 0, 0, 0, 0, 1), 512 - i)
-	#define XOR_SLICE(s1, s2) _mm512_xor_si512(s1, s2)
-	#define OR_SLICE(s1, s2) _mm512_or_si512(s1, s2)
-	#define AND_SLICE(s1, s2) _mm512_and_si512(s1, s2)
+	#define ROR_LANES(v, i) (_mm512_or_si512(_mm512_srli_epi64(v, i), _mm512_slli(v, (64 - i)))
+	#define ROL_LANES(v, i) (_mm512_or_si512(_mm512_slli_epi64(v, i), _mm512_srli(v, (64 - i)))
+	#define XOR_SLICE _mm512_xor_si512
+	#define OR_SLICE _mm512_or_si512
+	#define AND_SLICE _mm512_and_si512
 #else
 	#error "Please specify a valid configuration"
 #endif
