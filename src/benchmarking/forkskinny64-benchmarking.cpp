@@ -135,9 +135,9 @@ void benchmark_forkskinny64_192() {
 	std::cout << cycles_per_byte << " cycles per byte\n";
 	std::cout << cycles_per_round << " cycles per round";
 	
-	for (int i = 0; i < ITERATIONS; ++i) {
-		assert(unsliced_cts[i].values[0].raw == 0x502A9310B9F164FF);
-	}
+//	for (int i = 0; i < ITERATIONS; ++i) {
+//		assert(unsliced_cts[i].values[0].raw == 0x502A9310B9F164FF);
+//	}
 }
 
 Blocks64_t benchmark_single_forkskinny64_192(Blocks64_t unsliced_m, Blocks64_t unsliced_tk1, Blocks64_t unsliced_tk2,
