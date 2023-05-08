@@ -129,7 +129,7 @@ static inline State64Sliced_t slice_accelerated(Blocks64_t blocks,
 		/* Now re-align the slice by rotating back and put it in the slices buffer
 		 * (assign to result in 1 go if SIMD segmentation isn't needed) */
 		slices[i].value = ROR_LANES(res, i);
-		int appel = 1;
+//		int appel = 1;
 	}
 	
 	if (segment) {

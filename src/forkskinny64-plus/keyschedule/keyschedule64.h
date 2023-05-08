@@ -29,6 +29,7 @@ static inline KeySchedule64Sliced_t forkskinny_64_init_tk2(State64Sliced_t tk1, 
 	return schedule;
 }
 
+/// EXPECTS UNSLICED TK STATES
 static inline KeySchedule64Sliced_t forkskinny_64_init_tk23(State64Sliced_t tk1, State64Sliced_t tk2,
                                                             State64Sliced_t tk3) {
 	auto schedule = KeySchedule64Sliced_t();
@@ -43,7 +44,7 @@ static inline KeySchedule64Sliced_t forkskinny_64_init_tk23(State64Sliced_t tk1,
 		schedule.keys[i] = res;
 		
 		// 0x660075E2,
-		auto round_key = unslice_accelerated({.halves = {schedule.keys[i], {}}}).values[0].raw;
+//		auto round_key = unslice_accelerated({.halves = {schedule.keys[i], {}}}).values[0].raw;
 		
 		// Permute TK's
 		tk1 = permute(tk1);

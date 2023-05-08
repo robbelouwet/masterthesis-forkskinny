@@ -6,6 +6,8 @@
 
 
 /**
+ * EXPECTS UNSEGMENTED TK STATES
+ *
  * Pre-compute round keys of ForkSkinny64 using the fixed slicing technique as described in
  * section 2.3 of https://www.esat.kuleuven.be/cosic/events/silc2020/wp-content/uploads/sites/4/2020/10/Submission6.pdf.
  *

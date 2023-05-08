@@ -5,8 +5,6 @@
 #include "forkskinny64-plus/utils/forkskinny64-datatypes.h"
 #include "forkskinny128-plus/utils/forkskinny128-datatypes.h"
 
-
-
 //<editor-fold desc="forkskinny64 sliced branch constant"
 // When comparing to the bc in the paper, the cells inside consecutive pairs of cells are swapped with each other to account
 // for a swapped order of significance of 2 nibbles within a single byte of plaintext.
@@ -33,7 +31,7 @@ slice_t const branch_constant64[64] = {
 //</editor-fold>
 
 //<editor-fold desc="forkskinny64 segmented branch constant">
-slice_t const segmented_branch_constant64[64] = {
+State64Sliced_t const segmented_branch_constant64 = {
 		ZER, ONE, ONE, ZER,
 		ONE, ZER, ZER, ZER,
 		ZER, ZER, ZER, ONE,
