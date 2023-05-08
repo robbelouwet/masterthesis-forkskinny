@@ -231,4 +231,12 @@ void print_block(uint8_t *block, unsigned int n) {
 		printf("%02x", block[i]);
 }
 
+int cmp_dbl(const void *x, const void *y)
+{
+	double xx = *(double*)x, yy = *(double*)y;
+	if (xx < yy) return -1;
+	if (xx > yy) return  1;
+	return 0;
+}
+
 #endif //CONFIG_H
