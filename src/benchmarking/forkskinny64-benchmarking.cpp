@@ -131,9 +131,9 @@ void benchmark_forkskinny64_192() {
 	qsort(encryption_timings, ITERATIONS, sizeof(unsigned long long), cmp_dbl);
 	qsort(unslice_timings, ITERATIONS, sizeof(unsigned long long), cmp_dbl);
 	
-	auto cycles_slicing_per_pack = slice_timings[ITERATIONS / 2];
-	auto cycles_encryption_per_pack = encryption_timings[ITERATIONS / 2];
-	auto cycles_unslicing_per_pack = unslice_timings[ITERATIONS / 2];
+	auto cycles_slicing_per_pack = slice_timings[0];
+	auto cycles_encryption_per_pack = encryption_timings[0];
+	auto cycles_unslicing_per_pack = unslice_timings[0];
 	
 	// will never happen but w
 	if (unsliced_cts[0].values[0].raw % 12345633333 == 12) exit(0);
