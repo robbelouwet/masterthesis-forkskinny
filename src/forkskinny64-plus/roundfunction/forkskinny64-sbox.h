@@ -8,8 +8,8 @@ static inline void skinny64_sbox(State64Sliced_t *state) {
 //	*state = Slice64_t(blocks);
 //	int appel = 1;
 	
-	#if AVX512_support
-	#elif AVX2_support
+	#if AVX512_acceleration
+	#elif AVX2_acceleration
 	#define x0 state->segments256[i][0]
 	#define x1 state->segments256[i][1]
 	#define x2 state->segments256[i][2]

@@ -163,7 +163,7 @@ int main() {
 	benchmark_forkskinny64_192();
 	std::cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++";
 	std::cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++\n";
-	benchmark_PAEF_forkskinny64_192();
+//	benchmark_PAEF_forkskinny64_192();
 }
 //BENCHMARK(run_benchmark_fs64);
 //BENCHMARK_MAIN();

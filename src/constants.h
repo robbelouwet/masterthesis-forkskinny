@@ -32,6 +32,27 @@ slice_t const branch_constant64[64] = {
 };
 //</editor-fold>
 
+//<editor-fold desc="forkskinny64 segmented branch constant">
+slice_t const segmented_branch_constant64[64] = {
+		ZER, ONE, ONE, ZER,
+		ONE, ZER, ZER, ZER,
+		ZER, ZER, ZER, ONE,
+		ZER, ZER, ONE, ZER,
+		ZER, ONE, ZER, ONE,
+		ONE, ONE, ONE, ZER,
+		ONE, ZER, ZER, ONE,
+		ZER, ZER, ONE, ONE,
+		ONE, ONE, ONE, ONE,
+		ONE, ZER, ONE, ONE,
+		ZER, ONE, ONE, ONE,
+		ONE, ZER, ONE, ZER,
+		ZER, ZER, ONE, ZER,
+		ZER, ONE, ZER, ZER,
+		ONE, ONE, ZER, ZER,
+		ONE, ONE, ZER, ONE,
+};
+//</editor-fold>
+
 //<editor-fold desc="forkskinny128 sliced branch constant"
 // the branch constant in forkskinny128 doesn't have 'swapped nibbles' within a byte like forkskinny64 has,
 // because cells are already 8-bit and are definable datatypes with a specified order of significance.

@@ -92,7 +92,7 @@ static inline lane_t slice_significance_accelerated_64(const Block64_t *blocks) 
  */
 
 static inline State64Sliced_t slice_accelerated(Blocks64_t blocks,
-                                                bool const segment = (AVX512_support || AVX2_support)) {
+                                                bool const segment = (AVX512_acceleration || AVX2_acceleration)) {
 	auto result = State64Sliced_t();
 	Slice64_t slices[64];
 	
@@ -133,7 +133,7 @@ static inline State64Sliced_t slice_accelerated(Blocks64_t blocks,
 	}
 	
 	if (segment) {
-		#if AVX512_support
+		#if AVAVX2_acceleration
 		for (int i = 0; i < 2; ++i) {
 			for (int j = 0; j < 4; ++j) {
 				result.segments512[i][j] = _mm512_set_epi64(
@@ -148,7 +148,7 @@ static inline State64Sliced_t slice_accelerated(Blocks64_t blocks,
 						);
 			}
 		}
-		#elif AVX2_support
+		#elif AVX2_acceleration
 		for (int i = 0; i < 4; ++i) {
 			for (int j = 0; j < 4; ++j) {
 				result.segments256[i][j] = _mm256_set_epi64x(
@@ -220,12 +220,12 @@ static inline void unslice_significance_accelerated(const Slice64_t slice, Block
 }
 
 static inline Blocks64_t unslice_accelerated(State64Sliced_t state,
-                                             bool const segmented = (AVX2_support || AVX512_support)) {
+                                             bool const segmented = (AVX2_acceleration || AVX512_acceleration)) {
 	Blocks64_t unsliced = Blocks64_t();
 	Slice64_t unpacked[64];
 	
 	if (segmented) {
-		#if AVX512_support
+		#if AVX512_acceleration
 		for (int i = 0; i < 2; ++i) {
 			for (int j = 0; j < 4; ++j) {
 				for (int k = 0; k < 8; ++k) {
@@ -233,7 +233,7 @@ static inline Blocks64_t unslice_accelerated(State64Sliced_t state,
 				}
 			}
 		}
-		#elif AVX2_support
+		#elif AVX2_acceleration
 		for (int i = 0; i < 4; ++i) {
 			for (int j = 0; j < 4; ++j) {
 				for (int k = 0; k < 4; ++k) {
