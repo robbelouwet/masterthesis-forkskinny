@@ -30,7 +30,7 @@ static inline void back_rotate(Block64_t *b_blocks) {
  * @return
  */
 static inline lane_t slice_significance_accelerated_64(const Block64_t *blocks) {
-	lane_t slice = ZER;
+	lane_t slice = slice_ZER;
 	#if slice_size == 128
 	for (uint i = 0; i < 64; ++i)
 		slice = _mm_or_si128(

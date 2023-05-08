@@ -38,7 +38,7 @@ static inline void forkskinny64_add_constant(HalfState64Sliced_t *state, uint16_
 	#endif
 	
 	// only for TK2 and TK3
-	state->cells[3].slices[1].value = XOR_SLICE(state->cells[3].slices[1].value, ONE);
+	state->cells[3].slices[1].value = XOR_SLICE(state->cells[3].slices[1].value, slice_ONE);
 	
 	//auto unsliced_res = unslice_accelerated(*state).values[0].raw;
 	//int appel = 1;

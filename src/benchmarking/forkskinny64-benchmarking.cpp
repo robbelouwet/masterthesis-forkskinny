@@ -67,7 +67,7 @@ void benchmark_PAEF_forkskinny64_192() {
 }
 
 void benchmark_forkskinny64_192() {
-	#define ITERATIONS 1000
+	#define ITERATIONS 100
 	#define ROUNDS_BEFORE FORKSKINNY_ROUNDS_BEFORE
 	#define ROUNDS_AFTER FORKSKINNY_ROUNDS_AFTER
 	
@@ -131,9 +131,9 @@ void benchmark_forkskinny64_192() {
 	qsort(encryption_timings, ITERATIONS, sizeof(unsigned long long), cmp_dbl);
 	qsort(unslice_timings, ITERATIONS, sizeof(unsigned long long), cmp_dbl);
 	
-	auto cycles_slicing_per_pack = slice_timings[0];
-	auto cycles_encryption_per_pack = encryption_timings[0];
-	auto cycles_unslicing_per_pack = unslice_timings[0];
+	auto cycles_slicing_per_pack = slice_timings[ITERATIONS / 2];
+	auto cycles_encryption_per_pack = encryption_timings[ITERATIONS / 2];
+	auto cycles_unslicing_per_pack = unslice_timings[ITERATIONS / 2];
 	
 	// will never happen but w
 	if (unsliced_cts[0].values[0].raw % 12345633333 == 12) exit(0);
@@ -151,7 +151,7 @@ void benchmark_forkskinny64_192() {
 	std::cout << encryption_per_primitive << " cycles per single PRIMITIVE call (slicing excluded)\n";
 	std::cout << cycles_per_byte << " cycles per byte\n";
 	std::cout << (cycles_per_byte / (ROUNDS_BEFORE + 2 * ROUNDS_AFTER)) * 36 << " cycles per byte per 36 rounds\n";
-	std::cout << cycles_per_round << " cycles per round";
+	std::cout << cycles_per_round << " cycles per round (- 64)";
 
 //	for (int i = 0; i < ITERATIONS; ++i) {
 //		assert(unsliced_cts[i].values[0].raw == 0x502A9310B9F164FF);

@@ -24,6 +24,9 @@
 #define AVX512_acceleration (slice_size == 64 && AVX512_support)
 #define u64 uint64_t
 
+#define LOADU256(src) _mm256_loadu_si256((__m256i *)(src))
+#define STOREU256(dest,src) _mm256_storeu_si256((__m256i *)(dest),src)
+
 #define ROL64(v, i) ((v << i) | (v >> (64 - i)))
 
 #define XOR256 _mm256_xor_si256
@@ -38,8 +41,8 @@
 #if slice_size == 8
 	#define slice_t uint8_t
 	#define lane_t uint64_t
-	#define ONE uint8_t(0xFF)
-	#define ZER uint8_t(0x0)
+	auto slice_ONE = uint8_t(0xFF);
+	auto slice_ZER = uint8_t(0x0);
 	#define BIT(i) (uint8_t(1) << i)
 	#define MASK(i) (slice_t(-1) >> (8 - i))
 	#define ROR(v, i) ((v >> i) | (v << (8 - i)))
@@ -54,8 +57,8 @@
 #elif slice_size == 32
 	#define slice_t uint32_t
 	#define lane_t uint64_t
-	#define ONE uint32_t(0xFFFFFFFF)
-	#define ZER uint32_t(0x0)
+	auto slice_ONE = uint32_t(0xFFFFFFFF);
+	auto slice_ZER = uint32_t(0x0);
 	#define BIT(i) (uint32_t(1) << i)
 	#define MASK(i) (slice_t(-1) >> (32 - i))
 	#define ROR(v, i) ((v >> i) | (v << (32 - i)))
@@ -70,8 +73,8 @@
 #elif slice_size == 64
 	#define slice_t uint64_t
 	#define lane_t slice_t
-	#define ONE 0xFFFFFFFFFFFFFFFFULL
-	#define ZER 0x0ULL
+	auto const slice_ONE = 0xFFFFFFFFFFFFFFFFULL;
+	auto const slice_ZER = 0x0ULL;
 	#define BIT(i) (0x1ULL << i)
 	#define MASK(i) (slice_t(-1) >> (64 - i))
 	#define ROR_LANES(v, i) ((v >> i) | (v << (64 - i)))
@@ -85,8 +88,8 @@
 #elif slice_size == 128
 	#define slice_t __m128i
 	#define lane_t slice_t
-	#define ONE _mm_set1_epi64x(-1)
-	#define ZER _mm_setzero_si128()
+	auto slice_ONE = _mm_set1_epi64x(-1);
+	auto slice_ZER = _mm_setzero_si128();
 	#define BIT(i) mm_rotr_si128(_mm_set_epi64x(0, 1), 128 - i)
 	#define ROR_LANES(v, i) (_mm_or_si128(_mm_srli_epi64(v, i), _mm_slli_epi64(v, (64 - i))))
 	#define ROL_LANES(v, i) (_mm_or_si128(_mm_slli_epi64(v, i), _mm_srli_epi64(v, (64 - i))))
@@ -99,8 +102,8 @@
 #elif slice_size == 256
 	#define slice_t __m256i
 	#define lane_t slice_t
-	#define ONE _mm256_set1_epi64x(-1)
-	#define ZER _mm256_setzero_si256()
+	auto slice_ONE = _mm256_set1_epi64x(-1);
+	auto slice_ZER = _mm256_setzero_si256();
 	#define BIT(i) mm256_rotr_si256(_mm256_set_epi64x(0, 0, 0, 1), 256 - i)
 	#define ROR_LANES(v, i) (_mm256_or_si256(_mm256_srli_epi64(v, i), _mm256_slli_epi64(v, (64 - i))))
 	#define ROL_LANES(v, i) (_mm256_or_si256(_mm256_slli_epi64(v, i), _mm256_srli_epi64(v, (64 - i))))
@@ -113,8 +116,8 @@
 #elif slice_size == 512
 	#define slice_t __m512i
 	#define lane_t slice_t
-	#define ONE _mm512_set1_epi64(-1)
-	#define ZER _mm512_setzero_si512()
+	auto slice_ONE = _mm512_set1_epi64(-1);
+	auto slice_ZER = _mm512_setzero_si512();
 	#define BIT(i) mm512_rotr_si512(_mm512_set_epi64x(0, 0, 0, 0, 0, 0, 0, 1), 512 - i)
 	#define ROR_LANES(v, i) (_mm512_or_si512(_mm512_srli_epi64(v, i), _mm512_slli(v, (64 - i)))
 	#define ROL_LANES(v, i) (_mm512_or_si512(_mm512_slli_epi64(v, i), _mm512_srli(v, (64 - i)))

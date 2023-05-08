@@ -115,19 +115,19 @@ void test(){
 
 void test_forkskinny64_192() {
 	auto M = slice_accelerated(M_64());
-	auto TK1 = slice_accelerated(TK1_64(), false);
-	auto TK2 = slice_accelerated(TK2_64(), false);
-	auto TK3 = slice_accelerated(TK3_64(), false);
+	auto TK1 = slice_accelerated(TK1_64(), true);
+	auto TK2 = slice_accelerated(TK2_64(), true);
+	auto TK3 = slice_accelerated(TK3_64(), true);
 	auto original_pt = unslice_accelerated(M).values[0].raw;
 
-	KeySchedule64Sliced_t schedule = forkskinny_64_fixsliced_init_tk23(TK1, TK2, TK3);
+	KeySchedule64Sliced_t schedule = forkskinny_64_init_tk23(TK1, TK2, TK3);
 
 	// 0x EE00 FDE0
 	// 0x 099B 203B
 	// 0x 0EE2 40B2
-	auto rtk0 = unslice_accelerated({.halves = {schedule.keys[0], {}}}, false).values[0].raw;
-	auto rtk1 = unslice_accelerated({.halves = {schedule.keys[1], {}}}, false).values[0].raw;
-	auto rtk2 = unslice_accelerated({.halves = {schedule.keys[2], {}}}, false).values[0].raw;
+	auto rtk0 = unslice_accelerated({.halves = {schedule.keys[0], {}}}, true).values[0].raw;
+	auto rtk1 = unslice_accelerated({.halves = {schedule.keys[1], {}}}, true).values[0].raw;
+	auto rtk2 = unslice_accelerated({.halves = {schedule.keys[2], {}}}, true).values[0].raw;
 
 	// Ensure correct test vectors
 	auto ct = forkskinny64_encrypt(schedule, &M, 'b');

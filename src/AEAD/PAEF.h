@@ -16,8 +16,8 @@
 static inline void to_sliced(u64 in, State64Sliced_t *out) {
 	for (int i = 0; i < 64; ++i) {
 		u64 mask = 1 << i;
-		if (mask & in) out->raw[i].value = ONE;
-		else out->raw[i].value = ZER;
+		if (mask & in) out->raw[i].value = slice_ONE;
+		else out->raw[i].value = slice_ZER;
 	}
 }
 //  ----
@@ -86,9 +86,9 @@ static inline SlicedCiphertext64_t paef_forkskinny64_192_encrypt_section(
 	/* Set the bit flags */
 	State64Sliced_t sliced_tks[3] = {sliced_tk1, sliced_tk2, slice(tk3_blocks)};
 	auto *recast = (Slice64_t *) &sliced_tks;
-	(recast + nonce_bit_size)->value = ZER;
-	(recast + nonce_bit_size + 1)->value = ZER;
-	(recast + nonce_bit_size + 2)->value = isAD ? ZER : ONE;
+	(recast + nonce_bit_size)->value = slice_ZER;
+	(recast + nonce_bit_size + 1)->value = slice_ZER;
+	(recast + nonce_bit_size + 2)->value = isAD ? slice_ZER : slice_ONE;
 
 	/* If this section is the last one, set bit flag of last block in this section */
 	if (last != -1)

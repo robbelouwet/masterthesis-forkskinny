@@ -63,6 +63,8 @@ typedef union {
 } Row64_t;
 
 typedef union {
+	__m256i segments256[4][4];
+	
 	Slice64_t raw[32];
 	Cell64_t cells[8];
 	Pair64_t pairs[4];

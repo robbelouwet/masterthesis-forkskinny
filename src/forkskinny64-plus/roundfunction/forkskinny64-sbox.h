@@ -26,7 +26,6 @@ static inline void skinny64_sbox(State64Sliced_t *state) {
 		x2 = r2;
 		x3 = r3;
 	}
-	int appel = 1;
 	#else
 	#define x0 cell.slices[0].value
 	#define x1 cell.slices[1].value
