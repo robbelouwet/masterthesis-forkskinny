@@ -115,23 +115,29 @@ void benchmark_forkskinny64_192() {
 	Blocks64_t unsliced_cts[ITERATIONS];
 	auto before1 = _rdtsc();
 	for (int i = 0; i < ITERATIONS; ++i)
-		unsliced_cts[i] = unslice_accelerated(cts[i].M);
+		unsliced_cts[i] = unslice_accelerated(cts[i].C0);
 	auto after1 = _rdtsc();
 	
 	// will never happen but w
 	if (unsliced_cts[0].values[0].raw % 12345633333 == 12) exit(0);
+	if (unsliced_cts[0].values[0].raw % 12345633333 == 12) exit(0);
+	if (unsliced_cts[0].values[0].raw % 12345633333 == 12) exit(0);
 	
-	auto total = (after - before) /*+ (after0 - before0)*/ + (after1 - before1);
+	auto total = (after - before) + (after0 - before0) + (after1 - before1);
 	auto cycles_per_primitive = total / (ITERATIONS * slice_size);
 	auto cycles_per_round = cycles_per_primitive / (ROUNDS_BEFORE + 2 * ROUNDS_AFTER);
 	auto cycles_per_byte = cycles_per_primitive / 8;
 	
-	auto slicing_per_primitive = ((after0 - before0) + (after1 - before1)) / (ITERATIONS * slice_size);
+	auto slicing_per_primitive = ((after0 - before0) /*+ (after1 - before1)*/) / (ITERATIONS * slice_size);
 	std::cout << slicing_per_primitive << " spent on slicing per single PRIMITIVE call\n";
 	std::cout << cycles_per_primitive + slicing_per_primitive
 	          << " total cycles per single PRIMITIVE call (slicing included)\n";
 	std::cout << cycles_per_byte << " cycles per byte\n";
 	std::cout << cycles_per_round << " cycles per round";
+	
+	for (int i = 0; i < ITERATIONS; ++i) {
+		assert(unsliced_cts[i].values[0].raw == 0x502A9310B9F164FF);
+	}
 }
 
 Blocks64_t benchmark_single_forkskinny64_192(Blocks64_t unsliced_m, Blocks64_t unsliced_tk1, Blocks64_t unsliced_tk2,
