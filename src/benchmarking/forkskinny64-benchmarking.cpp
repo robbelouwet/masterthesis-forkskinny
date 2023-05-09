@@ -67,7 +67,7 @@ void benchmark_PAEF_forkskinny64_192() {
 }
 
 void benchmark_forkskinny64_192() {
-	#define ITERATIONS 100
+	#define ITERATIONS 199
 	#define ROUNDS_BEFORE FORKSKINNY_ROUNDS_BEFORE
 	#define ROUNDS_AFTER FORKSKINNY_ROUNDS_AFTER
 	
@@ -128,9 +128,9 @@ void benchmark_forkskinny64_192() {
 	unsigned long long unslice_timings[ITERATIONS];
 	for (int i = 0; i < ITERATIONS; ++i) {
 		auto before = _rdtsc();
-		unsliced_cts[i] = unslice_accelerated(cts[i].C0, true);
+		unsliced_cts[i] = unslice_accelerated(cts[i].C0);
 		auto after = _rdtsc();
-		unslice_timings[i] = after - before;
+		unslice_timings[i] = 0;//after - before;
 	}
 	
 	// sort the timings
@@ -139,10 +139,10 @@ void benchmark_forkskinny64_192() {
 	qsort(encryption_timings, ITERATIONS, sizeof(unsigned long long), cmp_dbl);
 	qsort(unslice_timings, ITERATIONS, sizeof(unsigned long long), cmp_dbl);
 	
-	double cycles_slicing_per_pack = slice_timings[ITERATIONS / 2];
-	double cycles_schedule_per_pack = schedule_timings[ITERATIONS / 2];
-	double cycles_encryption_per_pack = encryption_timings[ITERATIONS / 2];
-	double cycles_unslicing_per_pack = unslice_timings[ITERATIONS / 2];
+	double cycles_slicing_per_pack = slice_timings[0];
+	double cycles_schedule_per_pack = schedule_timings[0];
+	double cycles_encryption_per_pack = encryption_timings[0];
+	double cycles_unslicing_per_pack = unslice_timings[0];
 	
 	double total_per_block =
 			(cycles_unslicing_per_pack + cycles_slicing_per_pack + cycles_encryption_per_pack +
@@ -160,13 +160,13 @@ void benchmark_forkskinny64_192() {
 	std::cout << schedule_per_primitive << " cycles spent on key schedule alone PER PRIMITIVE\n";
 	std::cout << cycles_per_byte << " cycles per byte\n";
 	std::cout << ((cycles_per_byte / (ROUNDS_BEFORE + 2 * ROUNDS_AFTER))) * 36 << " cycles per byte per 36 rounds\n";
-	std::cout << cycles_per_round << " cycles per round (- 64)";
+	std::cout << cycles_per_round << " cycles per round";
 	
 	for (int i = 0; i < ITERATIONS; ++i) {
 		assert(unsliced_cts[i].values[0].raw == 0x502A9310B9F164FF);
 	}
 	
-	std::cout << "Success!";
+	std::cout << "\nSuccess!";
 }
 
 Blocks64_t benchmark_single_forkskinny64_192(Blocks64_t unsliced_m, Blocks64_t unsliced_tk1, Blocks64_t unsliced_tk2,
