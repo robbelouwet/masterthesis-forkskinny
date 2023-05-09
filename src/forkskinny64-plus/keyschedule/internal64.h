@@ -144,17 +144,15 @@ auto mask_0 = _mm256_set_epi64x(0, 0, 0, -1ULL);
 auto mask_1 = _mm256_set_epi64x(0, 0, -1ULL, 0);
 auto mask_2 = _mm256_set_epi64x(0, -1ULL, 0, 0);
 /// Make sure you first understand how the nibble-swapped cipher state looks like
-static inline State64Sliced_t permute(State64Sliced_t input) {
+static inline void permute(State64Sliced_t *state) {
 //	auto test_blocks = Blocks64_t();
 //	test_blocks.values[0].raw = 0xEFCDAB8967452301;
-//	input = slice_accelerated(test_blocks);
-	
-	auto output = State64Sliced_t();
+//	state = slice_accelerated(test_blocks);
 	
 	#if AVX2_acceleration || AVX512_acceleration
 	for (int i = 0; i < 4; ++i) {
-		auto bit_lane_row_2 = LOADU256(input.segments256[2] + i);
-		auto bit_lane_row_3 = LOADU256(input.segments256[3] + i);
+		auto bit_lane_row_2 = LOADU256(state->segments256[2] + i);
+		auto bit_lane_row_3 = LOADU256(state->segments256[3] + i);
 		
 		// align M_0x8 (cell 9) into cell 3 and M_0x9 (cell 8) into cell 1
 		bit_lane_row_2 = _mm256_permute4x64_epi64(bit_lane_row_2, 0b01100011);
@@ -178,23 +176,23 @@ static inline State64Sliced_t permute(State64Sliced_t input) {
 			bit_lane_row_3 = _mm256_or_si256(_mm256_andnot_si256(mask_1, bit_lane_row_3), r2_masked);
 		}
 		
-		STOREU256(output.segments256[0] + i, bit_lane_row_2);
-		STOREU256(output.segments256[1] + i, bit_lane_row_3);
-		STOREU256(output.segments256[2] + i, input.segments256[0][i]);
-		STOREU256(output.segments256[3] + i, input.segments256[1][i]);
+		STOREU256(state->segments256[2] + i, state->segments256[0][i]);
+		STOREU256(state->segments256[3] + i, state->segments256[1][i]);
+		STOREU256(state->segments256[0] + i, bit_lane_row_2);
+		STOREU256(state->segments256[1] + i, bit_lane_row_3);
 	}
 	
 	#else
-	output.halves[1] = input.halves[0];
+	output.halves[1] = state.halves[0];
 	
-	output.cells[0] = input.cells[0xE];
-	output.cells[1] = input.cells[0x8];
-	output.cells[2] = input.cells[0xC];
-	output.cells[3] = input.cells[0x9];
-	output.cells[4] = input.cells[0xF];
-	output.cells[5] = input.cells[0xB];
-	output.cells[6] = input.cells[0xA];
-	output.cells[7] = input.cells[0xD];
+	output.cells[0] = state.cells[0xE];
+	output.cells[1] = state.cells[0x8];
+	output.cells[2] = state.cells[0xC];
+	output.cells[3] = state.cells[0x9];
+	output.cells[4] = state.cells[0xF];
+	output.cells[5] = state.cells[0xB];
+	output.cells[6] = state.cells[0xA];
+	output.cells[7] = state.cells[0xD];
 	#endif
 	
 	// Input:   0x FEDC BA98 7654 3210
@@ -203,7 +201,7 @@ static inline State64Sliced_t permute(State64Sliced_t input) {
 	// Us:      0x 7654 3210 DABF 9C8E
 
 //	auto test_output = unslice_accelerated(output).values[0].raw;
-	return output;
+	int appel = 1;
 }
 
 static inline HalfState64Sliced_t xor_half_keys(HalfState64Sliced_t a, HalfState64Sliced_t b) {

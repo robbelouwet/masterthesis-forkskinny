@@ -3,7 +3,7 @@
 
 #include "../utils/forkskinny64-datatypes.h"
 
-static inline void skinny64_sbox(State64Sliced_t *state) {
+static inline void forkskinny64_sbox(State64Sliced_t *state) {
 //	auto blocks = Blocks64_t{.values = {0xFEDCBA9876543210}};
 //	*state = Slice64_t(blocks);
 //	int appel = 1;
@@ -55,7 +55,7 @@ static inline void skinny64_sbox(State64Sliced_t *state) {
 //	int banaan = 1;
 }
 
-static inline void skinny64_sbox_inv(State64Sliced_t *state) {
+static inline void forkskinny64_sbox_inv(State64Sliced_t *state) {
 //	auto blocks = Blocks64_t{.values = {0xF7E4D583B2A1096C}};
 //	*state = Slice64_t(blocks);
 //	int appel = 1;

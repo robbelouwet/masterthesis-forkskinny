@@ -97,7 +97,7 @@ static inline SlicedCiphertext64_t paef_forkskinny64_192_encrypt_section(
 	/// Encrypt
 	State64Sliced_t state = slice(ma);
 	auto schedule = forkskinny_64_fixsliced_init_tk23(sliced_tks[0], sliced_tks[1], sliced_tks[2]);
-	return forkskinny64_encrypt(schedule, &state, mode);
+	return forkskinny64_encrypt(&schedule, &state, mode);
 }
 
 /**

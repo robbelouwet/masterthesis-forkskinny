@@ -103,15 +103,22 @@ void benchmark_forkskinny64_192() {
 		slice_timings[i] = after - before;
 	}
 	
+	KeySchedule64Sliced_t schedules[ITERATIONS];
+	unsigned long long schedule_timings[ITERATIONS];
+	for (int i = 0; i < ITERATIONS; ++i) {
+		auto before = _rdtsc();
+		schedules[i] = forkskinny_64_init_tk23(test_TK1 + i, test_TK2 + i, test_TK3 + i);
+		schedule_timings[i] = _rdtsc() - before;
+	}
+	
 	SlicedCiphertext64_t cts[ITERATIONS];
 	unsigned long long encryption_timings[ITERATIONS];
 	for (int i = 0; i < ITERATIONS; ++i) {
 		auto before = _rdtsc();
-		auto schedule = forkskinny_64_init_tk23(test_TK1[i], test_TK2[i], test_TK3[i]);
 		
 		auto pt_block = test_M[i];
 		
-		cts[i] = forkskinny64_encrypt(schedule, &pt_block, 'b');
+		cts[i] = forkskinny64_encrypt(schedules + i, &pt_block, 'b');
 		auto after = _rdtsc();
 		encryption_timings[i] = after - before;
 	}
@@ -121,41 +128,45 @@ void benchmark_forkskinny64_192() {
 	unsigned long long unslice_timings[ITERATIONS];
 	for (int i = 0; i < ITERATIONS; ++i) {
 		auto before = _rdtsc();
-		unsliced_cts[i] = unslice_accelerated(cts[i].C0);
+		unsliced_cts[i] = unslice_accelerated(cts[i].C0, true);
 		auto after = _rdtsc();
 		unslice_timings[i] = after - before;
 	}
 	
 	// sort the timings
 	qsort(slice_timings, ITERATIONS, sizeof(unsigned long long), cmp_dbl);
+	qsort(schedule_timings, ITERATIONS, sizeof(unsigned long long), cmp_dbl);
 	qsort(encryption_timings, ITERATIONS, sizeof(unsigned long long), cmp_dbl);
 	qsort(unslice_timings, ITERATIONS, sizeof(unsigned long long), cmp_dbl);
 	
-	auto cycles_slicing_per_pack = slice_timings[ITERATIONS / 2];
-	auto cycles_encryption_per_pack = encryption_timings[ITERATIONS / 2];
-	auto cycles_unslicing_per_pack = unslice_timings[ITERATIONS / 2];
+	double cycles_slicing_per_pack = slice_timings[ITERATIONS / 2];
+	double cycles_schedule_per_pack = schedule_timings[ITERATIONS / 2];
+	double cycles_encryption_per_pack = encryption_timings[ITERATIONS / 2];
+	double cycles_unslicing_per_pack = unslice_timings[ITERATIONS / 2];
 	
-	// will never happen but w
-	if (unsliced_cts[0].values[0].raw % 12345633333 == 12) exit(0);
-	if (unsliced_cts[0].values[0].raw % 12345633333 == 12) exit(0);
-	if (unsliced_cts[0].values[0].raw % 12345633333 == 12) exit(0);
+	double total_per_block =
+			(cycles_unslicing_per_pack + cycles_slicing_per_pack + cycles_encryption_per_pack +
+			 cycles_schedule_per_pack) / slice_size;
+	double total_per_primitive = cycles_encryption_per_pack / slice_size;
+	double cycles_per_round = total_per_block / (ROUNDS_BEFORE + 2 * ROUNDS_AFTER);
+	double cycles_per_byte = total_per_block / 8;
 	
-	auto total_per_block = (cycles_unslicing_per_pack + cycles_slicing_per_pack + cycles_encryption_per_pack) / slice_size;
-	auto total_per_primitive = cycles_encryption_per_pack / slice_size;
-	auto cycles_per_round = total_per_block / (ROUNDS_BEFORE + 2 * ROUNDS_AFTER);
-	auto cycles_per_byte = total_per_block / 8;
-	
-	auto slicing_per_primitive = (cycles_unslicing_per_pack + cycles_slicing_per_pack) / slice_size;
-	auto encryption_per_primitive = cycles_encryption_per_pack / slice_size;
+	double slicing_per_primitive = (cycles_unslicing_per_pack + cycles_slicing_per_pack) / slice_size;
+	double encryption_per_primitive = cycles_encryption_per_pack / slice_size;
+	double schedule_per_primitive = cycles_schedule_per_pack / slice_size;
 	std::cout << slicing_per_primitive << " spent on slicing per single PRIMITIVE call\n";
-	std::cout << encryption_per_primitive << " cycles per single PRIMITIVE call (slicing excluded)\n";
+	std::cout << encryption_per_primitive + schedule_per_primitive
+	          << " cycles per single PRIMITIVE call (slicing excluded)\n";
+	std::cout << schedule_per_primitive << " cycles spent on key schedule alone PER PRIMITIVE\n";
 	std::cout << cycles_per_byte << " cycles per byte\n";
-	std::cout << (cycles_per_byte / (ROUNDS_BEFORE + 2 * ROUNDS_AFTER)) * 36 << " cycles per byte per 36 rounds\n";
+	std::cout << ((cycles_per_byte / (ROUNDS_BEFORE + 2 * ROUNDS_AFTER))) * 36 << " cycles per byte per 36 rounds\n";
 	std::cout << cycles_per_round << " cycles per round (- 64)";
-
-//	for (int i = 0; i < ITERATIONS; ++i) {
-//		assert(unsliced_cts[i].values[0].raw == 0x502A9310B9F164FF);
-//	}
+	
+	for (int i = 0; i < ITERATIONS; ++i) {
+		assert(unsliced_cts[i].values[0].raw == 0x502A9310B9F164FF);
+	}
+	
+	std::cout << "Success!";
 }
 
 Blocks64_t benchmark_single_forkskinny64_192(Blocks64_t unsliced_m, Blocks64_t unsliced_tk1, Blocks64_t unsliced_tk2,
@@ -172,7 +183,7 @@ Blocks64_t benchmark_single_forkskinny64_192(Blocks64_t unsliced_m, Blocks64_t u
 	
 	// PRIMITIVE
 	auto schedule = forkskinny_64_fixsliced_init_tk23(test_TK1, test_TK2, test_TK3);
-	auto ct = forkskinny64_encrypt(schedule, &test_M, 'b');
+	auto ct = forkskinny64_encrypt(&schedule, &test_M, 'b');
 	
 	// UNSLICE
 	return unslice_accelerated(ct.M);

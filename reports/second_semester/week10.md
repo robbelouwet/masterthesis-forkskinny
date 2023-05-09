@@ -3,7 +3,7 @@
 # Monday
 
 So I implemented both Ideas and there is a speed up but it's still way too slow. I think the problem is that my
-implementation oftwen switches from SIMD to general-purpose registers. Like this whole concept of ambiguous data (with
+implementation often switches from SIMD to general-purpose registers. Like this whole concept of ambiguous data (with
 this union structs, that you can access it as simd lane or as array of 4 ints) actually bears a disadvantage because
 when you do such a swap, it needs to leave the SIMD register and get stored in mem, THEN loaded into GP registers and
 takes up a lot of cpu cycles. I'm adjusting the

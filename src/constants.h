@@ -5,6 +5,8 @@
 #include "forkskinny64-plus/utils/forkskinny64-datatypes.h"
 #include "forkskinny128-plus/utils/forkskinny128-datatypes.h"
 
+#define S256(x) _mm256_set_epi64x(0, 0, x, 0)
+
 //<editor-fold desc="forkskinny64 sliced branch constant"
 // When comparing to the bc in the paper, the cells inside consecutive pairs of cells are swapped with each other to account
 // for a swapped order of significance of 2 nibbles within a single byte of plaintext.
@@ -168,6 +170,103 @@ slice_t forkskinny_precomputed_round_constants[88][7] = {
 		{slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ZER, }, // 33
 };
 //</editor-fold>
+
+#if AVX2_acceleration || AVX512_acceleration
+//<editor-fold desc="88 pre-computed forkskinny sliced round constants"
+// the first 88 states of the addconstant lfsr containing {rc⁰, rc¹, ..., rc⁶} each
+// every rc slice is now aligned to the 2nd cell within a segment-row
+__m256i forkskinny_precomputed_segmented_round_constants[88][7] = {
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 1
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 3
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 7
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 15
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 31
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 63
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 126
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 125
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 123
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 119
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 111
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 95
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 62
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 124
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 121
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 115
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 103
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), }, // 79
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 30
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 61
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 122
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 117
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 107
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 87
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), }, // 46
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 92
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 56
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 112
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 97
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), }, // 67
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 6
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 13
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 27
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 55
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 110
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 93
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 58
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 116
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 105
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 83
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), }, // 38
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), }, // 76
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 24
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 49
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 98
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), }, // 69
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 10
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 21
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), }, // 43
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 86
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), }, // 44
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 88
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 48
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 96
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), }, // 65
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 2
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 5
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 11
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 23
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), }, // 47
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 94
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 60
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 120
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 113
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 99
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), }, // 71
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 14
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 29
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 59
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 118
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 109
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 91
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 54
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 108
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 89
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 50
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 100
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), }, // 73
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 18
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), }, // 37
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), }, // 74
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 20
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), }, // 41
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 82
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), }, // 36
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), }, // 72
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 16
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), }, // 33
+};
+//</editor-fold>
+#endif
 
 // <editor-fold desc="PT²"
 #define PT64_2(input, output) {   \

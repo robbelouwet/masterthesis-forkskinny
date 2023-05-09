@@ -130,7 +130,7 @@ void test_forkskinny64_192() {
 	auto rtk2 = unslice_accelerated({.halves = {schedule.keys[2], {}}}, true).values[0].raw;
 
 	// Ensure correct test vectors
-	auto ct = forkskinny64_encrypt(schedule, &M, 'b');
+	auto ct = forkskinny64_encrypt(&schedule, &M, 'b');
 	auto result_c0 = unslice_accelerated(ct.C0);
 	auto result_c1 = unslice_accelerated(ct.C1);
 
