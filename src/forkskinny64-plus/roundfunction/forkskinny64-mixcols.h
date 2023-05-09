@@ -20,8 +20,10 @@ static void inline assign_segmented_row(uint8_t from, uint8_t to, State64Sliced_
 
 static inline void skinny64_mixcols(State64Sliced_t *state) {
 //	auto test_blocks = Blocks64_t();
-//	test_blocks.values[0].raw = 0x55557555B6988DDF;
-//	*state = slice(test_blocks);
+//	srand(3);
+//	auto in = (((uint64_t) rand()) << 32) | rand();
+//	test_blocks.values[0].raw = in;
+//	*state = slice_accelerated(test_blocks);
 
 	#if AVX512_acceleration || AVX2_acceleration
 	xor_segmented_row(1, 2, 1, state);
@@ -53,7 +55,7 @@ static inline void skinny64_mixcols(State64Sliced_t *state) {
 	state->rows[0] = temp;
 	#endif
 	
-	// 0xF88AC3CD8DDFADDF
+	// 0x F88A C3CD 8DDF ADDF
 //	auto test_res = unslice_accelerated(*state).values[0].raw;
 //	int appel = 1;
 }
