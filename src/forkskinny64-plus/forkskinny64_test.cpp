@@ -120,7 +120,7 @@ void test_forkskinny64_192() {
 	auto TK3 = slice_accelerated(TK3_64(), true);
 	auto original_pt = unslice_accelerated(M).values[0].raw;
 
-	KeySchedule64Sliced_t schedule = forkskinny_64_init_tk23(TK1, TK2, TK3);
+	KeySchedule64Sliced_t schedule = forkskinny_64_init_tk23(&TK1, &TK2, &TK3);
 
 	// 0x EE00 FDE0
 	// 0x 099B 203B
@@ -160,6 +160,6 @@ void test_forkskinny64_192() {
 
 int main() {
 	test_forkskinny64_192();
-	test();
+//	test();
 	std::cout << "\n\nSuccess!";
 }

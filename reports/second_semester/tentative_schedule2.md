@@ -40,6 +40,7 @@ What I'd like:
   - Efficient memory access & Optimizations (4 pages) What? How? Why?
     - Union Structs
     - Cipher & Tweakey state
+    - Optimizations
 - ForkSKINNY+ (18 pages) (The actual implementation, how it compares to others and what makes it different)
   - Existing implementations (re-used techniques -> union structs erik!)
   - Combining Bit Slicing with SIMD -> 128-, 256- or even 512 bit slices
