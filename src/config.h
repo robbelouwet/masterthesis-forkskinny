@@ -27,6 +27,7 @@
 #define STOREU256(dest,src) _mm256_store_si256((__m256i *)(dest),src)
 
 #define ROL64(v, i) ((v << i) | (v >> (64 - i)))
+#define ROR64(v, i, regwidth) ROL64(v, (regwidth - i))
 
 #define XOR256 _mm256_xor_si256
 #define OR256 _mm256_or_si256

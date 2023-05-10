@@ -117,11 +117,38 @@ static inline void unslice_significance(const Slice64_t slice, Blocks64_t *block
 	
 }
 
+static void inline unsegmentbla(State64Sliced_t *state, const bool segmented, Slice64_t *slices) {
+	if (segmented) {
+		#if AVX512_acceleration
+		for (int i = 0; i < 2; ++i) {
+			for (int j = 0; j < 4; ++j) {
+				for (int k = 0; k < 8; ++k) {
+					unpacked[(i * 16) + j + (k * 4)].value = state.segments256[i][j][k];
+				}
+			}
+		}
+		#elif AVX2_acceleration
+		for (int i = 0; i < 4; ++i) {
+			for (int j = 0; j < 4; ++j) {
+				for (int k = 0; k < 4; ++k) {
+					slices[(i * 16) + j + (k * 4)].value = state->segments256[i][j][k];
+				}
+			}
+		}
+		#endif
+	} else
+		for (int i = 0; i < 64; ++i) slices[i] = state->raw[i];
+}
+
 static inline Blocks64_t unslice(State64Sliced_t state) {
 	
 	Blocks64_t unsliced = Blocks64_t();
+	
+	Slice64_t slices[64];
+	unsegmentbla(&state, true, slices);
+	
 	for (int i = 0; i < 64; ++i)
-		unslice_significance(state.raw[i], &unsliced, i);
+		unslice_significance(slices[i], &unsliced, i);
 	
 	
 	return unsliced;

@@ -7,6 +7,7 @@
 #include "forkskinny64.h"
 #include "keyschedule/fixsliced-keyschedule64.h"
 #include "keyschedule/keyschedule64.h"
+#include "utils/slicing64.h"
 //#include "keyschedule/fixsliced-keyschedule64.h"
 
 //bool test_pt64(){
@@ -99,17 +100,18 @@ void test(){
 			0x6666666666666666,0xBBBBBBBBBBBBBBBB,0x9999999999999999,0x5555555555555555,*/
 	}};
 	
-	b = M_rand_64(9);
+//	b = M_rand_64(9);
 	//auto res = slice(b);
-	auto res1 = slice_accelerated(b);
-	auto unsliced = unslice_accelerated(res1);
+	auto res1 = slice_accelerated(b, false);
+	auto unsliced = unslice_accelerated(res1, false);
+	auto unsliced1 = unslice(res1);
 	int appel = 1;
 	
 //	for (int i = 0; i < slice_size; ++i)
 //		assert(res.raw[i].value == res1.raw[i].value);
 	
 	for (int i = 0; i < slice_size; ++i)
-		assert(unsliced.values[i].raw == b.values[i].raw);
+		assert(unsliced.values[i].raw == unsliced1.values[i].raw);
 }
 
 
@@ -159,7 +161,7 @@ void test_forkskinny64_192() {
 }
 
 int main() {
-	test_forkskinny64_192();
-//	test();
+//	test_forkskinny64_192();
+	test();
 	std::cout << "\n\nSuccess!";
 }
