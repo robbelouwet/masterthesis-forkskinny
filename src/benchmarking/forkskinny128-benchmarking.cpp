@@ -56,7 +56,7 @@ void benchmark_forkskinny128_384() {
 		auto ct = forkskinny128_encrypt(&schedule, &pt_block, 'b', ROUNDS_BEFORE,
 		                                ROUNDS_AFTER);
 
-		auto volatile res = unslice(ct.M);
+		auto volatile res = unslice_accelerated(ct.M);
 	}
 	auto after = _rdtsc();
 
@@ -91,7 +91,7 @@ int main(){
 //void run_benchmark_fs128(benchmark::State &state) {
 //	for (auto _: state) {
 //		auto ct = benchmark_fs128_encryption();
-//		auto volatile res = unslice(ct.M);
+//		auto volatile res = unslice_accelerated(ct.M);
 //	}
 //}
 //

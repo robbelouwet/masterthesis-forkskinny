@@ -299,10 +299,10 @@ int main(int argc, char **argv) {
 	shift_rows_sliced_lookup(&sliced_state3);
 	shift_rows_sliced_lookup_half_slices(&sliced_state4);
 	
-	auto unsliced1 = unslice(sliced_state1.state);
-	auto unsliced2 = unslice(sliced_state2.state);
-	auto unsliced3 = unslice(sliced_state3.state);
-	auto unsliced4 = unslice(sliced_state4.state);
+	auto unsliced1 = unslice_accelerated(sliced_state1.state);
+	auto unsliced2 = unslice_accelerated(sliced_state2.state);
+	auto unsliced3 = unslice_accelerated(sliced_state3.state);
+	auto unsliced4 = unslice_accelerated(sliced_state4.state);
 	
 	int appel = 1;
 }

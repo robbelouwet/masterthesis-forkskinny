@@ -14,6 +14,14 @@ static inline void forkskinny64_shiftrows(State64Sliced_t *state) {
 //	test_blocks.values[0].raw = 0xFEDCBA9876543210;
 //	*state = slice(test_blocks);
 	
+	#if AVX512_acceleration
+	#elif AVX2_acceleration
+	for (int i = 0; i < 4; ++i) {
+		state->segments256[1][i] = _mm256_permute4x64_epi64(state->segments256[1][i], 0b00111001);
+		state->segments256[2][i] = _mm256_permute4x64_epi64(state->segments256[2][i], 0b01001110);
+		state->segments256[3][i] = _mm256_permute4x64_epi64(state->segments256[3][i], 0b10010011);
+	}
+	#else
 	// shift second row
 	auto temp = state->cells[4];
 	state->cells[4] = state->cells[5];
@@ -35,10 +43,11 @@ static inline void forkskinny64_shiftrows(State64Sliced_t *state) {
 	state->cells[0xF] = state->cells[0xE];
 	state->cells[0xE] = state->cells[0xD];
 	state->cells[0xD] = temp;
+	#endif
 	
 	// Erik: 0x EDCF 98BA 4765 3210
 	// Us:   0x
-//	auto test_res = unslice(*state).values[0].raw;
+//	auto test_res = unslice_accelerated(*state).values[0].raw;
 //	int appel = 1;
 }
 
@@ -68,7 +77,7 @@ static inline void forkskinny64_shiftrows_inv(State64Sliced_t *state){
 	state->cells[0xE] = temp;
 	
 
-//	auto test_res = unslice(*state).values[0].raw;
+//	auto test_res = unslice_accelerated(*state).values[0].raw;
 //	int appel = 1;
 }
 #endif //FORKSKINNYPLUS64_FORKSKINNY_SHIFTROWS_H

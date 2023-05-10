@@ -13,7 +13,7 @@
 typedef union {
 	slice_t
 	#if slice_size > 64
-	__attribute__((aligned(32)))
+//	__attribute__((aligned(32)))
 	#endif
 	value;
 	
@@ -44,13 +44,13 @@ typedef union {
 typedef union {
 	Slice64_t slices[4];
 	#if AVX2_acceleration || AVX512_acceleration
-	__m256i __attribute__((aligned(32))) avx2_simd_cell;
+	__m256i /*__attribute__((aligned(32)))*/ avx2_simd_cell;
 	#endif
 } Cell64_t;
 
 typedef union {
 	#if AVX512_acceleration
-	__m512i __attribute__((aligned(32))) avx512_simd_pair;
+	__m512i /*__attribute__((aligned(32)))*/ avx512_simd_pair;
 	#endif
 	Cell64_t cells[2];
 } Pair64_t;
@@ -63,6 +63,8 @@ typedef union {
 } Row64_t;
 
 typedef union {
+	__m256i segments256[4][4];
+	
 	Slice64_t raw[32];
 	Cell64_t cells[8];
 	Pair64_t pairs[4];
@@ -70,12 +72,23 @@ typedef union {
 } HalfState64Sliced_t;
 
 typedef union {
+	/* !!! BEWARE !!!! */
+	/* These groups of members aren't used in the same context and assume different memory layout!*/
+	/* To save effort, these are both accessible in the same struct definition*/
+	// ----- Used for segmented cipher state:
+	uint64_t raw_segments[64];
+	__m512i segments512[2][4];
+	__m256i segments256[4][4];
+	
+	// ----- Used for accessing TK or non-segmented cipher state:
 	Slice64_t raw[64];
 	Cell64_t cells[16];
 	Row64_t rows[4];
 	Pair64_t pairs[8];
+	
 	HalfState64Sliced_t halves[2];
-} State64Sliced_t;
+	// -----
+} __attribute__((aligned(32))) State64Sliced_t;
 
 typedef union {
 	/** All words of the key keys */

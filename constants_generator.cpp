@@ -3,6 +3,20 @@
 #include <vector>
 #include "src/config.h"
 
+std::vector<uint64_t> segment(std::vector<uint64_t> slices) {
+	auto res = std::vector<uint64_t>();
+	
+	for (int i = 0; i < 4; ++i) {
+		for (int j = 0; j < 4; ++j) {
+			res.push_back(slices.at(16 * i + j));
+			res.push_back(slices.at(16 * i + 4 + j));
+			res.push_back(slices.at(16 * i + 8 + j));
+			res.push_back(slices.at(16 * i + 12 + j));
+		}
+	}
+	return res;
+}
+
 // expand every bit of the raw to a 64bit slice_t
 // if bit == 0: return 0⁶⁴
 // if bit == 1: return 1⁶⁴
@@ -31,6 +45,25 @@ void forkskinny64_branch_constant(){
 		else std::cout << "ONE, ";
 	}
 	std::cout << " // 0x" << std::hex << unsigned(((bc & (0xFUL << (60))) >> (60))) << "\n};\n\n";
+}
+
+void forkskinny64_segmented_branch_constant(){
+	u64 bc = 0x81ec7f5bda364912;
+	auto slices = to_slices(bc, 64);
+	
+	slices = segment(slices);
+	
+	std::cout << "State64Sliced_t const segmented_branch_constant64 = {\n\t";
+	for (int i = 0; i < 64; ++i) {
+		if (i % 4 == 0 && i != 0) {
+			uint8_t val = ((bc & (0xFUL << (i - 4))) >> (i - 4));
+			std::cout << "\n\t";
+		}
+		
+		if (slices.at(i) == 0) std::cout << "ZER, ";
+		else std::cout << "ONE, ";
+	}
+	std::cout << "\n};\n\n";
 }
 
 void forkskinny128_branch_constant(){
@@ -85,6 +118,7 @@ void forkskinny_round_constants(){
 
 int main() {
 	forkskinny64_branch_constant();
-	forkskinny128_branch_constant();
-	forkskinny_round_constants();
+	forkskinny64_segmented_branch_constant();
+//	forkskinny128_branch_constant();
+//	forkskinny_round_constants();
 }

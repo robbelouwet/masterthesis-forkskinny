@@ -5,7 +5,6 @@
 #include <x86intrin.h>
 #include "forkskinny64-datatypes.h"
 #include "../../constants.h"
-#include "slicing64.h"
 
 /**
  * Performs the back-rotate iteration, in other words:
@@ -14,7 +13,7 @@
  * If the slices are SIMD registers (so more than 64 blocks), this rotation is applied on their individual 64-bit lanes.
  * @param blocks ptr to beginning of an Block64_t array. Its length is assumed to be the value of the 'slice_t'.
  */
-static inline void back_rotate(Block64_t *b_blocks){
+static inline void back_rotate(Block64_t *b_blocks) {
 	#if slice_size > 64
 	auto iterations = (slice_size >> 6);
 	for (int i = 0; i < iterations; ++i)
@@ -31,7 +30,7 @@ static inline void back_rotate(Block64_t *b_blocks){
  * @return
  */
 static inline lane_t slice_significance_accelerated_64(const Block64_t *blocks) {
-	lane_t slice = ZER;
+	lane_t slice = slice_ZER;
 	#if slice_size == 128
 	for (uint i = 0; i < 64; ++i)
 		slice = _mm_or_si128(
@@ -92,8 +91,10 @@ static inline lane_t slice_significance_accelerated_64(const Block64_t *blocks) 
  * @return
  */
 
-static inline State64Sliced_t slice_accelerated(Blocks64_t blocks) {
+static inline State64Sliced_t slice_accelerated(Blocks64_t blocks,
+                                                bool const segment = (AVX512_acceleration || AVX2_acceleration)) {
 	auto result = State64Sliced_t();
+	Slice64_t slices[64];
 	
 	/* Buffer that holds all blocks AND the 64 spots that we use for the back-rotation */
 	#if slice_size >= 64
@@ -127,9 +128,41 @@ static inline State64Sliced_t slice_accelerated(Blocks64_t blocks) {
 		
 		/* Now re-align the slice by rotating back and put it in the slices buffer
 		 * (assign to result in 1 go if SIMD segmentation isn't needed) */
-		result.raw[i].value = ROR_LANES(res, i);
-		int appel = 1;
+		slices[i].value = ROR_LANES(res, i);
+//		int appel = 1;
 	}
+	
+	if (segment) {
+		#if AVAVX2_acceleration
+		for (int i = 0; i < 2; ++i) {
+			for (int j = 0; j < 4; ++j) {
+				result.segments512[i][j] = _mm512_set_epi64(
+						slices[(i << 5) + j + 28].value,
+						slices[(i << 5) + j + 24].value,
+						slices[(i << 5) + j + 20].value,
+						slices[(i << 5) + j + 16].value,
+						slices[(i << 5) + j + 12].value,
+						slices[(i << 5) + j + 8].value,
+						slices[(i << 5) + j + 4].value,
+						slices[(i << 5) + j].value
+						);
+			}
+		}
+		#elif AVX2_acceleration
+		for (int i = 0; i < 4; ++i) {
+			for (int j = 0; j < 4; ++j) {
+				result.segments256[i][j] = _mm256_set_epi64x(
+						slices[(i << 4) + j + 12].value,
+						slices[(i << 4) + j + 8].value,
+						slices[(i << 4) + j + 4].value,
+						slices[(i << 4) + j].value
+				);
+			}
+		}
+		#endif
+	} else
+		for (int i = 0; i < 64; i++) result.raw[i] = slices[i];
+	
 	
 	return result;
 }
@@ -142,13 +175,78 @@ static inline State64Sliced_t slice_accelerated(Blocks64_t blocks) {
  * 					E.g. the very first slice contains the *least* significant bits of 64 states
  */
 static inline void unslice_significance_accelerated(const Slice64_t slice, Blocks64_t *blocks, uint8_t significance) {
-	// TODO
+	#if slice_size == 128
+	uint8_t chunks[2] = {0, 64};
+	
+	// loop over every segment, __m128i has 2x 64-bit chunks
+	for (int i = 0; i < 2; i++) {
+		auto chunk = chunks[i];
+		for (int bit_index = chunk; bit_index < chunk + 64; ++bit_index) {
+			u64 chunk_mask = 1ULL << (bit_index - chunk);
+			blocks->values[bit_index].raw |= ((slice.chunks[i] & chunk_mask) >> (bit_index - chunk)) << significance;
+		}
+	}
+	
+	#elif slice_size == 256
+	uint8_t chunks[4] = {0, 64, 128, 192};
+	
+	// loop over every segment, __m256i has 4x 64-bit chunks
+	for (int i = 0; i < 4; i++) {
+		auto chunk = chunks[i];
+		for (int b_number = chunk; b_number < chunk + 64; ++b_number) {
+			u64 mask = 1ULL << (b_number - chunk);
+			blocks->values[b_number].raw |= ((slice.chunks[i] & mask) >> (b_number - chunk)) << significance;
+		}
+	}
+	#elif slice_size == 512
+	uint16_t chunks[8] = {0, 64, 128, 192, 256, 320, 384, 448};
+	
+	// loop over every chunk, __m512i has 8x 64-bit chunks
+	for (int i = 0; i < 8; i++) {
+		auto chunk = chunks[i];
+		for (int b_number = chunk; b_number < chunk + 64; ++b_number) {
+			u64 mask = 1ULL << (b_number - chunk);
+			blocks->values[b_number].raw |= ((slice.chunks[i] & mask) >> (b_number - chunk)) << significance;
+		}
+	}
+	#else
+	for (uint b_number = 0; b_number < slice_size; ++b_number) {
+		u64 mask = 1ULL << b_number;
+		blocks->values[b_number].raw |= ((slice.value & mask) >> b_number) << significance;
+	}
+	
+	#endif
+	
 }
 
-static inline Blocks64_t unslice_accelerated(State64Sliced_t state) {
+static inline Blocks64_t unslice_accelerated(State64Sliced_t state,
+                                             bool const segmented = (AVX2_acceleration || AVX512_acceleration)) {
 	Blocks64_t unsliced = Blocks64_t();
+	Slice64_t unpacked[64];
+	
+	if (segmented) {
+		#if AVX512_acceleration
+		for (int i = 0; i < 2; ++i) {
+			for (int j = 0; j < 4; ++j) {
+				for (int k = 0; k < 8; ++k) {
+					unpacked[(i * 16) + j + (k * 4)].value = state.segments256[i][j][k];
+				}
+			}
+		}
+		#elif AVX2_acceleration
+		for (int i = 0; i < 4; ++i) {
+			for (int j = 0; j < 4; ++j) {
+				for (int k = 0; k < 4; ++k) {
+					unpacked[(i * 16) + j + (k * 4)].value = state.segments256[i][j][k];
+				}
+			}
+		}
+		#endif
+	} else
+		for (int i = 0; i < 64; ++i) unpacked[i] = state.raw[i];
+	
 	for (int i = 0; i < 64; ++i)
-		unslice_significance(state.raw[i], &unsliced, i);
+		unslice_significance_accelerated(unpacked[i], &unsliced, i);
 	
 	return unsliced;
 }

@@ -108,8 +108,8 @@ u64 slice(u64 state) {
          | (slice_index(state, 3) << 48);
 }
 
-inline u64 unslice(u64 state) __attribute__((always_inline));
-u64 unslice(u64 state) {
+inline u64 unslice_accelerated(u64 state) __attribute__((always_inline));
+u64 unslice_accelerated(u64 state) {
   auto s0 = unslice_index((state & 0x000000000000FFFF), 0);
   auto s1 = unslice_index(((state & 0x00000000FFFF0000) >> 16), 1);
   auto s2 = unslice_index(((state & 0x0000FFFF00000000) >> 32), 2);

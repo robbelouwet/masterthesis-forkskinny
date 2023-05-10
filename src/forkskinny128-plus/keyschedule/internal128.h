@@ -87,7 +87,7 @@ static inline State128Sliced_t permute(State128Sliced_t input) {
 	// Erik:    0x 7654 3210 DABF 9C8E
 	// Us:      0x 7654 3210 DABF 9C8E
 
-//	auto res = unslice(output).values[0];
+//	auto res = unslice_accelerated(output).values[0];
 //	auto test_output0 = res.raw[0];
 //	auto test_output1 = res.raw[1];
 	return output;

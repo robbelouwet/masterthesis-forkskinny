@@ -16,8 +16,8 @@
 static inline void to_sliced(u64 in, State64Sliced_t *out) {
 	for (int i = 0; i < 64; ++i) {
 		u64 mask = 1 << i;
-		if (mask & in) out->raw[i].value = ONE;
-		else out->raw[i].value = ZER;
+		if (mask & in) out->raw[i].value = slice_ONE;
+		else out->raw[i].value = slice_ZER;
 	}
 }
 //  ----
@@ -86,9 +86,9 @@ static inline SlicedCiphertext64_t paef_forkskinny64_192_encrypt_section(
 	/* Set the bit flags */
 	State64Sliced_t sliced_tks[3] = {sliced_tk1, sliced_tk2, slice(tk3_blocks)};
 	auto *recast = (Slice64_t *) &sliced_tks;
-	(recast + nonce_bit_size)->value = ZER;
-	(recast + nonce_bit_size + 1)->value = ZER;
-	(recast + nonce_bit_size + 2)->value = isAD ? ZER : ONE;
+	(recast + nonce_bit_size)->value = slice_ZER;
+	(recast + nonce_bit_size + 1)->value = slice_ZER;
+	(recast + nonce_bit_size + 2)->value = isAD ? slice_ZER : slice_ONE;
 
 	/* If this section is the last one, set bit flag of last block in this section */
 	if (last != -1)
@@ -97,7 +97,7 @@ static inline SlicedCiphertext64_t paef_forkskinny64_192_encrypt_section(
 	/// Encrypt
 	State64Sliced_t state = slice(ma);
 	auto schedule = forkskinny_64_fixsliced_init_tk23(sliced_tks[0], sliced_tks[1], sliced_tks[2]);
-	return forkskinny64_encrypt(schedule, &state, mode);
+	return forkskinny64_encrypt(&schedule, &state, mode);
 }
 
 /**
@@ -163,7 +163,7 @@ static inline u64 paef_forkskinny64_192_encrypt_M(
 		AD_tag ^= extract_segment_tag(ct, last_segment, last_block_index, '1');
 		
 		// C0 is ciphertext
-		ct_out[i] = unslice(ct.C0);
+		ct_out[i] = unslice_accelerated(ct.C0);
 	}
 	
 	return AD_tag;

@@ -5,30 +5,51 @@
 #include "forkskinny64-plus/utils/forkskinny64-datatypes.h"
 #include "forkskinny128-plus/utils/forkskinny128-datatypes.h"
 
-
+#define S256(x) _mm256_set_epi64x(0, 0, x, 0)
 
 //<editor-fold desc="forkskinny64 sliced branch constant"
 // When comparing to the bc in the paper, the cells inside consecutive pairs of cells are swapped with each other to account
 // for a swapped order of significance of 2 nibbles within a single byte of plaintext.
 // See the README or publication for more info on memory layout
-State64Sliced_t const branch_constant64 = {
+slice_t const branch_constant64[64] = {
 		// LSB         MSB
-		ZER, ONE, ZER, ZER,  // 2
-		ONE, ZER, ZER, ZER,  // 1
-		ONE, ZER, ZER, ONE,  // 9
-		ZER, ZER, ONE, ZER,  // 4
-		ZER, ONE, ONE, ZER,  // 6
-		ONE, ONE, ZER, ZER,  // 3
-		ZER, ONE, ZER, ONE,  // A
-		ONE, ZER, ONE, ONE,  // D
-		ONE, ONE, ZER, ONE,  // B
-		ONE, ZER, ONE, ZER,  // 5
-		ONE, ONE, ONE, ONE,  // F
-		ONE, ONE, ONE, ZER,  // 7
-		ZER, ZER, ONE, ONE,  // C
-		ZER, ONE, ONE, ONE,  // E
-		ONE, ZER, ZER, ZER,  //  1
-		ZER, ZER, ZER, ONE,  // 8
+		slice_ZER, slice_ONE, slice_ZER, slice_ZER,  // 2
+		slice_ONE, slice_ZER, slice_ZER, slice_ZER,  // 1
+		slice_ONE, slice_ZER, slice_ZER, slice_ONE,  // 9
+		slice_ZER, slice_ZER, slice_ONE, slice_ZER,  // 4
+		slice_ZER, slice_ONE, slice_ONE, slice_ZER,  // 6
+		slice_ONE, slice_ONE, slice_ZER, slice_ZER,  // 3
+		slice_ZER, slice_ONE, slice_ZER, slice_ONE,  // A
+		slice_ONE, slice_ZER, slice_ONE, slice_ONE,  // D
+		slice_ONE, slice_ONE, slice_ZER, slice_ONE,  // B
+		slice_ONE, slice_ZER, slice_ONE, slice_ZER,  // 5
+		slice_ONE, slice_ONE, slice_ONE, slice_ONE,  // F
+		slice_ONE, slice_ONE, slice_ONE, slice_ZER,  // 7
+		slice_ZER, slice_ZER, slice_ONE, slice_ONE,  // C
+		slice_ZER, slice_ONE, slice_ONE, slice_ONE,  // E
+		slice_ONE, slice_ZER, slice_ZER, slice_ZER,  //  1
+		slice_ZER, slice_ZER, slice_ZER, slice_ONE,  // 8
+};
+//</editor-fold>
+
+//<editor-fold desc="forkskinny64 segmented branch constant">
+State64Sliced_t const segmented_branch_constant64 = {
+		slice_ZER, slice_ONE, slice_ONE, slice_ZER,
+		slice_ONE, slice_ZER, slice_ZER, slice_ZER,
+		slice_ZER, slice_ZER, slice_ZER, slice_ONE,
+		slice_ZER, slice_ZER, slice_ONE, slice_ZER,
+		slice_ZER, slice_ONE, slice_ZER, slice_ONE,
+		slice_ONE, slice_ONE, slice_ONE, slice_ZER,
+		slice_ONE, slice_ZER, slice_ZER, slice_ONE,
+		slice_ZER, slice_ZER, slice_ONE, slice_ONE,
+		slice_ONE, slice_ONE, slice_ONE, slice_ONE,
+		slice_ONE, slice_ZER, slice_ONE, slice_ONE,
+		slice_ZER, slice_ONE, slice_ONE, slice_ONE,
+		slice_ONE, slice_ZER, slice_ONE, slice_ZER,
+		slice_ZER, slice_ZER, slice_ONE, slice_ZER,
+		slice_ZER, slice_ONE, slice_ZER, slice_ZER,
+		slice_ONE, slice_ONE, slice_ZER, slice_ZER,
+		slice_ONE, slice_ONE, slice_ZER, slice_ONE,
 };
 //</editor-fold>
 
@@ -36,119 +57,216 @@ State64Sliced_t const branch_constant64 = {
 // the branch constant in forkskinny128 doesn't have 'swapped nibbles' within a byte like forkskinny64 has,
 // because cells are already 8-bit and are definable datatypes with a specified order of significance.
 // So we don't need to account for this and so, the order of branch constant cells is the same as in the paper
-State128Sliced_t const branch_constant128 = {
-		ONE, ZER, ZER, ZER, ZER, ZER, ZER, ZER,  // 0x1
-		ZER, ONE, ZER, ZER, ZER, ZER, ZER, ZER,  // 0x2
-		ZER, ZER, ONE, ZER, ZER, ZER, ZER, ZER,  // 0x4
-		ZER, ZER, ZER, ONE, ZER, ZER, ZER, ZER,  // 0x8
-		ZER, ZER, ZER, ZER, ONE, ZER, ZER, ZER,  // 0x10
-		ZER, ZER, ZER, ZER, ZER, ONE, ZER, ZER,  // 0x20
-		ONE, ZER, ZER, ZER, ZER, ZER, ONE, ZER,  // 0x41
-		ZER, ONE, ZER, ZER, ZER, ZER, ZER, ONE,  // 0x82
-		ONE, ZER, ONE, ZER, ZER, ZER, ZER, ZER,  // 0x5
-		ZER, ONE, ZER, ONE, ZER, ZER, ZER, ZER,  // 0xa
-		ZER, ZER, ONE, ZER, ONE, ZER, ZER, ZER,  // 0x14
-		ZER, ZER, ZER, ONE, ZER, ONE, ZER, ZER,  // 0x28
-		ONE, ZER, ZER, ZER, ONE, ZER, ONE, ZER,  // 0x51
-		ZER, ONE, ZER, ZER, ZER, ONE, ZER, ONE,  // 0xa2
-		ZER, ZER, ONE, ZER, ZER, ZER, ONE, ZER,  // 0x44
-		ZER, ZER, ZER, ONE, ZER, ZER, ZER, ONE,  // 0x88
+slice_t const branch_constant128[128] = {
+		slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ZER,  // 0x1
+		slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ZER,  // 0x2
+		slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ZER,  // 0x4
+		slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER,  // 0x8
+		slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ZER,  // 0x10
+		slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ZER,  // 0x20
+		slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ZER,  // 0x41
+		slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ONE,  // 0x82
+		slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ZER,  // 0x5
+		slice_ZER, slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER,  // 0xa
+		slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ZER,  // 0x14
+		slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ZER,  // 0x28
+		slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ONE, slice_ZER,  // 0x51
+		slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ONE,  // 0xa2
+		slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ZER,  // 0x44
+		slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ONE,  // 0x88
 };
 //</editor-fold>
 
 //<editor-fold desc="88 pre-computed forkskinny sliced round constants"
 // the first 88 states of the addconstant lfsr containing {rc⁰, rc¹, ..., rc⁶} each
 slice_t forkskinny_precomputed_round_constants[88][7] = {
-		{ONE, ZER, ZER, ZER, ZER, ZER, ZER, }, // 1
-		{ONE, ONE, ZER, ZER, ZER, ZER, ZER, }, // 3
-		{ONE, ONE, ONE, ZER, ZER, ZER, ZER, }, // 7
-		{ONE, ONE, ONE, ONE, ZER, ZER, ZER, }, // 15
-		{ONE, ONE, ONE, ONE, ONE, ZER, ZER, }, // 31
-		{ONE, ONE, ONE, ONE, ONE, ONE, ZER, }, // 63
-		{ZER, ONE, ONE, ONE, ONE, ONE, ONE, }, // 126
-		{ONE, ZER, ONE, ONE, ONE, ONE, ONE, }, // 125
-		{ONE, ONE, ZER, ONE, ONE, ONE, ONE, }, // 123
-		{ONE, ONE, ONE, ZER, ONE, ONE, ONE, }, // 119
-		{ONE, ONE, ONE, ONE, ZER, ONE, ONE, }, // 111
-		{ONE, ONE, ONE, ONE, ONE, ZER, ONE, }, // 95
-		{ZER, ONE, ONE, ONE, ONE, ONE, ZER, }, // 62
-		{ZER, ZER, ONE, ONE, ONE, ONE, ONE, }, // 124
-		{ONE, ZER, ZER, ONE, ONE, ONE, ONE, }, // 121
-		{ONE, ONE, ZER, ZER, ONE, ONE, ONE, }, // 115
-		{ONE, ONE, ONE, ZER, ZER, ONE, ONE, }, // 103
-		{ONE, ONE, ONE, ONE, ZER, ZER, ONE, }, // 79
-		{ZER, ONE, ONE, ONE, ONE, ZER, ZER, }, // 30
-		{ONE, ZER, ONE, ONE, ONE, ONE, ZER, }, // 61
-		{ZER, ONE, ZER, ONE, ONE, ONE, ONE, }, // 122
-		{ONE, ZER, ONE, ZER, ONE, ONE, ONE, }, // 117
-		{ONE, ONE, ZER, ONE, ZER, ONE, ONE, }, // 107
-		{ONE, ONE, ONE, ZER, ONE, ZER, ONE, }, // 87
-		{ZER, ONE, ONE, ONE, ZER, ONE, ZER, }, // 46
-		{ZER, ZER, ONE, ONE, ONE, ZER, ONE, }, // 92
-		{ZER, ZER, ZER, ONE, ONE, ONE, ZER, }, // 56
-		{ZER, ZER, ZER, ZER, ONE, ONE, ONE, }, // 112
-		{ONE, ZER, ZER, ZER, ZER, ONE, ONE, }, // 97
-		{ONE, ONE, ZER, ZER, ZER, ZER, ONE, }, // 67
-		{ZER, ONE, ONE, ZER, ZER, ZER, ZER, }, // 6
-		{ONE, ZER, ONE, ONE, ZER, ZER, ZER, }, // 13
-		{ONE, ONE, ZER, ONE, ONE, ZER, ZER, }, // 27
-		{ONE, ONE, ONE, ZER, ONE, ONE, ZER, }, // 55
-		{ZER, ONE, ONE, ONE, ZER, ONE, ONE, }, // 110
-		{ONE, ZER, ONE, ONE, ONE, ZER, ONE, }, // 93
-		{ZER, ONE, ZER, ONE, ONE, ONE, ZER, }, // 58
-		{ZER, ZER, ONE, ZER, ONE, ONE, ONE, }, // 116
-		{ONE, ZER, ZER, ONE, ZER, ONE, ONE, }, // 105
-		{ONE, ONE, ZER, ZER, ONE, ZER, ONE, }, // 83
-		{ZER, ONE, ONE, ZER, ZER, ONE, ZER, }, // 38
-		{ZER, ZER, ONE, ONE, ZER, ZER, ONE, }, // 76
-		{ZER, ZER, ZER, ONE, ONE, ZER, ZER, }, // 24
-		{ONE, ZER, ZER, ZER, ONE, ONE, ZER, }, // 49
-		{ZER, ONE, ZER, ZER, ZER, ONE, ONE, }, // 98
-		{ONE, ZER, ONE, ZER, ZER, ZER, ONE, }, // 69
-		{ZER, ONE, ZER, ONE, ZER, ZER, ZER, }, // 10
-		{ONE, ZER, ONE, ZER, ONE, ZER, ZER, }, // 21
-		{ONE, ONE, ZER, ONE, ZER, ONE, ZER, }, // 43
-		{ZER, ONE, ONE, ZER, ONE, ZER, ONE, }, // 86
-		{ZER, ZER, ONE, ONE, ZER, ONE, ZER, }, // 44
-		{ZER, ZER, ZER, ONE, ONE, ZER, ONE, }, // 88
-		{ZER, ZER, ZER, ZER, ONE, ONE, ZER, }, // 48
-		{ZER, ZER, ZER, ZER, ZER, ONE, ONE, }, // 96
-		{ONE, ZER, ZER, ZER, ZER, ZER, ONE, }, // 65
-		{ZER, ONE, ZER, ZER, ZER, ZER, ZER, }, // 2
-		{ONE, ZER, ONE, ZER, ZER, ZER, ZER, }, // 5
-		{ONE, ONE, ZER, ONE, ZER, ZER, ZER, }, // 11
-		{ONE, ONE, ONE, ZER, ONE, ZER, ZER, }, // 23
-		{ONE, ONE, ONE, ONE, ZER, ONE, ZER, }, // 47
-		{ZER, ONE, ONE, ONE, ONE, ZER, ONE, }, // 94
-		{ZER, ZER, ONE, ONE, ONE, ONE, ZER, }, // 60
-		{ZER, ZER, ZER, ONE, ONE, ONE, ONE, }, // 120
-		{ONE, ZER, ZER, ZER, ONE, ONE, ONE, }, // 113
-		{ONE, ONE, ZER, ZER, ZER, ONE, ONE, }, // 99
-		{ONE, ONE, ONE, ZER, ZER, ZER, ONE, }, // 71
-		{ZER, ONE, ONE, ONE, ZER, ZER, ZER, }, // 14
-		{ONE, ZER, ONE, ONE, ONE, ZER, ZER, }, // 29
-		{ONE, ONE, ZER, ONE, ONE, ONE, ZER, }, // 59
-		{ZER, ONE, ONE, ZER, ONE, ONE, ONE, }, // 118
-		{ONE, ZER, ONE, ONE, ZER, ONE, ONE, }, // 109
-		{ONE, ONE, ZER, ONE, ONE, ZER, ONE, }, // 91
-		{ZER, ONE, ONE, ZER, ONE, ONE, ZER, }, // 54
-		{ZER, ZER, ONE, ONE, ZER, ONE, ONE, }, // 108
-		{ONE, ZER, ZER, ONE, ONE, ZER, ONE, }, // 89
-		{ZER, ONE, ZER, ZER, ONE, ONE, ZER, }, // 50
-		{ZER, ZER, ONE, ZER, ZER, ONE, ONE, }, // 100
-		{ONE, ZER, ZER, ONE, ZER, ZER, ONE, }, // 73
-		{ZER, ONE, ZER, ZER, ONE, ZER, ZER, }, // 18
-		{ONE, ZER, ONE, ZER, ZER, ONE, ZER, }, // 37
-		{ZER, ONE, ZER, ONE, ZER, ZER, ONE, }, // 74
-		{ZER, ZER, ONE, ZER, ONE, ZER, ZER, }, // 20
-		{ONE, ZER, ZER, ONE, ZER, ONE, ZER, }, // 41
-		{ZER, ONE, ZER, ZER, ONE, ZER, ONE, }, // 82
-		{ZER, ZER, ONE, ZER, ZER, ONE, ZER, }, // 36
-		{ZER, ZER, ZER, ONE, ZER, ZER, ONE, }, // 72
-		{ZER, ZER, ZER, ZER, ONE, ZER, ZER, }, // 16
-		{ONE, ZER, ZER, ZER, ZER, ONE, ZER, }, // 33
+		{slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ZER, }, // 1
+		{slice_ONE, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ZER, }, // 3
+		{slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER, }, // 7
+		{slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ZER, slice_ZER, }, // 15
+		{slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ZER, }, // 31
+		{slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ZER, }, // 63
+		{slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ONE, }, // 126
+		{slice_ONE, slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ONE, }, // 125
+		{slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ONE, }, // 123
+		{slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ONE, slice_ONE, }, // 119
+		{slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ONE, }, // 111
+		{slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ONE, }, // 95
+		{slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ZER, }, // 62
+		{slice_ZER, slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ONE, }, // 124
+		{slice_ONE, slice_ZER, slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ONE, }, // 121
+		{slice_ONE, slice_ONE, slice_ZER, slice_ZER, slice_ONE, slice_ONE, slice_ONE, }, // 115
+		{slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ZER, slice_ONE, slice_ONE, }, // 103
+		{slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ZER, slice_ONE, }, // 79
+		{slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ZER, }, // 30
+		{slice_ONE, slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ZER, }, // 61
+		{slice_ZER, slice_ONE, slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ONE, }, // 122
+		{slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ONE, slice_ONE, slice_ONE, }, // 117
+		{slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ONE, slice_ONE, }, // 107
+		{slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ONE, }, // 87
+		{slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ZER, }, // 46
+		{slice_ZER, slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ONE, }, // 92
+		{slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ZER, }, // 56
+		{slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ONE, slice_ONE, }, // 112
+		{slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ONE, }, // 97
+		{slice_ONE, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ONE, }, // 67
+		{slice_ZER, slice_ONE, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER, }, // 6
+		{slice_ONE, slice_ZER, slice_ONE, slice_ONE, slice_ZER, slice_ZER, slice_ZER, }, // 13
+		{slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ONE, slice_ZER, slice_ZER, }, // 27
+		{slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ONE, slice_ZER, }, // 55
+		{slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ONE, }, // 110
+		{slice_ONE, slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ONE, }, // 93
+		{slice_ZER, slice_ONE, slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ZER, }, // 58
+		{slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ONE, slice_ONE, slice_ONE, }, // 116
+		{slice_ONE, slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ONE, slice_ONE, }, // 105
+		{slice_ONE, slice_ONE, slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ONE, }, // 83
+		{slice_ZER, slice_ONE, slice_ONE, slice_ZER, slice_ZER, slice_ONE, slice_ZER, }, // 38
+		{slice_ZER, slice_ZER, slice_ONE, slice_ONE, slice_ZER, slice_ZER, slice_ONE, }, // 76
+		{slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ONE, slice_ZER, slice_ZER, }, // 24
+		{slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ONE, slice_ZER, }, // 49
+		{slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ONE, }, // 98
+		{slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ONE, }, // 69
+		{slice_ZER, slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ZER, }, // 10
+		{slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ZER, }, // 21
+		{slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ONE, slice_ZER, }, // 43
+		{slice_ZER, slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ONE, }, // 86
+		{slice_ZER, slice_ZER, slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ZER, }, // 44
+		{slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ONE, slice_ZER, slice_ONE, }, // 88
+		{slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ONE, slice_ZER, }, // 48
+		{slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ONE, }, // 96
+		{slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ONE, }, // 65
+		{slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ZER, }, // 2
+		{slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER, }, // 5
+		{slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ZER, }, // 11
+		{slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ZER, }, // 23
+		{slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ZER, }, // 47
+		{slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ONE, }, // 94
+		{slice_ZER, slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ONE, slice_ZER, }, // 60
+		{slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ONE, }, // 120
+		{slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ONE, slice_ONE, }, // 113
+		{slice_ONE, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ONE, }, // 99
+		{slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ONE, }, // 71
+		{slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ZER, slice_ZER, }, // 14
+		{slice_ONE, slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ZER, slice_ZER, }, // 29
+		{slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ONE, slice_ONE, slice_ZER, }, // 59
+		{slice_ZER, slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ONE, slice_ONE, }, // 118
+		{slice_ONE, slice_ZER, slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ONE, }, // 109
+		{slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ONE, slice_ZER, slice_ONE, }, // 91
+		{slice_ZER, slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ONE, slice_ZER, }, // 54
+		{slice_ZER, slice_ZER, slice_ONE, slice_ONE, slice_ZER, slice_ONE, slice_ONE, }, // 108
+		{slice_ONE, slice_ZER, slice_ZER, slice_ONE, slice_ONE, slice_ZER, slice_ONE, }, // 89
+		{slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ONE, slice_ONE, slice_ZER, }, // 50
+		{slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ONE, slice_ONE, }, // 100
+		{slice_ONE, slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ONE, }, // 73
+		{slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ZER, }, // 18
+		{slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ONE, slice_ZER, }, // 37
+		{slice_ZER, slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ONE, }, // 74
+		{slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ONE, slice_ZER, slice_ZER, }, // 20
+		{slice_ONE, slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ONE, slice_ZER, }, // 41
+		{slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ONE, }, // 82
+		{slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ONE, slice_ZER, }, // 36
+		{slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ZER, slice_ONE, }, // 72
+		{slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ZER, slice_ZER, }, // 16
+		{slice_ONE, slice_ZER, slice_ZER, slice_ZER, slice_ZER, slice_ONE, slice_ZER, }, // 33
 };
 //</editor-fold>
+
+#if AVX2_acceleration || AVX512_acceleration
+//<editor-fold desc="88 pre-computed forkskinny sliced round constants"
+// the first 88 states of the addconstant lfsr containing {rc⁰, rc¹, ..., rc⁶} each
+// every rc slice is now aligned to the 2nd cell within a segment-row
+__m256i forkskinny_precomputed_segmented_round_constants[88][7] = {
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 1
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 3
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 7
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 15
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 31
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 63
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 126
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 125
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 123
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 119
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 111
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 95
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 62
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 124
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 121
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 115
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 103
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), }, // 79
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 30
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 61
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 122
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 117
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 107
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 87
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), }, // 46
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 92
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 56
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 112
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 97
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), }, // 67
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 6
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 13
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 27
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 55
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 110
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 93
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 58
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 116
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 105
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 83
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), }, // 38
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), }, // 76
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 24
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 49
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 98
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), }, // 69
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 10
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 21
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), }, // 43
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 86
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), }, // 44
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 88
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 48
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 96
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), }, // 65
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 2
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 5
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 11
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 23
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), }, // 47
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 94
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 60
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 120
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 113
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 99
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), }, // 71
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), }, // 14
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 29
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 59
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), }, // 118
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 109
+		{S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 91
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 54
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 108
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 89
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), }, // 50
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), }, // 100
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), }, // 73
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 18
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), }, // 37
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), }, // 74
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 20
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), }, // 41
+		{S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), }, // 82
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), }, // 36
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), }, // 72
+		{S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), }, // 16
+		{S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), }, // 33
+};
+//</editor-fold>
+#endif
 
 // <editor-fold desc="PT²"
 #define PT64_2(input, output) {   \

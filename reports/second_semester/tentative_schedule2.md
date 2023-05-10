@@ -37,18 +37,19 @@ What I'd like:
   - SIMD (8 pages)
     - What is it? How does it work? When should it be used? Why SIMD isn't always faster
     - compiler intrinsics & platform support -> SSE vs AVX2 vs AVX512
-  - Efficient memory access (4 pages) What? How? Why?
+  - Efficient memory access & Optimizations (4 pages) What? How? Why?
     - Union Structs
     - Cipher & Tweakey state
+    - Optimizations
 - ForkSKINNY+ (18 pages) (The actual implementation, how it compares to others and what makes it different)
   - Existing implementations (re-used techniques -> union structs erik!)
   - Combining Bit Slicing with SIMD -> 128-, 256- or even 512 bit slices
-    - Accelerating the slice & unslice operation -> How could it be optimized? accelerating it through SIMD itself again? Rotation for faster alignment?
+    - Segmentation: Accelerating the slice & unslice operation -> How could it be optimized? accelerating it through SIMD itself again? Rotation for faster alignment?
     - Balancing slice size & operation speedup
   - Fixed Slicing
   - Design (8 pages)
-    - Round function -> AddConstant inside key schedule!
     - Key schedule -> pre-computed!
+    - Round function -> AddConstant inside key schedule!
 - AEAD modes (3 pages)
   - PAEF
 - Benchmarking (5 pages)

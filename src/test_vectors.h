@@ -3,12 +3,9 @@
 
 #include <cstdint>
 #include <vector>
-
 #include "forkskinny64-plus/utils/forkskinny64-datatypes.h"
-#include "forkskinny64-plus/utils/slicing64.h"
-
 #include "forkskinny128-plus/utils/forkskinny128-datatypes.h"
-#include "forkskinny128-plus/utils/slicing128.h"
+
 
 static inline Blocks64_t M_rand_64(int seed) {
 	auto M = Blocks64_t();
