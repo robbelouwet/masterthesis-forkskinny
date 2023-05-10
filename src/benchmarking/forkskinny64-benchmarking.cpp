@@ -131,7 +131,7 @@ void benchmark_forkskinny64_192() {
 		auto before = _rdtsc();
 		unsliced_cts[i] = unslice_accelerated(cts[i].C0);
 		auto after = _rdtsc();
-		unslice_timings[i] = 0; //after - before;
+		unslice_timings[i] = after - before;
 	}
 	
 	// sort the timings
