@@ -23,8 +23,8 @@
 #define AVX512_acceleration (slice_size == 64 && AVX512_support)
 #define u64 uint64_t
 
-#define LOADU256(src) _mm256_loadu_si256((__m256i *)(src))
-#define STOREU256(dest,src) _mm256_storeu_si256((__m256i *)(dest),src)
+#define LOADU256(src) _mm256_load_si256((__m256i *)(src))
+#define STOREU256(dest,src) _mm256_store_si256((__m256i *)(dest),src)
 
 #define ROL64(v, i) ((v << i) | (v >> (64 - i)))
 

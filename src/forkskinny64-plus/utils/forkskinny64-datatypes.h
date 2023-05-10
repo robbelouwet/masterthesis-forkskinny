@@ -88,7 +88,7 @@ typedef union {
 	
 	HalfState64Sliced_t halves[2];
 	// -----
-} State64Sliced_t;
+} __attribute__((aligned(32))) State64Sliced_t;
 
 typedef union {
 	/** All words of the key keys */
