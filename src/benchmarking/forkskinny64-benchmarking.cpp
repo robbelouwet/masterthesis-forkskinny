@@ -297,7 +297,7 @@ void run_benchmark_fs64(benchmark::State &state) {
 int main() {
 	benchmark_forkskinny64_192();
 	std::cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++";
-	benchmark_forkskinny64_128();
+//	benchmark_forkskinny64_128();
 	std::cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++\n";
 //	benchmark_PAEF_forkskinny64_192();
 }
