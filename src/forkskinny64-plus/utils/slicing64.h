@@ -140,12 +140,12 @@ static void inline unsegmentbla(State64Sliced_t *state, const bool segmented, Sl
 		for (int i = 0; i < 64; ++i) slices[i] = state->raw[i];
 }
 
-static inline Blocks64_t unslice(State64Sliced_t state) {
+static inline Blocks64_t unslice(State64Sliced_t state, const bool segmented = false) {
 	
 	Blocks64_t unsliced = Blocks64_t();
 	
 	Slice64_t slices[64];
-	unsegmentbla(&state, true, slices);
+	unsegmentbla(&state, segmented, slices);
 	
 	for (int i = 0; i < 64; ++i)
 		unslice_significance(slices[i], &unsliced, i);
@@ -153,5 +153,14 @@ static inline Blocks64_t unslice(State64Sliced_t state) {
 	
 	return unsliced;
 }
+
+//static inline Blocks64_t unslice_half(HalfState64Sliced_t *state, const bool segmented = false) {
+//	State64Sliced_t s = State64Sliced_t();
+//	for (int i = 0; i < 32; ++i)
+//		s.raw[i].value = state->raw[i].value;
+//
+//	return unslice(s);
+//}
+
 
 #endif //FORKSKINNYPLUS_SLICING_H

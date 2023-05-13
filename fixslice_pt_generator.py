@@ -1,3 +1,6 @@
+import json
+
+
 def flip(arr):
     res = []
 
@@ -13,16 +16,16 @@ def flip(arr):
 if __name__ == "__main__":
 
     # choose the iteration you want to print
-    iterations = [2]
+    iterations = [2, 4, 6, 8, 10, 12, 14]
 
     # select false to compute PT's for forkskinny128
-    generate_fs64_permutations = False
+    generate_fs64_permutations = True
 
     pt_i = []
     flipped_start = []
     if generate_fs64_permutations:
         pt_i = [
-            [0x1, 0x0, 0x3, 0x2, 0x5, 0x4, 0x7, 0x6, 0x9, 0x8, 0xB, 0xA, 0xD, 0xC, 0xF, 0xE],  # PT 0 (nibble-swapped state)
+            [0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf],
             [0xE, 0x8, 0xC, 0x9, 0xF, 0xB, 0xA, 0xD, 0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7]  # PT 1 lanes of swapped nibbles (e.g., 0xF is at index 0xE in PT0)
             # ...
         ]
@@ -42,15 +45,17 @@ if __name__ == "__main__":
             pt_i[i].append(pt_i[i - 1][pt_i[1][j]])
 
     # because of how we laid out the state in memory, flip every 2 cells
-    for iteration in iterations:
-        lanes = pt_i[iteration]
-        # print the specified iteration
-        # print(f"PT128_{iteration}\n", pt_i[iteration])
-        print(f"#define PT128_{iteration}(input, output){{  \\")
-        for (i, n) in enumerate(lanes):
-            print(f'output.cells[{hex(i)}] = input.cells[{hex(flipped_start.index(n))}];', end="")
-            if i == len(lanes) - 1:
-                print("   }")
-            else:
-                print("   \\")
-        print("\n")
+    # for iteration in iterations:
+    #     lanes = pt_i[iteration]
+    #     # print the specified iteration
+    #     # print(f"PT128_{iteration}\n", pt_i[iteration])
+    #     print(f"#define PT128_{iteration}(input, output){{  \\")
+    #     for (i, n) in enumerate(lanes):
+    #         # print(f'output.cells[{hex(i)}] = input.cells[{hex(flipped_start.index(n))}];', end="")
+    #         print(f'{flipped_start.index(n)}, ', end="")
+    #         if i == len(lanes) - 1:
+    #             print("   }")
+    #         else:
+    #             print("   \\")
+    #     print("\n")
+    print(json.dumps(pt_i))

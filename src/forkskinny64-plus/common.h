@@ -3,29 +3,31 @@
 
 #include "utils/forkskinny64-datatypes.h"
 
-static inline Row64_t xor_row(Row64_t a, Row64_t b) {
-	auto res = Row64_t();
+static void inline xor_segmented_row(uint8_t a, uint8_t b, uint8_t out_i, State64Sliced_t *state) {
+	state->segments256[out_i][0] = XOR256(state->segments256[a][0], state->segments256[b][0]);
+	state->segments256[out_i][1] = XOR256(state->segments256[a][1], state->segments256[b][1]);
+	state->segments256[out_i][2] = XOR256(state->segments256[a][2], state->segments256[b][2]);
+	state->segments256[out_i][3] = XOR256(state->segments256[a][3], state->segments256[b][3]);
+}
+
+static inline void xor_row(Row64_t *a, Row64_t *b, Row64_t *out) {
 	
-	#if AVX512_acceleration
-	res.pairs[0].avx512_simd_pair = _mm512_xor_si512(a.pairs[0].avx512_simd_pair, b.pairs[0].avx512_simd_pair);
-	res.pairs[1].avx512_simd_pair = _mm512_xor_si512(a.pairs[1].avx512_simd_pair, b.pairs[1].avx512_simd_pair);
-	
-	#elif AVX2_acceleration
-	res.cols[0].avx2_simd_cell = _mm256_xor_si256(a.cols[0].avx2_simd_cell, b.cols[0].avx2_simd_cell);
-	res.cols[1].avx2_simd_cell = _mm256_xor_si256(a.cols[1].avx2_simd_cell, b.cols[1].avx2_simd_cell);
-	res.cols[2].avx2_simd_cell = _mm256_xor_si256(a.cols[2].avx2_simd_cell, b.cols[2].avx2_simd_cell);
-	res.cols[3].avx2_simd_cell = _mm256_xor_si256(a.cols[3].avx2_simd_cell, b.cols[3].avx2_simd_cell);
+	// even though the key schedule might be segmented, you can add rows ike this as if they weren't segmented
+	// (it just so happens the memory layout of the union struct allows this exception)
+	#if AVX2_acceleration || AVX512_acceleration
+	out->cols[0].avx2_simd_cell = _mm256_xor_si256(a->cols[0].avx2_simd_cell, b->cols[0].avx2_simd_cell);
+	out->cols[1].avx2_simd_cell = _mm256_xor_si256(a->cols[1].avx2_simd_cell, b->cols[1].avx2_simd_cell);
+	out->cols[2].avx2_simd_cell = _mm256_xor_si256(a->cols[2].avx2_simd_cell, b->cols[2].avx2_simd_cell);
+	out->cols[3].avx2_simd_cell = _mm256_xor_si256(a->cols[3].avx2_simd_cell, b->cols[3].avx2_simd_cell);
 	
 	#else
 	for (int i = 0; i < 4; ++i) {
-		res.cols[i].slices[0].value = XOR_SLICE(a.cols[i].slices[0].value, b.cols[i].slices[0].value);
-		res.cols[i].slices[1].value = XOR_SLICE(a.cols[i].slices[1].value, b.cols[i].slices[1].value);
-		res.cols[i].slices[2].value = XOR_SLICE(a.cols[i].slices[2].value, b.cols[i].slices[2].value);
-		res.cols[i].slices[3].value = XOR_SLICE(a.cols[i].slices[3].value, b.cols[i].slices[3].value);
+		out->cols[i].slices[0].value = XOR_SLICE(a->cols[i].slices[0].value, b->cols[i].slices[0].value);
+		out->cols[i].slices[1].value = XOR_SLICE(a->cols[i].slices[1].value, b->cols[i].slices[1].value);
+		out->cols[i].slices[2].value = XOR_SLICE(a->cols[i].slices[2].value, b->cols[i].slices[2].value);
+		out->cols[i].slices[3].value = XOR_SLICE(a->cols[i].slices[3].value, b->cols[i].slices[3].value);
 	}
 	#endif
-	
-	return res;
 }
 
 #endif //FORKSKINNYPLUS_COMMON_H

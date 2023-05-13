@@ -96,7 +96,7 @@ static inline SlicedCiphertext64_t paef_forkskinny64_192_encrypt_section(
 
 	/// Encrypt
 	State64Sliced_t state = slice(ma);
-	auto schedule = forkskinny_64_fixsliced_init_tk23(sliced_tks[0], sliced_tks[1], sliced_tks[2]);
+	auto schedule = forkskinny_64_init_tk23_fixsliced_internal(sliced_tks + 0, sliced_tks + 1, sliced_tks + 2);
 	return forkskinny64_encrypt(&schedule, &state, mode);
 }
 
@@ -163,7 +163,7 @@ static inline u64 paef_forkskinny64_192_encrypt_M(
 		AD_tag ^= extract_segment_tag(ct, last_segment, last_block_index, '1');
 		
 		// C0 is ciphertext
-		ct_out[i] = unslice_accelerated(ct.C0);
+		ct_out[i] = unslice_accelerated(&(ct.C0));
 	}
 	
 	return AD_tag;

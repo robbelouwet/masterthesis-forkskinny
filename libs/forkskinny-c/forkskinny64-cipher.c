@@ -290,6 +290,7 @@ static State64_t forkskinny64_encrypt_rounds(
 		
 		/* Mix the columns */
 		// 0x F4E7 185D AC51 6D26 | 0x ABDB E4D1 9270 16BF
+//		state.llrow = 0xFEDCBA9876543210;
 		state.row[1] ^= state.row[2];
 		state.row[2] ^= state.row[0];
 		temp = state.row[3] ^ state.row[2];
@@ -414,6 +415,8 @@ static State64_t forkskinny64_decrypt_rounds(
 	schedule2 = &(ks2->schedule[from - 1]);
 	for (index = from; index > to; --index, --schedule1, --schedule2) {
 		/* Inverse mix of the columns */
+		// state: 0x 502A 9310 B9F1 64FF
+		// key:   0x 0000 0020 0070 3132
 		temp = state.row[3];
 		state.row[3] = state.row[0];
 		state.row[0] = state.row[1];
@@ -423,25 +426,32 @@ static State64_t forkskinny64_decrypt_rounds(
 		state.row[1] ^= state.row[2];
 		
 		/* Inverse shift of the rows */
+		// 0x 34D5 E9DB 7ACB B9F1
 		state.row[1] = skinny64_rotate_right(state.row[1], 12);
 		state.row[2] = skinny64_rotate_right(state.row[2], 8);
 		state.row[3] = skinny64_rotate_right(state.row[3], 4);
 		
 		/* Apply the subkey for this round */
+		// 0x 534D DBE9 ACB7 B9F1
 		#if SKINNY_64BIT && SKINNY_LITTLE_ENDIAN
-		state.llrow ^= (schedule1->lrow ^ schedule2->lrow) | 0x2000000000ULL;
+		uint64_t key = (schedule1->lrow ^ schedule2->lrow) | 0x2000000000ULL;
+		state.llrow ^= key;
 		#else
 		state.lrow[0] ^= schedule1->lrow ^ schedule2->lrow;
 		state.row[2] ^= 0x20;
 		#endif
 		
 		/* Apply the inverse of the S-box to all bytes in the state */
+		// 0x 534D DBC9 ACC7 88C3
 		#if SKINNY_64BIT
 		state.llrow = skinny64_inv_sbox(state.llrow);
 		#else
 		state.lrow[0] = skinny64_inv_sbox(state.lrow[0]);
 		state.lrow[1] = skinny64_inv_sbox(state.lrow[1]);
 		#endif
+		
+		// 0x A8CB B702 500E 9908
+		int appel = 1;
 	}
 	return state;
 }

@@ -102,34 +102,38 @@ void test(){
 	
 //	b = M_rand_64(9);
 	//auto res = slice(b);
-	auto res1 = slice_accelerated(b, false);
-	auto unsliced = unslice_accelerated(res1, false);
-	auto unsliced1 = unslice(res1);
+	auto res1 = slice_accelerated(&b, true);
+	auto unsliced = unslice_accelerated(res1, true);
 	int appel = 1;
 	
 //	for (int i = 0; i < slice_size; ++i)
 //		assert(res.raw[i].value == res1.raw[i].value);
 	
 	for (int i = 0; i < slice_size; ++i)
-		assert(unsliced.values[i].raw == unsliced1.values[i].raw);
+		assert(b.values[i].raw == unsliced.values[i].raw);
 }
 
 
 void test_forkskinny64_192() {
-	auto M = slice_accelerated(M_64());
-	auto TK1 = slice_accelerated(TK1_64(), true);
-	auto TK2 = slice_accelerated(TK2_64(), true);
-	auto TK3 = slice_accelerated(TK3_64(), true);
+	auto uM = M_64();
+	auto M = slice_accelerated(&uM);
+	auto uTK1 = TK1_64();
+	auto TK1 = slice_accelerated(&uTK1);
+	auto uTK2 = TK2_64();
+	auto TK2 = slice_accelerated(&uTK2);
+	auto uTK3 = TK3_64();
+	auto TK3 = slice_accelerated(&uTK3);
 	auto original_pt = unslice_accelerated(M).values[0].raw;
 
-	KeySchedule64Sliced_t schedule = forkskinny_64_init_tk23(&TK1, &TK2, &TK3);
+	auto schedule = KeySchedule64Sliced_t();
+	forkskinny64_precompute_key_schedule(&TK1, &TK2, &TK3, &schedule);
 
 	// 0x EE00 FDE0
 	// 0x 099B 203B
 	// 0x 0EE2 40B2
-	auto rtk0 = unslice_accelerated({.halves = {schedule.keys[0], {}}}, true).values[0].raw;
-	auto rtk1 = unslice_accelerated({.halves = {schedule.keys[1], {}}}, true).values[0].raw;
-	auto rtk2 = unslice_accelerated({.halves = {schedule.keys[2], {}}}, true).values[0].raw;
+	auto rtk0 = unslice_accelerated({ .halves = {schedule.keys[0], {}}}).values[0].raw;
+	auto rtk1 = unslice_accelerated({ .halves = {schedule.keys[1], {}}}).values[0].raw;
+	auto rtk2 = unslice_accelerated({ .halves = {schedule.keys[2], {}}}).values[0].raw;
 
 	// Ensure correct test vectors
 	auto ct = forkskinny64_encrypt(&schedule, &M, 'b');
@@ -150,18 +154,18 @@ void test_forkskinny64_192() {
 		assert(result_c1.values[i].raw == 0x55520D27354ECF3);
 	}
 
-//	auto pt = forkskinny64_decrypt(schedule, &ct, '1', 'b');
-//	auto result_M = unslice_accelerated(pt.M);
-//	auto result_C0 = unslice_accelerated(pt.C0);
-//
-//	for (int i = 0; i < slice_size; ++i) {
-//		assert(result_M.values[i].raw == original_pt);
-//		assert(result_C0.values[i].raw == 0x502A9310B9F164FF);
-//	}
+	auto pt = forkskinny64_decrypt(&schedule, &ct, '1', 'b');
+	auto result_M = unslice_accelerated(pt.M);
+	auto result_C0 = unslice_accelerated(pt.C0);
+
+	for (int i = 0; i < slice_size; ++i) {
+		assert(result_M.values[i].raw == original_pt);
+		assert(result_C0.values[i].raw == 0x502A9310B9F164FF);
+	}
 }
 
 int main() {
-//	test_forkskinny64_192();
-	test();
+	test_forkskinny64_192();
+//	test();
 	std::cout << "\n\nSuccess!";
 }

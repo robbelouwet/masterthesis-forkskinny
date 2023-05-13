@@ -2,10 +2,12 @@
 #define FORKSKINNYPLUS64_KEYSCHEDULE_INTERNAL_H
 
 //#include <immintrin.h>
+#include <cstring>
 #include "../utils/forkskinny64-datatypes.h"
 #include "../roundfunction/forkskinny64-addconstant.h"
 #include "../common.h"
 #include "../utils/slicing64-accelerated.h"
+#include "../utils/slicing64.h"
 
 static inline void tk2_lfsr(State64Sliced_t *state) {
 	// 2 1 0 (3+2)
@@ -65,7 +67,7 @@ static inline void tk2_lfsr_full(State64Sliced_t *state) {
 //	}
 	
 	#else
-	for (auto & cell : state->cells) {
+	for (auto &cell: state->cells) {
 		auto temp = cell.slices[3];
 		cell.slices[3] = cell.slices[2];
 		cell.slices[2] = cell.slices[1];
@@ -129,7 +131,7 @@ static inline void tk3_lfsr_full(State64Sliced_t *state) {
 	
 	
 	#else
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 16; i++) {
 		// 0b00111001 = 0 3 2 1 -> lanes for the simd permutation
 		auto temp = state->cells[i].slices[0];
 		state->cells[i].slices[0] = state->cells[i].slices[1];
@@ -143,11 +145,12 @@ static inline void tk3_lfsr_full(State64Sliced_t *state) {
 auto mask_0 = _mm256_set_epi64x(0, 0, 0, -1ULL);
 auto mask_1 = _mm256_set_epi64x(0, 0, -1ULL, 0);
 auto mask_2 = _mm256_set_epi64x(0, -1ULL, 0, 0);
+
 /// Make sure you first understand how the nibble-swapped cipher state looks like
 static inline void permute(State64Sliced_t *state) {
 //	auto test_blocks = Blocks64_t();
 //	test_blocks.values[0].raw = 0xEFCDAB8967452301;
-//	state = slice_accelerated(test_blocks);
+//	*state = slice_accelerated(&test_blocks);
 	
 	#if AVX2_acceleration || AVX512_acceleration
 	for (int i = 0; i < 4; ++i) {
@@ -183,16 +186,38 @@ static inline void permute(State64Sliced_t *state) {
 	}
 	
 	#else
-	output.halves[1] = state.halves[0];
+	//	HalfState64Sliced_t top = (*state).halves[0];
+	//	State64Sliced_t temp = State64Sliced_t{.halves = {{}, top}};
+	//	auto testtemp = unslice_accelerated(&temp).values[0].raw;
 	
-	output.cells[0] = state.cells[0xE];
-	output.cells[1] = state.cells[0x8];
-	output.cells[2] = state.cells[0xC];
-	output.cells[3] = state.cells[0x9];
-	output.cells[4] = state.cells[0xF];
-	output.cells[5] = state.cells[0xB];
-	output.cells[6] = state.cells[0xA];
-	output.cells[7] = state.cells[0xD];
+	auto s_0 = state->cells[0];
+	auto s_1 = state->cells[1];
+	auto s_2 = state->cells[2];
+	auto s_3 = state->cells[3];
+	auto s_4 = state->cells[4];
+	auto s_5 = state->cells[5];
+	auto s_6 = state->cells[6];
+	auto s_7 = state->cells[7];
+	
+	state->cells[0] = state->cells[0xE];
+	state->cells[1] = state->cells[0x8];
+	state->cells[2] = state->cells[0xC];
+	state->cells[3] = state->cells[0x9];
+	state->cells[4] = state->cells[0xF];
+	state->cells[5] = state->cells[0xB];
+	state->cells[6] = state->cells[0xA];
+	state->cells[7] = state->cells[0xD];
+	
+	state->cells[0x8] = s_0;
+	state->cells[0x9] = s_1;
+	state->cells[0xA] = s_2;
+	state->cells[0xB] = s_3;
+	state->cells[0xC] = s_4;
+	state->cells[0xD] = s_5;
+	state->cells[0xE] = s_6;
+	state->cells[0xF] = s_7;
+	
+	//	state->halves[1] = top;
 	#endif
 	
 	// Input:   0x FEDC BA98 7654 3210
@@ -200,74 +225,43 @@ static inline void permute(State64Sliced_t *state) {
 	// Erik:    0x 7654 3210 DABF 9C8E
 	// Us:      0x 7654 3210 DABF 9C8E
 
-//	auto test_output = unslice_accelerated(output).values[0].raw;
+//	auto test_output = unslice_accelerated(state).values[0].raw;
 	int appel = 1;
 }
 
-static inline HalfState64Sliced_t xor_half_keys(HalfState64Sliced_t a, HalfState64Sliced_t b) {
-	return {.rows={
-			xor_row(a.rows[0], b.rows[0]),
-			xor_row(a.rows[1], b.rows[1]),
-	}};
-}
-
-static inline State64Sliced_t xor_keys(State64Sliced_t a, State64Sliced_t b) {
-	return {.rows={
-			xor_row(a.rows[0], b.rows[0]),
-			xor_row(a.rows[1], b.rows[1]),
-			xor_row(a.rows[2], b.rows[2]),
-			xor_row(a.rows[3], b.rows[3]),
-	}};
-}
-
-static inline HalfState64Sliced_t xor_half_segmented_keys(HalfState64Sliced_t a, HalfState64Sliced_t b) {
-	return {.segments256 = {
-			{
-					XOR256(a.segments256[0][0], b.segments256[0][0]),
-					XOR256(a.segments256[0][1], b.segments256[0][1]),
-					XOR256(a.segments256[0][2], b.segments256[0][2]),
-					XOR256(a.segments256[0][3], b.segments256[0][3])
-			},
-			{
-					XOR256(a.segments256[1][0], b.segments256[1][0]),
-					XOR256(a.segments256[1][1], b.segments256[1][1]),
-					XOR256(a.segments256[1][2], b.segments256[1][2]),
-					XOR256(a.segments256[1][3], b.segments256[1][3])
-			},
-		
+static inline void xor_keys(State64Sliced_t *a, State64Sliced_t *b,
+                            State64Sliced_t *out, const bool upper_half_only) {
+	xor_row(&(a->rows[0]), &(b->rows[0]), &(out->rows[0]));
+	xor_row(&(a->rows[1]), &(b->rows[1]), &(out->rows[1]));
+	
+	if (!upper_half_only) {
+		xor_row(&(a->rows[2]), &(b->rows[2]), &(out->rows[2]));
+		xor_row(&(a->rows[3]), &(b->rows[3]), &(out->rows[3]));
 	}
-	};
+	
 }
 
-static inline State64Sliced_t xor_segmented_keys(State64Sliced_t a, State64Sliced_t b) {
-	return {.segments256 = {
-			{
-					XOR256(a.segments256[0][0], b.segments256[0][0]),
-					XOR256(a.segments256[0][1], b.segments256[0][1]),
-					XOR256(a.segments256[0][2], b.segments256[0][2]),
-					XOR256(a.segments256[0][3], b.segments256[0][3])
-			},
-			{
-					XOR256(a.segments256[1][0], b.segments256[1][0]),
-					XOR256(a.segments256[1][1], b.segments256[1][1]),
-					XOR256(a.segments256[1][2], b.segments256[1][2]),
-					XOR256(a.segments256[1][3], b.segments256[1][3])
-			},
-			{
-					XOR256(a.segments256[2][0], b.segments256[2][0]),
-					XOR256(a.segments256[2][1], b.segments256[2][1]),
-					XOR256(a.segments256[2][2], b.segments256[2][2]),
-					XOR256(a.segments256[2][3], b.segments256[2][3])
-			},
-			{
-					XOR256(a.segments256[3][0], b.segments256[3][0]),
-					XOR256(a.segments256[3][1], b.segments256[3][1]),
-					XOR256(a.segments256[3][2], b.segments256[3][2]),
-					XOR256(a.segments256[3][3], b.segments256[3][3])
-			},
-		
+static inline State64Sliced_t xor_keys(State64Sliced_t a, State64Sliced_t b, const bool upper_half_only = false) {
+	State64Sliced_t res = {};
+	xor_keys(&a, &b, &res, upper_half_only);
+	return res;
+}
+
+static inline void xor_segmented_keys(State64Sliced_t *a, State64Sliced_t *b,
+                                      State64Sliced_t *out, const bool upper_half_only) {
+	auto range = upper_half_only ? 2 : 4;
+	for (int i = 0; i < range; ++i) {
+		out->segments256[i][0] = XOR256(a->segments256[i][0], b->segments256[i][0]);
+		out->segments256[i][1] = XOR256(a->segments256[i][1], b->segments256[i][1]);
+		out->segments256[i][2] = XOR256(a->segments256[i][2], b->segments256[i][2]);
+		out->segments256[i][3] = XOR256(a->segments256[i][3], b->segments256[i][3]);
 	}
-	};
+}
+
+static inline State64Sliced_t xor_segmented_keys(State64Sliced_t a, State64Sliced_t b, const bool upper_half_only) {
+	State64Sliced_t res = {};
+	xor_segmented_keys(&a, &b, &res, upper_half_only);
+	return res;
 }
 
 #endif //FORKSKINNYPLUS_KEYSCHEDULE_INTERNAL_H

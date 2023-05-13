@@ -63,7 +63,7 @@ typedef union {
 } Row64_t;
 
 typedef union {
-	__m256i segments256[4][4];
+//	__m256i segments256[4][2];
 	
 	Slice64_t raw[32];
 	Cell64_t cells[8];
@@ -76,8 +76,8 @@ typedef union {
 	/* These groups of members aren't used in the same context and assume different memory layout!*/
 	/* To save effort, these are both accessible in the same struct definition*/
 	// ----- Used for segmented cipher state:
-	uint64_t raw_segments[64];
-	__m512i segments512[2][4];
+//	uint64_t raw_segments[64];
+//	__m512i segments512[2][4];
 	__m256i segments256[4][4];
 	
 	// ----- Used for accessing TK or non-segmented cipher state:
@@ -88,7 +88,7 @@ typedef union {
 	
 	HalfState64Sliced_t halves[2];
 	// -----
-} __attribute__((aligned(32))) State64Sliced_t;
+} State64Sliced_t;
 
 typedef union {
 	/** All words of the key keys */

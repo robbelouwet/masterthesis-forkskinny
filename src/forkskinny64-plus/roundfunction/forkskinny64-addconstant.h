@@ -29,7 +29,7 @@ static inline void forkskinny64_add_segmented_constant(HalfState64Sliced_t *stat
 static inline void forkskinny64_add_constant(HalfState64Sliced_t *state, uint16_t iteration) {
 	// The beauty of unions:
 	
-	#if AVX2_acceleration || AVX512_acceleration
+	#if !FIXED_SLICING && (AVX2_acceleration || AVX512_acceleration)
 	// Cell 0 XOR_AVX2 C0
 	Cell64_t C0 = {.slices = {
 			forkskinny_precomputed_round_constants[iteration][0],

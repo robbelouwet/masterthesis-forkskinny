@@ -96,11 +96,12 @@ void benchmark_forkskinny64_192() {
 	unsigned long long slice_timings[ITERATIONS];
 	for (int i = 0; i < ITERATIONS; ++i) {
 		auto before = _rdtsc();
-		test_M[i] = slice_accelerated(unsliced_test_M[i]);
-		test_TK1[i] = slice_accelerated(unsliced_test_TK1[i]);
-		test_TK2[i] = slice_accelerated(unsliced_test_TK2[i]);
-		test_TK3[i] = slice_accelerated(unsliced_test_TK3[i]);
+		slice_accelerated(unsliced_test_M + i, test_M + i);
+		slice_accelerated(unsliced_test_TK1 + i, test_TK1 + i);
+		slice_accelerated(unsliced_test_TK2 + i, test_TK2 + i);
+		slice_accelerated(unsliced_test_TK3 + i, test_TK3 + i);
 		auto after = _rdtsc();
+		
 		slice_timings[i] = after - before;
 	}
 	
@@ -108,7 +109,7 @@ void benchmark_forkskinny64_192() {
 	unsigned long long schedule_timings[ITERATIONS];
 	for (int i = 0; i < ITERATIONS; ++i) {
 		auto before = _rdtsc();
-		schedules[i] = forkskinny_64_init_tk23(test_TK1 + i, test_TK2 + i, test_TK3 + i);
+		forkskinny64_precompute_key_schedule(test_TK1 + i, test_TK2 + i, test_TK3 + i, schedules + i);
 		schedule_timings[i] = _rdtsc() - before;
 	}
 	
@@ -129,7 +130,7 @@ void benchmark_forkskinny64_192() {
 	unsigned long long unslice_timings[ITERATIONS];
 	for (int i = 0; i < ITERATIONS; ++i) {
 		auto before = _rdtsc();
-		unsliced_cts[i] = unslice_accelerated(cts[i].C0);
+		unslice_accelerated(&(cts[i].C0), unsliced_cts + i);
 		auto after = _rdtsc();
 		unslice_timings[i] = after - before;
 	}
@@ -196,9 +197,9 @@ void benchmark_forkskinny64_128() {
 	unsigned long long slice_timings[ITERATIONS];
 	for (int i = 0; i < ITERATIONS; ++i) {
 		auto before = _rdtsc();
-		test_M[i] = slice_accelerated(unsliced_test_M[i]);
-		test_TK1[i] = slice_accelerated(unsliced_test_TK1[i]);
-		test_TK2[i] = slice_accelerated(unsliced_test_TK2[i]);
+		slice_accelerated(unsliced_test_M + i, test_M + i);
+		slice_accelerated(unsliced_test_TK1 + i, test_TK1 + i);
+		slice_accelerated(unsliced_test_TK2 + i, test_TK2 + i);
 		auto after = _rdtsc();
 		slice_timings[i] = after - before;
 	}
@@ -207,7 +208,7 @@ void benchmark_forkskinny64_128() {
 	unsigned long long schedule_timings[ITERATIONS];
 	for (int i = 0; i < ITERATIONS; ++i) {
 		auto before = _rdtsc();
-		schedules[i] = forkskinny_64_init_tk2(test_TK1 + i, test_TK2 + i);
+		schedules[i] = forkskinny_64_init_tk2_internal(test_TK1 + i, test_TK2 + i);
 		schedule_timings[i] = _rdtsc() - before;
 	}
 	
@@ -228,7 +229,7 @@ void benchmark_forkskinny64_128() {
 	unsigned long long unslice_timings[ITERATIONS];
 	for (int i = 0; i < ITERATIONS; ++i) {
 		auto before = _rdtsc();
-		unsliced_cts[i] = unslice_accelerated(cts[i].C0);
+		unslice_accelerated(&(cts[i].C0), unsliced_cts + i);
 		auto after = _rdtsc();
 		unslice_timings[i] = after - before;
 	}
@@ -261,9 +262,9 @@ void benchmark_forkskinny64_128() {
 	std::cout << ((cycles_per_byte / (ROUNDS_BEFORE + 2 * ROUNDS_AFTER))) * 36 << " cycles per byte per 36 rounds\n";
 	std::cout << cycles_per_round << " cycles per round";
 	
-//	for (int i = 0; i < ITERATIONS; ++i) {
-//		assert(unsliced_cts[i].values[0].raw == 0x502A9310B9F164FF);
-//	}
+	for (int i = 0; i < ITERATIONS; ++i) {
+		assert(unsliced_cts[i].values[0].raw == 0x502A9310B9F164FF);
+	}
 	
 	std::cout << "\nSuccess!";
 }
@@ -281,11 +282,14 @@ Blocks64_t benchmark_single_forkskinny64_192(Blocks64_t unsliced_m, Blocks64_t u
 	auto test_TK3 = slice(unsliced_tk3);
 	
 	// PRIMITIVE
-	auto schedule = forkskinny_64_fixsliced_init_tk23(test_TK1, test_TK2, test_TK3);
+	auto schedule = KeySchedule64Sliced_t();
+	forkskinny_64_init_tk23_fixsliced_internal(&test_TK1, &test_TK2, &test_TK3, &schedule);
 	auto ct = forkskinny64_encrypt(&schedule, &test_M, 'b');
 	
 	// UNSLICE
-	return unslice_accelerated(ct.M);
+	auto res = Blocks64_t();
+	unslice_accelerated(&(ct.M), &res);
+	return res;
 }
 
 void run_benchmark_fs64(benchmark::State &state) {

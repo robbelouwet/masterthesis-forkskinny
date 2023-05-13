@@ -91,9 +91,10 @@ static inline lane_t slice_significance_accelerated_64(const Block64_t *blocks) 
  * @return
  */
 
-static inline State64Sliced_t slice_accelerated(Blocks64_t blocks,
-                                                bool const segment = (AVX512_acceleration || AVX2_acceleration)) {
-	auto result = State64Sliced_t();
+static inline void slice_accelerated(Blocks64_t *blocks,
+                                     State64Sliced_t *result,
+                                     bool const segment = ((AVX512_acceleration || AVX2_acceleration) &&
+                                                           !FIXED_SLICING)) {
 	Slice64_t slices[64];
 	
 	/* Buffer that holds all blocks AND the 64 spots that we use for the back-rotation */
@@ -110,7 +111,7 @@ static inline State64Sliced_t slice_accelerated(Blocks64_t blocks,
 	/* rotate-align the blocks & copy into extended buffer at the upper half of the buffer */
 	auto stop = slice_size < 64 ? 64 + slice_size : len;
 	for (int i = 64; i < stop; i++)
-		b_blocks[i].raw = ROL64(blocks.values[i & range_mask].raw, (i & 63));
+		b_blocks[i].raw = ROL64(blocks->values[i & range_mask].raw, (i & 63));
 	
 	
 	/* Iterate over every 'significance' level the pt blocks have, which are 64 for forkskinny64 */
@@ -126,17 +127,15 @@ static inline State64Sliced_t slice_accelerated(Blocks64_t blocks,
 		/* back-rotate the last block in the buffer to the front */
 		back_rotate(b_blocks + ind);
 		
-		/* Now re-align the slice by rotating back and put it in the slices buffer
-		 * (assign to result in 1 go if SIMD segmentation isn't needed) */
+		/* Now re-align the slice by rotating back and put it in the slices buffer */
 		slices[i].value = ROR_LANES(res, i);
-//		int appel = 1;
 	}
 	
 	if (segment) {
 		#if AVAVX2_acceleration
 		for (int i = 0; i < 2; ++i) {
 			for (int j = 0; j < 4; ++j) {
-				result.segments512[i][j] = _mm512_set_epi64(
+				result->segments512[i][j] = _mm512_set_epi64(
 						slices[(i << 5) + j + 28].value,
 						slices[(i << 5) + j + 24].value,
 						slices[(i << 5) + j + 20].value,
@@ -151,7 +150,7 @@ static inline State64Sliced_t slice_accelerated(Blocks64_t blocks,
 		#elif AVX2_acceleration
 		for (int i = 0; i < 4; ++i) {
 			for (int j = 0; j < 4; ++j) {
-				result.segments256[i][j] = _mm256_set_epi64x(
+				result->segments256[i][j] = _mm256_set_epi64x(
 						slices[(i << 4) + j + 12].value,
 						slices[(i << 4) + j + 8].value,
 						slices[(i << 4) + j + 4].value,
@@ -161,11 +160,20 @@ static inline State64Sliced_t slice_accelerated(Blocks64_t blocks,
 		}
 		#endif
 	} else
-		for (int i = 0; i < 64; i++) result.raw[i] = slices[i];
+		for (int i = 0; i < 64; i++)
+			result->raw[i].value = slices[i].value;
 	
-	
-	return result;
+	int appel = 1;
 }
+
+static inline State64Sliced_t slice_accelerated(Blocks64_t *blocks,
+                                                bool const segment = ((AVX512_acceleration || AVX2_acceleration) &&
+                                                                      !FIXED_SLICING)) {
+	State64Sliced_t res;
+	slice_accelerated(blocks, &res, segment);
+	return res;
+}
+
 
 /**
  *
@@ -297,17 +305,16 @@ static inline uint64_t unslice_significance_accelerated(Slice64_t *slices) {
 	return block;
 }
 
-static inline Blocks64_t unslice_accelerated(State64Sliced_t state,
-                                             bool const segmented = (AVX2_acceleration || AVX512_acceleration)) {
-	Block64_t blocks[64] = {};
-	Slice64_t slices[128];
+static inline void unslice_accelerated(State64Sliced_t *state,
+                                       Blocks64_t *result,
+                                       bool const segmented = ((AVX2_acceleration || AVX512_acceleration) &
+                                                               !FIXED_SLICING)) {
+	Slice64_t slices[128] = {};
 	
-	unsegment(&state, segmented, slices + 64);
+	unsegment(state, segmented, slices + 64);
 	
-	for (int i = 64; i < 128; ++i){
+	for (int i = 64; i < 128; ++i)
 		slices[i].value = ROL_LANES(slices[i].value, (i & 63));
-		int appel = 1;
-	}
 	
 	
 	for (int i = 64; i < 128; ++i) {
@@ -317,10 +324,16 @@ static inline Blocks64_t unslice_accelerated(State64Sliced_t state,
 		
 		slices[63 - ind] = slices[127 - ind];
 		
-		blocks[ind].raw = ROR64(rotated_block, ind, 64);
+		result->values[ind].raw = ROR64(rotated_block, ind, 64);
 	}
-	
-	return reinterpret_cast<Blocks64_t &&>(blocks);
+}
+
+static inline Blocks64_t unslice_accelerated(State64Sliced_t state,
+                                             bool const segmented = ((AVX2_acceleration || AVX512_acceleration) &
+                                                                     !FIXED_SLICING)) {
+	Blocks64_t res = Blocks64_t();
+	unslice_accelerated(&state, &res, segmented);
+	return res;
 }
 
 #endif //FORKSKINNYPLUS_SLICING_ACCELERATED_H
