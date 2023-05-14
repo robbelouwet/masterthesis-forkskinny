@@ -125,6 +125,19 @@ void test_forkskinny64_192() {
 	auto TK3 = slice_accelerated(&uTK3);
 	auto original_pt = unslice_accelerated(M);
 
+//	auto schedule = KeySchedule64Sliced_t();
+//	auto schedule2 = KeySchedule64Sliced_t(); auto fTK1 = TK1; auto fTK2 = TK2; auto fTK3 = TK3;
+//	forkskinny_64_init_tk23_internal(&TK1, &TK2, &TK3, &schedule);
+//
+//	forkskinny_64_init_tk23_fixsliced_internal_test(&fTK1, &fTK2, &fTK3, &schedule2);
+//
+//	for (int i = 0; i < FORKSKINNY64_MAX_ROUNDS; ++i) {
+//		auto a = unslice_accelerated({.halves = {schedule.keys[i], {}}}).values[0].raw;
+//		auto b = unslice_accelerated({.halves = {schedule2.keys[i], {}}}).values[0].raw;
+//		std::cout << std::hex << a << std::endl;
+//		assert(a == b);
+//	}
+
 	auto schedule = KeySchedule64Sliced_t();
 	forkskinny64_precompute_key_schedule(&TK1, &TK2, &TK3, &schedule);
 

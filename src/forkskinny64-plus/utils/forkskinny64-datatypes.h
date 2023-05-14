@@ -3,6 +3,7 @@
 
 #define FORKSKINNY_ROUNDS_BEFORE 17
 #define FORKSKINNY_ROUNDS_AFTER 23
+// has to be even, or fixed slicing won't correctly derive double round keys!
 #define FORKSKINNY64_MAX_ROUNDS (FORKSKINNY_ROUNDS_BEFORE + 2*FORKSKINNY_ROUNDS_AFTER)
 
 #include <cstdint>

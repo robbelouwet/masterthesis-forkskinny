@@ -60,7 +60,7 @@ static inline void forkskinny64_precompute_key_schedule(State64Sliced_t *tk1, St
                                                         State64Sliced_t *tk3, KeySchedule64Sliced_t *out) {
 	// acceleration can't be enabled because fixed sliced key schedule doesn't cope with segmented cipher state
 	#if FIXED_SLICING && !AVX2_acceleration && !AVX512_acceleration
-	forkskinny_64_init_tk23_fixsliced_internal(tk1, tk2, tk3, out);
+	forkskinny_64_init_tk23_fixsliced_internal_test(tk1, tk2, tk3, out);
 	#else
 	forkskinny_64_init_tk23_internal(tk1, tk2, tk3, out);
 	#endif

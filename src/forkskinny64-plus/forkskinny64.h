@@ -71,35 +71,35 @@ static inline void apply_roundkey(HalfState64Sliced_t *round_key, State64Sliced_
 static inline void forkskinny64_encrypt_round(KeySchedule64Sliced_t *schedule, State64Sliced_t *state,
                                               uint16_t iteration) {
 	// i: 0, 0x76541200
-	auto roundkey = unslice_accelerated({.halves= {schedule->keys[iteration], {}}}, false).values[0].raw;
+//	auto roundkey = unslice_accelerated({.halves= {schedule->keys[iteration], {}}}, false).values[0].raw;
 
-	auto test_sbox_before = unslice_accelerated(*state).values[0].raw; // 0x EFCD AB89 6745 2301
+//	auto test_sbox_before = unslice_accelerated(*state).values[0].raw; // 0x EFCD AB89 6745 2301
 //	auto before0 = _rdtsc();
 	forkskinny64_sbox(state);
 //	auto after0 = _rdtsc();
 //	std::cout << "SBOX: " << after0 - before0 << std::endl;
-	auto test_state = unslice_accelerated(*state).values[0].raw; // 0x 7F4E 5D38 2B1A 90C6
+//	auto test_state = unslice_accelerated(*state).values[0].raw; // 0x 7F4E 5D38 2B1A 90C6
 	
 	/* round constant is added during pre computation of key schedule and added to the roundkey */
 	apply_roundkey(schedule->keys + iteration, state);
 //	auto after1 = _rdtsc();
 //	std::cout << "Key injection: " << after1 - before1 << std::endl;
-	test_state = unslice_accelerated(*state).values[0].raw; // 0x 7F4E 5D18 C51A 6D26
+//	test_state = unslice_accelerated(*state).values[0].raw; // 0x 7F4E 5D18 C51A 6D26
 
 //	auto before2 = _rdtsc();
 	forkskinny64_shiftrows(state);
 //	auto after2 = _rdtsc();
 //	std::cout << "ShiftRows: " << after2 - before2 << std::endl;
-	test_state = unslice_accelerated(*state).values[0].raw; // 0x F4E7 185D AC51 6D26
+//	test_state = unslice_accelerated(*state).values[0].raw; // 0x F4E7 185D AC51 6D26
 
 //	auto before3 = _rdtsc();
 	forkskinny64_mixcols(state);
 //	auto after3 = _rdtsc();
 //	std::cout << "MixCols: " << after3 - before3 << std::endl;
 //	exit(1);
-	test_state = unslice_accelerated(*state).values[0].raw; // 0x 757B B40C 6D26 819C
+//	test_state = unslice_accelerated(*state).values[0].raw; // 0x 757B B40C 6D26 819C
 
-	int appel = 1;
+//	int appel = 1;
 
 }
 

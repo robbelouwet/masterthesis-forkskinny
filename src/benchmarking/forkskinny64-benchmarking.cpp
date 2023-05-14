@@ -117,10 +117,7 @@ void benchmark_forkskinny64_192() {
 	unsigned long long encryption_timings[ITERATIONS];
 	for (int i = 0; i < ITERATIONS; ++i) {
 		auto before = _rdtsc();
-		
-		auto pt_block = test_M[i];
-		
-		cts[i] = forkskinny64_encrypt(schedules + i, &pt_block, 'b');
+		cts[i] = forkskinny64_encrypt(schedules + i, test_M + i, 'b');
 		auto after = _rdtsc();
 		encryption_timings[i] = after - before;
 	}
@@ -283,7 +280,7 @@ Blocks64_t benchmark_single_forkskinny64_192(Blocks64_t unsliced_m, Blocks64_t u
 	
 	// PRIMITIVE
 	auto schedule = KeySchedule64Sliced_t();
-	forkskinny_64_init_tk23_fixsliced_internal(&test_TK1, &test_TK2, &test_TK3, &schedule);
+	forkskinny64_precompute_key_schedule(&test_TK1, &test_TK2, &test_TK3, &schedule);
 	auto ct = forkskinny64_encrypt(&schedule, &test_M, 'b');
 	
 	// UNSLICE
