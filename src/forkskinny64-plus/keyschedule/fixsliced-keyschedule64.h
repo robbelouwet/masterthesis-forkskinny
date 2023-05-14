@@ -25,7 +25,7 @@ static inline void forkskinny_64_init_tk23_fixsliced_internal(State64Sliced_t *t
 	while (i < FORKSKINNY64_MAX_ROUNDS) {
 		// RTK 0
 		// TODO: adjust by-ref xor_keys calls
-		auto res0 = xor_keys(xor_keys(*tk1, *tk2, true), *tk3, true);
+		auto res0 = xor_keys(xor_keys(*tk1, *tk2, 0), *tk3, 0);
 		forkskinny64_add_constant(&(res0.halves[0]), i);
 		out->keys[i++] = res0.halves[0];
 		
@@ -33,7 +33,7 @@ static inline void forkskinny_64_init_tk23_fixsliced_internal(State64Sliced_t *t
 		if (i >= FORKSKINNY64_MAX_ROUNDS) break;
 		tk2_lfsr_full(tk2);
 		tk3_lfsr_full(tk3);
-		State64Sliced_t rtk12_temp = xor_keys(xor_keys(*tk1, *tk2), *tk3);
+		auto rtk12_temp = xor_keys(xor_keys(*tk1, *tk2), *tk3);
 		auto rtk12 = State64Sliced_t();
 		PT64_2(rtk12_temp, rtk12);
 		forkskinny64_add_constant(&(rtk12.halves[1]), i); // RTK N+1 comes before RTK N!
@@ -117,7 +117,7 @@ static inline void forkskinny_64_init_tk23_fixsliced_internal(State64Sliced_t *t
 		if (i >= FORKSKINNY64_MAX_ROUNDS) break;
 		tk2_lfsr_full(tk2);
 		tk3_lfsr_full(tk3);
-		auto rtk15 = xor_keys(xor_keys(*tk1, *tk2, true), *tk3, true);
+		auto rtk15 = xor_keys(xor_keys(*tk1, *tk2, 1), *tk3, 1);
 		forkskinny64_add_constant(&(rtk15.halves[1]), i); // RTK N+1 is at [0], and RTK N is at [1]!
 		out->keys[i++] = rtk15.halves[1];
 	}

@@ -10,7 +10,7 @@ static inline KeySchedule64Sliced_t forkskinny_64_init_tk2_internal(State64Slice
 	auto schedule = KeySchedule64Sliced_t();
 	
 	for (int i = 0; i < FORKSKINNY64_MAX_ROUNDS; ++i) {
-		auto res = xor_keys(*tk1, *tk2).halves[0];
+		auto res = xor_keys(*tk1, *tk2, 0).halves[0];
 		//auto test_tks = unslice_accelerated(res);
 		
 		forkskinny64_add_constant(&res, i);
@@ -35,7 +35,7 @@ static inline void forkskinny_64_init_tk23_internal(State64Sliced_t *tk1, State6
                                                     State64Sliced_t *tk3, KeySchedule64Sliced_t *out) {
 	
 	for (int i = 0; i < FORKSKINNY64_MAX_ROUNDS; ++i) {
-		auto res = xor_keys(xor_keys(*tk2, *tk3, true), *tk1, true).halves[0];
+		auto res = xor_keys(xor_keys(*tk2, *tk3, 0), *tk1, 0).halves[0];
 		//auto test_tks = unslice_accelerated(res);
 		
 		// Keep in mind: the C2 constant relating to the 9nth cell is part of the 2nd 'half'!

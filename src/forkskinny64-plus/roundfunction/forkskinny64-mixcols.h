@@ -45,9 +45,9 @@ static inline void forkskinny64_mixcols_inv(State64Sliced_t *state) {
 	state->rows[1] = state->rows[2];
 	
 	
-	xor_row(state->rows + 3, &temp, state->rows + 3);
-	xor_row(&temp, state->rows + 0, state->rows + 2);
-	xor_row(state->rows + 1, state->rows + 1, state->rows + 1);
+	xor_row(&(state->rows[3]), &temp, &(state->rows[3]));
+	xor_row(&temp, &(state->rows[0]), &(state->rows[2]));
+	xor_row(&(state->rows[1]), &(state->rows[2]), &(state->rows[1]));
 	#endif
 
 //	auto test_res = unslice_accelerated(*state).values[0].raw;

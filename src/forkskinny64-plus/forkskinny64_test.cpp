@@ -123,30 +123,29 @@ void test_forkskinny64_192() {
 	auto TK2 = slice_accelerated(&uTK2);
 	auto uTK3 = TK3_64();
 	auto TK3 = slice_accelerated(&uTK3);
-	auto original_pt = unslice_accelerated(M).values[0].raw;
+	auto original_pt = unslice_accelerated(M);
 
 	auto schedule = KeySchedule64Sliced_t();
 	forkskinny64_precompute_key_schedule(&TK1, &TK2, &TK3, &schedule);
 
-	// 0x EE00 FDE0
-	// 0x 099B 203B
-	// 0x 0EE2 40B2
-	auto rtk0 = unslice_accelerated({ .halves = {schedule.keys[0], {}}}).values[0].raw;
-	auto rtk1 = unslice_accelerated({ .halves = {schedule.keys[1], {}}}).values[0].raw;
-	auto rtk2 = unslice_accelerated({ .halves = {schedule.keys[2], {}}}).values[0].raw;
+	auto rtk0 = unslice_accelerated({ .halves = {schedule.keys[0], {}}}).values[0].raw; // 0x EE00 FDE0
+	auto rtk1 = unslice_accelerated({ .halves = {schedule.keys[1], {}}}).values[0].raw; // 0x 099B 203B
+	auto rtk2 = unslice_accelerated({ .halves = {schedule.keys[2], {}}}).values[0].raw; // 0x 0EE2 40B2
+	auto rtk3 = unslice_accelerated({ .halves = {schedule.keys[3], {}}}).values[0].raw; // 0x 7000 2967
+	auto rtk4 = unslice_accelerated({ .halves = {schedule.keys[4], {}}}).values[0].raw; // 0x 4090 EE14
+	auto rtk5 = unslice_accelerated({ .halves = {schedule.keys[5], {}}}).values[0].raw; // 0x 732 50D0
+	auto rtk6 = unslice_accelerated({ .halves = {schedule.keys[6], {}}}).values[0].raw; // 0x 247F 6010
+	auto rtk7 = unslice_accelerated({ .halves = {schedule.keys[7], {}}}).values[0].raw; // 0x 0010 FDD6
 
 	// Ensure correct test vectors
 	auto ct = forkskinny64_encrypt(&schedule, &M, 'b');
 	auto result_c0 = unslice_accelerated(ct.C0);
 	auto result_c1 = unslice_accelerated(ct.C1);
 
-	std::cout << "M [0]: ";
-	print_block(unslice_accelerated(M).values[0].bytes, 8);
-
-	std::cout << "\nC0 [0]: ";
+	std::cout << "\nM->C0 [0]: ";
 	print_block(result_c0.values[0].bytes, 8);
 
-	std::cout << "\nC1 [0]: ";
+	std::cout << "\nM->C1 [0]: ";
 	print_block(result_c1.values[0].bytes, 8);
 
 	for (int i = 0; i < slice_size; ++i) {
@@ -157,11 +156,18 @@ void test_forkskinny64_192() {
 	auto pt = forkskinny64_decrypt(&schedule, &ct, '1', 'b');
 	auto result_M = unslice_accelerated(pt.M);
 	auto result_C0 = unslice_accelerated(pt.C0);
+	
+	std::cout << "\n-----\nC1->M [0]: ";
+	print_block(result_M.values[0].bytes, 8);
+	
+	std::cout << "\nC1->C0 [0]: ";
+	print_block(result_C0.values[0].bytes, 8);
 
 	for (int i = 0; i < slice_size; ++i) {
-		assert(result_M.values[i].raw == original_pt);
+		assert(result_M.values[i].raw == original_pt.values[i].raw);
 		assert(result_C0.values[i].raw == 0x502A9310B9F164FF);
 	}
+	int appel = 1;
 }
 
 int main() {

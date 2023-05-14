@@ -230,18 +230,20 @@ static inline void permute(State64Sliced_t *state) {
 }
 
 static inline void xor_keys(State64Sliced_t *a, State64Sliced_t *b,
-                            State64Sliced_t *out, const bool upper_half_only) {
-	xor_row(&(a->rows[0]), &(b->rows[0]), &(out->rows[0]));
-	xor_row(&(a->rows[1]), &(b->rows[1]), &(out->rows[1]));
+                            State64Sliced_t *out, const int half) {
+	if (half == 0 || half == -1) {
+		xor_row(&(a->rows[0]), &(b->rows[0]), &(out->rows[0]));
+		xor_row(&(a->rows[1]), &(b->rows[1]), &(out->rows[1]));
+	}
 	
-	if (!upper_half_only) {
+	if (half == -1 || half == 1) {
 		xor_row(&(a->rows[2]), &(b->rows[2]), &(out->rows[2]));
 		xor_row(&(a->rows[3]), &(b->rows[3]), &(out->rows[3]));
 	}
 	
 }
 
-static inline State64Sliced_t xor_keys(State64Sliced_t a, State64Sliced_t b, const bool upper_half_only = false) {
+static inline State64Sliced_t xor_keys(State64Sliced_t a, State64Sliced_t b, const int upper_half_only = -1) {
 	State64Sliced_t res = {};
 	xor_keys(&a, &b, &res, upper_half_only);
 	return res;

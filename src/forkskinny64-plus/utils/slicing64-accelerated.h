@@ -307,7 +307,7 @@ static inline uint64_t unslice_significance_accelerated(Slice64_t *slices) {
 
 static inline void unslice_accelerated(State64Sliced_t *state,
                                        Blocks64_t *result,
-                                       bool const segmented = ((AVX2_acceleration || AVX512_acceleration) &
+                                       bool const segmented = ((AVX2_acceleration || AVX512_acceleration) &&
                                                                !FIXED_SLICING)) {
 	Slice64_t slices[128] = {};
 	
@@ -329,7 +329,7 @@ static inline void unslice_accelerated(State64Sliced_t *state,
 }
 
 static inline Blocks64_t unslice_accelerated(State64Sliced_t state,
-                                             bool const segmented = ((AVX2_acceleration || AVX512_acceleration) &
+                                             bool const segmented = ((AVX2_acceleration || AVX512_acceleration) &&
                                                                      !FIXED_SLICING)) {
 	Blocks64_t res = Blocks64_t();
 	unslice_accelerated(&state, &res, segmented);
