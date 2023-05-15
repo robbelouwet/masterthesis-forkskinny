@@ -11,7 +11,7 @@
 #define AVX2_support true
 #define AVX512_support false // deprecated, not used
 
-#define FIXED_SLICING false
+#define FIXED_SLICING true
 // ------------
 
 /* Define SKINNY_64BIT to 1 if the CPU is natively 64-bit */

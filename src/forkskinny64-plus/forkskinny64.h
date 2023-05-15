@@ -10,14 +10,7 @@
 static inline void add_branch_constant64(State64Sliced_t *state) {
 	// <editor-fold desc="branch constant">
 	// @formatter:off
-	#if AVX512_acceleration
-	for (int i = 0; i < 2; ++i) {
-		state->segments512[i][0] = XOR512(state->segments512[i][0], segmented_branch_constant64.segments512[i][0]);
-		state->segments512[i][1] = XOR512(state->segments512[i][1], segmented_branch_constant64.segments512[i][1]);
-		state->segments512[i][2] = XOR512(state->segments512[i][2], segmented_branch_constant64.segments512[i][2]);
-		state->segments512[i][3] = XOR512(state->segments512[i][3], segmented_branch_constant64.segments512[i][3]);
-	}
-	#elif AVX2_acceleration
+	#if AVX2_acceleration || AVX512_acceleration
 	for (int i = 0; i < 4; ++i) {
 		state->segments256[i][0] = XOR256(state->segments256[i][0], segmented_branch_constant64.segments256[i][0]);
 		state->segments256[i][1] = XOR256(state->segments256[i][1], segmented_branch_constant64.segments256[i][1]);
@@ -36,8 +29,9 @@ static inline void add_branch_constant64(State64Sliced_t *state) {
 	// </editor-fold>
 }
 
+#if AVX2_acceleration || AVX512_acceleration
 auto c2 = _mm256_set_epi64x(0, 0, -1ULL, 0);
-
+#endif
 static inline void apply_roundkey(HalfState64Sliced_t *round_key, State64Sliced_t *state) {
 	// <editor-fold desc="xor first 8 least significant cells">
 	#if AVX2_acceleration || AVX512_acceleration
@@ -113,14 +107,9 @@ static inline void forkskinny64_encrypt_round(KeySchedule64Sliced_t *schedule, S
  * @return
  */
 // TODO: return by reference
-static inline SlicedCiphertext64_t forkskinny64_encrypt(KeySchedule64Sliced_t *schedule,
-                                                        State64Sliced_t *state, unsigned char const mode) {
-//	auto initial_state = unslice_accelerated(*state).values[0].raw;
-	
-	// default values of branches
-	auto C0 = State64Sliced_t();
-	auto C1 = State64Sliced_t();
-	
+static inline void forkskinny64_encrypt(KeySchedule64Sliced_t *schedule,
+                                                        State64Sliced_t *state, unsigned char const mode,
+														State64Sliced_t *C0, State64Sliced_t *C1) {
 	// ### INITIAL ROUNDS ###
 	int i = 0;
 	for (; i < FORKSKINNY_ROUNDS_BEFORE; i++) {
@@ -128,40 +117,38 @@ static inline SlicedCiphertext64_t forkskinny64_encrypt(KeySchedule64Sliced_t *s
 //		auto test = unslice_accelerated(*state).values[0].raw;
 //		int bannn = 1;
 	}
-
-
+	
 //	auto test1 = unslice_accelerated(*state).values[0].raw; // 0xE86B7E7E22F3BA92
 	
 	// ### C0 ###
 	if (mode == '0' || mode == 'b') {
-		C0 = *state;
+		*C0 = *state;
 		for (int c0_i = i; c0_i < FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER; c0_i++) {
-			forkskinny64_encrypt_round(schedule, &C0, c0_i);
-//			auto test2a = unslice_accelerated(C0).values[0].raw;
+			forkskinny64_encrypt_round(schedule, C0, c0_i);
+//			auto test2a = unslice_accelerated(*C0).values[0].raw;
 //			int appel = 1;
 		}
 	}
 
-//	auto test2b = unslice_accelerated(C0).values[0].raw;
+//	auto test2b = unslice_accelerated(*C0).values[0].raw;
 //	u64 test3_bc = 0x0;
 	
 	// ### C1 ###
 	if (mode == '1' || mode == 'b') {
-		C1 = *state;
-//		auto test3_before = unslice_accelerated(C1).values[0].raw;
-		add_branch_constant64(&C1);
-//		test3_bc = unslice_accelerated(C1).values[0].raw;
+		*C1 = *state;
+//		auto test3_before = unslice_accelerated(*C1).values[0].raw;
+		add_branch_constant64(C1);
+//		test3_bc = unslice_accelerated(*C1).values[0].raw;
 		for (int c1_i = FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER;
 		     c1_i < FORKSKINNY64_MAX_ROUNDS; c1_i++) {
-			forkskinny64_encrypt_round(schedule, &C1, c1_i);
-//			auto test3a = unslice_accelerated(C1).values[0].raw;
+			forkskinny64_encrypt_round(schedule, C1, c1_i);
+//			auto test3a = unslice_accelerated(*C1).values[0].raw;
 //			int appel = 1;
 		}
 	}
 
-//	auto test3 = unslice_accelerated(C1).values[0].raw;
-	
-	return {C1, C0};
+//	auto test3 = unslice_accelerated(*C1).values[0].raw;
+//	int appel = 1;
 }
 
 static inline void forkskinny64_decrypt_round(KeySchedule64Sliced_t *schedule, State64Sliced_t *state,

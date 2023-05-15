@@ -109,16 +109,19 @@ void benchmark_forkskinny64_192() {
 	unsigned long long schedule_timings[ITERATIONS];
 	for (int i = 0; i < ITERATIONS; ++i) {
 		auto before = _rdtsc();
-		forkskinny64_precompute_key_schedule(test_TK1 + i, test_TK2 + i, test_TK3 + i, schedules + i);
+		forkskinny64_192_precompute_key_schedule(test_TK1 + i, test_TK2 + i, test_TK3 + i, schedules + i);
 		schedule_timings[i] = _rdtsc() - before;
 	}
 	
 	SlicedCiphertext64_t cts[ITERATIONS];
 	unsigned long long encryption_timings[ITERATIONS];
 	for (int i = 0; i < ITERATIONS; ++i) {
+		State64Sliced_t C0;
+		State64Sliced_t C1;
 		auto before = _rdtsc();
-		cts[i] = forkskinny64_encrypt(schedules + i, test_M + i, 'b');
+		forkskinny64_encrypt(schedules + i, test_M + i, 'b', &C0, &C1);
 		auto after = _rdtsc();
+		cts[i] = {C1, C0};
 		encryption_timings[i] = after - before;
 	}
 	
@@ -212,12 +215,12 @@ void benchmark_forkskinny64_128() {
 	SlicedCiphertext64_t cts[ITERATIONS];
 	unsigned long long encryption_timings[ITERATIONS];
 	for (int i = 0; i < ITERATIONS; ++i) {
+		State64Sliced_t C0;
+		State64Sliced_t C1;
 		auto before = _rdtsc();
-		
-		auto pt_block = test_M[i];
-		
-		cts[i] = forkskinny64_encrypt(schedules + i, &pt_block, 'b');
+		forkskinny64_encrypt(schedules + i, test_M + i, 'b', &C0, &C1);
 		auto after = _rdtsc();
+		cts[i] = {C1, C0};
 		encryption_timings[i] = after - before;
 	}
 	
@@ -266,34 +269,34 @@ void benchmark_forkskinny64_128() {
 	std::cout << "\nSuccess!";
 }
 
-Blocks64_t benchmark_single_forkskinny64_192(Blocks64_t unsliced_m, Blocks64_t unsliced_tk1, Blocks64_t unsliced_tk2,
-                                             Blocks64_t unsliced_tk3) {
-	
-	#define ROUNDS_BEFORE FORKSKINNY_ROUNDS_BEFORE
-	#define ROUNDS_AFTER FORKSKINNY_ROUNDS_AFTER
-	
-	// SLICE
-	auto test_M = slice(unsliced_m);
-	auto test_TK1 = slice(unsliced_tk1);
-	auto test_TK2 = slice(unsliced_tk2);
-	auto test_TK3 = slice(unsliced_tk3);
-	
-	// PRIMITIVE
-	auto schedule = KeySchedule64Sliced_t();
-	forkskinny64_precompute_key_schedule(&test_TK1, &test_TK2, &test_TK3, &schedule);
-	auto ct = forkskinny64_encrypt(&schedule, &test_M, 'b');
-	
-	// UNSLICE
-	auto res = Blocks64_t();
-	unslice_accelerated(&(ct.M), &res);
-	return res;
-}
-
-void run_benchmark_fs64(benchmark::State &state) {
-	for (auto _: state) {
-		benchmark_single_forkskinny64_192(M_64(), TK1_64(), TK2_64(), TK3_64());
-	}
-}
+//Blocks64_t benchmark_single_forkskinny64_192(Blocks64_t unsliced_m, Blocks64_t unsliced_tk1, Blocks64_t unsliced_tk2,
+//                                             Blocks64_t unsliced_tk3) {
+//
+//	#define ROUNDS_BEFORE FORKSKINNY_ROUNDS_BEFORE
+//	#define ROUNDS_AFTER FORKSKINNY_ROUNDS_AFTER
+//
+//	// SLICE
+//	auto test_M = slice(unsliced_m);
+//	auto test_TK1 = slice(unsliced_tk1);
+//	auto test_TK2 = slice(unsliced_tk2);
+//	auto test_TK3 = slice(unsliced_tk3);
+//
+//	// PRIMITIVE
+//	auto schedule = KeySchedule64Sliced_t();
+//	forkskinny64_192_precompute_key_schedule(&test_TK1, &test_TK2, &test_TK3, &schedule);
+//	auto ct = forkskinny64_encrypt(&schedule, &test_M, 'b');
+//
+//	// UNSLICE
+//	auto res = Blocks64_t();
+//	unslice_accelerated(&(ct.M), &res);
+//	return res;
+//}
+//
+//void run_benchmark_fs64(benchmark::State &state) {
+//	for (auto _: state) {
+//		benchmark_single_forkskinny64_192(M_64(), TK1_64(), TK2_64(), TK3_64());
+//	}
+//}
 
 int main() {
 	benchmark_forkskinny64_192();

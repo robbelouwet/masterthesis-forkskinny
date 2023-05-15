@@ -124,12 +124,12 @@ void test_forkskinny64_192() {
 	auto uTK3 = TK3_64();
 	auto TK3 = slice_accelerated(&uTK3);
 	auto original_pt = unslice_accelerated(M);
-
+//
 //	auto schedule = KeySchedule64Sliced_t();
 //	auto schedule2 = KeySchedule64Sliced_t(); auto fTK1 = TK1; auto fTK2 = TK2; auto fTK3 = TK3;
 //	forkskinny_64_init_tk23_internal(&TK1, &TK2, &TK3, &schedule);
 //
-//	forkskinny_64_init_tk23_fixsliced_internal_test(&fTK1, &fTK2, &fTK3, &schedule2);
+//	forkskinny_64_init_tk23_fixsliced_internal(&fTK1, &fTK2, &fTK3, &schedule2);
 //
 //	for (int i = 0; i < FORKSKINNY64_MAX_ROUNDS; ++i) {
 //		auto a = unslice_accelerated({.halves = {schedule.keys[i], {}}}).values[0].raw;
@@ -139,7 +139,7 @@ void test_forkskinny64_192() {
 //	}
 
 	auto schedule = KeySchedule64Sliced_t();
-	forkskinny64_precompute_key_schedule(&TK1, &TK2, &TK3, &schedule);
+	forkskinny64_192_precompute_key_schedule(&TK1, &TK2, &TK3, &schedule);
 
 	auto rtk0 = unslice_accelerated({ .halves = {schedule.keys[0], {}}}).values[0].raw; // 0x EE00 FDE0
 	auto rtk1 = unslice_accelerated({ .halves = {schedule.keys[1], {}}}).values[0].raw; // 0x 099B 203B
