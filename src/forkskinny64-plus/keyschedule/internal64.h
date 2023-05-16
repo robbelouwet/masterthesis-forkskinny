@@ -10,9 +10,8 @@
 #include "../utils/slicing64.h"
 
 static inline void tk2_lfsr(State64Sliced_t *state, const bool full_state = false) {
-	// 2 1 0 (3+2)
-	#if AVX2_acceleration || AVX512_acceleration
 	int bound = full_state ? 4 : 2;
+	#if AVX2_acceleration || AVX512_acceleration
 	for (int i = 0; i < bound; ++i) {
 		auto temp = state->segments256[i][3];
 		state->segments256[i][3] = state->segments256[i][2];
@@ -21,7 +20,7 @@ static inline void tk2_lfsr(State64Sliced_t *state, const bool full_state = fals
 		state->segments256[i][0] = XOR256(state->segments256[i][3], temp);
 	}
 	#else
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < (bound << 2); i++) {
 		auto temp = state->cells[i].slices[3];
 		state->cells[i].slices[3] = state->cells[i].slices[2];
 		state->cells[i].slices[2] = state->cells[i].slices[1];
@@ -32,16 +31,8 @@ static inline void tk2_lfsr(State64Sliced_t *state, const bool full_state = fals
 }
 
 static inline void tk3_lfsr(State64Sliced_t *state, const bool full_state = false) {
-	#if AVX512_acceleration
-	
-	for (int i = 0; i < 4; ++i) {
-		state->pairs[i].avx512_simd_pair = _mm512_permutex_epi64(state->pairs[i].avx512_simd_pair, 0b00111001);
-		state->cells[i*2].slices[3].value = XOR_SLICE(state->cells[i*2].slices[3].value, state->cells[i*2].slices[2].value);
-		state->cells[(i*2)+1].slices[3].value = XOR_SLICE(state->cells[(i*2)+1].slices[3].value, state->cells[(i*2)+1].slices[2].value);
-	}
-	
-	#elif AVX2_acceleration
 	int bound = full_state ? 4 : 2;
+	#if AVX2_acceleration || AVX512_acceleration
 	for (int i = 0; i < bound; ++i) {
 		auto temp = state->segments256[i][0];
 		state->segments256[i][0] = state->segments256[i][1];
@@ -51,7 +42,7 @@ static inline void tk3_lfsr(State64Sliced_t *state, const bool full_state = fals
 	}
 	
 	#else
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < (bound << 2); i++) {
 		// 0b00111001 = 0 3 2 1 -> lanes for the simd permutation
 		auto temp = state->cells[i].slices[0];
 		state->cells[i].slices[0] = state->cells[i].slices[1];
@@ -151,8 +142,7 @@ static inline void permute(State64Sliced_t *state) {
 //	int appel = 1;
 }
 
-static inline void xor_keys(State64Sliced_t *a, State64Sliced_t *b,
-                            State64Sliced_t *out, const int half) {
+static inline void xor_keys(State64Sliced_t *a, State64Sliced_t *b, State64Sliced_t *out, const int half) {
 	if (half == 0 || half == -1) {
 		xor_row(&(a->rows[0]), &(b->rows[0]), &(out->rows[0]));
 		xor_row(&(a->rows[1]), &(b->rows[1]), &(out->rows[1]));
@@ -163,17 +153,6 @@ static inline void xor_keys(State64Sliced_t *a, State64Sliced_t *b,
 		xor_row(&(a->rows[3]), &(b->rows[3]), &(out->rows[3]));
 	}
 	
-}
-
-static inline void xor_segmented_keys(State64Sliced_t *a, State64Sliced_t *b,
-                                      State64Sliced_t *out, const bool upper_half_only) {
-	auto range = upper_half_only ? 2 : 4;
-	for (int i = 0; i < range; ++i) {
-		out->segments256[i][0] = XOR256(a->segments256[i][0], b->segments256[i][0]);
-		out->segments256[i][1] = XOR256(a->segments256[i][1], b->segments256[i][1]);
-		out->segments256[i][2] = XOR256(a->segments256[i][2], b->segments256[i][2]);
-		out->segments256[i][3] = XOR256(a->segments256[i][3], b->segments256[i][3]);
-	}
 }
 
 #endif //FORKSKINNYPLUS_KEYSCHEDULE_INTERNAL_H

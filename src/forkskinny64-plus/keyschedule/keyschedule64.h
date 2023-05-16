@@ -36,19 +36,21 @@ static inline void forkskinny_64_init_tk23_internal(State64Sliced_t *tk1, State6
                                                     State64Sliced_t *tk3, KeySchedule64Sliced_t *out) {
 	
 	for (int i = 0; i < FORKSKINNY64_MAX_ROUNDS; ++i) {
-		State64Sliced_t res0;
-		xor_keys(tk2, tk3,&res0, 0);
-		xor_keys(tk1, &res0, &res0, 0);
-		//auto test_tks = unslice_accelerated(res);
+		State64Sliced_t res;
+		xor_keys(tk2, tk3, &res, 0);
+		xor_keys(tk1, &res, &res, 0);
+		
+		// 0x FCDA B896 EE00 DDF0
+//		auto test_tks = unslice_accelerated(res).values[0].raw;
 		
 		// Keep in mind: the C2 constant relating to the 9nth cell is part of the 2nd 'half'!
 		// So we add 0x2 at the key injection step
-		#if AVX2_acceleration || AVX512_acceleration
-		forkskinny64_add_constant(&(res0.halves[0]), i); // 1, 3, 7
-		#else
-		forkskinny64_add_constant(&res, i);
-		#endif
-		out->keys[i] = res0.halves[0];
+		forkskinny64_add_constant(&(res.halves[0]), i);
+
+		out->keys[i] = res.halves[0];
+		
+		// 0x FCDA B896 EE00 FDE0
+//		auto test_tks2 = unslice_accelerated(res).values[0].raw;
 		
 		permute(tk1);
 		permute(tk2);
@@ -56,6 +58,12 @@ static inline void forkskinny_64_init_tk23_internal(State64Sliced_t *tk1, State6
 		
 		tk2_lfsr(tk2);
 		tk3_lfsr(tk3);
+		
+//		auto test_tk1 = unslice_accelerated(*tk1).values[0].raw; // 0x 2200 11F1 0334 0004
+//		auto test_tk2 = unslice_accelerated(*tk2).values[0].raw; // 0x 6600 55F2 0FF1 0001
+//		auto test_tk3 = unslice_accelerated(*tk3).values[0].raw; // 0x AA00 99F3 055E 000E
+//
+//		int appel = 1;
 	}
 }
 

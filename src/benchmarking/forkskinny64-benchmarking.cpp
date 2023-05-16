@@ -5,8 +5,6 @@
 #include "../forkskinny64-plus/keyschedule/fixsliced-keyschedule64.h"
 #include "../forkskinny64-plus/forkskinny64.h"
 #include "../AEAD/PAEF.h"
-#include "../forkskinny64-plus/utils/slicing64-accelerated.h"
-#include "../forkskinny64-plus/keyschedule/keyschedule64.h"
 #include <benchmark/benchmark.h>
 
 void benchmark_PAEF_forkskinny64_192() {
@@ -136,10 +134,10 @@ void benchmark_forkskinny64_192() {
 	}
 	
 	// sort the timings
-	qsort(slice_timings, ITERATIONS, sizeof(unsigned long long), cmp_dbl);
-	qsort(schedule_timings, ITERATIONS, sizeof(unsigned long long), cmp_dbl);
-	qsort(encryption_timings, ITERATIONS, sizeof(unsigned long long), cmp_dbl);
-	qsort(unslice_timings, ITERATIONS, sizeof(unsigned long long), cmp_dbl);
+	qsort(slice_timings, ITERATIONS, sizeof(unsigned long long), compare);
+	qsort(schedule_timings, ITERATIONS, sizeof(unsigned long long), compare);
+	qsort(encryption_timings, ITERATIONS, sizeof(unsigned long long), compare);
+	qsort(unslice_timings, ITERATIONS, sizeof(unsigned long long), compare);
 	
 	double cycles_slicing_per_pack = slice_timings[0];
 	double cycles_schedule_per_pack = schedule_timings[0];
@@ -235,10 +233,10 @@ void benchmark_forkskinny64_128() {
 	}
 	
 	// sort the timings
-	qsort(slice_timings, ITERATIONS, sizeof(unsigned long long), cmp_dbl);
-	qsort(schedule_timings, ITERATIONS, sizeof(unsigned long long), cmp_dbl);
-	qsort(encryption_timings, ITERATIONS, sizeof(unsigned long long), cmp_dbl);
-	qsort(unslice_timings, ITERATIONS, sizeof(unsigned long long), cmp_dbl);
+	qsort(slice_timings, ITERATIONS, sizeof(unsigned long long), compare);
+	qsort(schedule_timings, ITERATIONS, sizeof(unsigned long long), compare);
+	qsort(encryption_timings, ITERATIONS, sizeof(unsigned long long), compare);
+	qsort(unslice_timings, ITERATIONS, sizeof(unsigned long long), compare);
 	
 	double cycles_slicing_per_pack = slice_timings[0];
 	double cycles_schedule_per_pack = schedule_timings[0];

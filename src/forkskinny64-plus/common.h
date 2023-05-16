@@ -11,15 +11,11 @@ static void inline xor_segmented_row(uint8_t a, uint8_t b, uint8_t out_i, State6
 }
 
 static inline void xor_row(Row64_t *a, Row64_t *b, Row64_t *out) {
-	
-	// even though the key schedule might be segmented, you can add rows ike this as if they weren't segmented
-	// (it just so happens the memory layout of the union struct allows this exception)
 	#if AVX2_acceleration || AVX512_acceleration
-	out->cols[0].avx2_simd_cell = _mm256_xor_si256(a->cols[0].avx2_simd_cell, b->cols[0].avx2_simd_cell);
-	out->cols[1].avx2_simd_cell = _mm256_xor_si256(a->cols[1].avx2_simd_cell, b->cols[1].avx2_simd_cell);
-	out->cols[2].avx2_simd_cell = _mm256_xor_si256(a->cols[2].avx2_simd_cell, b->cols[2].avx2_simd_cell);
-	out->cols[3].avx2_simd_cell = _mm256_xor_si256(a->cols[3].avx2_simd_cell, b->cols[3].avx2_simd_cell);
-	
+	out->segments[0] = XOR256(a->segments[0], b->segments[0]);
+	out->segments[1] = XOR256(a->segments[1], b->segments[1]);
+	out->segments[2] = XOR256(a->segments[2], b->segments[2]);
+	out->segments[3] = XOR256(a->segments[3], b->segments[3]);
 	#else
 	for (int i = 0; i < 4; ++i) {
 		out->cols[i].slices[0].value = XOR_SLICE(a->cols[i].slices[0].value, b->cols[i].slices[0].value);

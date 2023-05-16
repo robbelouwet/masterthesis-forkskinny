@@ -7,11 +7,11 @@
 
 // @formatter:off
 // -- CONFIG --
-#define slice_size 64 // 8, 32, 64, 128, 256 or 512
-#define AVX2_support true
+#define slice_size 256 // 8, 32, 64, 128, 256 or 512
+#define AVX2_support false
 #define AVX512_support false // deprecated, not used
 
-#define FIXED_SLICING true
+#define FIXED_SLICING false
 // ------------
 
 /* Define SKINNY_64BIT to 1 if the CPU is natively 64-bit */
@@ -29,15 +29,22 @@
 #define STOREU256(dest,src) _mm256_store_si256((__m256i *)(dest),src)
 
 #define ROL64(v, i) ((v << i) | (v >> (64 - i)))
-#define ROR64(v, i, regwidth) ROL64(v, (regwidth - i))
+#define ROR64(v, i) ROL64(v, (64 - i))
 
 #define XOR256 _mm256_xor_si256
 #define OR256 _mm256_or_si256
 #define ONE256 _mm256_set1_epi64x(-1)
+#define AND256 _mm256_and_si256
+
+#define XOR128 _mm_xor_si128
+#define OR128 _mm_or_si128
+#define ONE128 _mm_set1_epi64x(-1)
+#define AND128 _mm_and_si128
 
 #define XOR512 _mm512_xor_si512
 #define OR512 _mm512_or_si512
 #define ONE512 _mm512_set1_epi64x(-1)
+#define AND512 _mm512_and_si512
 
 // ----- 8-bit slices -----
 #if slice_size == 8
@@ -47,9 +54,9 @@
 	auto slice_ZER = uint8_t(0x0);
 	#define BIT(i) (uint8_t(1) << i)
 	#define MASK(i) (slice_t(-1) >> (8 - i))
-	#define ROR(v, i) ((v >> i) | (v << (8 - i)))
-	#define ROR_LANES(v, i) ((v >> i) | (v << (64 - i)))
-	#define ROL_LANES(v, i) ((v << i) | (v >> (64 - i)))
+	#define ROR(v, i) (slice_t((v >> i) | (v << (8 - i))))
+	#define ROL_LANES ROL64
+	#define ROR_LANES ROR64
 	#define XOR_SLICE(s1, s2) (s1 ^ s2)
 	#define OR_SLICE(s1, s2) (s1 | s2)
 	#define AND_SLICE(s1, s2) (s1 & s2)
@@ -63,9 +70,9 @@
 	auto slice_ZER = uint32_t(0x0);
 	#define BIT(i) (uint32_t(1) << i)
 	#define MASK(i) (slice_t(-1) >> (32 - i))
-	#define ROR(v, i) ((v >> i) | (v << (32 - i)))
-	#define ROR_LANES(v, i) ((v >> i) | (v << (64 - i)))
-	#define ROL_LANES(v, i) ((v << i) | (v >> (64 - i)))
+	#define ROR(v, i) (slice_t((v >> i) | (v << (32 - i))))
+	#define ROL_LANES ROL64
+	#define ROR_LANES ROR64
 	#define XOR_SLICE(s1, s2) (s1 ^ s2)
 	#define OR_SLICE(s1, s2) (s1 | s2)
 	#define AND_SLICE(s1, s2) (s1 & s2)
@@ -79,8 +86,8 @@
 	auto const slice_ZER = 0x0ULL;
 	#define BIT(i) (0x1ULL << i)
 	#define MASK(i) (slice_t(-1) >> (64 - i))
-	#define ROR_LANES(v, i) ((v >> i) | (v << (64 - i)))
-	#define ROL_LANES(v, i) ((v << i) | (v >> (64 - i)))
+	#define ROL_LANES ROL64
+	#define ROR_LANES ROR64
 	#define XOR_SLICE(s1, s2) (s1 ^ s2)
 	#define OR_SLICE(s1, s2) (s1 | s2)
 	#define AND_SLICE(s1, s2) (s1 & s2)
@@ -236,11 +243,13 @@ void print_block(uint8_t *block, unsigned int n) {
 		printf("%02x", block[i]);
 }
 
-int cmp_dbl(const void *x, const void *y)
-{
-	double xx = *(double*)x, yy = *(double*)y;
-	if (xx < yy) return -1;
-	if (xx > yy) return  1;
+int compare(const void *first, const void *second) {
+	auto a = *(double *) first;
+	auto b = *(double *) second;
+	
+	if (a > b) return 1;
+	if (a < b) return -1;
+	
 	return 0;
 }
 

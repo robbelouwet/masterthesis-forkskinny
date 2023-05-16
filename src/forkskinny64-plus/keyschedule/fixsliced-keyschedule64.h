@@ -55,15 +55,23 @@ static inline void forkskinny_64_init_tk23_fixsliced_internal(State64Sliced_t *t
 		xor_keys(tk2, tk3,&rtk_temp, -1);
 		xor_keys(tk1, &rtk_temp, &rtk_temp, -1);
 		
-		State64Sliced_t temp;
+		auto test1 = unslice_accelerated(rtk_temp).values[0].raw;
+		
+		State64Sliced_t temp; // 0x BB00 9900 2200 EE6C | 0x 9900 7700 EE00 448C
 		auto pt_index = (i + 1) & 0xF;
 		if (pt_index != 0) fixslice_permute(&rtk_temp, &temp, pt_index);
 		else temp = rtk_temp;
 		
 		forkskinny64_add_constant(&(temp.halves[1]), i); // RTK N+1 comes before RTK N!
 		out->keys[i] = temp.halves[1];
+		
+		auto test2before = unslice_accelerated(temp).values[0].raw;
 		forkskinny64_add_constant(&(temp.halves[0]), i + 1);
 		out->keys[i + 1] = temp.halves[0];
+		
+		// 0x 099B 000B 0EE2 40B2 | 0x 7000 0997 4090 EE14
+		auto test2 = unslice_accelerated(temp).values[0].raw;
+		int appel = 1;
 	}
 }
 

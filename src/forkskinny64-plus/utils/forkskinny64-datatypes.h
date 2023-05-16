@@ -58,13 +58,15 @@ typedef union {
 
 typedef union {
 	Cell64_t cols[4];
-	#if AVX512_acceleration
-	Pair64_t pairs[2];
+	#if AVX2_acceleration
+	__m256i segments[4];
 	#endif
 } Row64_t;
 
 typedef union {
+	#if AVX2_acceleration
 	__m256i segments256[2][4];
+	#endif
 	
 	Slice64_t raw[32];
 	Cell64_t cells[8];
