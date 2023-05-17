@@ -7,6 +7,21 @@
 #include "roundfunction/forkskinny64-shiftrows.h"
 #include "roundfunction/forkskinny64-mixcols.h"
 
+#if AVX2_acceleration || AVX512_acceleration
+#define NOT(x) invert(x)
+#else
+#define NOT(x) ()
+#endif
+
+static inline void invert(State64Sliced_t *state){
+	for (int i = 0; i < 4; ++i) {
+		state->segments256[i][0] = XOR256(state->segments256[i][0], ONE256);
+		state->segments256[i][0] = XOR256(state->segments256[i][0], ONE256);
+		state->segments256[i][0] = XOR256(state->segments256[i][0], ONE256);
+		state->segments256[i][0] = XOR256(state->segments256[i][0], ONE256);
+	}
+}
+
 static inline void add_branch_constant64(State64Sliced_t *state) {
 	// <editor-fold desc="branch constant">
 	// @formatter:off
@@ -110,6 +125,8 @@ static inline void forkskinny64_encrypt_round(KeySchedule64Sliced_t *schedule, S
 static inline void forkskinny64_encrypt(KeySchedule64Sliced_t *schedule,
                                                         State64Sliced_t *state, unsigned char const mode,
 														State64Sliced_t *C0, State64Sliced_t *C1) {
+//	NOT(state);
+	
 	// ### INITIAL ROUNDS ###
 	int i = 0;
 	for (; i < FORKSKINNY_ROUNDS_BEFORE; i++) {
@@ -128,6 +145,7 @@ static inline void forkskinny64_encrypt(KeySchedule64Sliced_t *schedule,
 //			auto test2a = unslice_accelerated(*C0).values[0].raw;
 //			int appel = 1;
 		}
+//		NOT(C0);
 	}
 
 //	auto test2b = unslice_accelerated(*C0).values[0].raw;
@@ -145,6 +163,7 @@ static inline void forkskinny64_encrypt(KeySchedule64Sliced_t *schedule,
 //			auto test3a = unslice_accelerated(*C1).values[0].raw;
 //			int appel = 1;
 		}
+//		NOT(C1);
 	}
 
 //	auto test3 = unslice_accelerated(*C1).values[0].raw;

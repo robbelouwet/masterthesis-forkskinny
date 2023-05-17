@@ -7,11 +7,11 @@
 
 // @formatter:off
 // -- CONFIG --
-#define slice_size 256 // 8, 32, 64, 128, 256 or 512
-#define AVX2_support false
+#define slice_size 64 // 8, 32, 64, 128, 256 or 512
+#define AVX2_support true
 #define AVX512_support false // deprecated, not used
 
-#define FIXED_SLICING false
+#define FIXED_SLICING true
 // ------------
 
 /* Define SKINNY_64BIT to 1 if the CPU is natively 64-bit */
@@ -45,6 +45,8 @@
 #define OR512 _mm512_or_si512
 #define ONE512 _mm512_set1_epi64x(-1)
 #define AND512 _mm512_and_si512
+
+#define ULL unsigned long long
 
 // ----- 8-bit slices -----
 #if slice_size == 8
