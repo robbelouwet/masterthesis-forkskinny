@@ -43,7 +43,7 @@ static inline void forkskinny_64_init_tk23_fixsliced_internal(State64Sliced_t *t
 	xor_keys(tk2, tk3, &res0, 0);
 	xor_keys(tk1, &res0, &res0, 0);
 	
-	forkskinny64_add_constant(&(res0.halves[0]), i);
+//	forkskinny64_add_constant(&(res0.halves[0]), i);
 	out->keys[i++] = res0.halves[0];
 	
 	// RTK N & N+1
@@ -60,9 +60,9 @@ static inline void forkskinny_64_init_tk23_fixsliced_internal(State64Sliced_t *t
 		if (pt_index != 0) fixslice_permute(&rtk_temp, &temp, pt_index);
 		else temp = rtk_temp;
 		
-		forkskinny64_add_constant(&(temp.halves[1]), i); // RTK N+1 comes before RTK N!
+//		forkskinny64_add_constant(&(temp.halves[1]), i); // RTK N+1 comes before RTK N!
 		out->keys[i] = temp.halves[1];
-		forkskinny64_add_constant(&(temp.halves[0]), i + 1);
+//		forkskinny64_add_constant(&(temp.halves[0]), i + 1);
 		out->keys[i + 1] = temp.halves[0];
 	}
 }
@@ -75,7 +75,7 @@ static inline void forkskinny_64_init_tk2_fixsliced_internal(State64Sliced_t *tk
 	State64Sliced_t res0;
 	xor_keys(tk1, tk2, &res0, 0);
 	
-	forkskinny64_add_constant(&(res0.halves[0]), i);
+//	forkskinny64_add_constant(&(res0.halves[0]), i);
 	out->keys[i++] = res0.halves[0];
 	
 	// RTK N & N+1
@@ -90,9 +90,9 @@ static inline void forkskinny_64_init_tk2_fixsliced_internal(State64Sliced_t *tk
 		if (pt_index != 0) fixslice_permute(&rtk_temp, &temp, pt_index);
 		else temp = rtk_temp;
 		
-		forkskinny64_add_constant(&(temp.halves[1]), i); // RTK N+1 comes before RTK N!
+//		forkskinny64_add_constant(&(temp.halves[1]), i); // RTK N+1 comes before RTK N!
 		out->keys[i] = temp.halves[1];
-		forkskinny64_add_constant(&(temp.halves[0]), i + 1);
+//		forkskinny64_add_constant(&(temp.halves[0]), i + 1);
 		out->keys[i + 1] = temp.halves[0];
 	}
 }

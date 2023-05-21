@@ -79,11 +79,11 @@ static inline void forkskinny64_mixcols(State64Sliced_t *state) {
 	state->segments256[0][3] = temp3;
 	
 	#else
-	xor_row(state->rows + 1, state->rows + 2, state->rows + 1);
-	xor_row(state->rows + 2, state->rows + 0, state->rows + 2);
+	xor_row(&(state->rows[1]), &(state->rows[2]), &(state->rows[1]));
+	xor_row(&(state->rows[2]), &(state->rows[0]), &(state->rows[2]));
 	
 	Row64_t temp;
-	xor_row(state->rows + 3, state->rows + 2, &temp);
+	xor_row(&(state->rows[3]), &(state->rows[2]), &temp);
 	state->rows[3] = state->rows[2];
 	state->rows[2] = state->rows[1];
 	state->rows[1] = state->rows[0];

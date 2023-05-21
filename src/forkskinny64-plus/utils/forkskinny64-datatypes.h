@@ -12,11 +12,7 @@
 
 /** ---- SKINNY64 ---- */
 typedef union {
-	slice_t
-	#if slice_size > 64
-//	__attribute__((aligned(32)))
-	#endif
-	value;
+	slice_t value;
 	
 	#if slice_size == 128
 	u64 chunks[2];
@@ -45,7 +41,7 @@ typedef union {
 typedef union {
 	Slice64_t slices[4];
 	#if AVX2_acceleration || AVX512_acceleration
-	__m256i /*__attribute__((aligned(32)))*/ avx2_simd_cell;
+	__m256i avx2_simd_cell;
 	#endif
 } Cell64_t;
 

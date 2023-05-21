@@ -6,12 +6,13 @@
 #include "../../constants.h"
 
 #if AVX2_acceleration || AVX512_acceleration
-auto TWO = _mm256_set_epi64x(-1ULL, 0, 0,0);
+//auto TWO = _mm256_set_epi64x(-1ULL, 0, 0,0);
 #endif
 static inline void forkskinny64_add_constant(HalfState64Sliced_t *state, uint16_t iteration) {
 	#if AVX2_acceleration || AVX512_acceleration
 	// @formatter:off
-	// C0 (at row 0, cell 1)
+	// C0 (with packed 0x2) (at row 0, cell 1)
+	
 	state->segments256[0][0] = XOR256(state->segments256[0][0], forkskinny_precomputed_segmented_round_constants[iteration][0]);
 	state->segments256[0][1] = XOR256(state->segments256[0][1], forkskinny_precomputed_segmented_round_constants[iteration][1]);
 	state->segments256[0][2] = XOR256(state->segments256[0][2], forkskinny_precomputed_segmented_round_constants[iteration][2]);
@@ -23,7 +24,7 @@ static inline void forkskinny64_add_constant(HalfState64Sliced_t *state, uint16_
 	state->segments256[1][2] = XOR256(state->segments256[1][2], forkskinny_precomputed_segmented_round_constants[iteration][6]);
 	
 	// M2 (+) 0x2 from Appendix (at row 0, cell 3)
-	state->segments256[0][1] = XOR256(state->segments256[0][1], TWO);
+//	state->segments256[0][1] = XOR256(state->segments256[0][1], TWO);
 	// @formatter:on
 	#else
 	state->cells[1].slices[0].value = XOR_SLICE(state->cells[1].slices[0].value, forkskinny_precomputed_round_constants[iteration][0]);
