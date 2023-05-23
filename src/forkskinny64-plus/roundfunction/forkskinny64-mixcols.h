@@ -50,14 +50,14 @@ static inline void forkskinny64_mixcols_inv(State64Sliced_t *state) {
 	xor_row(&(state->rows[1]), &(state->rows[2]), &(state->rows[1]));
 	#endif
 
-//	auto test_res = unslice_accelerated(*state).values[0].raw;
+//	auto test_res = unslice_accelerated_internal(*state).values[0].raw;
 //	int appel = 1;
 }
 
 static inline void forkskinny64_mixcols(State64Sliced_t *state) {
 //	auto test_blocks = Blocks64_t();
 //	test_blocks.values[0].raw = 0xFEDCBA9876543210;
-//	*state = slice_accelerated(&test_blocks);
+//	*state = slice_accelerated_internal(&test_blocks);
 	
 	#if AVX512_acceleration || AVX2_acceleration
 	xor_segmented_row(1, 2, 1, state);
@@ -92,7 +92,7 @@ static inline void forkskinny64_mixcols(State64Sliced_t *state) {
 	
 	// 0x F88A C3CD 8DDF ADDF
 //	forkskinny64_mixcols_inv(state);
-//	auto test_res = unslice_accelerated(state).values[0].raw;
+//	auto test_res = unslice_accelerated_internal(state).values[0].raw;
 //	int appel = 1;
 }
 

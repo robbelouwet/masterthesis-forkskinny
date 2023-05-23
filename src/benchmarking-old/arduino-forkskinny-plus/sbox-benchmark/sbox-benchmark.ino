@@ -105,12 +105,12 @@ uint32_t unslice_index(uint8_t value, uint8_t i) {
 	       | ((x & 0x80) << i << 21);
 }
 
-inline uint32_t slice(uint32_t state)  __attribute__((always_inline));
-uint32_t slice(uint32_t state) {
-	return slice_index(state, 0)
-	       | (slice_index(state, 1) << 8)
-	       | (slice_index(state, 2) << 16)
-	       | (slice_index(state, 3) << 24);
+inline uint32_t slice_internal(const anonymous union blocks)  __attribute__((always_inline));
+uint32_t slice_internal(const anonymous union blocks) {
+	return slice_index(blocks, 0)
+	       | (slice_index(blocks, 1) << 8)
+	       | (slice_index(blocks, 2) << 16)
+	       | (slice_index(blocks, 3) << 24);
 }
 
 inline uint32_t unslice_accelerated(uint32_t state)  __attribute__((always_inline));
@@ -169,7 +169,7 @@ void run(){
   Serial.println(state);
 
   auto sliced = State64Sliced_16_t();
-  sliced.state = slice(state);
+  sliced.state = slice_internal(state);
 
   // --- Sliced SBOX ---
   KIN1_ResetCycleCounter();

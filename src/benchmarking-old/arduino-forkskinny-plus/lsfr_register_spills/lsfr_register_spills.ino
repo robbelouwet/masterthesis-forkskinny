@@ -100,12 +100,12 @@ u64 unslice_index(uint8_t value, uint8_t i) {
          | ((x & 0x8000) << i << 45);
 }
 
-inline u64 slice(u64 state) __attribute__((always_inline));
-u64 slice(u64 state) {
-  return slice_index(state, 0)
-         | (slice_index(state, 1) << 16)
-         | (slice_index(state, 2) << 32)
-         | (slice_index(state, 3) << 48);
+inline u64 slice_internal(const anonymous union blocks) __attribute__((always_inline));
+u64 slice_internal(const anonymous union blocks) {
+  return slice_index(blocks, 0)
+         | (slice_index(blocks, 1) << 16)
+         | (slice_index(blocks, 2) << 32)
+         | (slice_index(blocks, 3) << 48);
 }
 
 inline u64 unslice_accelerated(u64 state) __attribute__((always_inline));
@@ -126,7 +126,7 @@ void setup() {
   Serial.print("State: ");
   Serial.println(state);
 
-  u64 sliced = slice(state);
+  u64 sliced = slice_internal(state);
 
   // --- Sliced LSFR ---
   KIN1_ResetCycleCounter();

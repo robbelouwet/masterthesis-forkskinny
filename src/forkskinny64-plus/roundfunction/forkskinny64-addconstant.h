@@ -40,7 +40,7 @@ static inline void forkskinny64_add_constant(HalfState64Sliced_t *state, uint16_
 	state->cells[3].slices[1].value = XOR_SLICE(state->cells[3].slices[1].value, slice_ONE);
 	#endif
 	
-	//auto unsliced_res = unslice_accelerated(*state).values[0].raw;
+	//auto unsliced_res = unslice_accelerated_internal(*state).values[0].raw;
 	//int appel = 1;
 }
 

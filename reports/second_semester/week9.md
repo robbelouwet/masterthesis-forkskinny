@@ -19,8 +19,8 @@ Accelerated slicing works on 64-bit slices. Speedup from 900 cycles per block to
 
 # Saturday
 
-Fixed the accelerated slicing to work on all slice sizes. The speedup is more or less equivalent for other slice sizes.
+Fixed the accelerated slicing to work on all slice_internal sizes. The speedup is more or less equivalent for other slice_internal sizes.
 I also started on the segmenting approach where I basically group multiple slices of the same significance relative to
-their cell (so slice 0, 4, 8 and 12) and group them in a 'sqegment' which is basically a 256-bit SIMD register. By doing
+their cell (so slice_internal 0, 4, 8 and 12) and group them in a 'sqegment' which is basically a 256-bit SIMD register. By doing
 this, I can significantly speed up the round operations. I refactored the code to adhere to the segmentation approach
 and already implemented the s box and round key injection step in the segmented approach.

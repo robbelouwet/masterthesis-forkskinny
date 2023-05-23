@@ -125,9 +125,9 @@ static inline lane_t slice_significance_accelerated_64(const Block64_t *blocks) 
  * @return
  */
 
-static inline void slice_accelerated(Blocks64_t *blocks,
-                                     State64Sliced_t *result,
-                                     bool const segment = (AVX512_acceleration || AVX2_acceleration)) {
+static inline void slice_accelerated_internal(Blocks64_t *blocks,
+                                              State64Sliced_t *result,
+                                              bool const segment = (AVX512_acceleration || AVX2_acceleration)) {
 	Slice64_t slices[64];
 	
 	/* Buffer that holds all blocks (minimum 64) AND the 64 spots that we use for the back-rotation */
@@ -154,13 +154,13 @@ static inline void slice_accelerated(Blocks64_t *blocks,
 		/* The relative pointer pointing to the beginning of the queue */
 		auto ind = 64 - i;
 		
-		/* Construct the slice for this significance level */
+		/* Construct the slice_internal for this significance level */
 		auto res = slice_significance_accelerated_64(b_blocks + ind);
 		
 		/* back-rotate the last block in the buffer to the front */
 		back_rotate(b_blocks + ind);
 		
-		/* Now re-align the slice by rotating back and put it in the slices buffer */
+		/* Now re-align the slice_internal by rotating back and put it in the slices buffer */
 		slices[i].value = ROR_LANES(res, i);
 		int appel = 1;
 	}
@@ -170,10 +170,11 @@ static inline void slice_accelerated(Blocks64_t *blocks,
 	int appel = 1;
 }
 
-static inline State64Sliced_t slice_accelerated(Blocks64_t *blocks,
-                                                bool const segment = (AVX512_acceleration || AVX2_acceleration)) {
+static inline State64Sliced_t slice_accelerated_internal(Blocks64_t *blocks,
+                                                         bool const segment = (AVX512_acceleration ||
+                                                                               AVX2_acceleration)) {
 	State64Sliced_t res;
-	slice_accelerated(blocks, &res, segment);
+	slice_accelerated_internal(blocks, &res, segment);
 	return res;
 }
 
@@ -204,8 +205,8 @@ static void inline unsegment(State64Sliced_t *state, const bool segmented, lane_
  *
  * @param slice
  * @param blocks
- * @param significance the index of the Slice64_t, what 'significance' are we talking about w.r.t. the slice.
- * 					E.g. the very first slice contains the *least* significant bits of 64 states
+ * @param significance the index of the Slice64_t, what 'significance' are we talking about w.r.t. the slice_internal.
+ * 					E.g. the very first slice_internal contains the *least* significant bits of 64 states
  */
 static inline lane_t unslice_significance_accelerated(lane_t *slices) {
 	lane_t block = slice_ZER;
@@ -235,9 +236,9 @@ static inline lane_t unslice_significance_accelerated(lane_t *slices) {
 	return block;
 }
 
-static inline void unslice_accelerated(State64Sliced_t *state,
-                                       Blocks64_t *result,
-                                       bool const segmented = (AVX2_acceleration || AVX512_acceleration)) {
+static inline void unslice_accelerated_internal(State64Sliced_t *state,
+                                                Blocks64_t *result,
+                                                bool const segmented = (AVX2_acceleration || AVX512_acceleration)) {
 	lane_t slices[128] = {};
 	unsegment(state, segmented, slices + 64);
 	
@@ -253,8 +254,8 @@ static inline void unslice_accelerated(State64Sliced_t *state,
 		
 		auto packed_blocks = ROR_LANES(rotated_block, ind);
 		
-		// after unslicing and rotating back, the slice contains the value of the block
-		// or multiple blocks are contained in the lanes if a slice is a SIMD variable
+		// after unslicing and rotating back, the slice_internal contains the value of the block
+		// or multiple blocks are contained in the lanes if a slice_internal is a SIMD variable
 		#if slice_size > 64
 		for (int j = 0; j < (slice_size >> 6); ++j)
 			result->values[j * 64 + ind].raw = packed_blocks[j];
@@ -265,10 +266,10 @@ static inline void unslice_accelerated(State64Sliced_t *state,
 	}
 }
 
-static inline Blocks64_t unslice_accelerated(State64Sliced_t state,
-                                             bool const segmented = (AVX2_acceleration || AVX512_acceleration)) {
+static inline Blocks64_t unslice_accelerated_internal(State64Sliced_t *state,
+                                                      bool const segmented = (AVX2_acceleration || AVX512_acceleration)) {
 	Blocks64_t res = Blocks64_t();
-	unslice_accelerated(&state, &res, segmented);
+	unslice_accelerated_internal(state, &res, segmented);
 	return res;
 }
 

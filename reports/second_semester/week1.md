@@ -10,7 +10,7 @@ I could mail the authors of the fixslicing paper and ask for a test vector if th
 
 # Tuesday
 
-Implemented slice_t, unslice and fixedslicing key schedule operation for skinny128. I had to do this because in order to
+Implemented slice_t, unslice_internal and fixedslicing key schedule operation for skinny128. I had to do this because in order to
 test the correctness of the fixedslicing keyschedule, I have to compare it against the implementation of the authors of
 [the paper](https://www.esat.kuleuven.be/cosic/events/silc2020/wp-content/uploads/sites/4/2020/10/Submission6.pdf) on
 the fixed slicing technique, and their implementation of the fixsliced keyschedule computes 2 schedules of skinny128 in

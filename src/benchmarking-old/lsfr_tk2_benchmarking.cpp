@@ -52,8 +52,8 @@ int main(int argc, char **argv) {
 	auto sliced_res = sliced_fghi(sliced_state.state);
 	auto sequential_res = sequential_abcde(state);
 	
-	// unslice
-	//auto unsliced_simd_res = unslice_accelerated(sliced_simd_res.state);
+	// unslice_internal
+	//auto unsliced_simd_res = unslice_accelerated_internal(sliced_simd_res.state);
 	auto unsliced_res = unslice_accelerated(sliced_res);
 	
 	// double check LSFRs were computed correctly

@@ -177,7 +177,7 @@ slice_t forkskinny_precomputed_round_constants[88][7] = {
 #if AVX2_acceleration || AVX512_acceleration
 //<editor-fold desc="88 pre-computed forkskinny sliced round constants"
 // the first 88 states of the addconstant lfsr containing {rc⁰, rc¹, ..., rc⁶} each
-// every rc slice is now aligned to the 2nd cell within a segment-row
+// every rc slice_internal is now aligned to the 2nd cell within a segment-row
 __m256i const forkskinny_precomputed_segmented_round_constants[88][7] = {
 		{S256(slice_ONE), XOR256(S256(slice_ZER), TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 1
 		{S256(slice_ONE), XOR256(S256(slice_ONE), TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 3

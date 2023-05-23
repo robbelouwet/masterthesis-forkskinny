@@ -36,7 +36,7 @@
 
 static inline void forkskinny128_sbox(State128Sliced_t *state) {
 //	auto blocks = Blocks128_t{.values = {{.raw = {0xFEDCBA9876543210, 0x80}}}};
-//	*state = slice(blocks);
+//	*state = slice_internal(blocks);
 	
 //	#if AVX512_acceleration
 //	for (int i = 0; i < 2; ++i) {
@@ -158,14 +158,14 @@ static inline void forkskinny128_sbox(State128Sliced_t *state) {
 	
 	// INPUT:   0x FEDC BA98 7654 3210 | 0x 0000 0000 0000 0080 ---- 0xFE = 0b 1111 1110
 	// OUTP :   0x DF57 DA56 C44D A835 | 0x 6565 6565 6565 6536 ---- 0x07 = 0b 0000 0111
-//	auto test_res0 = unslice_accelerated(*state).values[0].raw[0];
-//	auto test_res1 = unslice_accelerated(*state).values[0].raw[1];
+//	auto test_res0 = unslice_accelerated_internal(*state).values[0].raw[0];
+//	auto test_res1 = unslice_accelerated_internal(*state).values[0].raw[1];
 //	int banaan = 1;
 }
 
 static inline void forkskinny128_sbox_inv(State128Sliced_t *state) {
 //	auto blocks = Blocks128_t{.values = {0xDF57DA56C44DA835, 0x6565656565656536}};
-//	*state = slice(blocks);
+//	*state = slice_internal(blocks);
 
 //	#if AVX512_acceleration
 //	for (int i = 0; i < 4; ++i) {
@@ -242,7 +242,7 @@ static inline void forkskinny128_sbox_inv(State128Sliced_t *state) {
 	
 	// INPUT:   0x DF57 DA56 C44D A835
 	// OUTPUT:  0x FEDC BA98 7654 3210
-//	auto test_res = unslice_accelerated(*state).values[0];
+//	auto test_res = unslice_accelerated_internal(*state).values[0];
 //	int banaan = 1;
 }
 

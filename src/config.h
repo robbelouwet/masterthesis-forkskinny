@@ -8,10 +8,11 @@
 // @formatter:off
 // -- CONFIG --
 #define slice_size 64 // 8, 32, 64, 128, 256 or 512
-#define AVX2_support false
+#define AVX2_support true
 #define AVX512_support false // deprecated, not used
 
 #define IMPROVED_KEYSCHEDULE false
+#define FAST_SLICING true
 // ------------
 
 /* Define SKINNY_64BIT to 1 if the CPU is natively 64-bit */
@@ -139,7 +140,7 @@
 	#error "Please specify a valid configuration"
 #endif
 // @formatter:on
-// mask the end result to get correct result for small slice on larger-register platform
+// mask the end result to get correct result for small slice_internal on larger-register platform
 #define ROL(v, i, regwidth) ROR(v, (regwidth - i))
 
 #if slice_size == 128

@@ -96,8 +96,8 @@ register.
 - It turns out that Cortex M4 chips also
   have [SIMD intrinsics](https://www.keil.com/pack/doc/CMSIS/Core/html/group__intrinsic__SIMD__gr.html) built on 32-bit
   SIMD registers, so definitely taking a look at that. Maybe we can use this to speed up the permutation or speed up the
-  slice_t() and unslice_accelerated() operations. If we can make the slicing operations much faster, then it might become more
-  lucrative to first unslice, permute in 1 cycle through SIMD, and slice_t again. Because the permutation is ridiculously
+  slice_t() and unslice_accelerated_internal() operations. If we can make the slicing operations much faster, then it might become more
+  lucrative to first unslice_internal, permute in 1 cycle through SIMD, and slice_t again. Because the permutation is ridiculously
   fast with 64 bit SIMD (e.g. this
   intel [SIMD intrinsic](https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=shuffle&techs=MMX,SSE_ALL&ig_expand=6562,5660)
   that performs a constant permutation in 1 instruction).

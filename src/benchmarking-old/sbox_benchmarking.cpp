@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
 	// BROKEN sliced_circuit_sbox_res.slices = sliced_circuit_sbox(sliced_state.slices);
 	auto sliced_sbox_res = sliced_sbox(sliced_state).state;
 	
-	// unslice
+	// unslice_internal
 	auto unsliced_circuit_sbox_res = unslice_accelerated(sliced_circuit_sbox_res.state);
 	auto unsliced_sbox_res = unslice_accelerated(sliced_sbox_res);
 	

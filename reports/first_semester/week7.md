@@ -11,7 +11,7 @@ cheap.
 
 ## Wednesday
 
-Implemented the reverse operation unslice_accelerated() and benchmarked a bit sliced_fghi LSFR with the sequential_abcde one. The bit sliced_fghi
+Implemented the reverse operation unslice_accelerated_internal() and benchmarked a bit sliced_fghi LSFR with the sequential_abcde one. The bit sliced_fghi
 one seems faster. when executing the bitsliced LSFR 5 times it takes about 25 cycles for all 5 runs. TIf I execute the
 sequential_abcde LSFR 5 times, it takes about 50 cycles.
 

@@ -67,7 +67,7 @@ static inline State128Sliced_t permute(State128Sliced_t input) {
 //	auto test_blocks = Blocks128_t();
 //	test_blocks.values[0].raw[0] = 0x7766554433221100;
 //	test_blocks.values[0].raw[1] = 0xffeeddccbbaa9988;
-//	input = slice(test_blocks);
+//	input = slice_internal(test_blocks);
 	
 	auto output = State128Sliced_t();
 	
@@ -87,7 +87,7 @@ static inline State128Sliced_t permute(State128Sliced_t input) {
 	// Erik:    0x 7654 3210 DABF 9C8E
 	// Us:      0x 7654 3210 DABF 9C8E
 
-//	auto res = unslice_accelerated(output).values[0];
+//	auto res = unslice_accelerated_internal(output).values[0];
 //	auto test_output0 = res.raw[0];
 //	auto test_output1 = res.raw[1];
 	return output;

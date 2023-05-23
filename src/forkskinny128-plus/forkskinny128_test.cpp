@@ -9,17 +9,17 @@
 
 //bool test_pt128(){
 //	auto original_pt = Blocks128_t{.values = {{.bytes = {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef}}}};
-//	auto sliced_state = slice(original_pt);
+//	auto sliced_state = slice_internal(original_pt);
 //
 //	auto s_output = State128Sliced_t();
 //	PT128_4(sliced_state, s_output)
-//	auto output = unslice_accelerated(s_output).values[0].raw[0];
+//	auto output = unslice_accelerated_internal(s_output).values[0].raw[0];
 //
 //
 //	auto original_pt2 = Blocks64_t{.values = {{.bytes = {0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef}}}};
-//	auto sliced_state2 = slice(original_pt);
+//	auto sliced_state2 = slice_internal(original_pt);
 //	auto s_output2 = permute(permute(permute(permute(sliced_state2))));
-//	auto output2 = unslice_accelerated(s_output2).values[0].raw[0];
+//	auto output2 = unslice_accelerated_internal(s_output2).values[0].raw[0];
 //
 //	int appel = 1;
 //
@@ -27,9 +27,9 @@
 
 void test_forkskinny_128_256() {
 	std::cout << "\nforkskinny128-256\n";
-	auto M = slice(M_128());
-	auto TK1 = slice(TK1_128());
-	auto TK2 = slice(TK2_128());
+	auto M = slice_internal(M_128());
+	auto TK1 = slice_internal(TK1_128());
+	auto TK2 = slice_internal(TK2_128());
 	auto original_pt = unslice_accelerated(M);
 	
 	auto schedule = forkskinny_128_keyschedule_tk2(TK1, TK2);
@@ -74,10 +74,10 @@ void test_forkskinny_128_256() {
 
 void test_forkskinny_128_384() {
 	std::cout << "\n\nforkskinny128-384\n";
-	auto M = slice(M_128());
-	auto TK1 = slice(TK1_128());
-	auto TK2 = slice(TK2_128());
-	auto TK3 = slice(TK3_128());
+	auto M = slice_internal(M_128());
+	auto TK1 = slice_internal(TK1_128());
+	auto TK2 = slice_internal(TK2_128());
+	auto TK3 = slice_internal(TK3_128());
 	auto original_pt = unslice_accelerated(M);
 	
 	auto schedule = forkskinny_128_fixsliced_init_tk23(TK1, TK2, TK3);

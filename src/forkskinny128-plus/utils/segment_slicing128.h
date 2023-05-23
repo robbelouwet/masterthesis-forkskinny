@@ -6,8 +6,8 @@
 
 /**
  * Segment slicing is the concept of grouping together multiple slices into a single SIMD lane, or as I call it, a 'segment'.
- * Whereas a slice is a grouping of all equally significant bits, a segment is a grouping of multiple slices where
- * each slice of such a group is an equally significant slice of a cell.
+ * Whereas a slice_internal is a grouping of all equally significant bits, a segment is a grouping of multiple slices where
+ * each slice of such a group is an equally significant slice_internal of a cell.
  *
  * In other words, a SlicedState64_t cipher state may look like this:
  * cell 0: [A, B, C, D], cell 1: [E, F, G, H], cell 2: [I, J, K, L], cell 3: [M, N, O, P]

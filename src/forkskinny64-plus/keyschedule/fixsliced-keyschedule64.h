@@ -3,7 +3,7 @@
 
 #include "internal64.h"
 #include "../roundfunction/forkskinny64-addconstant.h"
-#include "../utils/slicing64.h"
+#include "../utils/slicing64-internal.h"
 
 static inline void fixslice_permute(State64Sliced_t *src, State64Sliced_t *dst, int i) {
 	#if AVX2_acceleration || AVX512_acceleration

@@ -77,10 +77,10 @@ int main(){
 //SlicedCiphertext128_t benchmark_fs128_encryption() {
 //	#define ROUNDS_BEFORE FORKSKINNY_128_384_ROUNDS_BEFORE
 //	#define ROUNDS_AFTER FORKSKINNY_128_384_ROUNDS_AFTER
-//	auto m = slice(M_128());
-//	auto tk1 = slice(TK1_128());
-//	auto tk2 = slice(TK2_128());
-//	auto tk3 = slice(TK3_128());
+//	auto m = slice_internal(M_128());
+//	auto tk1 = slice_internal(TK1_128());
+//	auto tk2 = slice_internal(TK2_128());
+//	auto tk3 = slice_internal(TK3_128());
 //
 //	auto schedule = forkskinny_128_fixsliced_init_tk23(tk1, tk2, tk3);
 //	auto ct = forkskinny128_encrypt(&schedule, &m, 'b', ROUNDS_BEFORE, ROUNDS_AFTER);
@@ -91,7 +91,7 @@ int main(){
 //void run_benchmark_fs128(benchmark::State &state) {
 //	for (auto _: state) {
 //		auto ct = benchmark_fs128_encryption();
-//		auto volatile res = unslice_accelerated(ct.M);
+//		auto volatile res = unslice_accelerated_internal(ct.M);
 //	}
 //}
 //

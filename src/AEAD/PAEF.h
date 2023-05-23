@@ -5,11 +5,12 @@
 #include <stdexcept>
 #include <iostream>
 #include "../forkskinny64-plus/utils/forkskinny64-datatypes.h"
-#include "../forkskinny64-plus/utils/slicing64.h"
+#include "../forkskinny64-plus/utils/slicing64-internal.h"
 #include "../forkskinny64-plus/forkskinny64.h"
 #include "../forkskinny64-plus/keyschedule/fixsliced-keyschedule64.h"
 #include "../test_vectors.h"
 #include "../forkskinny64-plus/keyschedule/keyschedule64.h"
+#include "../forkskinny64-plus/utils/slicing64.h"
 
 // TODO: THIS IS NOT CONSTANT TIME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 //  ----
@@ -27,7 +28,7 @@ static inline void to_sliced(u64 in, State64Sliced_t *out) {
 static inline u64
 extract_segment_tag(SlicedCiphertext64_t ct, bool last_segment, int last_block_index, char tag_leg) {
 	/// Calculate the AD tag of this segment (these 64 or less blocks)
-	/// by calculating the parity of every individual slice and packing those together
+	/// by calculating the parity of every individual slice_internal and packing those together
 	u64 block_tag = 0;
 	State64Sliced_t *pLeg;
 	if (tag_leg == '0') pLeg = &(ct.C0);
@@ -37,7 +38,7 @@ extract_segment_tag(SlicedCiphertext64_t ct, bool last_segment, int last_block_i
 		u64 tag_bit = 0;
 		
 		# if slice_size > 64
-		/* If the slice was a SIMD vector, iterate over its lanes */
+		/* If the slice_internal was a SIMD vector, iterate over its lanes */
 		auto lanes_in_slice = slice_size >> 6;
 		for (int k = 0; k < lanes_in_slice; ++k) {
 			if (last_segment && last_block_index != -1 && last_block_index < 64)
@@ -48,7 +49,7 @@ extract_segment_tag(SlicedCiphertext64_t ct, bool last_segment, int last_block_i
 		}
 		#else
 		
-		/* With non-SIMD slices, calculate the normal parity of the slice */
+		/* With non-SIMD slices, calculate the normal parity of the slice_internal */
 			tag_bit = __builtin_parity(ct.C0.raw[j].value);
 		#endif
 		
@@ -85,7 +86,7 @@ static inline SlicedCiphertext64_t paef_forkskinny64_192_encrypt_section(
 	to_sliced(nonce_blocks[1].raw, &sliced_tk2);
 
 	/* Set the bit flags */
-	State64Sliced_t sliced_tks[3] = {sliced_tk1, sliced_tk2, slice(tk3_blocks)};
+	State64Sliced_t sliced_tks[3] = {sliced_tk1, sliced_tk2, slice(&tk3_blocks)};
 	auto *recast = (Slice64_t *) &sliced_tks;
 	(recast + nonce_bit_size)->value = slice_ZER;
 	(recast + nonce_bit_size + 1)->value = slice_ZER;
@@ -96,7 +97,7 @@ static inline SlicedCiphertext64_t paef_forkskinny64_192_encrypt_section(
 		(recast + nonce_bit_size)->value |= BIT(last);
 
 	/// Encrypt
-	State64Sliced_t state = slice(ma);
+	State64Sliced_t state = slice(&ma);
 	auto schedule = KeySchedule64Sliced_t();
 	forkskinny64_192_precompute_key_schedule(sliced_tks + 0, sliced_tks + 1, sliced_tks + 2, &schedule);
 	SlicedCiphertext64_t res;
@@ -167,7 +168,7 @@ static inline u64 paef_forkskinny64_192_encrypt_M(
 		AD_tag ^= extract_segment_tag(ct, last_segment, last_block_index, '1');
 		
 		// C0 is ciphertext
-		ct_out[i] = unslice_accelerated(ct.C0);
+		ct_out[i] = unslice(&(ct.C0));
 	}
 	
 	return AD_tag;

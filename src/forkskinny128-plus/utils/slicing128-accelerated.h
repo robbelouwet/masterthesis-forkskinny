@@ -91,7 +91,7 @@ static inline State128Sliced_t *slice_accelerated(Blocks128_t blocks) {
 			slice.value |= (blocks.values[i].raw & mask);
 			mask = _rotr(mask, 1);
 		}
-		result->raw[j].value = _rotl(slice.value, i);
+		result->raw[j].value = _rotl(slice_internal.value, i);
 		#elif slice_size == 256
 		u64 mask = 0x8000000000000000ULL >> i;
 		int j = 0;
@@ -124,8 +124,8 @@ static inline State128Sliced_t *slice_accelerated(Blocks128_t blocks) {
  *
  * @param slice
  * @param blocks
- * @param sb_index the index of the slice_t, what 'significance' are we talking about w.r.t. the slice.
- * 					E.g. the very first slice contains the *least* significant bits of 64 states
+ * @param sb_index the index of the slice_t, what 'significance' are we talking about w.r.t. the slice_internal.
+ * 					E.g. the very first slice_internal contains the *least* significant bits of 64 states
  */
 static inline void unslice_significance_accelerated(const Slice128_t slice, Blocks128_t *blocks, uint8_t sb_index) {
 #if slice_size == 256

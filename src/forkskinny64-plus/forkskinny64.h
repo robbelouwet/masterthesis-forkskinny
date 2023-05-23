@@ -3,7 +3,7 @@
 
 #include "utils/forkskinny64-datatypes.h"
 #include "roundfunction/forkskinny64-sbox.h"
-#include "utils/slicing64-accelerated.h"
+#include "utils/slicing64-accelerated-internal.h"
 #include "roundfunction/forkskinny64-shiftrows.h"
 #include "roundfunction/forkskinny64-mixcols.h"
 #include "roundfunction/forkskinny64-addconstant.h"
@@ -59,7 +59,7 @@ static inline void apply_roundkey(HalfState64Sliced_t *round_key, State64Sliced_
 					XOR256(state->segments256[i][j], round_key->segments256[i][j])
 			);
 	
-	// AddConstant: M8 (in cell 9) 0x2, aka slice 1 of cell 8, because C2 is on the third row and not present in the round key!
+	// AddConstant: M8 (in cell 9) 0x2, aka slice_internal 1 of cell 8, because C2 is on the third row and not present in the round key!
 	// See the thesis on where index segment[2][1] comes from
 	state->segments256[2][1] ^= c2;
 	#else
@@ -82,14 +82,14 @@ static inline void apply_roundkey(HalfState64Sliced_t *round_key, State64Sliced_
 static inline void forkskinny64_encrypt_round(KeySchedule64Sliced_t *schedule, State64Sliced_t *state,
                                               uint16_t iteration) {
 	// i: 0, 0x76541200
-//	auto roundkey = unslice_accelerated({.halves= {schedule->keys[iteration], {}}}, false).values[0].raw;
+//	auto roundkey = unslice_accelerated_internal({.halves= {schedule->keys[iteration], {}}}, false).values[0].raw;
 
-//	auto test_sbox_before = unslice_accelerated(*state).values[0].raw; // 0x EFCD AB89 6745 2301
+//	auto test_sbox_before = unslice_accelerated_internal(*state).values[0].raw; // 0x EFCD AB89 6745 2301
 //	auto before0 = _rdtsc();
 	forkskinny64_sbox(state);
 //	auto after0 = _rdtsc();
 //	std::cout << "SBOX: " << after0 - before0 << std::endl;
-//	auto test_state = unslice_accelerated(*state).values[0].raw; // 0x 7F4E 5D38 2B1A 90C6
+//	auto test_state = unslice_accelerated_internal(*state).values[0].raw; // 0x 7F4E 5D38 2B1A 90C6
 	
 	forkskinny64_add_constant(&(state->halves[0]), iteration);
 	
@@ -97,20 +97,20 @@ static inline void forkskinny64_encrypt_round(KeySchedule64Sliced_t *schedule, S
 	apply_roundkey(schedule->keys + iteration, state);
 //	auto after1 = _rdtsc();
 //	std::cout << "Key injection: " << after1 - before1 << std::endl;
-//	test_state = unslice_accelerated(*state).values[0].raw; // 0x 7F4E 5D18 C51A 6D26
+//	test_state = unslice_accelerated_internal(*state).values[0].raw; // 0x 7F4E 5D18 C51A 6D26
 
 //	auto before2 = _rdtsc();
 	forkskinny64_shiftrows(state);
 //	auto after2 = _rdtsc();
 //	std::cout << "ShiftRows: " << after2 - before2 << std::endl;
-//	test_state = unslice_accelerated(*state).values[0].raw; // 0x F4E7 185D AC51 6D26
+//	test_state = unslice_accelerated_internal(*state).values[0].raw; // 0x F4E7 185D AC51 6D26
 
 //	auto before3 = _rdtsc();
 	forkskinny64_mixcols(state);
 //	auto after3 = _rdtsc();
 //	std::cout << "MixCols: " << after3 - before3 << std::endl;
 //	exit(1);
-//	test_state = unslice_accelerated(*state).values[0].raw; // 0x 757B B40C 6D26 819C
+//	test_state = unslice_accelerated_internal(*state).values[0].raw; // 0x 757B B40C 6D26 819C
 
 //	int appel = 1;
 
@@ -135,65 +135,65 @@ static inline void forkskinny64_encrypt(KeySchedule64Sliced_t *schedule,
 	int i = 0;
 	for (; i < FORKSKINNY_ROUNDS_BEFORE; i++) {
 		forkskinny64_encrypt_round(schedule, state, i);
-//		auto test = unslice_accelerated(*state).values[0].raw;
+//		auto test = unslice_accelerated_internal(*state).values[0].raw;
 //		int bannn = 1;
 	}
 
-//	auto test1 = unslice_accelerated(*state).values[0].raw; // 0xE86B7E7E22F3BA92
+//	auto test1 = unslice_accelerated_internal(*state).values[0].raw; // 0xE86B7E7E22F3BA92
 	
 	// ### C0 ###
 	if (mode == '0' || mode == 'b') {
 		*C0 = *state;
 		for (int c0_i = i; c0_i < FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER; c0_i++) {
 			forkskinny64_encrypt_round(schedule, C0, c0_i);
-//			auto test2a = unslice_accelerated(*C0).values[0].raw;
+//			auto test2a = unslice_accelerated_internal(*C0).values[0].raw;
 //			int appel = 1;
 		}
 //		NOT(C0);
 	}
 
-//	auto test2b = unslice_accelerated(*C0).values[0].raw;
+//	auto test2b = unslice_accelerated_internal(*C0).values[0].raw;
 	
 	// ### C1 ###
 	if (mode == '1' || mode == 'b') {
 		*C1 = *state;
-//		auto test3_before = unslice_accelerated(*C1).values[0].raw;
+//		auto test3_before = unslice_accelerated_internal(*C1).values[0].raw;
 		add_branch_constant64(C1);
-//		u64 test3_bc = unslice_accelerated(*C1).values[0].raw;
+//		u64 test3_bc = unslice_accelerated_internal(*C1).values[0].raw;
 		for (int c1_i = FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER; c1_i < FORKSKINNY64_MAX_ROUNDS; c1_i++) {
 			forkskinny64_encrypt_round(schedule, C1, c1_i);
-//			auto test3a = unslice_accelerated(*C1).values[0].raw;
+//			auto test3a = unslice_accelerated_internal(*C1).values[0].raw;
 //			int appel = 1;
 		}
 //		NOT(C1);
 	}
 
-//	auto test3 = unslice_accelerated(*C1).values[0].raw;
+//	auto test3 = unslice_accelerated_internal(*C1).values[0].raw;
 //	int appel = 1;
 }
 
 static inline void forkskinny64_decrypt_round(KeySchedule64Sliced_t *schedule, State64Sliced_t *state,
                                               uint16_t iteration) {
 //	State64Sliced_t uRTK = {.halves= {schedule->keys[iteration], {}}};
-//	auto roundkey = unslice_accelerated(uRTK).values[0].raw;
+//	auto roundkey = unslice_accelerated_internal(uRTK).values[0].raw;
 
 //	auto ct = Blocks64_t{.values = {0x9A9BFD8982C66E7C}};
 //	*state = Slice64_t(ct);
 
-//	auto test_sbox_before = unslice_accelerated(*state).values[0].raw;
+//	auto test_sbox_before = unslice_accelerated_internal(*state).values[0].raw;
 	forkskinny64_mixcols_inv(state);
-//	auto test_state = unslice_accelerated(*state).values[0].raw;
+//	auto test_state = unslice_accelerated_internal(*state).values[0].raw;
 	
 	forkskinny64_shiftrows_inv(state);
-//	test_state = unslice_accelerated(*state).values[0].raw;
+//	test_state = unslice_accelerated_internal(*state).values[0].raw;
 	
 	apply_roundkey(schedule->keys + iteration, state);
-//	test_state = unslice_accelerated(*state).values[0].raw;
+//	test_state = unslice_accelerated_internal(*state).values[0].raw;
 	
 	forkskinny64_add_constant(&(state->halves[0]), iteration);
 	
 	forkskinny64_sbox_inv(state);
-//	test_state = unslice_accelerated(*state).values[0].raw;
+//	test_state = unslice_accelerated_internal(*state).values[0].raw;
 
 //	int appel = 1;
 }
@@ -204,14 +204,14 @@ static inline SlicedCiphertext64_t forkskinny64_decrypt_C0(KeySchedule64Sliced_t
 	auto M = State64Sliced_t();
 	auto C1 = State64Sliced_t();
 
-//	auto initial_state = unslice_accelerated(*state).values[0].raw;
+//	auto initial_state = unslice_accelerated_internal(*state).values[0].raw;
 	
 	u64 test2 = 0;
 	// decrypt C0 branch
 	int c0_i = FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER - 1;
 	for (; c0_i > FORKSKINNY_ROUNDS_BEFORE - 1; --c0_i) {
 		forkskinny64_decrypt_round(schedule, state, c0_i);
-//		test2 = unslice_accelerated(*state).values[0].raw;
+//		test2 = unslice_accelerated_internal(*state).values[0].raw;
 //		int appel = 1;
 	}
 	
@@ -247,9 +247,9 @@ static inline SlicedCiphertext64_t forkskinny64_decrypt_C1(KeySchedule64Sliced_t
 		forkskinny64_decrypt_round(schedule, state, c1_i);
 	
 	// 0x 6987 0125 F8C5 F380
-//	auto before = unslice_accelerated(*state).values[0].raw;
+//	auto before = unslice_accelerated_internal(*state).values[0].raw;
 	add_branch_constant64(state);
-//	auto after = unslice_accelerated(*state).values[0].raw;
+//	auto after = unslice_accelerated_internal(*state).values[0].raw;
 	// 0x E86B 7E7E 22F3 BA92
 	
 	// Further decrypt to M

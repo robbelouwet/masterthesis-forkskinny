@@ -6,8 +6,8 @@
 #include "../utils/forkskinny64-datatypes.h"
 #include "../roundfunction/forkskinny64-addconstant.h"
 #include "../common.h"
-#include "../utils/slicing64-accelerated.h"
-#include "../utils/slicing64.h"
+#include "../utils/slicing64-accelerated-internal.h"
+#include "../utils/slicing64-internal.h"
 
 static inline void tk2_lfsr(State64Sliced_t *state, const bool full_state = false) {
 	int bound = full_state ? 4 : 2;
@@ -63,7 +63,7 @@ auto mask_2 = _mm256_set_epi64x(0, -1ULL, 0, 0);
 static inline void permute(State64Sliced_t *state) {
 //	auto test_blocks = Blocks64_t();
 //	test_blocks.values[0].raw = 0xEFCDAB8967452301;
-//	*state = slice_accelerated(&test_blocks);
+//	*state = slice_accelerated_internal(&test_blocks);
 	
 	#if AVX2_acceleration || AVX512_acceleration
 	for (int i = 0; i < 4; ++i) {
@@ -101,7 +101,7 @@ static inline void permute(State64Sliced_t *state) {
 	#else
 	//	HalfState64Sliced_t top = (*state).halves[0];
 	//	State64Sliced_t temp = State64Sliced_t{.halves = {{}, top}};
-	//	auto testtemp = unslice_accelerated(&temp).values[0].raw;
+	//	auto testtemp = unslice_accelerated_internal(&temp).values[0].raw;
 	
 	auto s_0 = state->cells[0];
 	auto s_1 = state->cells[1];
@@ -138,7 +138,7 @@ static inline void permute(State64Sliced_t *state) {
 	// Erik:    0x 7654 3210 DABF 9C8E
 	// Us:      0x 7654 3210 DABF 9C8E
 
-//	auto test_output = unslice_accelerated(state).values[0].raw;
+//	auto test_output = unslice_accelerated_internal(state).values[0].raw;
 //	int appel = 1;
 }
 
