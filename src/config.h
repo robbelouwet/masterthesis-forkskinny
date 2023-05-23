@@ -7,8 +7,8 @@
 
 // @formatter:off
 // -- CONFIG --
-#define slice_size 64 // 8, 32, 64, 128, 256 or 512
-#define AVX2_support true
+#define slice_size 8 // 8, 32, 64, 128, 256 or 512
+#define AVX2_support false
 #define AVX512_support false // deprecated, not used
 
 #define FIXED_SLICING true
