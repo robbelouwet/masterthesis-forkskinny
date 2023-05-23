@@ -5,8 +5,10 @@
 #include "forkskinny64-plus/utils/forkskinny64-datatypes.h"
 #include "forkskinny128-plus/utils/forkskinny128-datatypes.h"
 
+#if AVX2_acceleration
 #define S256(x) _mm256_set_epi64x(0, 0, x, 0)
 auto TWO = _mm256_set_epi64x(-1ULL, 0, 0,0);
+#endif
 
 //<editor-fold desc="forkskinny64 sliced branch constant"
 // When comparing to the bc in the paper, the cells inside consecutive pairs of cells are swapped with each other to account

@@ -57,11 +57,13 @@ static inline Slice64_t slice_significance(const Blocks64_t *blocks, uint8_t sig
 	return slice;
 }
 
-static inline State64Sliced_t slice_internal(const Blocks64_t *blocks) {
+static inline State64Sliced_t slice_internal(const Blocks64_t *blocks,
+											 const bool segment = (AVX512_acceleration || AVX2_acceleration)) {
 	State64Sliced_t result = State64Sliced_t();
 	for (uint i = 0; i < 64; ++i) {
 		result.raw[i] = slice_significance(blocks, i);
 	}
+	try_segment(result.raw, &result, segment);
 	return result;
 }
 
