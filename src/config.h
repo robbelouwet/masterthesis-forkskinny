@@ -7,8 +7,8 @@
 
 // @formatter:off
 // -- CONFIG --
-#define slice_size 8 // 8, 32, 64, 128, 256 or 512
-#define AVX2_support false
+#define slice_size 64 // 8, 32, 64, 128, 256 or 512
+#define AVX2_support true
 #define AVX512_support false // deprecated, not used
 
 #define FIXED_SLICING true
@@ -129,9 +129,9 @@
 	#define lane_t slice_t
 	auto slice_ONE = _mm512_set1_epi64(-1);
 	auto slice_ZER = _mm512_setzero_si512();
-	#define BIT(i) mm512_rotr_si512(_mm512_set_epi64x(0, 0, 0, 0, 0, 0, 0, 1), 512 - i)
-	#define ROR_LANES(v, i) (_mm512_or_si512(_mm512_srli_epi64(v, i), _mm512_slli(v, (64 - i)))
-	#define ROL_LANES(v, i) (_mm512_or_si512(_mm512_slli_epi64(v, i), _mm512_srli(v, (64 - i)))
+	#define BIT(i) mm512_rotr_si512(_mm512_set_epi64(0, 0, 0, 0, 0, 0, 0, 1), 512 - i)
+	#define ROR_LANES(v, i) (_mm512_or_si512(_mm512_srli_epi64(v, i), _mm512_slli_epi64(v, (64 - i))))
+	#define ROL_LANES(v, i) (_mm512_or_si512(_mm512_slli_epi64(v, i), _mm512_srli_epi64(v, (64 - i))))
 	#define XOR_SLICE _mm512_xor_si512
 	#define OR_SLICE _mm512_or_si512
 	#define AND_SLICE _mm512_and_si512

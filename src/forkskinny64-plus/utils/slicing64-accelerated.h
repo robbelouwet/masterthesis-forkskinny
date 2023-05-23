@@ -103,7 +103,7 @@ static inline lane_t slice_significance_accelerated_64(const Block64_t *blocks) 
 								blocks[i + 256].raw,
 								blocks[i + 320].raw,
 								blocks[i + 384].raw,
-								blocks[i + 448].raw,
+								blocks[i + 448].raw
 						), _mm512_set1_epi64(bit_masks[i])
 				), slice
 		);
@@ -212,7 +212,7 @@ static inline lane_t unslice_significance_accelerated(lane_t *slices) {
 	
 	#if slice_size == 512
 	for (int i = 0; i < 64; ++i) {
-		auto val = AND512(slices[i], _mm512_set1_epi64x(bit_masks[i]));
+		auto val = AND512(slices[i], _mm512_set1_epi64(bit_masks[i]));
 		block = OR512(block, val);
 	}
 	#elif slice_size == 256

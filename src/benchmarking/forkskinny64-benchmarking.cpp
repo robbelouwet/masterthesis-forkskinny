@@ -110,7 +110,7 @@ void benchmark_forkskinny64_128() {
 	std::cout << encryption_per_primitive + schedule_per_primitive
 	          << " cycles per single PRIMITIVE call (slicing excluded)\n";
 	std::cout << schedule_per_primitive << " cycles spent on key schedule alone PER PRIMITIVE\n";
-	std::cout << cycles_per_byte << " cycles per byte\n";
+	std::cout << "-->" << cycles_per_byte << " cycles per byte\n";
 	std::cout << (cycles_per_byte / rounds) * 36 << " cycles per byte per 36 rounds\n";
 	std::cout << cycles_per_round << " cycles per round";
 }
@@ -160,7 +160,7 @@ void benchmark_forkskinny64_192() {
 	std::cout << encryption_per_primitive + schedule_per_primitive
 	          << " cycles per single PRIMITIVE call (slicing excluded)\n";
 	std::cout << schedule_per_primitive << " cycles spent on key schedule alone PER PRIMITIVE\n";
-	std::cout << cycles_per_byte << " cycles per byte\n";
+	std::cout << "-->" << cycles_per_byte << " cycles per byte\n";
 	std::cout << (cycles_per_byte / rounds) * 36 << " cycles per byte per 36 rounds\n";
 	std::cout << cycles_per_round << " cycles per round";
 }
