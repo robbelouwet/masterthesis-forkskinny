@@ -75,12 +75,14 @@ void benchmark_forkskinny64_128() {
 	std::cout << slice_size << " blocks in parallel\n";
 	std::cout << rounds << " rounds per primitive call\n--------\n";
 	
-	ULL slice_timings[iterations], schedule_timings[iterations], encryption_timings[iterations], unslice_timings[iterations];
+	ULL slice_timings[iterations], schedule_timings[iterations], encryption_timings[iterations],
+			decryption_timings[iterations], unslice_timings[iterations];
 	for (int i = 0; i < iterations; ++i)
 		benchmark_forkskinny64_128_sb(
 				slice_timings + i,
 				schedule_timings + i,
 				encryption_timings + i,
+				decryption_timings + i,
 				unslice_timings + i
 		);
 	
@@ -88,6 +90,7 @@ void benchmark_forkskinny64_128() {
 	qsort(slice_timings, iterations, sizeof(ULL), compare);
 	qsort(schedule_timings, iterations, sizeof(ULL), compare);
 	qsort(encryption_timings, iterations, sizeof(ULL), compare);
+	qsort(decryption_timings, iterations, sizeof(ULL), compare);
 	qsort(unslice_timings, iterations, sizeof(ULL), compare);
 	
 	// the encryption samples use the same keys and plaintext and so are deterministic. Any noise that slows it down
@@ -95,6 +98,7 @@ void benchmark_forkskinny64_128() {
 	double cycles_slicing_per_pack = slice_timings[0];
 	double cycles_schedule_per_pack = schedule_timings[0];
 	double cycles_encryption_per_pack = encryption_timings[0];
+	double cycles_decryption_per_pack = decryption_timings[0];
 	double cycles_unslicing_per_pack = unslice_timings[0];
 	
 	double total_per_block =
@@ -105,10 +109,13 @@ void benchmark_forkskinny64_128() {
 	
 	double slicing_per_primitive = (cycles_unslicing_per_pack + cycles_slicing_per_pack) / slice_size;
 	double encryption_per_primitive = cycles_encryption_per_pack / slice_size;
+	double decryption_per_primitive = cycles_decryption_per_pack / slice_size;
 	double schedule_per_primitive = cycles_schedule_per_pack / slice_size;
 	std::cout << slicing_per_primitive << " spent on slicing per single PRIMITIVE call\n";
 	std::cout << encryption_per_primitive
 	          << " cycles on encryption alone per single PRIMITIVE call (slicing excluded)\n";
+	std::cout << decryption_per_primitive
+	          << " cycles on decryption alone per single PRIMITIVE call (slicing excluded)\n";
 	std::cout << schedule_per_primitive << " cycles spent on key schedule alone PER PRIMITIVE\n";
 	std::cout << "-->" << cycles_per_byte << " cycles per byte\n";
 	std::cout << (cycles_per_byte / rounds) * 36 << " cycles per byte per 36 rounds\n";
@@ -118,19 +125,21 @@ void benchmark_forkskinny64_128() {
 void benchmark_forkskinny64_192() {
 	std::cout << "\nFORKSKINNY64-192\n";
 	auto iterations = 5000;
-	auto rounds_before =  FORKSKINNY_ROUNDS_BEFORE;
+	auto rounds_before = FORKSKINNY_ROUNDS_BEFORE;
 	auto rounds_after = FORKSKINNY_ROUNDS_AFTER;
 	auto rounds = rounds_before + rounds_after;
 	
 	std::cout << slice_size << " blocks in parallel\n";
 	std::cout << rounds << " rounds per primitive call\n--------\n";
 	
-	ULL slice_timings[iterations], schedule_timings[iterations], encryption_timings[iterations], unslice_timings[iterations];
+	ULL slice_timings[iterations], schedule_timings[iterations], encryption_timings[iterations],
+			decryption_timings[iterations], unslice_timings[iterations];
 	for (int i = 0; i < iterations; ++i)
 		benchmark_forkskinny64_192_sb(
 				slice_timings + i,
 				schedule_timings + i,
 				encryption_timings + i,
+				decryption_timings + i,
 				unslice_timings + i
 		);
 	
@@ -138,6 +147,7 @@ void benchmark_forkskinny64_192() {
 	qsort(slice_timings, iterations, sizeof(ULL), compare);
 	qsort(schedule_timings, iterations, sizeof(ULL), compare);
 	qsort(encryption_timings, iterations, sizeof(ULL), compare);
+	qsort(decryption_timings, iterations, sizeof(ULL), compare);
 	qsort(unslice_timings, iterations, sizeof(ULL), compare);
 	
 	// the encryption samples use the same keys and plaintext and so are deterministic. Any noise that slows it down
@@ -145,6 +155,7 @@ void benchmark_forkskinny64_192() {
 	double cycles_slicing_per_pack = slice_timings[0];
 	double cycles_schedule_per_pack = schedule_timings[0];
 	double cycles_encryption_per_pack = encryption_timings[0];
+	double cycles_decryption_per_pack = decryption_timings[0];
 	double cycles_unslicing_per_pack = unslice_timings[0];
 	
 	double total_per_block =
@@ -155,10 +166,13 @@ void benchmark_forkskinny64_192() {
 	
 	double slicing_per_primitive = (cycles_unslicing_per_pack + cycles_slicing_per_pack) / slice_size;
 	double encryption_per_primitive = cycles_encryption_per_pack / slice_size;
+	double decryption_per_primitive = cycles_decryption_per_pack / slice_size;
 	double schedule_per_primitive = cycles_schedule_per_pack / slice_size;
 	std::cout << slicing_per_primitive << " spent on slicing per single PRIMITIVE call\n";
 	std::cout << encryption_per_primitive
 	          << " cycles on encryption alone per single PRIMITIVE call (slicing excluded)\n";
+	std::cout << decryption_per_primitive
+	          << " cycles on decryption alone per single PRIMITIVE call (slicing excluded)\n";
 	std::cout << schedule_per_primitive << " cycles spent on key schedule alone PER PRIMITIVE\n";
 	std::cout << "-->" << cycles_per_byte << " cycles per byte\n";
 	std::cout << (cycles_per_byte / rounds) * 36 << " cycles per byte per 36 rounds\n";

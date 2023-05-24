@@ -8,21 +8,6 @@
 #include "roundfunction/forkskinny64-mixcols.h"
 #include "roundfunction/forkskinny64-addconstant.h"
 
-#if AVX2_acceleration || AVX512_acceleration
-#define NOT(x) invert(x)
-#else
-#define NOT(x) ()
-#endif
-
-static inline void invert(State64Sliced_t *state) {
-	for (int i = 0; i < 4; ++i) {
-		state->segments256[i][0] = XOR256(state->segments256[i][0], ONE256);
-		state->segments256[i][0] = XOR256(state->segments256[i][0], ONE256);
-		state->segments256[i][0] = XOR256(state->segments256[i][0], ONE256);
-		state->segments256[i][0] = XOR256(state->segments256[i][0], ONE256);
-	}
-}
-
 static inline void add_branch_constant64(State64Sliced_t *state) {
 	// <editor-fold desc="branch constant">
 	// @formatter:off
@@ -65,13 +50,13 @@ static inline void apply_roundkey(HalfState64Sliced_t *round_key, State64Sliced_
 	#else
 	for (int i = 0; i < 8; ++i) {
 		state->cells[i].slices[0].value = XOR_SLICE(state->cells[i].slices[0].value,
-													round_key->cells[i].slices[0].value);
+		                                            round_key->cells[i].slices[0].value);
 		state->cells[i].slices[1].value = XOR_SLICE(state->cells[i].slices[1].value,
-													round_key->cells[i].slices[1].value);
+		                                            round_key->cells[i].slices[1].value);
 		state->cells[i].slices[2].value = XOR_SLICE(state->cells[i].slices[2].value,
-													round_key->cells[i].slices[2].value);
+		                                            round_key->cells[i].slices[2].value);
 		state->cells[i].slices[3].value = XOR_SLICE(state->cells[i].slices[3].value,
-													round_key->cells[i].slices[3].value);
+		                                            round_key->cells[i].slices[3].value);
 	}
 	// AddConstant: Cell 8 XOR_AVX2 0x2, aka Slice64_t 1 of cell 8, because C2 is on the third row and not present in the round key!
 	state->cells[9].slices[1].value = XOR_SLICE(state->cells[9].slices[1].value, slice_ONE);
@@ -125,12 +110,9 @@ static inline void forkskinny64_encrypt_round(KeySchedule64Sliced_t *schedule, S
  * 			   'b': m -> (C0, C1)
  * @return
  */
-// TODO: return by reference
 static inline void forkskinny64_encrypt(KeySchedule64Sliced_t *schedule,
                                         State64Sliced_t *state, unsigned char const mode,
                                         State64Sliced_t *C0, State64Sliced_t *C1) {
-//	NOT(state);
-	
 	// ### INITIAL ROUNDS ###
 	int i = 0;
 	for (; i < FORKSKINNY_ROUNDS_BEFORE; i++) {
@@ -149,7 +131,6 @@ static inline void forkskinny64_encrypt(KeySchedule64Sliced_t *schedule,
 //			auto test2a = unslice_accelerated_internal(*C0).values[0].raw;
 //			int appel = 1;
 		}
-//		NOT(C0);
 	}
 
 //	auto test2b = unslice_accelerated_internal(*C0).values[0].raw;
@@ -165,7 +146,6 @@ static inline void forkskinny64_encrypt(KeySchedule64Sliced_t *schedule,
 //			auto test3a = unslice_accelerated_internal(*C1).values[0].raw;
 //			int appel = 1;
 		}
-//		NOT(C1);
 	}
 
 //	auto test3 = unslice_accelerated_internal(*C1).values[0].raw;
@@ -198,15 +178,13 @@ static inline void forkskinny64_decrypt_round(KeySchedule64Sliced_t *schedule, S
 //	int appel = 1;
 }
 
-// TODO: return by reference
-static inline SlicedCiphertext64_t forkskinny64_decrypt_C0(KeySchedule64Sliced_t *schedule,
-                                                           State64Sliced_t *state, unsigned char mode) {
-	auto M = State64Sliced_t();
-	auto C1 = State64Sliced_t();
+static inline void forkskinny64_decrypt_C0(KeySchedule64Sliced_t *schedule,
+                                           State64Sliced_t *state, unsigned char mode,
+                                           SlicedCiphertext64_t *result) {
 
 //	auto initial_state = unslice_accelerated_internal(*state).values[0].raw;
 	
-	u64 test2 = 0;
+//	u64 test2 = 0;
 	// decrypt C0 branch
 	int c0_i = FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER - 1;
 	for (; c0_i > FORKSKINNY_ROUNDS_BEFORE - 1; --c0_i) {
@@ -217,30 +195,23 @@ static inline SlicedCiphertext64_t forkskinny64_decrypt_C0(KeySchedule64Sliced_t
 	
 	// Further decrypt to M
 	if (mode == 'i' || mode == 'b') {
-		M = *state;
+		result->M = *state;
 		for (int i = c0_i; i >= 0; --i)
-			forkskinny64_decrypt_round(schedule, &M, i);
-		
+			forkskinny64_decrypt_round(schedule, &(result->M), i);
 	}
 	
 	// Re-encrypt to C1
 	if (mode == 'o' || mode == 'b') {
-		C1 = *state;
-		add_branch_constant64(&C1);
+		result->C1 = *state;
+		add_branch_constant64(&(result->C1));
 		for (int i = FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER; i < FORKSKINNY64_MAX_ROUNDS; ++i)
-			forkskinny64_encrypt_round(schedule, &C1, i);
+			forkskinny64_encrypt_round(schedule, &(result->C1), i);
 	}
-	
-	return {C1, State64Sliced_t(), M};
-	
 }
 
-// TODO: return by reference
-static inline SlicedCiphertext64_t forkskinny64_decrypt_C1(KeySchedule64Sliced_t *schedule,
-                                                           State64Sliced_t *state, unsigned char mode) {
-	auto M = State64Sliced_t();
-	auto C0 = State64Sliced_t();
-	
+static inline void forkskinny64_decrypt_C1(KeySchedule64Sliced_t *schedule,
+                                           State64Sliced_t *state, unsigned char mode,
+                                           SlicedCiphertext64_t *result) {
 	// decrypt C1 branch
 	int c1_i = FORKSKINNY64_MAX_ROUNDS - 1;
 	for (; c1_i > FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER - 1; --c1_i)
@@ -254,20 +225,17 @@ static inline SlicedCiphertext64_t forkskinny64_decrypt_C1(KeySchedule64Sliced_t
 	
 	// Further decrypt to M
 	if (mode == 'i' || mode == 'b') {
-		M = *state;
+		result->M = *state;
 		for (int i = c1_i - FORKSKINNY_ROUNDS_AFTER; i >= 0; --i)
-			forkskinny64_decrypt_round(schedule, &M, i);
+			forkskinny64_decrypt_round(schedule, &(result->M), i);
 	}
 	
 	// Re-encrypt to C0
 	if (mode == 'o' || mode == 'b') {
-		C0 = *state;
+		result->C0 = *state;
 		for (int i = FORKSKINNY_ROUNDS_BEFORE; i < FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER; ++i)
-			forkskinny64_encrypt_round(schedule, &C0, i);
+			forkskinny64_encrypt_round(schedule, &(result->C0), i);
 	}
-	
-	return {State64Sliced_t(), C0, M};
-	
 }
 
 /**
@@ -280,12 +248,12 @@ static inline SlicedCiphertext64_t forkskinny64_decrypt_C1(KeySchedule64Sliced_t
  * 			   'b': CX -> (CY, M)
  * @return
  */
-// TODO return by reference
-static inline SlicedCiphertext64_t forkskinny64_decrypt(KeySchedule64Sliced_t *schedule, SlicedCiphertext64_t *ct,
-                                                        unsigned char input_label, unsigned char mode) {
+static inline void forkskinny64_decrypt(KeySchedule64Sliced_t *schedule,
+                                        SlicedCiphertext64_t *ct, SlicedCiphertext64_t *result,
+                                        unsigned char input_label, unsigned char mode) {
 	if (input_label == '0')
-		return forkskinny64_decrypt_C0(schedule, &(ct->C0), mode);
-	return forkskinny64_decrypt_C1(schedule, &(ct->C1), mode);
+		return forkskinny64_decrypt_C0(schedule, &(ct->C0), mode, result);
+	return forkskinny64_decrypt_C1(schedule, &(ct->C1), mode, result);
 }
 
 #endif //FORKSKINNYPLUS64_FORKSKINNY_H

@@ -43,9 +43,8 @@ static inline void forkskinny64_shiftrows(State64Sliced_t *state) {
 //	auto test_blocks = Blocks64_t();
 //	test_blocks.values[0].raw = 0xFEDCBA9876543210;
 //	*state = slice_accelerated_internal(&test_blocks);
-	
-	#if AVX512_acceleration
-	#elif AVX2_acceleration
+
+	#if AVX2_acceleration || AVX512_acceleration
 	for (int i = 0; i < 4; ++i) {
 		state->segments256[1][i] = _mm256_permute4x64_epi64(state->segments256[1][i], 0b00111001);
 		state->segments256[2][i] = _mm256_permute4x64_epi64(state->segments256[2][i], 0b01001110);
