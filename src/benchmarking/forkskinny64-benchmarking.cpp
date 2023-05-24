@@ -107,8 +107,8 @@ void benchmark_forkskinny64_128() {
 	double encryption_per_primitive = cycles_encryption_per_pack / slice_size;
 	double schedule_per_primitive = cycles_schedule_per_pack / slice_size;
 	std::cout << slicing_per_primitive << " spent on slicing per single PRIMITIVE call\n";
-	std::cout << encryption_per_primitive + schedule_per_primitive
-	          << " cycles per single PRIMITIVE call (slicing excluded)\n";
+	std::cout << encryption_per_primitive
+	          << " cycles on encryption alone per single PRIMITIVE call (slicing excluded)\n";
 	std::cout << schedule_per_primitive << " cycles spent on key schedule alone PER PRIMITIVE\n";
 	std::cout << "-->" << cycles_per_byte << " cycles per byte\n";
 	std::cout << (cycles_per_byte / rounds) * 36 << " cycles per byte per 36 rounds\n";
@@ -157,8 +157,8 @@ void benchmark_forkskinny64_192() {
 	double encryption_per_primitive = cycles_encryption_per_pack / slice_size;
 	double schedule_per_primitive = cycles_schedule_per_pack / slice_size;
 	std::cout << slicing_per_primitive << " spent on slicing per single PRIMITIVE call\n";
-	std::cout << encryption_per_primitive + schedule_per_primitive
-	          << " cycles per single PRIMITIVE call (slicing excluded)\n";
+	std::cout << encryption_per_primitive
+	          << " cycles on encryption alone per single PRIMITIVE call (slicing excluded)\n";
 	std::cout << schedule_per_primitive << " cycles spent on key schedule alone PER PRIMITIVE\n";
 	std::cout << "-->" << cycles_per_byte << " cycles per byte\n";
 	std::cout << (cycles_per_byte / rounds) * 36 << " cycles per byte per 36 rounds\n";
@@ -168,8 +168,8 @@ void benchmark_forkskinny64_192() {
 int main() {
 	benchmark_forkskinny64_192();
 	std::cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++";
-//	benchmark_forkskinny64_128();
-//	std::cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++\n";
+	benchmark_forkskinny64_128();
+	std::cout << "\n++++++++++++++++++++++++++++++++++++++++++++++++\n";
 //	benchmark_PAEF_forkskinny64_192();
 }
 //BENCHMARK(run_benchmark_fs64);

@@ -98,9 +98,9 @@ void test_forkskinny64(int keysize, uint64_t test_C0, uint64_t test_C1) {
 }
 
 int main() {
-//	test_forkskinny64(128, 0x9674fd60578adac8, 0x6a66ddc835c86a94);
-//	std::cout << "\n---------------------------------\n";
-//	test_forkskinny64(192, 0x502A9310B9F164FF, 0x55520D27354ECF3);
-	test();
+	test_forkskinny64(128, 0x9674fd60578adac8, 0x6a66ddc835c86a94);
+	std::cout << "\n---------------------------------\n";
+	test_forkskinny64(192, 0x502A9310B9F164FF, 0x55520D27354ECF3);
+//	test();
 	std::cout << "\n\nSuccess!";
 }

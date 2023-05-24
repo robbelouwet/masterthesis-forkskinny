@@ -227,7 +227,7 @@ static inline lane_t unslice_significance_accelerated(lane_t *slices) {
 		block = OR128(block, val);
 	}
 	#else
-	for (int i = 0; i < slice_size; ++i) {
+	for (int i = 0; i < 64; ++i) {
 		lane_t val = slices[i] & bit_masks[i];
 		block |= val;
 	}

@@ -2,21 +2,21 @@ FORKSKINNY64-192
 32 blocks in parallel
 40 rounds per primitive call
 --------
-151.906 spent on slicing per single PRIMITIVE call
-344.875 cycles per single PRIMITIVE call (slicing excluded)
-198.938 cycles spent on key schedule alone PER PRIMITIVE
--->62.0977 cycles per byte
-55.8879 cycles per byte per 36 rounds
-12.4195 cycles per round
+151.969 spent on slicing per single PRIMITIVE call
+147.375 cycles on encryption alone per single PRIMITIVE call (slicing excluded)
+198.906 cycles spent on key schedule alone PER PRIMITIVE
+-->62.2812 cycles per byte
+56.0531 cycles per byte per 36 rounds
+12.4563 cycles per round
 ++++++++++++++++++++++++++++++++++++++++++++++++
 FORKSKINNY64-128
 32 blocks in parallel
 40 rounds per primitive call
 --------
 122.469 spent on slicing per single PRIMITIVE call
-242.812 cycles per single PRIMITIVE call (slicing excluded)
-98.1562 cycles spent on key schedule alone PER PRIMITIVE
--->45.6602 cycles per byte
-41.0941 cycles per byte per 36 rounds
-9.13203 cycles per round
+145.156 cycles on encryption alone per single PRIMITIVE call (slicing excluded)
+97.9688 cycles spent on key schedule alone PER PRIMITIVE
+-->45.6992 cycles per byte
+41.1293 cycles per byte per 36 rounds
+9.13984 cycles per round
 ++++++++++++++++++++++++++++++++++++++++++++++++
