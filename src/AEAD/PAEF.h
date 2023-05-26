@@ -12,51 +12,46 @@
 #include "../forkskinny64-plus/keyschedule/keyschedule64.h"
 #include "../forkskinny64-plus/utils/slicing64.h"
 
-// TODO: THIS IS NOT CONSTANT TIME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//  ----
-//  ----
 static inline void to_sliced(u64 in, State64Sliced_t *out) {
 	for (int i = 0; i < 64; ++i) {
-		u64 mask = 1 << i;
-		if (mask & in) out->raw[i].value = slice_ONE;
-		else out->raw[i].value = slice_ZER;
+		// trick to make it constant time:
+		auto res = (((1 << i) & in) >> i);
+		#if slice_size == 512
+		out->raw[i].value = _mm512_set1_epi64((ULL) (((int) 0) - res));
+		#elif slice_size == 256
+		out->raw[i].value = _mm256_set1_epi64x((ULL) (((int) 0) - res));
+		#elif slice_size == 128
+		out->raw[i].value = _mm_set1_epi64x((ULL) (((int) 0) - res));
+		#else
+		out->raw[i].value = (((int) 0) - res);
+		#endif
 	}
 }
-//  ----
-//  ----
 
-static inline u64
-extract_segment_tag(SlicedCiphertext64_t ct, bool last_segment, int last_block_index, char tag_leg) {
+static inline void extract_segment_tag(State64Sliced_t *state, bool last_segment, int last_block_index,
+                                       u64 *result_tag) {
 	/// Calculate the AD tag of this segment (these 64 or less blocks)
 	/// by calculating the parity of every individual slice_internal and packing those together
-	u64 block_tag = 0;
-	State64Sliced_t *pLeg;
-	if (tag_leg == '0') pLeg = &(ct.C0);
-	else pLeg = &(ct.C1);
 	
 	for (int j = 0; j < 64; j++) {
-		u64 tag_bit = 0;
-		
+		u64 tag_bit;
 		# if slice_size > 64
-		/* If the slice_internal was a SIMD vector, iterate over its lanes */
+		/* If the slice was a SIMD vector, iterate over its lanes */
 		auto lanes_in_slice = slice_size >> 6;
 		for (int k = 0; k < lanes_in_slice; ++k) {
 			if (last_segment && last_block_index != -1 && last_block_index < 64)
-				ct.C0.raw[j].value[k] &= -1ULL >> (64 - last_block_index); // PAS OP AANGEPAST
-			u64 bit = __builtin_parity((u64) ct.C0.raw[j].value[k]);
+				state->raw[j].value[k] &= -1ULL >> (64 - last_block_index);
+			u64 bit = __builtin_parity((u64) state->raw[j].value[k]);
 			tag_bit ^= bit;
 			last_block_index -= 64;
 		}
 		#else
-		
 		/* With non-SIMD slices, calculate the normal parity of the slice_internal */
-			tag_bit = __builtin_parity(ct.C0.raw[j].value);
+		tag_bit = __builtin_parity(state->raw[j].value);
 		#endif
 		
-		block_tag ^= tag_bit << j;
+		*result_tag ^= tag_bit << j;
 	}
-	
-	return block_tag;
 }
 
 /**
@@ -70,39 +65,44 @@ extract_segment_tag(SlicedCiphertext64_t ct, bool last_segment, int last_block_i
  * 			  but no one's going to encrypt more than 2000 petabyte (2⁶⁴), right?
  * @return
  */
-static inline SlicedCiphertext64_t paef_forkskinny64_192_encrypt_section(
-		Blocks64_t ma, const Block64_t nonce_blocks[2], uint8_t nonce_bit_size, u64 *ctr, int last, char mode,
-		bool isAD) {
-
+static inline void paef_forkskinny64_192_encrypt_section(
+		Blocks64_t *ma, Block64_t *nonce_blocks, uint8_t nonce_bit_size, u64 *ctr, int last, char mode,
+		bool isAD, SlicedCiphertext64_t *res, double *t_slice, double *t_encrypt) {
+	
 	/// Construct sliced Tweakeys from nonce, bit flags and block ctr
 	/* TK3 is the only one containing different counter values for each block */
 	auto tk3_blocks = Blocks64_t();
 	for (auto &value: tk3_blocks.values) value.raw = (*ctr)++;
-
+	
+	auto t_slice_before = _rdtsc();
 	/* Set the nonce across TK1 & TK2 */
 	State64Sliced_t sliced_tk1;
 	to_sliced(nonce_blocks[0].raw, &sliced_tk1);
 	State64Sliced_t sliced_tk2;
 	to_sliced(nonce_blocks[1].raw, &sliced_tk2);
-
+	State64Sliced_t sliced_tk3;
+	slice(&tk3_blocks, &sliced_tk3);
+	State64Sliced_t state;
+	slice(ma, &state);
+	*t_slice = _rdtsc() - t_slice_before;
+	
 	/* Set the bit flags */
-	State64Sliced_t sliced_tks[3] = {sliced_tk1, sliced_tk2, slice(&tk3_blocks)};
+	State64Sliced_t sliced_tks[3] = {sliced_tk1, sliced_tk2, sliced_tk3};
 	auto *recast = (Slice64_t *) &sliced_tks;
 	(recast + nonce_bit_size)->value = slice_ZER;
 	(recast + nonce_bit_size + 1)->value = slice_ZER;
 	(recast + nonce_bit_size + 2)->value = isAD ? slice_ZER : slice_ONE;
-
+	
 	/* If this section is the last one, set bit flag of last block in this section */
 	if (last != -1)
 		(recast + nonce_bit_size)->value |= BIT(last);
-
+	
 	/// Encrypt
-	State64Sliced_t state = slice(&ma);
 	auto schedule = KeySchedule64Sliced_t();
+	auto t_encrypt_before = _rdtsc();
 	forkskinny64_192_precompute_key_schedule(sliced_tks + 0, sliced_tks + 1, sliced_tks + 2, &schedule);
-	SlicedCiphertext64_t res;
-	forkskinny64_encrypt(&schedule, &state, mode, &(res.C0), &(res.C1));
-	return res;
+	forkskinny64_encrypt(&schedule, &state, mode, &(res->C0), &(res->C1));
+	*t_encrypt = _rdtsc() - t_encrypt_before;
 }
 
 /**
@@ -120,58 +120,58 @@ static inline SlicedCiphertext64_t paef_forkskinny64_192_encrypt_section(
  * @return the AD tag resulting from encrypting all the segments in *pt* and XOR'ing all the C0 outputs together (except
  * for the last n blocks in the last segment, specified by *last_block_index*).
  */
-static inline u64 paef_forkskinny64_192_encrypt_AD(
-		Blocks64_t *pt, int last_block_index, u64 amount_segments, const Block64_t nonce_blocks[2],
-		u64 nonce_bit_length) {
+static inline void paef_forkskinny64_192_encrypt_AD(
+		Blocks64_t *pt, u64 amount_segments, Block64_t *nonce_blocks, u64 nonce_bit_length,
+		SlicedCiphertext64_t *result_ct, u64 *result_tag, double *t_slice, double *t_encrypt) {
 	
 	u64 ctr = 1;
-	u64 AD_tag = 0;
+	bool last = slice_size - 1; // since we just encrypt 1 full sliced state, provide default last index
 	for (int i = 0; i < amount_segments; ++i) {
-		bool last_segment = i == amount_segments - 1;
-		SlicedCiphertext64_t ct;
-		
-		/// Encrypt this segment, if this is the last segment, provide the index of the last block.
-		/// E.g. this segment is the result of slicing 64 blocks, but only the first n < 64 were actual plaintext blocks
-		
-		ct = paef_forkskinny64_192_encrypt_section(
-				pt[i],
+		paef_forkskinny64_192_encrypt_section(
+				pt + i,
 				nonce_blocks,
 				nonce_bit_length,
 				&ctr,
-				last_segment ? last_block_index : -1,
+				last,
 				'0',
-				true);
+				true,
+				result_ct + i,
+				t_slice,
+				t_encrypt);
 		
-		AD_tag ^= extract_segment_tag(ct, last_segment, last_block_index, '0');
+		// C0 contributes to the tag
+		u64 segment_tag;
+		extract_segment_tag(&(result_ct[i].C0), true, slice_size - 1, &segment_tag);
+		*result_tag ^= segment_tag;
 	}
-	
-	return AD_tag;
 }
 
-static inline u64 paef_forkskinny64_192_encrypt_M(
-		Blocks64_t *pt, int last_block_index, u64 amount_segments, const Block64_t nonce_blocks[2],
-		u64 nonce_bit_length, Blocks64_t *ct_out) {
+static inline void paef_forkskinny64_192_encrypt_M(
+		Blocks64_t *pt, u64 amount_segments, Block64_t *nonce_blocks, u64 nonce_bit_length,
+		SlicedCiphertext64_t *result_ct, u64 *result_tag, double *t_slice, double *t_encrypt) {
 	
 	u64 ctr = 1;
-	u64 AD_tag = 0;
+	bool last = slice_size - 1; // since we just encrypt 1 full sliced state, provide default last index
 	for (int i = 0; i < amount_segments; ++i) {
-		bool last_segment = i == amount_segments - 1;
-		SlicedCiphertext64_t ct;
 		
-		/// Encrypt this segment, if this is the last segment, provide the index of the last block.
-		/// E.g. this segment is the result of slicing 64 blocks, but only the first 23 were actual plaintext blocks
-		ct = paef_forkskinny64_192_encrypt_section(
-				pt[i], nonce_blocks, nonce_bit_length, &ctr,
-				last_segment ? last_block_index : -1, 'b', false);
+		paef_forkskinny64_192_encrypt_section(
+				pt + i,
+				nonce_blocks,
+				nonce_bit_length,
+				&ctr,
+				last,
+				'b',
+				false,
+				result_ct + i,
+				t_slice,
+				t_encrypt);
 		
 		// C1 contributes to the tag
-		AD_tag ^= extract_segment_tag(ct, last_segment, last_block_index, '1');
-		
-		// C0 is ciphertext
-		ct_out[i] = unslice(&(ct.C0));
+		u64 m_tag;
+		// State64Sliced_t *state, bool last_segment, int last_block_index, u64 *result_tag
+		extract_segment_tag(&(result_ct[i].C1), last, last, &m_tag);
+		*result_tag ^= m_tag;
 	}
-	
-	return AD_tag;
 }
 
 #endif //FORKSKINNYPLUS_PAEF_H

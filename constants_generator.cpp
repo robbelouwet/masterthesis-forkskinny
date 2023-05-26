@@ -23,7 +23,7 @@ std::vector<uint64_t> segment(std::vector<uint64_t> slices) {
 static inline std::vector<u64> to_slices(u64 value, uint8_t width) {
 	auto res = std::vector<u64>();
 	for (uint8_t i = 0; i < width; ++i) {
-		if ((value & (1ULL << i)) >> i) res.push_back(0xFFFFFFFFFFFFFFFF);
+		if ((value & (1ULL << i)) >> i) res.push_back(-1ULL);
 		else res.push_back(0x0);
 	}
 	

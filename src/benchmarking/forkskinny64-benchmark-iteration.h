@@ -113,61 +113,31 @@ static inline void benchmark_forkskinny64_128_sb(ULL *slice_timing, ULL *schedul
 	}
 }
 
-void benchmark_PAEF_forkskinny64_192() {
-	
-	#define SEGMENTS 100
-	
-	std::cout << "PAEF 64 - 192; SAMPLING " << SEGMENTS * slice_size << " BLOCKS (half AD, half M)" << std::endl;
-	std::cout << slice_size << " blocks in parallel" << std::endl;
-	
-	Blocks64_t M_blocks[SEGMENTS];
-	Blocks64_t AD_blocks[SEGMENTS];
-	for (int i = 0; i < SEGMENTS; i += 2) {
-		M_blocks[i] = M_rand_64(i);
-		AD_blocks[i] = M_rand_64(i + 1);
-	}
-	
+void PAEF_forkskinny64_192(double *timing_AD_slice, double *timing_AD_encrypt,
+                           double *timing_M_slice, double *timing_M_encrypt, u64 *tag) {
 	/// Nonce N
-	Block64_t nonce[2] = {{.raw = 0xFEDCBA9876543210},
-	                      {.raw = 0xAAAAAAAA}};
 	int nonce_bit_length = 96;
+	Block64_t nonce[3] = {{.raw = 0xFEDCBA9876543210},
+	                      {.raw = 0xAAAAAAAA}};
 	
-	/// Associated Data
-	// 1 full and 1 partial AD segment, last AD segment has last_AD_block blocks
-	auto size_AD = SEGMENTS;
-	auto last_AD_block = (slice_size >> 1) + 5;
-	for (int i = slice_size - 1; i > last_AD_block; --i) AD_blocks[1].values[i].raw = 0;
+	/// 1 sliced AD state
+	auto AD = M_rand_64(1);
 	
-	/// Message
-	// 1 full and 1 partial AD segment, last AD segment has last_AD_block blocks
-	auto size_M = SEGMENTS;
-	auto last_M_block = (slice_size >> 1) - 9;
-	for (int i = slice_size - 1; i > last_M_block; --i) M_blocks[1].values[i].raw = 0;
+	/// Sample 1 sliced AD state
+	u64 ad_tag;
+	SlicedCiphertext64_t temp_AD; // we don't need the ciphertext, just the tag generated from it
+	paef_forkskinny64_192_encrypt_AD(&AD, 1, nonce, nonce_bit_length,
+	                                 &temp_AD, &ad_tag, timing_AD_slice, timing_AD_encrypt);
 	
-	Blocks64_t ct[SEGMENTS];
-	auto before_AD = _rdtsc();
-	auto const AD_tag = paef_forkskinny64_192_encrypt_AD(
-			AD_blocks, last_AD_block, size_AD, nonce, nonce_bit_length);
-	auto after_AD = _rdtsc();
+	/// 1 sliced M state
+	auto M_state = M_rand_64(2);
 	
-	auto before_M = _rdtsc();
-	auto const M_tag = paef_forkskinny64_192_encrypt_M(
-			M_blocks, last_M_block, size_M, nonce, nonce_bit_length, ct);
-	auto after_M = _rdtsc();
-	
-	auto tag = AD_tag ^ M_tag;
-	
-	auto cycles_per_AD_block = (after_AD - before_AD) / (SEGMENTS * slice_size);
-	std::cout << cycles_per_AD_block << " cycles per PRIMITIVE (AD - "
-	          << FORKSKINNY_ROUNDS_BEFORE + FORKSKINNY_ROUNDS_AFTER << " rounds)" << std::endl;
-	std::cout << cycles_per_AD_block / 8 << " cycles per byte (AD)" << std::endl;
-	
-	auto cycles_per_M_block = (after_M - before_M) / (SEGMENTS * slice_size);
-	std::cout << cycles_per_M_block << " cycles PRIMITIVE (M - " << FORKSKINNY64_MAX_ROUNDS << " rounds)" << std::endl;
-	std::cout << cycles_per_M_block / 8 << " cycles per byte (M)" << std::endl;
-	
-	std::cout << "Tag: " << std::hex << tag << std::endl;
-	std::cout << "C (first 8 bytes): " << std::hex << ct[0].values[0].raw << std::endl;
+	/// Sample 1 sliced M state
+	u64 m_tag;
+	SlicedCiphertext64_t temp_M;
+	paef_forkskinny64_192_encrypt_M(&M_state, 1, nonce, nonce_bit_length,
+	                                &temp_M, &m_tag, timing_M_slice, timing_M_encrypt);
+	*tag = m_tag ^ ad_tag;
 }
 
 #endif //FORKSKINNYPLUS_FORKSKINNY64_BENCHMARK_ITERATION_H

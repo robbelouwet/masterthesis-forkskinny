@@ -7,7 +7,7 @@
 
 // @formatter:off
 // -- CONFIG --
-#define slice_size 512 // 8, 32, 64, 128, 256 or 512
+#define slice_size 64 // 8, 32, 64, 128, 256 or 512
 #define AVX2_support true
 #define AVX512_support false // deprecated, not used
 
@@ -32,6 +32,8 @@
 #define ROL64(v, i) ((v << i) | (v >> (64 - i)))
 #define ROR64(v, i) ROL64(v, (64 - i))
 
+#define PERM_4x64 _mm256_permute4x64_epi64
+#define ANDNOT256 _mm256_andnot_si256
 #define XOR256 _mm256_xor_si256
 #define OR256 _mm256_or_si256
 #define ONE256 _mm256_set1_epi64x(-1)
@@ -85,7 +87,7 @@
 #elif slice_size == 64
 	#define slice_t uint64_t
 	#define lane_t slice_t
-	auto const slice_ONE = 0xFFFFFFFFFFFFFFFFULL;
+	auto const slice_ONE = -1ULL;
 	auto const slice_ZER = 0x0ULL;
 	#define BIT(i) (0x1ULL << i)
 	#define MASK(i) (slice_t(-1) >> (64 - i))

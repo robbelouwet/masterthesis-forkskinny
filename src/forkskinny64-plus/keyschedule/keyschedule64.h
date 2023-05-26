@@ -28,7 +28,6 @@ static inline void forkskinny_64_init_tk2_internal(State64Sliced_t *tk1, State64
 	}
 }
 
-/// EXPECTS UNSLICED TK STATES
 static inline void forkskinny_64_init_tk23_internal(State64Sliced_t *tk1, State64Sliced_t *tk2,
                                                     State64Sliced_t *tk3, KeySchedule64Sliced_t *out) {
 	

@@ -67,35 +67,30 @@ static inline void permute(State64Sliced_t *state) {
 	
 	#if AVX2_acceleration || AVX512_acceleration
 	for (int i = 0; i < 4; ++i) {
-		auto bit_lane_row_2 = LOADU256(state->segments256[2] + i);
-		auto bit_lane_row_3 = LOADU256(state->segments256[3] + i);
+		auto row2 = LOADU256(state->segments256[2] + i);
+		auto row3 = LOADU256(state->segments256[3] + i);
 		
-		// align M_0x8 (cell 9) into cell 3 and M_0x9 (cell 8) into cell 1
-		bit_lane_row_2 = _mm256_permute4x64_epi64(bit_lane_row_2, 0b01100011);
+		/* Align row 2 & 3 for easy segment swapping */
+		row2 = PERM_4x64(row2, 0b01100011);
+		row3 = PERM_4x64(row3, 0b01001011);
 		
-		// align M_0xE (cell 15) into cell 4 and M_0xC (cell 13) into cell 7
-		bit_lane_row_3 = _mm256_permute4x64_epi64(bit_lane_row_3, 0b01001011);
+		/* SWAP cell 1 of row 2 & 3 */
+		auto r2_c2 = AND256(row2, mask_2);
+		auto r3_c2 = AND256(row3, mask_2);
+		row2 = OR256(ANDNOT256(mask_2, row2), r3_c2);
+		row3 = OR256(ANDNOT256(mask_2, row3), r2_c2);
 		
-		{
-			/* SWAP cell 2 of row 2 & 3 */
-			auto r2_cell2 = _mm256_and_si256(bit_lane_row_2, mask_2);
-			auto r3_cell2 = _mm256_and_si256(bit_lane_row_3, mask_2);
-			bit_lane_row_2 = _mm256_or_si256(_mm256_andnot_si256(mask_2, bit_lane_row_2), r3_cell2);
-			bit_lane_row_3 = _mm256_or_si256(_mm256_andnot_si256(mask_2, bit_lane_row_3), r2_cell2);
-		}
+		/* SWAP cell 0 of row 2 with cell 1 of row 3 */
+		auto r2_c0 = PERM_4x64(AND256(row2, mask_0), 0b11100001);
+		auto r3_c1 = PERM_4x64(AND256(row3, mask_1), 0b11100001);
+		row2 = OR256(ANDNOT256(mask_0, row2), r3_c1);
+		row3 = OR256(ANDNOT256(mask_1, row3), r2_c0);
 		
-		{
-			/* SWAP cell 0 of row 2 with cell 1 of row 3 */
-			auto r2_masked = _mm256_permute4x64_epi64(_mm256_and_si256(bit_lane_row_2, mask_0), 0b11100001);
-			auto r3_masked = _mm256_permute4x64_epi64(_mm256_and_si256(bit_lane_row_3, mask_1), 0b11100001);
-			bit_lane_row_2 = _mm256_or_si256(_mm256_andnot_si256(mask_0, bit_lane_row_2), r3_masked);
-			bit_lane_row_3 = _mm256_or_si256(_mm256_andnot_si256(mask_1, bit_lane_row_3), r2_masked);
-		}
 		
 		STOREU256(state->segments256[2] + i, state->segments256[0][i]);
 		STOREU256(state->segments256[3] + i, state->segments256[1][i]);
-		STOREU256(state->segments256[0] + i, bit_lane_row_2);
-		STOREU256(state->segments256[1] + i, bit_lane_row_3);
+		STOREU256(state->segments256[0] + i, row2);
+		STOREU256(state->segments256[1] + i, row3);
 	}
 	
 	#else
@@ -103,14 +98,7 @@ static inline void permute(State64Sliced_t *state) {
 	//	State64Sliced_t temp = State64Sliced_t{.halves = {{}, top}};
 	//	auto testtemp = unslice_accelerated_internal(&temp).values[0].raw;
 	
-	auto s_0 = state->cells[0];
-	auto s_1 = state->cells[1];
-	auto s_2 = state->cells[2];
-	auto s_3 = state->cells[3];
-	auto s_4 = state->cells[4];
-	auto s_5 = state->cells[5];
-	auto s_6 = state->cells[6];
-	auto s_7 = state->cells[7];
+	HalfState64Sliced_t copy = state->halves[0];
 	
 	state->cells[0] = state->cells[0xE];
 	state->cells[1] = state->cells[0x8];
@@ -121,14 +109,7 @@ static inline void permute(State64Sliced_t *state) {
 	state->cells[6] = state->cells[0xA];
 	state->cells[7] = state->cells[0xD];
 	
-	state->cells[0x8] = s_0;
-	state->cells[0x9] = s_1;
-	state->cells[0xA] = s_2;
-	state->cells[0xB] = s_3;
-	state->cells[0xC] = s_4;
-	state->cells[0xD] = s_5;
-	state->cells[0xE] = s_6;
-	state->cells[0xF] = s_7;
+	state->halves[1] = copy;
 	
 	//	state->halves[1] = top;
 	#endif
