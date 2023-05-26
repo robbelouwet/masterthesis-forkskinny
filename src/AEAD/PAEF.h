@@ -23,7 +23,8 @@ static inline void to_sliced(u64 in, State64Sliced_t *out) {
 		#elif slice_size == 128
 		out->raw[i].value = _mm_set1_epi64x((ULL) (((int) 0) - res));
 		#else
-		out->raw[i].value = (((int) 0) - res);
+		auto val = (((int) 0) - res);
+		out->raw[i].value = val;
 		#endif
 	}
 }
@@ -66,7 +67,8 @@ static inline void extract_segment_tag(State64Sliced_t *state, bool last_segment
  * @return
  */
 static inline void paef_forkskinny64_192_encrypt_section(
-		Blocks64_t *ma, Block64_t *nonce_blocks, uint8_t nonce_bit_size, u64 *ctr, int last, char mode,
+		Blocks64_t *ma, Block64_t *nonce_blocks, State64Sliced_t *TK1, State64Sliced_t *TK2,
+		uint8_t nonce_bit_size, u64 *ctr, int last, char mode,
 		bool isAD, SlicedCiphertext64_t *res, double *t_slice, double *t_encrypt) {
 	
 	/// Construct sliced Tweakeys from nonce, bit flags and block ctr
@@ -74,28 +76,13 @@ static inline void paef_forkskinny64_192_encrypt_section(
 	auto tk3_blocks = Blocks64_t();
 	for (auto &value: tk3_blocks.values) value.raw = (*ctr)++;
 	
+	State64Sliced_t sliced_tk3;
+	State64Sliced_t state;
 	auto t_slice_before = _rdtsc();
 	/* Set the nonce across TK1 & TK2 */
-	State64Sliced_t sliced_tk1;
-	to_sliced(nonce_blocks[0].raw, &sliced_tk1);
-	State64Sliced_t sliced_tk2;
-	to_sliced(nonce_blocks[1].raw, &sliced_tk2);
-	State64Sliced_t sliced_tk3;
 	slice(&tk3_blocks, &sliced_tk3);
-	State64Sliced_t state;
 	slice(ma, &state);
 	*t_slice = _rdtsc() - t_slice_before;
-	
-	/* Set the bit flags */
-	State64Sliced_t sliced_tks[3] = {sliced_tk1, sliced_tk2, sliced_tk3};
-	auto *recast = (Slice64_t *) &sliced_tks;
-	(recast + nonce_bit_size)->value = slice_ZER;
-	(recast + nonce_bit_size + 1)->value = slice_ZER;
-	(recast + nonce_bit_size + 2)->value = isAD ? slice_ZER : slice_ONE;
-	
-	/* If this section is the last one, set bit flag of last block in this section */
-	if (last != -1)
-		(recast + nonce_bit_size)->value |= BIT(last);
 	
 	/// Encrypt
 	auto schedule = KeySchedule64Sliced_t();
@@ -124,12 +111,26 @@ static inline void paef_forkskinny64_192_encrypt_AD(
 		Blocks64_t *pt, u64 amount_segments, Block64_t *nonce_blocks, u64 nonce_bit_length,
 		SlicedCiphertext64_t *result_ct, u64 *result_tag, double *t_slice, double *t_encrypt) {
 	
+	// Nonce stays the same for evey block, so we can slice and copy beforehand
+	State64Sliced_t TK1;
+	State64Sliced_t TK2;
+	to_sliced(nonce_blocks[0].raw, &TK1);
+	to_sliced(nonce_blocks[1].raw, &TK2);
+	
+	if (nonce_bit_length <= 64) {
+		TK1.raw[nonce_bit_length - 64 - 1].value =;
+	} else {
+		// ----------------- refactoring to pre-compute TK1 and TK2
+		
+	}
+	
 	u64 ctr = 1;
 	bool last = slice_size - 1; // since we just encrypt 1 full sliced state, provide default last index
 	for (int i = 0; i < amount_segments; ++i) {
 		paef_forkskinny64_192_encrypt_section(
-				pt + i,
+				pt + i, // -------- is geen arr in callstack
 				nonce_blocks,
+				&TK1, &TK2,
 				nonce_bit_length,
 				&ctr,
 				last,
@@ -148,7 +149,16 @@ static inline void paef_forkskinny64_192_encrypt_AD(
 
 static inline void paef_forkskinny64_192_encrypt_M(
 		Blocks64_t *pt, u64 amount_segments, Block64_t *nonce_blocks, u64 nonce_bit_length,
-		SlicedCiphertext64_t *result_ct, u64 *result_tag, double *t_slice, double *t_encrypt) {
+		Blocks64_t *result_ct, u64 *result_tag, double *t_slice, double *t_encrypt) {
+	
+	// Nonce stays the same for evey block, so we can slice and copy beforehand
+	State64Sliced_t TK1;
+	State64Sliced_t TK2;
+	to_sliced(nonce_blocks[0].raw, &TK1);
+	to_sliced(nonce_blocks[1].raw, &TK2);
+	
+	SlicedCiphertext64_t ct;
+	Blocks64_t unsliced;
 	
 	u64 ctr = 1;
 	bool last = slice_size - 1; // since we just encrypt 1 full sliced state, provide default last index
@@ -156,21 +166,26 @@ static inline void paef_forkskinny64_192_encrypt_M(
 		
 		paef_forkskinny64_192_encrypt_section(
 				pt + i,
-				nonce_blocks,
+				nonce_blocks, &TK1, &TK2,
 				nonce_bit_length,
 				&ctr,
 				last,
 				'b',
 				false,
-				result_ct + i,
+				&ct,
 				t_slice,
 				t_encrypt);
 		
 		// C1 contributes to the tag
 		u64 m_tag;
 		// State64Sliced_t *state, bool last_segment, int last_block_index, u64 *result_tag
-		extract_segment_tag(&(result_ct[i].C1), last, last, &m_tag);
+		extract_segment_tag(&(ct.C1), last, last, &m_tag);
 		*result_tag ^= m_tag;
+		
+		auto before = _rdtsc();
+		unslice(&(ct.C1), &unsliced);
+		*t_slice += _rdtsc() - before;
+		*result_ct = unsliced;
 	}
 }
 

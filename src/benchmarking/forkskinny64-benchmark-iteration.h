@@ -121,7 +121,7 @@ void PAEF_forkskinny64_192(double *timing_AD_slice, double *timing_AD_encrypt,
 	                      {.raw = 0xAAAAAAAA}};
 	
 	/// 1 sliced AD state
-	auto AD = M_rand_64(1);
+	auto AD = M_64();
 	
 	/// Sample 1 sliced AD state
 	u64 ad_tag;
@@ -130,14 +130,16 @@ void PAEF_forkskinny64_192(double *timing_AD_slice, double *timing_AD_encrypt,
 	                                 &temp_AD, &ad_tag, timing_AD_slice, timing_AD_encrypt);
 	
 	/// 1 sliced M state
-	auto M_state = M_rand_64(2);
+	auto M_state = M_64();
 	
 	/// Sample 1 sliced M state
 	u64 m_tag;
-	SlicedCiphertext64_t temp_M;
+	Blocks64_t *temp_M = new Blocks64_t[segm]; ///
 	paef_forkskinny64_192_encrypt_M(&M_state, 1, nonce, nonce_bit_length,
 	                                &temp_M, &m_tag, timing_M_slice, timing_M_encrypt);
 	*tag = m_tag ^ ad_tag;
+	
+	// assert temp_M !!!
 }
 
 #endif //FORKSKINNYPLUS_FORKSKINNY64_BENCHMARK_ITERATION_H
