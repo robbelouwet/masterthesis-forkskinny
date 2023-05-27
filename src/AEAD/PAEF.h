@@ -12,22 +12,6 @@
 #include "../forkskinny64-plus/keyschedule/keyschedule64.h"
 #include "../forkskinny64-plus/utils/slicing64.h"
 
-static inline void to_sliced(u64 in, State64Sliced_t *out) {
-	for (int i = 0; i < 64; ++i) {
-		// trick to make it constant time:
-		auto res = (((1 << i) & in) >> i);
-		#if slice_size == 512
-		out->raw[i].value = _mm512_set1_epi64((ULL) (((int) 0) - res));
-		#elif slice_size == 256
-		out->raw[i].value = _mm256_set1_epi64x((ULL) (((int) 0) - res));
-		#elif slice_size == 128
-		out->raw[i].value = _mm_set1_epi64x((ULL) (((int) 0) - res));
-		#else
-		out->raw[i].value = (((int) 0) - res);
-		#endif
-	}
-}
-
 static inline void extract_segment_tag(State64Sliced_t *state, bool last_segment, int last_block_index,
                                        u64 *result_tag) {
 	/// Calculate the AD tag of this segment (these 64 or less blocks)
@@ -77,9 +61,9 @@ static inline void paef_forkskinny64_192_encrypt_section(
 	auto t_slice_before = _rdtsc();
 	/* Set the nonce across TK1 & TK2 */
 	State64Sliced_t sliced_tk1;
-	to_sliced(nonce_blocks[0].raw, &sliced_tk1);
+	expand(nonce_blocks[0].raw, &sliced_tk1);
 	State64Sliced_t sliced_tk2;
-	to_sliced(nonce_blocks[1].raw, &sliced_tk2);
+	expand(nonce_blocks[1].raw, &sliced_tk2);
 	State64Sliced_t sliced_tk3;
 	slice(&tk3_blocks, &sliced_tk3);
 	State64Sliced_t state;

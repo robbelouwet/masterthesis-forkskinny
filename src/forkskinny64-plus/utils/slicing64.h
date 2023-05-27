@@ -49,4 +49,34 @@ static inline Blocks64_t unslice(State64Sliced_t state,
 	#endif
 }
 
+/**
+ * This method expands a number into a SlicedCipherState.
+ * In other words, if bit n == 1, slice n becomes 0xFFFFFFFFFFFFFFFF, same for bit n == 0
+ * @param value
+ * @param out
+ */
+static inline void expand(ULL in, State64Sliced_t *out){
+	Slice64_t slices[slice_size];
+	for (ULL i = 0; i < 64; ++i) {
+		// trick to make it constant time:
+		auto res = (((0x1ULL << i) & in) >> i);
+		#if slice_size == 512
+		slices[i].value = _mm512_set1_epi64((ULL) (((int) 0) - res));
+		#elif slice_size == 256
+		slices[i].value = _mm256_set1_epi64x((ULL) (((int) 0) - res));
+		#elif slice_size == 128
+		slices[i].value = _mm_set1_epi64x((ULL) (((int) 0) - res));
+		#else
+		auto val = (((int) 0) - res);
+		slices[i].value = val;
+		#endif
+	}
+	
+	#if AVX2_acceleration
+	try_segment(slices, out, true);
+	#else
+	TODO
+	#endif
+}
+
 #endif //FORKSKINNYPLUS_SLICING64_H
