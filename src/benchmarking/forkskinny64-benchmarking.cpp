@@ -46,6 +46,7 @@ void benchmark_PAEF_forkskinny64_192() {
 	          << " cpb for slicing, " << cycles_M_block_encrypt << " cpb for encryption)" << std::endl;
 	std::cout << cycles_AD_block_slice + cycles_AD_block_encrypt << " cpb for AD (" << cycles_AD_block_slice
 	          << " cpb for slicing, " << cycles_AD_block_encrypt << " cpb for encryption)" << std::endl;
+	std::cout << "Tag: " << std::hex << tag << std::endl;
 	std::cout << "++++++++" << std::endl;
 }
 
@@ -95,11 +96,11 @@ void benchmark_forkskinny64_128() {
 	double encryption_per_primitive = cycles_encryption_per_pack / slice_size;
 	double decryption_per_primitive = cycles_decryption_per_pack / slice_size;
 	double schedule_per_primitive = cycles_schedule_per_pack / slice_size;
-	std::cout << slicing_per_primitive << " spent on slicing per single PRIMITIVE call\n";
+	std::cout << slicing_per_primitive << " spent on slicing per single block\n";
 	std::cout << encryption_per_primitive
-	          << " cycles on encryption alone per single PRIMITIVE call (slicing excluded)\n";
+	          << " cycles on encryption alone per single block (slicing excluded)\n";
 	std::cout << decryption_per_primitive
-	          << " cycles on decryption alone per single PRIMITIVE call (slicing excluded)\n";
+	          << " cycles on decryption alone per single block (slicing excluded)\n";
 	std::cout << schedule_per_primitive << " cycles spent on key schedule alone PER PRIMITIVE\n";
 	std::cout << "-->" << cycles_per_byte << " cycles per byte\n";
 	std::cout << (cycles_per_byte / rounds) * 36 << " cycles per byte per 36 rounds\n";
@@ -152,11 +153,11 @@ void benchmark_forkskinny64_192() {
 	double encryption_per_primitive = cycles_encryption_per_pack / slice_size;
 	double decryption_per_primitive = cycles_decryption_per_pack / slice_size;
 	double schedule_per_primitive = cycles_schedule_per_pack / slice_size;
-	std::cout << slicing_per_primitive << " spent on slicing per single PRIMITIVE call\n";
+	std::cout << slicing_per_primitive << " spent on slicing per single block\n";
 	std::cout << encryption_per_primitive
-	          << " cycles on encryption alone per single PRIMITIVE call (slicing excluded)\n";
+	          << " cycles on encryption alone per single block (slicing excluded)\n";
 	std::cout << decryption_per_primitive
-	          << " cycles on decryption alone per single PRIMITIVE call (slicing excluded)\n";
+	          << " cycles on decryption alone per single block (slicing excluded)\n";
 	std::cout << schedule_per_primitive << " cycles spent on key schedule alone PER PRIMITIVE\n";
 	std::cout << "-->" << cycles_per_byte << " cycles per byte (encryption)\n";
 	std::cout << (cycles_per_byte / rounds) * 36 << " cycles per byte per 36 rounds (encryption)\n";

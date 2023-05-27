@@ -137,7 +137,6 @@ static inline void paef_forkskinny64_192_encrypt_M(
 	u64 ctr = 1;
 	bool last = slice_size - 1; // since we just encrypt 1 full sliced state, provide default last index
 	for (int i = 0; i < amount_segments; ++i) {
-		
 		paef_forkskinny64_192_encrypt_section(
 				pt + i,
 				nonce_blocks,

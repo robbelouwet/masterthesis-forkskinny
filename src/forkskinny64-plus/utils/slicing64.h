@@ -56,7 +56,7 @@ static inline Blocks64_t unslice(State64Sliced_t state,
  * @param out
  */
 static inline void expand(ULL in, State64Sliced_t *out){
-	Slice64_t slices[slice_size];
+	Slice64_t slices[64];
 	for (ULL i = 0; i < 64; ++i) {
 		// trick to make it constant time:
 		auto res = (((0x1ULL << i) & in) >> i);
@@ -75,7 +75,7 @@ static inline void expand(ULL in, State64Sliced_t *out){
 	#if AVX2_acceleration
 	try_segment(slices, out, true);
 	#else
-	TODO
+	for (int i = 0; i < 64; ++i) out->raw[i].value = slices[i].value;
 	#endif
 }
 
