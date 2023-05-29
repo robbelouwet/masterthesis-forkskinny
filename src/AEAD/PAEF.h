@@ -20,7 +20,7 @@ static inline void extract_segment_tag(State64Sliced_t *state, bool last_segment
 	for (int j = 0; j < 64; j++) {
 		u64 tag_bit;
 		# if slice_size > 64
-		/* If the slice was a SIMD vector, iterate over its lanes */
+		/* If the slice64 was a SIMD vector, iterate over its lanes */
 		auto lanes_in_slice = slice_size >> 6;
 		for (int k = 0; k < lanes_in_slice; ++k) {
 			if (last_segment && last_block_index != -1 && last_block_index < 64)
@@ -65,9 +65,9 @@ static inline void paef_forkskinny64_192_encrypt_section(
 	State64Sliced_t sliced_tk2;
 	expand(nonce_blocks[1].raw, &sliced_tk2);
 	State64Sliced_t sliced_tk3;
-	slice(&tk3_blocks, &sliced_tk3);
+	slice64(&tk3_blocks, &sliced_tk3);
 	State64Sliced_t state;
-	slice(ma, &state);
+	slice64(ma, &state);
 	*t_slice = _rdtsc() - t_slice_before;
 	
 	/* Set the bit flags */

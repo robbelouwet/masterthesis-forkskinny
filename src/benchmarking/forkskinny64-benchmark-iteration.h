@@ -22,10 +22,10 @@ static inline void benchmark_forkskinny64_192_sb(ULL *slice_timing, ULL *schedul
 	// --- SLICING ---
 	State64Sliced_t test_M, test_TK1, test_TK2, test_TK3;
 	auto before_slicing = _rdtsc();
-	slice(&unsliced_test_M, &test_M);
-	slice(&unsliced_test_TK1, &test_TK1);
-	slice(&unsliced_test_TK2, &test_TK2);
-	slice(&unsliced_test_TK3, &test_TK3);
+	slice64(&unsliced_test_M, &test_M);
+	slice64(&unsliced_test_TK1, &test_TK1);
+	slice64(&unsliced_test_TK2, &test_TK2);
+	slice64(&unsliced_test_TK3, &test_TK3);
 	*slice_timing = _rdtsc() - before_slicing;
 	
 	// --- KEY SCHEDULE ---
@@ -46,13 +46,13 @@ static inline void benchmark_forkskinny64_192_sb(ULL *slice_timing, ULL *schedul
 	auto decryption_before = _rdtsc();
 	forkskinny64_decrypt(&schedule, &wrapped_c1, &recovered_pt, '1', 'i');
 	*decryption_timing = _rdtsc() - decryption_before;
-	auto unsliced_recovered_pt = unslice(&(recovered_pt.M));
+	auto unsliced_recovered_pt = unslice64(&(recovered_pt.M));
 	
 	// --- UNSLICING ---
 	Blocks64_t unsliced_C0, unsliced_C1;
 	auto unslicing_before = _rdtsc();
-	//unslice(&C0, &unsliced_C0);
-	unslice(&C1, &unsliced_C1);
+	//unslice64(&C0, &unsliced_C0);
+	unslice64(&C1, &unsliced_C1);
 	*unslice_timing = _rdtsc() - unslicing_before;
 	
 	// Prevent dead-code elimination caused by optimizations!
@@ -73,9 +73,9 @@ static inline void benchmark_forkskinny64_128_sb(ULL *slice_timing, ULL *schedul
 	// --- SLICING ---
 	State64Sliced_t test_M, test_TK1, test_TK2;
 	auto before_slicing = _rdtsc();
-	slice(&unsliced_test_M, &test_M);
-	slice(&unsliced_test_TK1, &test_TK1);
-	slice(&unsliced_test_TK2, &test_TK2);
+	slice64(&unsliced_test_M, &test_M);
+	slice64(&unsliced_test_TK1, &test_TK1);
+	slice64(&unsliced_test_TK2, &test_TK2);
 	*slice_timing = _rdtsc() - before_slicing;
 	
 	// --- KEY SCHEDULE ---
@@ -96,13 +96,13 @@ static inline void benchmark_forkskinny64_128_sb(ULL *slice_timing, ULL *schedul
 	auto decryption_before = _rdtsc();
 	forkskinny64_decrypt(&schedule, &wrapped_c1, &recovered_pt, '1', 'i');
 	*decryption_timing = _rdtsc() - decryption_before;
-	auto unsliced_recovered_pt = unslice(&(recovered_pt.M));
+	auto unsliced_recovered_pt = unslice64(&(recovered_pt.M));
 	
 	// --- UNSLICING ---
 	Blocks64_t unsliced_C0, unsliced_C1;
 	auto unslicing_before = _rdtsc();
-	//unslice(&C0, &unsliced_C0);
-	unslice(&C1, &unsliced_C1);
+	//unslice64(&C0, &unsliced_C0);
+	unslice64(&C1, &unsliced_C1);
 	*unslice_timing = _rdtsc() - unslicing_before;
 	
 	// Prevent dead-code elimination caused by optimizations!

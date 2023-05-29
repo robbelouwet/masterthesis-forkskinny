@@ -4,8 +4,8 @@
 #include "forkskinny64-datatypes.h"
 #include "slicing64-accelerated-internal.h"
 
-static inline void slice(Blocks64_t *blocks, State64Sliced_t *result,
-                         const bool segment = (AVX2_acceleration || AVX512_acceleration)) {
+static inline void slice64(Blocks64_t *blocks, State64Sliced_t *result,
+                           const bool segment = (AVX2_acceleration || AVX512_acceleration)) {
 	#if FAST_SLICING
 	slice_accelerated_internal(blocks, result, segment);
 	#else
@@ -13,8 +13,8 @@ static inline void slice(Blocks64_t *blocks, State64Sliced_t *result,
 	#endif
 }
 
-static inline State64Sliced_t slice(Blocks64_t *blocks,
-                                    const bool segment = (AVX2_acceleration || AVX512_acceleration)) {
+static inline State64Sliced_t slice64(Blocks64_t *blocks,
+                                      const bool segment = (AVX2_acceleration || AVX512_acceleration)) {
 	#if FAST_SLICING
 	return slice_accelerated_internal(blocks, segment);
 	#else
@@ -22,8 +22,8 @@ static inline State64Sliced_t slice(Blocks64_t *blocks,
 	#endif
 }
 
-static inline void unslice(State64Sliced_t *state, Blocks64_t *result,
-                           const bool segmented = (AVX2_acceleration || AVX512_acceleration)) {
+static inline void unslice64(State64Sliced_t *state, Blocks64_t *result,
+                             const bool segmented = (AVX2_acceleration || AVX512_acceleration)) {
 	#if FAST_SLICING
 	unslice_accelerated_internal(state, result, segmented);
 	#else
@@ -31,8 +31,8 @@ static inline void unslice(State64Sliced_t *state, Blocks64_t *result,
 	#endif
 }
 
-static inline Blocks64_t unslice(State64Sliced_t *state,
-                                 const bool segmented = (AVX2_acceleration || AVX512_acceleration)) {
+static inline Blocks64_t unslice64(State64Sliced_t *state,
+                                   const bool segmented = (AVX2_acceleration || AVX512_acceleration)) {
 	#if FAST_SLICING
 	return unslice_accelerated_internal(state, segmented);
 	#else
@@ -40,8 +40,8 @@ static inline Blocks64_t unslice(State64Sliced_t *state,
 	#endif
 }
 
-static inline Blocks64_t unslice(State64Sliced_t state,
-                                 const bool segmented = (AVX2_acceleration || AVX512_acceleration)) {
+static inline Blocks64_t unslice64(State64Sliced_t state,
+                                   const bool segmented = (AVX2_acceleration || AVX512_acceleration)) {
 	#if FAST_SLICING
 	return unslice_accelerated_internal(&state, segmented);
 	#else
@@ -51,7 +51,7 @@ static inline Blocks64_t unslice(State64Sliced_t state,
 
 /**
  * This method expands a number into a SlicedCipherState.
- * In other words, if bit n == 1, slice n becomes 0xFFFFFFFFFFFFFFFF, same for bit n == 0
+ * In other words, if bit n == 1, slice64 n becomes 0xFFFFFFFFFFFFFFFF, same for bit n == 0
  * @param value
  * @param out
  */

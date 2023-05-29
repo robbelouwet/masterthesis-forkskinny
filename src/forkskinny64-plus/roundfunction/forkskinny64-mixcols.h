@@ -4,12 +4,14 @@
 #include "../utils/forkskinny64-datatypes.h"
 #include "../common.h"
 
+#if AVX2_acceleration
 static void inline assign_segmented_row(uint8_t from, uint8_t to, State64Sliced_t *state){
 	state->segments256[to][0] = state->segments256[from][0];
 	state->segments256[to][1] = state->segments256[from][1];
 	state->segments256[to][2] = state->segments256[from][2];
 	state->segments256[to][3] = state->segments256[from][3];
 }
+#endif
 
 static inline void forkskinny64_mixcols_inv(State64Sliced_t *state) {
 //	auto ct = Blocks64_t{.values = {0xF88AC3CD8DDFADDF}};

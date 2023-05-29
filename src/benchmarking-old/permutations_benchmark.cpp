@@ -12,7 +12,7 @@ static inline void permute_sliced_packed_32(State64Sliced_16_t *tk) {
 	auto slice2 = tk->slices[2];
 	auto slice3 = tk->slices[3];
 	
-	// pack the bottom 2 rows of every slice_t in a single 32 bit word
+	// unpack the bottom 2 rows of every slice_t in a single 32 bit word
 	// i.e.: r3⁰r4⁰ | r3¹r4¹ | r3²r4² | r3³r4³
 	uint32_t packed_slices =
 			((slice0 & 0x00FF) << 24)
@@ -43,10 +43,10 @@ static inline void permute_sliced_packed_16(State64Sliced_16_t *tk) {
 	auto slice2 = tk->slices[2];
 	auto slice3 = tk->slices[3];
 	
-	// pack the bottom 2 rows of the first 2 slices in 1 16-bit variable
+	// unpack the bottom 2 rows of the first 2 slices in 1 16-bit variable
 	uint16_t slice_0_1 = ((slice0 & 0x00FF) << 8) | (slice1 & 0x00FF);
 	
-	// pack the bottom 2 rows of the last 2 slices in 1 16-bit variable
+	// unpack the bottom 2 rows of the last 2 slices in 1 16-bit variable
 	uint16_t slice_2_3 = ((slice2 & 0x00FF) << 8) | (slice3 & 0x00FF);
 	
 	// perform permutation on first 2 slices

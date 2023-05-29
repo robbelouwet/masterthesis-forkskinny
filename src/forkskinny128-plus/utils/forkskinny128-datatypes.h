@@ -8,7 +8,6 @@
 #define FORKSKINNY128_MAX_ROUNDS (FORKSKINNY_128_384_ROUNDS_BEFORE + 2*FORKSKINNY_128_384_ROUNDS_AFTER)
 
 #include <cstdint>
-//#include "immintrin.h"
 #include "../../config.h"
 
 /** ---- SKINNY128 ---- */
@@ -26,21 +25,11 @@ typedef union {
 } Slice128_t;
 
 typedef union {
-	#if AVX512_acceleration
-	__m512i __attribute__((aligned(32))) lane;
-	u64 segments[8];
-	#elif AVX2_acceleration
-	__m256i __attribute__((aligned(32))) lane;
-	u64 segments[4];
+	#if AVX2_acceleration
+	__m128i lane;
 	#endif
-} Segment128_t;
-
-typedef union {
-	#if SKINNY_64BIT
+	
 	u64 raw[2];
-	#else
-	uint32_t raw[4];
-	#endif
 	unsigned char bytes[16];
 } Block128_t;
 
@@ -50,25 +39,35 @@ typedef union {
 
 typedef union {
 	Slice128_t slices[8];
-	#if AVX512_acceleration
-	__m512i __attribute__((aligned(32))) avx512_simd_cell;
-	#endif
 	#if AVX2_acceleration | AVX512_acceleration
-	__m256i __attribute__((aligned(32))) avx2_simd_cells[2];
+	__m256i avx2_simd_cells[2];
 	#endif
 } Cell128_t;
 
 typedef union {
 	Cell128_t cols[4];
+	#if AVX2_acceleration
+	__m256i segments[8];
+	#endif
 } Row128_t;
 
 typedef union {
+	#if AVX2_acceleration
+	__m256i segments256[2][8];
+	#endif
+	
 	Slice128_t raw[64];
 	Cell128_t cells[8];
 	Row128_t rows[2];
 } HalfState128Sliced_t;
 
 typedef union {
+	/* Used when segmentation is enabled */
+	#if AVX2_acceleration
+	__m256i segments256[4][8];
+	#endif
+	
+	/* Used when segmentation is disabled */
 	Slice128_t raw[128];
 	Cell128_t cells[16];
 	Row128_t rows[4];

@@ -30,7 +30,6 @@ typedef union {
 	#else
 	uint32_t raw[2];
 	#endif
-	
 	unsigned char bytes[8];
 } Block64_t;
 
@@ -40,17 +39,17 @@ typedef union {
 
 typedef union {
 	Slice64_t slices[4];
-	#if AVX2_acceleration || AVX512_acceleration
-	__m256i avx2_simd_cell;
-	#endif
+//	#if AVX2_acceleration || AVX512_acceleration
+//	__m256i avx2_simd_cell;
+//	#endif
 } Cell64_t;
 
-typedef union {
-	#if AVX512_acceleration
-	__m512i /*__attribute__((aligned(32)))*/ avx512_simd_pair;
-	#endif
-	Cell64_t cells[2];
-} Pair64_t;
+//typedef union {
+//	#if AVX512_acceleration
+//	__m512i /*__attribute__((aligned(32)))*/ avx512_simd_pair;
+//	#endif
+//	Cell64_t cells[2];
+//} Pair64_t;
 
 typedef union {
 	Cell64_t cols[4];
@@ -66,7 +65,7 @@ typedef union {
 	
 	Slice64_t raw[32];
 	Cell64_t cells[8];
-	Pair64_t pairs[4];
+//	Pair64_t pairs[4];
 	Row64_t rows[2];
 } HalfState64Sliced_t;
 
@@ -77,13 +76,15 @@ typedef union {
 	// ----- Used for segmented cipher state:
 //	uint64_t raw_segments[64];
 //	__m512i segments512[2][4];
+	#if AVX2_acceleration
 	__m256i segments256[4][4];
+	#endif
 	
 	// ----- Used for accessing TK or non-segmented cipher state:
 	Slice64_t raw[64];
 	Cell64_t cells[16];
 	Row64_t rows[4];
-	Pair64_t pairs[8];
+	//Pair64_t pairs[8];
 	
 	HalfState64Sliced_t halves[2];
 	// -----

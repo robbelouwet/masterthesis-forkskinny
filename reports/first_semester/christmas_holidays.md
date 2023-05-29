@@ -28,7 +28,7 @@ get to the modes).
 I implemented the TK permutation in a bit sliced manner. Erik's old permutation takes about 42 cycles, new bit sliced
 permutation takes 82 cycles when permuting every slice_t separately. This was expected since we actually do 4x the work
 that Erik's previous implementation
-needed, so this is no surprise. Although I think I can speed this up with a factor of 2 if I pack 2 slices in 1 32-bit
+needed, so this is no surprise. Although I think I can speed this up with a factor of 2 if I unpack 2 slices in 1 32-bit
 variable. Then we only do 2 of these 'slice_t-permutations' instead of 4.
 
 ### Sunday 01 jan
@@ -73,7 +73,7 @@ even though the lookups individually are 2x faster than a bit rotation calculati
 ## Saturday 07 jan
 
 Continued working on the shift rows. I fear we're going to have to let go of our goal to have every operation use online
-a 16 bit register. We can make the shift rows (and probably mixcols as well) equally fast as before, if we pack the
+a 16 bit register. We can make the shift rows (and probably mixcols as well) equally fast as before, if we unpack the
 whole state in a 64 bit register (or repeat 2 times in 32 bit register). This way we can still parallelize the other
 operations that use only 16 bit registers, we can still use bit slicing and thus also use fixed slicing key keys.
 Only the shift rows and mix cols will be performed using larger registers. Either we use larger registers or we have a
@@ -94,7 +94,7 @@ register.
 - 64 blocks in parallel is really, *really* fast. I can't imagine how they do this, even if you could combine bit
   slicing with SIMD. Looking at their code raises more questions than answers, I really wish they documented their code.
 - It turns out that Cortex M4 chips also
-  have [SIMD intrinsics](https://www.keil.com/pack/doc/CMSIS/Core/html/group__intrinsic__SIMD__gr.html) built on 32-bit
+  have [SIMD intrinsics](https://www.keil.com/unpack/doc/CMSIS/Core/html/group__intrinsic__SIMD__gr.html) built on 32-bit
   SIMD registers, so definitely taking a look at that. Maybe we can use this to speed up the permutation or speed up the
   slice_t() and unslice_accelerated_internal() operations. If we can make the slicing operations much faster, then it might become more
   lucrative to first unslice_internal, permute in 1 cycle through SIMD, and slice_t again. Because the permutation is ridiculously

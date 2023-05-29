@@ -36,7 +36,7 @@
   KIN1_DWT_CYCCNT
 
 /**
- * For every nibble, take the ith significant bit and pack those all together.
+ * For every nibble, take the ith significant bit and unpack those all together.
  *
  * E.g.:
  *       v    v    v

@@ -2,13 +2,14 @@
 #define FORKSKINNYPLUS_COMMON_H
 
 #include "utils/forkskinny64-datatypes.h"
-
+#if AVX2_acceleration
 static void inline xor_segmented_row(uint8_t a, uint8_t b, uint8_t out_i, State64Sliced_t *state) {
 	state->segments256[out_i][0] = XOR256(state->segments256[a][0], state->segments256[b][0]);
 	state->segments256[out_i][1] = XOR256(state->segments256[a][1], state->segments256[b][1]);
 	state->segments256[out_i][2] = XOR256(state->segments256[a][2], state->segments256[b][2]);
 	state->segments256[out_i][3] = XOR256(state->segments256[a][3], state->segments256[b][3]);
 }
+#endif
 
 static inline void xor_row(Row64_t *a, Row64_t *b, Row64_t *out) {
 	#if AVX2_acceleration || AVX512_acceleration
