@@ -1,5 +1,5 @@
-#ifndef FORKSKINNYPLUS_SLICING128_OUTSOURCED_H
-#define FORKSKINNYPLUS_SLICING128_OUTSOURCED_H
+#ifndef FORKSKINNYPLUS_SLICING128_ACCELERATED_H
+#define FORKSKINNYPLUS_SLICING128_ACCELERATED_H
 
 #include "forkskinny128-datatypes.h"
 #include "../../forkskinny64-plus/utils/forkskinny64-datatypes.h"
@@ -25,7 +25,7 @@ static inline void try_segment128(State128Sliced_t *in, State128Sliced_t *result
 }
 
 static inline void try_unsegment128(State128Sliced_t *in, State128Sliced_t *out,
-									const bool segmented = AVX2_acceleration){
+                                    const bool segmented = AVX2_acceleration) {
 	if (segmented) {
 		#if AVX2_acceleration
 		for (int i = 0; i < 4; ++i) {
@@ -37,7 +37,8 @@ static inline void try_unsegment128(State128Sliced_t *in, State128Sliced_t *out,
 		}
 		#endif
 	} else
-		for (int i = 0; i < 128; ++i) out->raw[i].value = in->raw[i].value;
+		for (int i = 0; i < 128; ++i)
+			out->raw[i].value = in->raw[i].value;
 }
 
 static inline void unpack(Blocks128_t *state, Block64_t *out) {
@@ -47,8 +48,8 @@ static inline void unpack(Blocks128_t *state, Block64_t *out) {
 	}
 }
 
-static inline void slice128_outsourced(Blocks128_t *state, State128Sliced_t *out,
-                                       const bool segment = AVX2_acceleration) {
+static inline void slice_accelerated_internal(Blocks128_t *state, State128Sliced_t *out,
+                                              const bool segment = AVX2_acceleration) {
 	/// Unpack the lower and upper halves of all 128-bit blocks together
 	Block64_t buf[slice_size << 1];
 	unpack(state, buf);
@@ -70,8 +71,15 @@ static inline void slice128_outsourced(Blocks128_t *state, State128Sliced_t *out
 	try_segment128(&temp, out, segment);
 }
 
-static inline void unslice128_outsourced(State128Sliced_t *state, Blocks128_t *out,
-                                         const bool segmented = AVX2_acceleration) {
+static inline State128Sliced_t slice_accelerated_internal(Blocks128_t *state,
+                                                          const bool segment = AVX2_acceleration) {
+	State128Sliced_t res;
+	slice_accelerated_internal(state, &res, segment);
+	return res;
+}
+
+static inline void unslice_accelerated_internal(State128Sliced_t *state, Blocks128_t *out,
+                                                const bool segmented = AVX2_acceleration) {
 	/// Unsegment
 	State128Sliced_t unsegmented;
 	try_unsegment128(state, &unsegmented, segmented);
@@ -84,10 +92,17 @@ static inline void unslice128_outsourced(State128Sliced_t *state, Blocks128_t *o
 	unslice64((State64Sliced_t *) &(unsegmented.raw[64]), &unsliced64_high, false);
 	
 	/// Pack blocks back together
-	for (int j = 0; j < 64; ++j) {
+	for (int j = 0; j < slice_size; ++j) {
 		out->values[j].raw[0] = unsliced64_low.values[j].raw;
 		out->values[j].raw[1] = unsliced64_high.values[j].raw;
 	}
 }
 
-#endif //FORKSKINNYPLUS_SLICING128_OUTSOURCED_H
+static inline Blocks128_t unslice_accelerated_internal(State128Sliced_t *state,
+                                                       const bool segmented = AVX2_acceleration) {
+	Blocks128_t res;
+	unslice_accelerated_internal(state, &res, segmented);
+	return res;
+}
+
+#endif //FORKSKINNYPLUS_SLICING128_ACCELERATED_H

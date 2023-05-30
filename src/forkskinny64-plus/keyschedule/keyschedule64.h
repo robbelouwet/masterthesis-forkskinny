@@ -63,8 +63,8 @@ static inline void forkskinny_64_init_tk23_internal(State64Sliced_t *tk1, State6
 	}
 }
 
-static inline void forkskinny64_192_precompute_key_schedule(State64Sliced_t *tk1, State64Sliced_t *tk2,
-                                                            State64Sliced_t *tk3, KeySchedule64Sliced_t *out) {
+static inline void forkskinny64_precompute_key_schedule(State64Sliced_t *tk1, State64Sliced_t *tk2,
+                                                        State64Sliced_t *tk3, KeySchedule64Sliced_t *out) {
 	#if IMPROVED_KEYSCHEDULE
 	forkskinny_64_init_tk23_fixsliced_internal(tk1, tk2, tk3, out);
 	#else
@@ -72,8 +72,8 @@ static inline void forkskinny64_192_precompute_key_schedule(State64Sliced_t *tk1
 	#endif
 }
 
-static inline void forkskinny64_192_precompute_key_schedule(State64Sliced_t *tk1, State64Sliced_t *tk2,
-                                                            KeySchedule64Sliced_t *out) {
+static inline void forkskinny64_precompute_key_schedule(State64Sliced_t *tk1, State64Sliced_t *tk2,
+                                                        KeySchedule64Sliced_t *out) {
 	#if IMPROVED_KEYSCHEDULE
 	forkskinny_64_init_tk2_fixsliced_internal(tk1, tk2, out);
 	#else

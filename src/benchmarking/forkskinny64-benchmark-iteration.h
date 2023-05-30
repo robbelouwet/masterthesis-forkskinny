@@ -31,7 +31,7 @@ static inline void benchmark_forkskinny64_192_sb(ULL *slice_timing, ULL *schedul
 	// --- KEY SCHEDULE ---
 	KeySchedule64Sliced_t schedule;
 	auto schedule_before = _rdtsc();
-	forkskinny64_192_precompute_key_schedule(&test_TK1, &test_TK2, &test_TK3, &schedule);
+	forkskinny64_precompute_key_schedule(&test_TK1, &test_TK2, &test_TK3, &schedule);
 	*schedule_timing = _rdtsc() - schedule_before;
 	
 	// --- ENCRYPTION ---
@@ -81,7 +81,7 @@ static inline void benchmark_forkskinny64_128_sb(ULL *slice_timing, ULL *schedul
 	// --- KEY SCHEDULE ---
 	KeySchedule64Sliced_t schedule;
 	auto schedule_before = _rdtsc();
-	forkskinny64_192_precompute_key_schedule(&test_TK1, &test_TK2, &schedule);
+	forkskinny64_precompute_key_schedule(&test_TK1, &test_TK2, &schedule);
 	*schedule_timing = _rdtsc() - schedule_before;
 	
 	// --- ENCRYPTION ---

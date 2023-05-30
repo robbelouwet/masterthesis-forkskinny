@@ -48,11 +48,11 @@ void test_forkskinny64(int keysize, uint64_t test_C0, uint64_t test_C1) {
 	auto original_pt = unslice64(&M);
 	
 	auto schedule = KeySchedule64Sliced_t();
-	if (keysize == 128) forkskinny64_192_precompute_key_schedule(&TK1, &TK2, &schedule);
-	else if (keysize == 192) forkskinny64_192_precompute_key_schedule(&TK1, &TK2, &TK3, &schedule);
+	if (keysize == 128) forkskinny64_precompute_key_schedule(&TK1, &TK2, &schedule);
+	else if (keysize == 192) forkskinny64_precompute_key_schedule(&TK1, &TK2, &TK3, &schedule);
 	
-	auto rtk0 = unslice64({.halves = {schedule.keys[0],
-	                                  {}}}).values[0].raw; // 0x EE00 FDE0 (fs64-192, pre-computed AddConstant inside ks)
+	/// Round keys (fs64-192, pre-computed AddConstant inside ks)
+	auto rtk0 = unslice64({.halves = {schedule.keys[0], {}}}).values[0].raw; // 0x EE00 FDE0
 	auto rtk1 = unslice64({.halves = {schedule.keys[1], {}}}).values[0].raw; // 0x 099B 203B
 	auto rtk2 = unslice64({.halves = {schedule.keys[2], {}}}).values[0].raw; // 0x 0EE2 40B2
 	auto rtk3 = unslice64({.halves = {schedule.keys[3], {}}}).values[0].raw; // 0x 7000 2967

@@ -8,7 +8,7 @@
 static inline void fixslice_permute(State64Sliced_t *src, State64Sliced_t *dst, int i) {
 	#if AVX2_acceleration || AVX512_acceleration
 	for (int j = 0; j < 16; ++j) {
-		auto cell_src = fixslice_pt[i][j];
+		auto cell_src = fixsliced_pt64[i][j];
 		
 		dst->raw[(j >> 2) * 16 + (j & 3) + 0] = src->raw[(cell_src >> 2) * 16 + (cell_src & 3) + 0];
 		dst->raw[(j >> 2) * 16 + (j & 3) + 4] = src->raw[(cell_src >> 2) * 16 + (cell_src & 3) + 4];
@@ -17,7 +17,7 @@ static inline void fixslice_permute(State64Sliced_t *src, State64Sliced_t *dst, 
 	}
 	#else
 	for (int j = 0; j < 16; ++j) {
-		dst->cells[j] = src->cells[fixslice_pt[i][j]];
+		dst->cells[j] = src->cells[fixsliced_pt64[i][j]];
 	}
 	#endif
 }

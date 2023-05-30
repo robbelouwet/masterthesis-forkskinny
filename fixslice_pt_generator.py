@@ -19,7 +19,7 @@ if __name__ == "__main__":
     iterations = [2, 4, 6, 8, 10, 12, 14]
 
     # select false to compute PT's for forkskinny128
-    generate_fs64_permutations = True
+    generate_fs64_permutations = False
 
     pt_i = []
     flipped_start = []

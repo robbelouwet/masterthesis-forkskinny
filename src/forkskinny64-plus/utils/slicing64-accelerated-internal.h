@@ -67,19 +67,19 @@ static inline lane_t slice_significance_accelerated_64(const Block64_t *blocks) 
 	lane_t slice = slice_ZER;
 	#if slice_size == 128
 	for (uint i = 0; i < 64; ++i)
-		slice64 = _mm_or_si128(
+		slice = _mm_or_si128(
 				_mm_and_si128(
 						_mm_set_epi64x(
 								blocks[i].raw,
 								blocks[i + 64].raw
 								
 						), _mm_set1_epi64x(bit_masks[i])
-				), slice64
+				), slice
 		);
 	
 	#elif slice_size == 256
 	for (uint i = 0; i < 64; ++i)
-		slice64 = _mm256_or_si256(
+		slice = _mm256_or_si256(
 				_mm256_and_si256(
 						_mm256_set_epi64x(
 								blocks[i + 128].raw,
@@ -88,12 +88,12 @@ static inline lane_t slice_significance_accelerated_64(const Block64_t *blocks) 
 								blocks[i + 192].raw
 								
 						), _mm256_set1_epi64x(bit_masks[i])
-				), slice64
+				), slice
 		);
 	
 	#elif slice_size == 512
 	for (uint i = 0; i < 64; ++i)
-		slice64 = _mm512_or_si512(
+		slice = _mm512_or_si512(
 				_mm512_and_si512(
 						_mm512_set_epi64(
 								blocks[i].raw,
@@ -105,7 +105,7 @@ static inline lane_t slice_significance_accelerated_64(const Block64_t *blocks) 
 								blocks[i + 384].raw,
 								blocks[i + 448].raw
 						), _mm512_set1_epi64(bit_masks[i])
-				), slice64
+				), slice
 		);
 	
 	#else

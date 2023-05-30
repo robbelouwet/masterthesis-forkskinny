@@ -12,7 +12,7 @@ static void inline xor_segmented_row(uint8_t a, uint8_t b, uint8_t out_i, State6
 #endif
 
 static inline void xor_row(Row64_t *a, Row64_t *b, Row64_t *out) {
-	#if AVX2_acceleration || AVX512_acceleration
+	#if AVX2_acceleration
 	out->segments[0] = XOR256(a->segments[0], b->segments[0]);
 	out->segments[1] = XOR256(a->segments[1], b->segments[1]);
 	out->segments[2] = XOR256(a->segments[2], b->segments[2]);

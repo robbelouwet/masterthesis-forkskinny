@@ -17,7 +17,7 @@ std::vector<uint64_t> segment(std::vector<uint64_t> slices) {
 	return res;
 }
 
-// expand every bit of the raw to a 64bit slice_t
+// expand64 every bit of the raw to a 64bit slice_t
 // if bit == 0: return 0⁶⁴
 // if bit == 1: return 1⁶⁴
 static inline std::vector<u64> to_slices(u64 value, uint8_t width) {

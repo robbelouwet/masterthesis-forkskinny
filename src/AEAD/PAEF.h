@@ -61,9 +61,9 @@ static inline void paef_forkskinny64_192_encrypt_section(
 	auto t_slice_before = _rdtsc();
 	/* Set the nonce across TK1 & TK2 */
 	State64Sliced_t sliced_tk1;
-	expand(nonce_blocks[0].raw, &sliced_tk1);
+	expand64(nonce_blocks[0].raw, &sliced_tk1);
 	State64Sliced_t sliced_tk2;
-	expand(nonce_blocks[1].raw, &sliced_tk2);
+	expand64(nonce_blocks[1].raw, &sliced_tk2);
 	State64Sliced_t sliced_tk3;
 	slice64(&tk3_blocks, &sliced_tk3);
 	State64Sliced_t state;
@@ -84,7 +84,7 @@ static inline void paef_forkskinny64_192_encrypt_section(
 	/// Encrypt
 	auto schedule = KeySchedule64Sliced_t();
 	auto t_encrypt_before = _rdtsc();
-	forkskinny64_192_precompute_key_schedule(sliced_tks + 0, sliced_tks + 1, sliced_tks + 2, &schedule);
+	forkskinny64_precompute_key_schedule(sliced_tks + 0, sliced_tks + 1, sliced_tks + 2, &schedule);
 	forkskinny64_encrypt(&schedule, &state, mode, &(res->C0), &(res->C1));
 	*t_encrypt = _rdtsc() - t_encrypt_before;
 }

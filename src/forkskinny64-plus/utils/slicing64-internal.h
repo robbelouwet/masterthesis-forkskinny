@@ -16,9 +16,9 @@ static inline Slice64_t slice_significance(const Blocks64_t *blocks, uint8_t sig
 	
 	#if slice_size == 128
 	for (uint i = 0; i < 64; ++i)
-		slice64.chunks[0] |= (blocks->values[i].raw & mask) >> significance << i;
+		slice.chunks[0] |= (blocks->values[i].raw & mask) >> significance << i;
 	for (uint i = 64; i < 128; ++i)
-		slice64.chunks[1] |= (blocks->values[i].raw & mask) >> significance << (i - 64);
+		slice.chunks[1] |= (blocks->values[i].raw & mask) >> significance << (i - 64);
 	
 	#elif slice_size == 256
 	for (uint i = 0; i < 64; ++i)
@@ -26,9 +26,9 @@ static inline Slice64_t slice_significance(const Blocks64_t *blocks, uint8_t sig
 	for (uint i = 64; i < 128; ++i)
 		slice.chunks[1] |= (blocks->values[i].raw & mask) >> significance << (i - 64);
 	for (uint i = 128; i < 192; ++i)
-		slice64.chunks[2] |= (blocks->values[i].raw & mask) >> significance << (i - 128);
+		slice.chunks[2] |= (blocks->values[i].raw & mask) >> significance << (i - 128);
 	for (uint i = 192; i < 256; ++i)
-		slice64.chunks[3] |= (blocks->values[i].raw & mask) >> significance << (i - 192);
+		slice.chunks[3] |= (blocks->values[i].raw & mask) >> significance << (i - 192);
 	
 	#elif slice_size == 512
 	for (uint i = 0; i < 64; ++i)
@@ -40,9 +40,9 @@ static inline Slice64_t slice_significance(const Blocks64_t *blocks, uint8_t sig
 	for (uint i = 192; i < 256; ++i)
 		slice.chunks[3] |= (blocks->values[i].raw & mask) >> significance << (i - 192);
 	for (uint i = 256; i < 320; ++i)
-		slice64.chunks[4] |= (blocks->values[i].raw & mask) >> significance << (i - 256);
+		slice.chunks[4] |= (blocks->values[i].raw & mask) >> significance << (i - 256);
 	for (uint i = 320; i < 384; ++i)
-		slice64.chunks[5] |= (blocks->values[i].raw & mask) >> significance << (i - 320);
+		slice.chunks[5] |= (blocks->values[i].raw & mask) >> significance << (i - 320);
 	for (uint i = 384; i < 448; ++i)
 		slice.chunks[6] |= (blocks->values[i].raw & mask) >> significance << (i - 384);
 	for (uint i = 448; i < 512; ++i)
@@ -83,7 +83,7 @@ static inline void unslice_significance(const Slice64_t *slice, Blocks64_t *bloc
 		auto chunk = chunks[i];
 		for (int bit_index = chunk; bit_index < chunk + 64; ++bit_index) {
 			u64 chunk_mask = 1ULL << (bit_index - chunk);
-			blocks->values[bit_index].raw |= ((slice64->chunks[i] & chunk_mask) >> (bit_index - chunk)) << significance;
+			blocks->values[bit_index].raw |= ((slice->chunks[i] & chunk_mask) >> (bit_index - chunk)) << significance;
 		}
 	}
 	
@@ -95,7 +95,7 @@ static inline void unslice_significance(const Slice64_t *slice, Blocks64_t *bloc
 		auto chunk = chunks[i];
 		for (int b_number = chunk; b_number < chunk + 64; ++b_number) {
 			u64 mask = 1ULL << (b_number - chunk);
-			blocks->values[b_number].raw |= ((slice64->chunks[i] & mask) >> (b_number - chunk)) << significance;
+			blocks->values[b_number].raw |= ((slice->chunks[i] & mask) >> (b_number - chunk)) << significance;
 		}
 	}
 	#elif slice_size == 512
@@ -106,7 +106,7 @@ static inline void unslice_significance(const Slice64_t *slice, Blocks64_t *bloc
 		auto chunk = chunks[i];
 		for (int b_number = chunk; b_number < chunk + 64; ++b_number) {
 			u64 mask = 1ULL << (b_number - chunk);
-			blocks->values[b_number].raw |= ((slice64->chunks[i] & mask) >> (b_number - chunk)) << significance;
+			blocks->values[b_number].raw |= ((slice->chunks[i] & mask) >> (b_number - chunk)) << significance;
 		}
 	}
 	#else
@@ -119,7 +119,7 @@ static inline void unslice_significance(const Slice64_t *slice, Blocks64_t *bloc
 	
 }
 
-static void inline unsegmentbla(State64Sliced_t *state, const bool segmented, Slice64_t *slices) {
+static void inline try_unsegment(State64Sliced_t *state, const bool segmented, Slice64_t *slices) {
 	if (segmented) {
 		#if AVX512_acceleration
 		for (int i = 0; i < 2; ++i) {
@@ -145,7 +145,7 @@ static void inline unsegmentbla(State64Sliced_t *state, const bool segmented, Sl
 static inline void unslice_internal(State64Sliced_t *state, Blocks64_t *result,
 										  const bool segmented = false) {
 	Slice64_t slices[64];
-	unsegmentbla(state, segmented, slices);
+	try_unsegment(state, segmented, slices);
 	
 	for (int i = 0; i < 64; ++i)
 		unslice_significance(slices + i, result, i);

@@ -72,6 +72,15 @@ static inline Blocks128_t M_128() {
 	return M;
 }
 
+static inline Blocks128_t M_rand_128(int seed) {
+	auto M = Blocks128_t();
+	srand(seed);
+	for (auto &value: M.values)
+		for (unsigned char & byte : value.bytes)
+			byte = uint8_t(rand());
+	return M;
+}
+
 static inline Blocks128_t TK1_128() {
 	uint8_t ct_tk1[16] =
 			{0x29, 0xcd, 0xba, 0xab, 0xf2, 0xfb, 0xe3, 0x46, 0x7c, 0xc2, 0x54, 0xf8, 0x1b, 0xe8, 0xe7, 0x8d};

@@ -3,7 +3,7 @@
 
 #include "../utils/forkskinny128-datatypes.h"
 #include "../utils/segment_slicing128.h"
-#include "../utils/slicing128.h"
+#include "../utils/slicing128-internal.h"
 
 // for readability:
 #define in0 cell.slices[0].value
