@@ -39,7 +39,7 @@ typedef union {
 
 typedef union {
 	Slice128_t slices[8];
-	#if AVX2_acceleration | AVX512_acceleration
+	#if AVX2_acceleration
 	__m256i avx2_simd_cells[2];
 	#endif
 } Cell128_t;
@@ -76,7 +76,7 @@ typedef union {
 
 typedef union {
 	/** All words of the key keys */
-	HalfState128Sliced_t keys[FORKSKINNY128_MAX_ROUNDS];
+	HalfState128Sliced_t keys[FORKSKINNY128_MAX_ROUNDS ]; // +1 to make it even to compensate for the double round keys
 } KeySchedule128Sliced_t;
 
 typedef struct {

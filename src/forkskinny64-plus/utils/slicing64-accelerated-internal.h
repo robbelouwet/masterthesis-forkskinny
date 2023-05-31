@@ -127,7 +127,7 @@ static inline lane_t slice_significance_accelerated_64(const Block64_t *blocks) 
 
 static inline void slice_accelerated_internal(Blocks64_t *blocks,
                                               State64Sliced_t *result,
-                                              bool const segment = (AVX512_acceleration || AVX2_acceleration)) {
+                                              bool const segment = AVX2_acceleration) {
 	Slice64_t slices[64];
 	
 	/* Buffer that holds all blocks (minimum 64) AND the 64 spots that we use for the back-rotation */
@@ -170,9 +170,7 @@ static inline void slice_accelerated_internal(Blocks64_t *blocks,
 	int appel = 1;
 }
 
-static inline State64Sliced_t slice_accelerated_internal(Blocks64_t *blocks,
-                                                         bool const segment = (AVX512_acceleration ||
-                                                                               AVX2_acceleration)) {
+static inline State64Sliced_t slice_accelerated_internal(Blocks64_t *blocks, bool const segment = AVX2_acceleration) {
 	State64Sliced_t res;
 	slice_accelerated_internal(blocks, &res, segment);
 	return res;
@@ -230,7 +228,7 @@ static inline lane_t unslice_significance_accelerated(lane_t *slices) {
 
 static inline void unslice_accelerated_internal(State64Sliced_t *state,
                                                 Blocks64_t *result,
-                                                bool const segmented = (AVX2_acceleration || AVX512_acceleration)) {
+                                                bool const segmented = AVX2_acceleration) {
 	lane_t slices[128] = {};
 	unsegment(state, segmented, slices + 64);
 	
@@ -259,7 +257,7 @@ static inline void unslice_accelerated_internal(State64Sliced_t *state,
 }
 
 static inline Blocks64_t unslice_accelerated_internal(State64Sliced_t *state,
-                                                      bool const segmented = (AVX2_acceleration || AVX512_acceleration)) {
+                                                      bool const segmented = AVX2_acceleration) {
 	Blocks64_t res = Blocks64_t();
 	unslice_accelerated_internal(state, &res, segmented);
 	return res;

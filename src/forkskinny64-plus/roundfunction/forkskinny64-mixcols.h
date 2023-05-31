@@ -6,10 +6,8 @@
 
 #if AVX2_acceleration
 static void inline assign_segmented_row(uint8_t from, uint8_t to, State64Sliced_t *state){
-	state->segments256[to][0] = state->segments256[from][0];
-	state->segments256[to][1] = state->segments256[from][1];
-	state->segments256[to][2] = state->segments256[from][2];
-	state->segments256[to][3] = state->segments256[from][3];
+	for (int i = 0; i < 4; ++i)
+		state->segments256[to][i] = state->segments256[from][i];
 }
 #endif
 
@@ -18,7 +16,7 @@ static inline void forkskinny64_mixcols_inv(State64Sliced_t *state) {
 //	*state = Slice64_t(ct);
 	
 	
-	#if AVX2_acceleration || AVX512_acceleration
+	#if AVX2_acceleration
 	auto temp0 = state->segments256[3][0];
 	auto temp1 = state->segments256[3][1];
 	auto temp2 = state->segments256[3][2];
@@ -61,7 +59,7 @@ static inline void forkskinny64_mixcols(State64Sliced_t *state) {
 //	test_blocks.values[0].raw = 0xFEDCBA9876543210;
 //	*state = slice_accelerated_internal(&test_blocks);
 	
-	#if AVX512_acceleration || AVX2_acceleration
+	#if AVX2_acceleration
 	xor_segmented_row(1, 2, 1, state);
 	xor_segmented_row(2, 0, 2, state);
 	

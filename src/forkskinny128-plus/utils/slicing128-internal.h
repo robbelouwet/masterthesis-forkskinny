@@ -103,7 +103,7 @@ static inline void unslice_significance(const Slice128_t *slice, Blocks128_t *bl
 	#if slice_size == 128
 	uint8_t chunks[4] = {0, 64};
 	
-	// loop over every segment, __m128i has 2x 64-bit chunks
+	// loop over every segment64, __m128i has 2x 64-bit chunks
 	for (int i = 0; i < 2; i++) {
 		for (int b_number = chunks[i]; b_number < chunks[i] + 64; ++b_number) {
 			u64 mask = 1ULL << (b_number - chunks[i]);
@@ -114,7 +114,7 @@ static inline void unslice_significance(const Slice128_t *slice, Blocks128_t *bl
 	#elif slice_size == 256
 	uint8_t chunks[4] = {0, 64, 128, 192};
 	
-	// loop over every segment, __m256i has 4x 64-bit chunks
+	// loop over every segment64, __m256i has 4x 64-bit chunks
 	for (int i = 0; i < 4; i++) {
 		for (int b_number = chunks[i]; b_number < chunks[i] + 64; ++b_number) {
 			u64 mask = 1ULL << (b_number - chunks[i]);
@@ -125,7 +125,7 @@ static inline void unslice_significance(const Slice128_t *slice, Blocks128_t *bl
 	#elif slice_size == 512
 	uint16_t chunks[8] = {0, 64, 128, 192, 256, 320, 384, 448};
 	
-	// loop over every segment, __m512i has 8x 64-bit chunks
+	// loop over every segment64, __m512i has 8x 64-bit chunks
 	for (int i = 0; i < 8; i++) {
 		for (int b_number = chunks[i]; b_number < chunks[i] + 64; ++b_number) {
 			u64 mask = 1ULL << (b_number - chunks[i]);

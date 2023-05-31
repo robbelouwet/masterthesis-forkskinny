@@ -8,21 +8,29 @@
 #include "../roundfunction/forkskinny128-addconstant.h"
 
 static inline void fixslice_permute(State128Sliced_t *src, State128Sliced_t *dst, int i) {
-	#if AVX2_acceleration || AVX512_acceleration
-	???
+//	auto test_blocks = Blocks128_t{.values = {{.raw = {0x7766554433221100, 0xFFEEDDCCBBAA9988}}}};
+//	*src = slice128(&test_blocks);
+	#if AVX2_acceleration
 	for (int j = 0; j < 16; ++j) {
-		auto cell_src = fixsliced_pt64[i][j];
+		auto cell_src = fixsliced_pt128[i][j];
 		
-		dst->raw[(j >> 2) * 16 + (j & 3) + 0] = src->raw[(cell_src >> 2) * 16 + (cell_src & 3) + 0];
-		dst->raw[(j >> 2) * 16 + (j & 3) + 4] = src->raw[(cell_src >> 2) * 16 + (cell_src & 3) + 4];
-		dst->raw[(j >> 2) * 16 + (j & 3) + 8] = src->raw[(cell_src >> 2) * 16 + (cell_src & 3) + 8];
-		dst->raw[(j >> 2) * 16 + (j & 3) + 12] = src->raw[(cell_src >> 2) * 16 + (cell_src & 3) + 12];
+		dst->raw[(j >> 2) * 32 + (j & 3) + 0] = src->raw[(cell_src >> 2) * 32 + (cell_src & 3) + 0];
+		dst->raw[(j >> 2) * 32 + (j & 3) + 4] = src->raw[(cell_src >> 2) * 32 + (cell_src & 3) + 4];
+		dst->raw[(j >> 2) * 32 + (j & 3) + 8] = src->raw[(cell_src >> 2) * 32 + (cell_src & 3) + 8];
+		dst->raw[(j >> 2) * 32 + (j & 3) + 12] = src->raw[(cell_src >> 2) * 32 + (cell_src & 3) + 12];
+		dst->raw[(j >> 2) * 32 + (j & 3) + 16] = src->raw[(cell_src >> 2) * 32 + (cell_src & 3) + 16];
+		dst->raw[(j >> 2) * 32 + (j & 3) + 20] = src->raw[(cell_src >> 2) * 32 + (cell_src & 3) + 20];
+		dst->raw[(j >> 2) * 32 + (j & 3) + 24] = src->raw[(cell_src >> 2) * 32 + (cell_src & 3) + 24];
+		dst->raw[(j >> 2) * 32 + (j & 3) + 28] = src->raw[(cell_src >> 2) * 32 + (cell_src & 3) + 28];
 	}
 	#else
 	for (int j = 0; j < 16; ++j) {
 		dst->cells[j] = src->cells[fixsliced_pt128[i][j]];
 	}
 	#endif
+	
+//	auto test_output = unslice128(dst).values[0];
+//	int appel = 1;
 }
 
 /**
@@ -45,12 +53,12 @@ static inline void forkskinny_128_init_tk23_fixsliced_internal(State128Sliced_t 
 	State128Sliced_t res0;
 	xor_keys(tk2, tk3, &res0, 0);
 	xor_keys(tk1, &res0, &res0, 0);
-
+	
 	forkskinny128_add_constant(&(res0.halves[0]), i);
 	out->keys[i++] = res0.halves[0];
 	
 	// RTK N & N+1
-	for (; i < FORKSKINNY64_MAX_ROUNDS; i += 2) {
+	for (; i < FORKSKINNY128_MAX_ROUNDS; i += 2) {
 		tk2_lfsr(tk2, true);
 		tk3_lfsr(tk3, true);
 		
@@ -62,7 +70,7 @@ static inline void forkskinny_128_init_tk23_fixsliced_internal(State128Sliced_t 
 		auto pt_index = (i + 1) & 0xF;
 		if (pt_index != 0) fixslice_permute(&rtk_temp, &temp, pt_index);
 		else temp = rtk_temp;
-
+		
 		forkskinny128_add_constant(&(temp.halves[1]), i); // RTK N+1 comes before RTK N!
 		out->keys[i] = temp.halves[1];
 		forkskinny128_add_constant(&(temp.halves[0]), i + 1);
@@ -77,12 +85,12 @@ static inline void forkskinny_128_init_tk2_fixsliced_internal(State128Sliced_t *
 	// RTK0
 	State128Sliced_t res0;
 	xor_keys(tk1, tk2, &res0, 0);
-
+	
 	forkskinny128_add_constant(&(res0.halves[0]), i);
 	out->keys[i++] = res0.halves[0];
 	
 	// RTK N & N+1
-	for (; i < FORKSKINNY64_MAX_ROUNDS; i += 2) {
+	for (; i < FORKSKINNY128_MAX_ROUNDS; i += 2) {
 		tk2_lfsr(tk2, true);
 		
 		State128Sliced_t rtk_temp;
@@ -92,7 +100,7 @@ static inline void forkskinny_128_init_tk2_fixsliced_internal(State128Sliced_t *
 		auto pt_index = (i + 1) & 0xF;
 		if (pt_index != 0) fixslice_permute(&rtk_temp, &temp, pt_index);
 		else temp = rtk_temp;
-
+		
 		forkskinny128_add_constant(&(temp.halves[1]), i); // RTK N+1 comes before RTK N!
 		out->keys[i] = temp.halves[1];
 		forkskinny128_add_constant(&(temp.halves[0]), i + 1);

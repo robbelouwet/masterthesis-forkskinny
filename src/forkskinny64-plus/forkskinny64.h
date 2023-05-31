@@ -11,7 +11,7 @@
 static inline void add_branch_constant64(State64Sliced_t *state) {
 	// <editor-fold desc="branch constant">
 	// @formatter:off
-	#if AVX2_acceleration || AVX512_acceleration
+	#if AVX2_acceleration
 	for (int i = 0; i < 4; ++i) {
 		state->segments256[i][0] = XOR256(state->segments256[i][0], segmented_branch_constant64.segments256[i][0]);
 		state->segments256[i][1] = XOR256(state->segments256[i][1], segmented_branch_constant64.segments256[i][1]);
@@ -30,13 +30,13 @@ static inline void add_branch_constant64(State64Sliced_t *state) {
 	// </editor-fold>
 }
 
-#if AVX2_acceleration || AVX512_acceleration
+#if AVX2_acceleration
 auto c2 = _mm256_set_epi64x(0, 0, -1ULL, 0);
 #endif
 
 static inline void apply_roundkey(HalfState64Sliced_t *round_key, State64Sliced_t *state) {
 	// <editor-fold desc="xor first 8 least significant cells">
-	#if AVX2_acceleration || AVX512_acceleration
+	#if AVX2_acceleration
 	for (int i = 0; i < 2; ++i)
 		for (int j = 0; j < 4; ++j)
 			STOREU256(
@@ -45,7 +45,7 @@ static inline void apply_roundkey(HalfState64Sliced_t *round_key, State64Sliced_
 			);
 	
 	// AddConstant: M8 (in cell 9) 0x2, aka slice_internal 1 of cell 8, because C2 is on the third row and not present in the round key!
-	// See the thesis on where index segment[2][1] comes from
+	// See the thesis on where index segment64[2][1] comes from
 	state->segments256[2][1] ^= c2;
 	#else
 	for (int i = 0; i < 8; ++i) {
@@ -252,8 +252,8 @@ static inline void forkskinny64_decrypt(KeySchedule64Sliced_t *schedule,
                                         SlicedCiphertext64_t *ct, SlicedCiphertext64_t *result,
                                         unsigned char input_label, unsigned char mode) {
 	if (input_label == '0')
-		return forkskinny64_decrypt_C0(schedule, &(ct->C0), mode, result);
-	return forkskinny64_decrypt_C1(schedule, &(ct->C1), mode, result);
+		forkskinny64_decrypt_C0(schedule, &(ct->C0), mode, result);
+	else forkskinny64_decrypt_C1(schedule, &(ct->C1), mode, result);
 }
 
 #endif //FORKSKINNYPLUS64_FORKSKINNY_H

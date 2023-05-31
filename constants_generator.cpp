@@ -2,8 +2,9 @@
 #include <iostream>
 #include <vector>
 #include "src/config.h"
+#include "src/forkskinny64-plus/utils/slicing64.h"
 
-std::vector<uint64_t> segment(std::vector<uint64_t> slices) {
+std::vector<uint64_t> segment64(std::vector<uint64_t> slices) {
 	auto res = std::vector<uint64_t>();
 	
 	for (int i = 0; i < 4; ++i) {
@@ -12,6 +13,20 @@ std::vector<uint64_t> segment(std::vector<uint64_t> slices) {
 			res.push_back(slices.at(16 * i + 4 + j));
 			res.push_back(slices.at(16 * i + 8 + j));
 			res.push_back(slices.at(16 * i + 12 + j));
+		}
+	}
+	return res;
+}
+
+std::vector<uint64_t> segment128(std::vector<uint64_t> slices) {
+	auto res = std::vector<uint64_t>();
+	
+	for (int i = 0; i < 4; ++i) {
+		for (int j = 0; j < 8; ++j) {
+			res.push_back(slices.at(32 * i + j));
+			res.push_back(slices.at(32 * i + 8 + j));
+			res.push_back(slices.at(32 * i + 16 + j));
+			res.push_back(slices.at(32 * i + 24 + j));
 		}
 	}
 	return res;
@@ -41,8 +56,8 @@ void forkskinny64_branch_constant(){
 			std::cout << " // 0x" << std::hex << unsigned(val) << "\n\t";
 		}
 		
-		if (slices.at(i) == 0) std::cout << "ZER, ";
-		else std::cout << "ONE, ";
+		if (slices.at(i) == 0) std::cout << "slice_ZER, ";
+		else std::cout << "slice_ONE, ";
 	}
 	std::cout << " // 0x" << std::hex << unsigned(((bc & (0xFUL << (60))) >> (60))) << "\n};\n\n";
 }
@@ -51,7 +66,7 @@ void forkskinny64_segmented_branch_constant(){
 	u64 bc = 0x81ec7f5bda364912;
 	auto slices = to_slices(bc, 64);
 	
-	slices = segment(slices);
+	slices = segment64(slices);
 	
 	std::cout << "State64Sliced_t const segmented_branch_constant64 = {\n\t";
 	for (int i = 0; i < 64; ++i) {
@@ -60,8 +75,8 @@ void forkskinny64_segmented_branch_constant(){
 			std::cout << "\n\t";
 		}
 		
-		if (slices.at(i) == 0) std::cout << "ZER, ";
-		else std::cout << "ONE, ";
+		if (slices.at(i) == 0) std::cout << "slice_ZER, ";
+		else std::cout << "slice_ONE, ";
 	}
 	std::cout << "\n};\n\n";
 }
@@ -78,8 +93,8 @@ void forkskinny128_branch_constant(){
 			std::cout << " // 0x" << std::hex << unsigned(val) << "\n\t";
 		}
 		
-		if (slices.at(i) == 0) std::cout << "ZER, ";
-		else std::cout << "ONE, ";
+		if (slices.at(i) == 0) std::cout << "slice_ZER, ";
+		else std::cout << "slice_ONE, ";
 	}
 	std::cout << " // 0x" << std::hex << unsigned(((bc[0] & (0xFFUL << 56)) >> 56)) << "\n\t";
 	
@@ -90,14 +105,51 @@ void forkskinny128_branch_constant(){
 			std::cout << " // 0x" << std::hex << unsigned(val) << "\n\t";
 		}
 		
-		if (slices.at(i) == 0) std::cout << "ZER, ";
-		else std::cout << "ONE, ";
+		if (slices.at(i) == 0) std::cout << "slice_ZER, ";
+		else std::cout << "slice_ONE, ";
+	}
+	std::cout << " // 0x" << std::hex << unsigned(((bc[1] & (0xFFUL << 56)) >> 56)) << "\n};\n\n";
+}
+
+void forkskinny128_segmented_branch_constant(){
+	u64 bc[2] = {0x8241201008040201ULL, 0x8844a25128140a05ULL};
+	
+	auto low = to_slices(bc[0], 64);
+	auto high = to_slices(bc[1], 64);
+	
+	auto state = low;
+	state.insert(state.end(), high.begin(), high.end());
+	
+	auto segmented_state = segment128(state);
+	
+	std::cout << "State128Sliced_t const segmented_branch_constant128 = {\n\t";
+	
+	int i = 0;
+	for (; i < 64; ++i) {
+		if (i % 8 == 0 && i != 0) {
+			uint8_t val = (bc[0] & (0xFFUL << (i-8))) >> (i-8);
+			std::cout << " // 0x" << std::hex << unsigned(val) << "\n\t";
+		}
+		
+		if (segmented_state.at(i) == 0) std::cout << "slice_ZER, ";
+		else std::cout << "slice_ONE, ";
+	}
+	std::cout << " // 0x" << std::hex << unsigned(((bc[0] & (0xFFUL << 56)) >> 56)) << "\n\t";
+	
+	for (; i < 128; ++i) {
+		if (i % 8 == 0 && i != 0) {
+			uint8_t val = ((bc[1] & (0xFFUL << (i - 8))) >> (i - 8));
+			std::cout << " // 0x" << std::hex << unsigned(val) << "\n\t";
+		}
+		
+		if (segmented_state.at(i) == 0) std::cout << "slice_ZER, ";
+		else std::cout << "slice_ONE, ";
 	}
 	std::cout << " // 0x" << std::hex << unsigned(((bc[1] & (0xFFUL << 56)) >> 56)) << "\n};\n\n";
 }
 
 void forkskinny_round_constants(){
-	std::cout << "u64 forkskinny_precomputed_round_constants[88][7] = {";
+	std::cout << "u64 forkskinny_unsegmented_round_constants[88][7] = {";
 	uint8_t lfsr = 0;
 	for (int i = 0; i < 88; i++) {
 		auto rc6 = (lfsr & 0b1000000) >> 6;
@@ -107,8 +159,8 @@ void forkskinny_round_constants(){
 		
 		std::cout << "\n\t{";
 		for (auto &value: res) {
-			if (value == 0) std::cout << "ZER, ";
-			else std::cout << "ONE, ";
+			if (value == 0) std::cout << "slice_ZER, ";
+			else std::cout << "slice_ONE, ";
 		}
 		std::cout << "}, // 0x" << std::hex << unsigned(lfsr);
 	}
@@ -119,6 +171,7 @@ void forkskinny_round_constants(){
 int main() {
 	forkskinny64_branch_constant();
 	forkskinny64_segmented_branch_constant();
-//	forkskinny128_branch_constant();
+	forkskinny128_branch_constant();
+	forkskinny128_segmented_branch_constant();
 //	forkskinny_round_constants();
 }

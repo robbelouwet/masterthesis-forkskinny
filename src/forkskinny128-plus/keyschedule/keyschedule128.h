@@ -13,7 +13,7 @@ static inline void forkskinny_128_init_tk2_internal(State128Sliced_t *tk1, State
 		xor_keys(tk1, tk2, &res, 0);
 		//auto test_tks = unslice_accelerated_internal(res);
 		
-		//forkskinny128_add_constant(&res, i);
+		forkskinny128_add_constant(&(res.halves[0]), i);
 		
 		// Keep in mind: the C2 constant relating to the 8th cell is part of the 2nd 'half'!
 		// So we add 0x2 at the key injection step

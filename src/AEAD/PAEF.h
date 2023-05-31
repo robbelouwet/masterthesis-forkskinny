@@ -14,7 +14,7 @@
 
 static inline void extract_segment_tag(State64Sliced_t *state, bool last_segment, int last_block_index,
                                        u64 *result_tag) {
-	/// Calculate the AD tag of this segment (these 64 or less blocks)
+	/// Calculate the AD tag of this segment64 (these 64 or less blocks)
 	/// by calculating the parity of every individual slice_internal and packing those together
 	
 	for (int j = 0; j < 64; j++) {
@@ -90,19 +90,19 @@ static inline void paef_forkskinny64_192_encrypt_section(
 }
 
 /**
- * Encrypts a list of segments. A segment is a sliced group of blocks. If last_block_index is specified, then only the
- * first *last_block_index + 1* blocks in the last segment will be used to xor and calculate the tag.
+ * Encrypts a list of segments. A segment64 is a sliced group of blocks. If last_block_index is specified, then only the
+ * first *last_block_index + 1* blocks in the last segment64 will be used to xor and calculate the tag.
  *
  * @param pt pointer to a list containing *amount_segments* segments (sliced cipher states)
- * @param last_block_index index of the last block inside the last segment. In other words, every segment holds the same
- * amount of blocks, also the last segment will hold (and also encrypt) more blocks than necessary. This param forces
+ * @param last_block_index index of the last block inside the last segment. In other words, every segment64 holds the same
+ * amount of blocks, also the last segment64 will hold (and also encrypt) more blocks than necessary. This param forces
  * the method to not inlcude the last n blocks to calculate the tag with.
  * @param amount_segments amount of sliced cipher states that *pt* holds (because we can't calculate length of a list that a pointer points to)
  * @param nonce_blocks The nonce N, segmented into 2 64-bit blocks.
  * @param nonce_bit_length since the nonce N is held in a buffer of 2 blocks stretching 128 bits, we manually specify
  * the bit length of the nonce itself, within its 128-bit buffer of TK1 & TK2
  * @return the AD tag resulting from encrypting all the segments in *pt* and XOR'ing all the C0 outputs together (except
- * for the last n blocks in the last segment, specified by *last_block_index*).
+ * for the last n blocks in the last segment64, specified by *last_block_index*).
  */
 static inline void paef_forkskinny64_192_encrypt_AD(
 		Blocks64_t *pt, u64 amount_segments, Block64_t *nonce_blocks, u64 nonce_bit_length,

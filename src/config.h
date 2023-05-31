@@ -8,11 +8,9 @@
 // @formatter:off
 // -- CONFIG --
 #define slice_size 64 // 8, 32, 64, 128, 256 or 512
-#define AVX2_support false
-#define AVX512_support false // deprecated, not used
-
-#define IMPROVED_KEYSCHEDULE false
-#define FAST_SLICING false
+#define AVX2_support true
+#define IMPROVED_KEYSCHEDULE true
+#define FAST_SLICING true
 // ------------
 
 /* Define SKINNY_64BIT to 1 if the CPU is natively 64-bit */
@@ -23,7 +21,6 @@
 #endif
 
 #define AVX2_acceleration (slice_size == 64 && AVX2_support)
-#define AVX512_acceleration (slice_size == 64 && AVX512_support)
 #define u64 uint64_t
 
 #define LOADU256(src) _mm256_load_si256((__m256i *)(src))
@@ -48,6 +45,13 @@
 #define OR512 _mm512_or_si512
 #define ONE512 _mm512_set1_epi64x(-1)
 #define AND512 _mm512_and_si512
+
+#if AVX2_support
+auto mask_0 = _mm256_set_epi64x(0, 0, 0, -1ULL);
+auto mask_1 = _mm256_set_epi64x(0, 0, -1ULL, 0);
+auto mask_2 = _mm256_set_epi64x(0, -1ULL, 0, 0);
+auto mask_3 = _mm256_set_epi64x(-1ULL, 0, 0, 0);
+#endif
 
 #define ULL unsigned long long
 

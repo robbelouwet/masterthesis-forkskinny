@@ -8,17 +8,28 @@
 static inline void tk2_lfsr(State128Sliced_t *state, const bool full_state = false) {
 	auto bound = full_state ? 4 : 2;
 	#if AVX2_acceleration
+	for (int i = 0; i < bound; ++i) {
+		auto temp = s7;
+		s7 = s6;
+		s6 = s5;
+		s5 = s4;
+		s4 = s3;
+		s3 = s2;
+		s2 = s1;
+		s1 = s0;
+		s0 = XOR256(temp, s6);
+	}
 	#else
 	for (int i = 0; i < (bound << 2); i++) {
-		auto temp = state->cells[i].slices[7];
-		state->cells[i].slices[7] = state->cells[i].slices[6];
-		state->cells[i].slices[6] = state->cells[i].slices[5];
-		state->cells[i].slices[5] = state->cells[i].slices[4];
-		state->cells[i].slices[4] = state->cells[i].slices[3];
-		state->cells[i].slices[3] = state->cells[i].slices[2];
-		state->cells[i].slices[2] = state->cells[i].slices[1];
-		state->cells[i].slices[1] = state->cells[i].slices[0];
-		state->cells[i].slices[0].value = XOR_SLICE(temp.value, state->cells[i].slices[6].value);
+		auto temp = x7;
+		x7 = x6;
+		x6 = x5;
+		x5 = x4;
+		x4 = x3;
+		x3 = x2;
+		x2 = x1;
+		x1 = x0;
+		x0 = XOR_SLICE(temp, x6);
 	}
 	#endif
 }
@@ -26,49 +37,84 @@ static inline void tk2_lfsr(State128Sliced_t *state, const bool full_state = fal
 static inline void tk3_lfsr(State128Sliced_t *state, const bool full_state = false) {
 	auto bound = full_state ? 4 : 2;
 	#if AVX2_acceleration
+	for (int i = 0; i < bound; ++i) {
+		auto temp = s0;
+		s0 = s1;
+		s1 = s2;
+		s2 = s3;
+		s3 = s4;
+		s4 = s5;
+		s5 = s6;
+		s6 = s7;
+		s7 = XOR256(temp, s5);
+	}
 	#else
 	for (int i = 0; i < (bound << 2); i++) {
-		auto temp = state->cells[i].slices[0];
-		state->cells[i].slices[0] = state->cells[i].slices[1];
-		state->cells[i].slices[1] = state->cells[i].slices[2];
-		state->cells[i].slices[2] = state->cells[i].slices[3];
-		state->cells[i].slices[3] = state->cells[i].slices[4];
-		state->cells[i].slices[4] = state->cells[i].slices[5];
-		state->cells[i].slices[5] = state->cells[i].slices[6];
-		state->cells[i].slices[6] = state->cells[i].slices[7];
-		state->cells[i].slices[7].value = XOR_SLICE(temp.value, state->cells[i].slices[5].value);
+		auto temp = x0;
+		x0 = x1;
+		x1 = x2;
+		x2 = x3;
+		x3 = x4;
+		x4 = x5;
+		x5 = x6;
+		x6 = x7;
+		x7 = XOR_SLICE(temp, x5);
 	}
 	#endif
 }
 
-static inline void permute(State128Sliced_t *input) {
+static inline void permute(State128Sliced_t *state) {
 //	auto test_blocks = Blocks128_t();
 //	test_blocks.values[0].raw[0] = 0x7766554433221100;
-//	test_blocks.values[0].raw[1] = 0xffeeddccbbaa9988;
-//	input = slice_internal(test_blocks);
+//	test_blocks.values[0].raw[1] = 0xFFEEDDCCBBAA9988;
+//	*state = slice128(&test_blocks);
+	
+	#if AVX2_acceleration
+	for (int i = 0; i < 8; ++i) {
+		auto row2 = LOADU256(state->segments256[2] + i);
+		auto row3 = LOADU256(state->segments256[3] + i);
+		
+		/* Align row 2 & 3 for easy segment64 swapping */
+		row2 = PERM_4x64(row2, 0b11001001);
+		row3 = PERM_4x64(row3, 0b01001011);
+		
+		/* SWAP cell 3 of row 2 & 3 */
+		auto r2_c3 = AND256(row2, mask_3);
+		auto r3_c3 = AND256(row3, mask_3);
+		row2 = OR256(ANDNOT256(mask_3, row2), r3_c3);
+		row3 = OR256(ANDNOT256(mask_3, row3), r2_c3);
+		
+		/* SWAP cell 1 of row 2 with cell 0 of row 3 */
+		auto r2_c1 = PERM_4x64(AND256(row2, mask_1), 0b11100001);
+		auto r3_c0 = PERM_4x64(AND256(row3, mask_0), 0b11100001);
+		row2 = OR256(ANDNOT256(mask_1, row2), r3_c0);
+		row3 = OR256(ANDNOT256(mask_0, row3), r2_c1);
+		
+		
+		STOREU256(state->segments256[2] + i, state->segments256[0][i]);
+		STOREU256(state->segments256[3] + i, state->segments256[1][i]);
+		STOREU256(state->segments256[0] + i, row2);
+		STOREU256(state->segments256[1] + i, row3);
+	}
+	#else
+	auto copy = state->halves[0];
+	
+	state->cells[0] = state->cells[0x9];
+	state->cells[1] = state->cells[0xF];
+	state->cells[2] = state->cells[0x8];
+	state->cells[3] = state->cells[0xD];
+	state->cells[4] = state->cells[0xA];
+	state->cells[5] = state->cells[0xE];
+	state->cells[6] = state->cells[0xC];
+	state->cells[7] = state->cells[0xB];
+	
+	state->halves[1] = copy;
+	#endif
 
-	
-	auto copy = input->halves[0];
-	
-	input->cells[0] = input->cells[0x9];
-	input->cells[1] = input->cells[0xF];
-	input->cells[2] = input->cells[0x8];
-	input->cells[3] = input->cells[0xD];
-	input->cells[4] = input->cells[0xA];
-	input->cells[5] = input->cells[0xE];
-	input->cells[6] = input->cells[0xC];
-	input->cells[7] = input->cells[0xB];
-	
-	input->halves[1] = copy;
-	
-	// Input:   0x FEDC BA98 7654 3210
-	
-	// Erik:    0x 7654 3210 DABF 9C8E
-	// Us:      0x 7654 3210 DABF 9C8E
-
-//	auto res = unslice_accelerated_internal(output).values[0];
-//	auto test_output0 = res.raw[0];
-//	auto test_output1 = res.raw[1];
+	// 0x F81B E754 E87C 8DC2
+	// 0x 46E3 FBF2 ABBA CD29
+//	auto res = unslice128(state).values[0];
+//	int appel = 1;
 }
 
 static inline void xor_keys(State128Sliced_t *a, State128Sliced_t *b, State128Sliced_t *out, const int half) {

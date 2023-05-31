@@ -8,10 +8,12 @@
 #include "../common.h"
 #include "../utils/slicing64-accelerated-internal.h"
 #include "../utils/slicing64-internal.h"
+#include "../common.h"
+#include "../utils/slicing64.h"
 
 static inline void tk2_lfsr(State64Sliced_t *state, const bool full_state = false) {
 	int bound = full_state ? 4 : 2;
-	#if AVX2_acceleration || AVX512_acceleration
+	#if AVX2_acceleration
 	for (int i = 0; i < bound; ++i) {
 		auto temp = state->segments256[i][3];
 		state->segments256[i][3] = state->segments256[i][2];
@@ -32,7 +34,7 @@ static inline void tk2_lfsr(State64Sliced_t *state, const bool full_state = fals
 
 static inline void tk3_lfsr(State64Sliced_t *state, const bool full_state = false) {
 	int bound = full_state ? 4 : 2;
-	#if AVX2_acceleration || AVX512_acceleration
+	#if AVX2_acceleration
 	for (int i = 0; i < bound; ++i) {
 		auto temp = state->segments256[i][0];
 		state->segments256[i][0] = state->segments256[i][1];
@@ -48,45 +50,39 @@ static inline void tk3_lfsr(State64Sliced_t *state, const bool full_state = fals
 		state->cells[i].slices[0] = state->cells[i].slices[1];
 		state->cells[i].slices[1] = state->cells[i].slices[2];
 		state->cells[i].slices[2] = state->cells[i].slices[3];
-		state->cells[i].slices[3].value = XOR_SLICE(temp.value, state->cells[i].slices[2].value);
+		state->cells[i].slices[3].value = XOR_SLICE(temp.value, state->cells[i].slices[3].value);
 	}
 	#endif
 }
 
-#if AVX2_support
-auto mask_0 = _mm256_set_epi64x(0, 0, 0, -1ULL);
-auto mask_1 = _mm256_set_epi64x(0, 0, -1ULL, 0);
-auto mask_2 = _mm256_set_epi64x(0, -1ULL, 0, 0);
-#endif
-
-/// Make sure you first understand how the nibble-swapped cipher state looks like
+/// Make sure you first understand how the nibble-swapped cipher works
 static inline void permute(State64Sliced_t *state) {
 //	auto test_blocks = Blocks64_t();
-//	test_blocks.values[0].raw = 0xEFCDAB8967452301;
-//	*state = slice_accelerated_internal(&test_blocks);
+//	test_blocks.values[0].raw = 0xFEDCBA9876543210;
+//	*state = slice64(&test_blocks);
 	
-	#if AVX2_acceleration || AVX512_acceleration
+	#if AVX2_acceleration
 	for (int i = 0; i < 4; ++i) {
 		auto row2 = LOADU256(state->segments256[2] + i);
 		auto row3 = LOADU256(state->segments256[3] + i);
-		
-		/* Align row 2 & 3 for easy segment swapping */
+
+		/* Align row 2 & 3 for easy segment64 swapping */
 		row2 = PERM_4x64(row2, 0b01100011);
 		row3 = PERM_4x64(row3, 0b01001011);
-		
+
 		/* SWAP cell 1 of row 2 & 3 */
 		auto r2_c2 = AND256(row2, mask_2);
 		auto r3_c2 = AND256(row3, mask_2);
 		row2 = OR256(ANDNOT256(mask_2, row2), r3_c2);
 		row3 = OR256(ANDNOT256(mask_2, row3), r2_c2);
-		
+
 		/* SWAP cell 0 of row 2 with cell 1 of row 3 */
 		auto r2_c0 = PERM_4x64(AND256(row2, mask_0), 0b11100001);
 		auto r3_c1 = PERM_4x64(AND256(row3, mask_1), 0b11100001);
 		row2 = OR256(ANDNOT256(mask_0, row2), r3_c1);
 		row3 = OR256(ANDNOT256(mask_1, row3), r2_c0);
-		
-		
+
+
 		STOREU256(state->segments256[2] + i, state->segments256[0][i]);
 		STOREU256(state->segments256[3] + i, state->segments256[1][i]);
 		STOREU256(state->segments256[0] + i, row2);
@@ -119,7 +115,7 @@ static inline void permute(State64Sliced_t *state) {
 	// Erik:    0x 7654 3210 DABF 9C8E
 	// Us:      0x 7654 3210 DABF 9C8E
 
-//	auto test_output = unslice_accelerated_internal(state).values[0].raw;
+//	auto test_output = unslice64(state).values[0].raw;
 //	int appel = 1;
 }
 

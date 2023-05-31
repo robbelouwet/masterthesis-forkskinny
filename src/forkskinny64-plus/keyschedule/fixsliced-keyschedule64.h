@@ -6,7 +6,7 @@
 #include "../utils/slicing64-internal.h"
 
 static inline void fixslice_permute(State64Sliced_t *src, State64Sliced_t *dst, int i) {
-	#if AVX2_acceleration || AVX512_acceleration
+	#if AVX2_acceleration
 	for (int j = 0; j < 16; ++j) {
 		auto cell_src = fixsliced_pt64[i][j];
 		

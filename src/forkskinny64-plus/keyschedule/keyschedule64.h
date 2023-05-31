@@ -13,7 +13,7 @@ static inline void forkskinny_64_init_tk2_internal(State64Sliced_t *tk1, State64
 		xor_keys(tk1, tk2, &res, 0);
 		//auto test_tks = unslice_accelerated_internal(res);
 		
-		//forkskinny64_add_constant(&(res.halves[0]), i);
+		forkskinny64_add_constant(&(res.halves[0]), i);
 		
 		// Keep in mind: the C2 constant relating to the 9nth cell is part of the 2nd 'half'!
 		// So we add 0x2 at the key injection step
@@ -41,7 +41,7 @@ static inline void forkskinny_64_init_tk23_internal(State64Sliced_t *tk1, State6
 		
 		// Keep in mind: the C2 constant relating to the 9nth cell is part of the 2nd 'half'!
 		// So we add 0x2 at the key injection step
-		//forkskinny64_add_constant(&(res.halves[0]), i);
+		forkskinny64_add_constant(&(res.halves[0]), i);
 		
 		out->keys[i] = res.halves[0];
 		

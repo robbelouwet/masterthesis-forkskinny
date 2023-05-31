@@ -7,22 +7,23 @@
 #include "../test_vectors.h"
 #include "utils/slicing128.h"
 #include "keyschedule/keyschedule128.h"
+#include "forkskinny128.h"
 
 void test() {
 	
 	Blocks128_t b;
 	for (int i = 0; i < slice_size; i += 4) {
-		b.values[i].raw[0] =     0xAAAAAAAAAAAAAAA0;
+		b.values[i].raw[0] = 0xAAAAAAAAAAAAAAA0;
 		b.values[i + 1].raw[0] = 0xBBBBBBBBBBBBBBB0;
 		b.values[i + 2].raw[0] = 0xCCCCCCCCCCCCCCC0;
 		b.values[i + 3].raw[0] = 0xDDDDDDDDDDDDDDD0;
 		// ----------------------------------------
-		b.values[i].raw[1] =     0xAAAAAAAAAAAAAAA1;
+		b.values[i].raw[1] = 0xAAAAAAAAAAAAAAA1;
 		b.values[i + 1].raw[1] = 0xBBBBBBBBBBBBBBB1;
 		b.values[i + 2].raw[1] = 0xCCCCCCCCCCCCCCC1;
 		b.values[i + 3].raw[1] = 0xDDDDDDDDDDDDDDD1;
 	}
-
+	
 	b = M_rand_128(21);
 	auto res = slice_internal(&b);
 	auto res1 = slice_accelerated_internal(&b);
@@ -30,14 +31,20 @@ void test() {
 	auto unsliced = unslice_internal(&res);
 	auto unsliced1 = unslice_accelerated_internal(&res1);
 	
+	#if slice_size <= 64
 	for (int i = 0; i < 128; ++i)
 		assert(res.raw[i].value == res1.raw[i].value);
-
+	#else
+	for (int i = 0; i < 128; ++i)
+		assert(res.raw[i].value[0] == res1.raw[i].value[0]);
+	#endif
+	
 	for (int i = 0; i < slice_size; ++i) {
 		assert(unsliced1.values[i].raw[0] == unsliced.values[i].raw[0]);
 		assert(unsliced1.values[i].raw[1] == unsliced.values[i].raw[1]);
 	}
 }
+
 //
 //void test_forkskinny_128_256() {
 //	std::cout << "\nforkskinny128-256\n";
@@ -86,9 +93,10 @@ void test() {
 //
 //}
 //
-void test_forkskinny_128_384(int keysize, uint64_t test_C0[2], uint64_t test_C1[2]) {
+void test_forkskinny_128_384(int keysize, uint64_t C0_A, uint64_t C0_B,
+                             uint64_t C1_A, uint64_t C1_B) {
 	std::cout << "\nFORKSKINNY128-" << keysize << " (s=b)" << std::endl;
-
+	
 	/// PT Blocks
 	auto uM = M_128();
 	auto M = slice128(&uM);
@@ -99,6 +107,19 @@ void test_forkskinny_128_384(int keysize, uint64_t test_C0[2], uint64_t test_C1[
 	auto uTK3 = TK3_128();
 	auto TK3 = slice128(&uTK3);
 	auto original_pt = unslice128(&M);
+	
+//	KeySchedule128Sliced_t ks_improved;
+//	auto TK1a = TK1; auto TK2a = TK2; auto TK3a = TK3;
+//	forkskinny_128_init_tk23_fixsliced_internal(&TK1, &TK2, &TK3, &ks_improved);
+//
+//	KeySchedule128Sliced_t ks_original;
+//	forkskinny_128_init_tk23_internal(&TK1a, &TK2a, &TK3a, &ks_original);
+//
+//	for (int i = 0; i < FORKSKINNY128_MAX_ROUNDS; ++i)
+//		for (int j = 0; j < 64; ++j)
+//			assert(ks_improved.keys[i].raw[j].value == ks_original.keys[i].raw[j].value);
+	
+	
 	
 	/// Key schedule
 	auto schedule = KeySchedule128Sliced_t();
@@ -117,21 +138,36 @@ void test_forkskinny_128_384(int keysize, uint64_t test_C0[2], uint64_t test_C1[
 	auto rtk7 = unslice128({.halves = {schedule.keys[7], {}}}).values[0].raw[0]; // 0x 75B1 84A2 92F3 A118
 	// @formatter:on
 	
-	int appel = 1;
-
-
-//	// test C1 -> (C0, M)
-//	for (int i = 0; i < slice_size; ++i) {
-//		assert(result_M.values[i].raw[0] == 0xEC4AFF517369C667);
-//		assert(result_M.values[i].raw[1] == 0x80);
-//		assert(result_C0.values[i].raw[0] == 0x72D8874177DC8C16);
-//		assert(result_C0.values[i].raw[1] == 0x266DA48EA11FD273);
-//	}
+	State128Sliced_t C0;
+	State128Sliced_t C1;
+	forkskinny128_encrypt(&schedule, &M, &C0, &C1, '0',
+	                      FORKSKINNY_128_384_ROUNDS_BEFORE, FORKSKINNY_128_384_ROUNDS_AFTER);
+	
+	SlicedCiphertext128_t ct = SlicedCiphertext128_t{.C1 = C1, .C0 = C0};
+	auto result_C0 = unslice128(&(ct.C0));
+	
+	
+	SlicedCiphertext128_t res;
+	forkskinny128_decrypt(&schedule, &ct, &res, '0', 'b',
+	                      FORKSKINNY_128_384_ROUNDS_BEFORE, FORKSKINNY_128_384_ROUNDS_AFTER);
+	
+	auto result_M = unslice128(&(res.M));
+	auto result_C1 = unslice128(&(res.C1));
+	
+	// test C1 -> (C0, M)
+	for (int i = 0; i < slice_size; ++i) {
+		assert(result_M.values[i].raw[0] == original_pt.values[i].raw[0]);
+		assert(result_M.values[i].raw[1] == original_pt.values[i].raw[1]);
+		assert(result_C1.values[i].raw[0] == C1_A);
+		assert(result_C1.values[i].raw[1] == C1_B);
+		assert(result_C0.values[i].raw[0] == C0_A);
+		assert(result_C0.values[i].raw[1] == C0_B);
+	}
 }
 
 
 int main() {
 //	test_forkskinny_128_256();
-	test_forkskinny_128_384(384, nullptr, nullptr);
+	test_forkskinny_128_384(384, 0x72D8874177DC8C16, 0x266DA48EA11FD273, 0x4f318ce8a6a22f06, 0x09e2dd8ecd1c6945);
 //	test();
 }
