@@ -56,6 +56,8 @@ void benchmark_forkskinny64_128() {
 	auto rounds_before = FORKSKINNY_ROUNDS_BEFORE;
 	auto rounds_after = FORKSKINNY_ROUNDS_AFTER;
 	auto rounds = rounds_before + rounds_after;
+	auto slicing_label = FAST_SLICING ? "Fast slicing" : "Naive slicing";
+	auto ks_label = IMPROVED_KEYSCHEDULE ? "Improved KS" : "Original ks";
 	
 	std::cout << slice_size << " blocks in parallel\n";
 	std::cout << rounds << " rounds per primitive call\n--------\n";
@@ -96,12 +98,12 @@ void benchmark_forkskinny64_128() {
 	double encryption_per_primitive = cycles_encryption_per_pack / slice_size;
 	double decryption_per_primitive = cycles_decryption_per_pack / slice_size;
 	double schedule_per_primitive = cycles_schedule_per_pack / slice_size;
-	std::cout << slicing_per_primitive << " spent on slicing per single block\n";
+	std::cout << slicing_per_primitive << " spent on slicing per single block (" << slicing_label <<")\n";
 	std::cout << encryption_per_primitive
 	          << " cycles on encryption alone per single block (slicing excluded)\n";
 	std::cout << decryption_per_primitive
 	          << " cycles on decryption alone per single block (slicing excluded)\n";
-	std::cout << schedule_per_primitive << " cycles spent on key schedule alone PER PRIMITIVE\n";
+	std::cout << schedule_per_primitive << " cycles spent on key schedule alone PER PRIMITIVE (" << ks_label << ")\n";
 	std::cout << "-->" << cycles_per_byte << " cycles per byte\n";
 	std::cout << (cycles_per_byte / rounds) * 36 << " cycles per byte per 36 rounds\n";
 	std::cout << cycles_per_round << " cycles per round";
@@ -113,6 +115,8 @@ void benchmark_forkskinny64_192() {
 	auto rounds_before = FORKSKINNY_ROUNDS_BEFORE;
 	auto rounds_after = FORKSKINNY_ROUNDS_AFTER;
 	auto rounds = rounds_before + rounds_after;
+	auto slicing_label = FAST_SLICING ? "Fast slicing" : "Naive slicing";
+	auto ks_label = IMPROVED_KEYSCHEDULE ? "Improved KS" : "Original ks";
 	
 	std::cout << slice_size << " blocks in parallel\n";
 	std::cout << rounds << " rounds per primitive call\n--------\n";
@@ -153,12 +157,12 @@ void benchmark_forkskinny64_192() {
 	double encryption_per_primitive = cycles_encryption_per_pack / slice_size;
 	double decryption_per_primitive = cycles_decryption_per_pack / slice_size;
 	double schedule_per_primitive = cycles_schedule_per_pack / slice_size;
-	std::cout << slicing_per_primitive << " spent on slicing per single block\n";
+	std::cout << slicing_per_primitive << " spent on slicing per single block (" << slicing_label << ")\n";
 	std::cout << encryption_per_primitive
 	          << " cycles on encryption alone per single block (slicing excluded)\n";
 	std::cout << decryption_per_primitive
-	          << " cycles on decryption alone per single block (slicing excluded)\n";
-	std::cout << schedule_per_primitive << " cycles spent on key schedule alone PER PRIMITIVE\n";
+	          << " cycles on decryption alone per single block (slicing excludned)\n";
+	std::cout << schedule_per_primitive << " cycles spent on key schedule alone PER PRIMITIVE (" << ks_label << ")\n";
 	std::cout << "-->" << cycles_per_byte << " cycles per byte (encryption)\n";
 	std::cout << (cycles_per_byte / rounds) * 36 << " cycles per byte per 36 rounds (encryption)\n";
 	std::cout << cycles_per_round << " cycles per round (encryption)";
