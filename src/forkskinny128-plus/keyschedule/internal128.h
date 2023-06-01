@@ -5,7 +5,7 @@
 #include "../utils/forkskinny128-datatypes.h"
 #include "../common.h"
 
-static inline void tk2_lfsr(State128Sliced_t *state, const bool full_state = false) {
+static inline void tk2_lfsr128(State128Sliced_t *state, const bool full_state = false) {
 	auto bound = full_state ? 4 : 2;
 	#if AVX2_acceleration
 	for (int i = 0; i < bound; ++i) {
@@ -34,7 +34,7 @@ static inline void tk2_lfsr(State128Sliced_t *state, const bool full_state = fal
 	#endif
 }
 
-static inline void tk3_lfsr(State128Sliced_t *state, const bool full_state = false) {
+static inline void tk3_lfsr128(State128Sliced_t *state, const bool full_state = false) {
 	auto bound = full_state ? 4 : 2;
 	#if AVX2_acceleration
 	for (int i = 0; i < bound; ++i) {
@@ -63,7 +63,7 @@ static inline void tk3_lfsr(State128Sliced_t *state, const bool full_state = fal
 	#endif
 }
 
-static inline void permute(State128Sliced_t *state) {
+static inline void permute128(State128Sliced_t *state) {
 //	auto test_blocks = Blocks128_t();
 //	test_blocks.values[0].raw[0] = 0x7766554433221100;
 //	test_blocks.values[0].raw[1] = 0xFFEEDDCCBBAA9988;
@@ -71,8 +71,8 @@ static inline void permute(State128Sliced_t *state) {
 	
 	#if AVX2_acceleration
 	for (int i = 0; i < 8; ++i) {
-		auto row2 = LOADU256(state->segments256[2] + i);
-		auto row3 = LOADU256(state->segments256[3] + i);
+		auto row2 = LOAD256(state->segments256[2] + i);
+		auto row3 = LOAD256(state->segments256[3] + i);
 		
 		/* Align row 2 & 3 for easy segment64 swapping */
 		row2 = PERM_4x64(row2, 0b11001001);
@@ -91,10 +91,10 @@ static inline void permute(State128Sliced_t *state) {
 		row3 = OR256(ANDNOT256(mask_0, row3), r2_c1);
 		
 		
-		STOREU256(state->segments256[2] + i, state->segments256[0][i]);
-		STOREU256(state->segments256[3] + i, state->segments256[1][i]);
-		STOREU256(state->segments256[0] + i, row2);
-		STOREU256(state->segments256[1] + i, row3);
+		STORE256(state->segments256[2] + i, state->segments256[0][i]);
+		STORE256(state->segments256[3] + i, state->segments256[1][i]);
+		STORE256(state->segments256[0] + i, row2);
+		STORE256(state->segments256[1] + i, row3);
 	}
 	#else
 	auto copy = state->halves[0];
@@ -117,15 +117,15 @@ static inline void permute(State128Sliced_t *state) {
 //	int appel = 1;
 }
 
-static inline void xor_keys(State128Sliced_t *a, State128Sliced_t *b, State128Sliced_t *out, const int half) {
+static inline void xor_keys128(State128Sliced_t *a, State128Sliced_t *b, State128Sliced_t *out, const int half) {
 	if (half == 0 || half == -1) {
-		xor_row(&(a->rows[0]), &(b->rows[0]), &(out->rows[0]));
-		xor_row(&(a->rows[1]), &(b->rows[1]), &(out->rows[1]));
+		xor_row128(&(a->rows[0]), &(b->rows[0]), &(out->rows[0]));
+		xor_row128(&(a->rows[1]), &(b->rows[1]), &(out->rows[1]));
 	}
 	
 	if (half == -1 || half == 1) {
-		xor_row(&(a->rows[2]), &(b->rows[2]), &(out->rows[2]));
-		xor_row(&(a->rows[3]), &(b->rows[3]), &(out->rows[3]));
+		xor_row128(&(a->rows[2]), &(b->rows[2]), &(out->rows[2]));
+		xor_row128(&(a->rows[3]), &(b->rows[3]), &(out->rows[3]));
 	}
 	
 }

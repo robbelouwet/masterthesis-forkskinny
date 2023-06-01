@@ -11,7 +11,7 @@
 #include "../common.h"
 #include "../utils/slicing64.h"
 
-static inline void tk2_lfsr(State64Sliced_t *state, const bool full_state = false) {
+static inline void tk2_lfsr64(State64Sliced_t *state, const bool full_state = false) {
 	int bound = full_state ? 4 : 2;
 	#if AVX2_acceleration
 	for (int i = 0; i < bound; ++i) {
@@ -32,7 +32,7 @@ static inline void tk2_lfsr(State64Sliced_t *state, const bool full_state = fals
 	#endif
 }
 
-static inline void tk3_lfsr(State64Sliced_t *state, const bool full_state = false) {
+static inline void tk3_lfsr64(State64Sliced_t *state, const bool full_state = false) {
 	int bound = full_state ? 4 : 2;
 	#if AVX2_acceleration
 	for (int i = 0; i < bound; ++i) {
@@ -56,15 +56,15 @@ static inline void tk3_lfsr(State64Sliced_t *state, const bool full_state = fals
 }
 
 /// Make sure you first understand how the nibble-swapped cipher works
-static inline void permute(State64Sliced_t *state) {
+static inline void permute64(State64Sliced_t *state) {
 //	auto test_blocks = Blocks64_t();
 //	test_blocks.values[0].raw = 0xFEDCBA9876543210;
 //	*state = slice64(&test_blocks);
 	
 	#if AVX2_acceleration
 	for (int i = 0; i < 4; ++i) {
-		auto row2 = LOADU256(state->segments256[2] + i);
-		auto row3 = LOADU256(state->segments256[3] + i);
+		auto row2 = LOAD256(state->segments256[2] + i);
+		auto row3 = LOAD256(state->segments256[3] + i);
 
 		/* Align row 2 & 3 for easy segment64 swapping */
 		row2 = PERM_4x64(row2, 0b01100011);
@@ -83,16 +83,16 @@ static inline void permute(State64Sliced_t *state) {
 		row3 = OR256(ANDNOT256(mask_1, row3), r2_c0);
 
 
-		STOREU256(state->segments256[2] + i, state->segments256[0][i]);
-		STOREU256(state->segments256[3] + i, state->segments256[1][i]);
-		STOREU256(state->segments256[0] + i, row2);
-		STOREU256(state->segments256[1] + i, row3);
+		STORE256(state->segments256[2] + i, state->segments256[0][i]);
+		STORE256(state->segments256[3] + i, state->segments256[1][i]);
+		STORE256(state->segments256[0] + i, row2);
+		STORE256(state->segments256[1] + i, row3);
 	}
 	
 	#else
 	//	HalfState64Sliced_t top = (*state).halves[0];
 	//	State64Sliced_t temp = State64Sliced_t{.halves = {{}, top}};
-	//	auto testtemp = unslice_accelerated_internal(&temp).values[0].raw;
+	//	auto testtemp = unslice128_accelerated_internal(&temp).values[0].raw;
 	
 	HalfState64Sliced_t copy = state->halves[0];
 	
@@ -119,15 +119,15 @@ static inline void permute(State64Sliced_t *state) {
 //	int appel = 1;
 }
 
-static inline void xor_keys(State64Sliced_t *a, State64Sliced_t *b, State64Sliced_t *out, const int half) {
+static inline void xor_keys64(State64Sliced_t *a, State64Sliced_t *b, State64Sliced_t *out, const int half) {
 	if (half == 0 || half == -1) {
-		xor_row(&(a->rows[0]), &(b->rows[0]), &(out->rows[0]));
-		xor_row(&(a->rows[1]), &(b->rows[1]), &(out->rows[1]));
+		xor_row64(&(a->rows[0]), &(b->rows[0]), &(out->rows[0]));
+		xor_row64(&(a->rows[1]), &(b->rows[1]), &(out->rows[1]));
 	}
 	
 	if (half == -1 || half == 1) {
-		xor_row(&(a->rows[2]), &(b->rows[2]), &(out->rows[2]));
-		xor_row(&(a->rows[3]), &(b->rows[3]), &(out->rows[3]));
+		xor_row64(&(a->rows[2]), &(b->rows[2]), &(out->rows[2]));
+		xor_row64(&(a->rows[3]), &(b->rows[3]), &(out->rows[3]));
 	}
 	
 }

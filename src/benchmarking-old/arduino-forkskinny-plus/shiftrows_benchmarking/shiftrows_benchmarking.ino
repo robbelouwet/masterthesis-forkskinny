@@ -62,7 +62,7 @@ typedef union {
 } State64_t;
 
 /**
- * For every nibble, take the ith significant bit and unpack those all together.
+ * For every nibble, take the ith significant bit and unpack128 those all together.
  *
  * E.g.:
  *       v    v    v
@@ -403,7 +403,7 @@ void shift_rows_sliced_packed_rows(State64Sliced_16_t *state) {
   // Split up every slice_t into 4 rows each
   // So if slice0 contains 16 bits, then the first 4 bits of slice0 correspond to the most significant bit
   // of the first 4 cells (-> MSB because it's the first slice_t).
-  // By this analogy, unpack all the bits of the same row over every slice_t next to each other.
+  // By this analogy, unpack128 all the bits of the same row over every slice_t next to each other.
   uint16_t first_rows = ((slice0 & 0x0F00) << 4) | (slice1 & 0x0F00) | ((slice2 & 0x0F00) >> 4) | ((slice3 & 0x0F00) >> 8);
   uint16_t second_rows = ((slice0 & 0x00F0) << 8) | ((slice1 & 0x00F0) << 4) | (slice2 & 0x00F0) | ((slice3 & 0x00F0) >> 4);
   uint16_t third_rows = ((slice0 & 0x000F) << 12) | ((slice1 & 0x000F) << 8) | ((slice2 & 0x000F) << 4) | (slice3 & 0x000F);

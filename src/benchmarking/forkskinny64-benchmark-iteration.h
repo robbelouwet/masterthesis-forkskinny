@@ -11,9 +11,9 @@
 #include "../forkskinny64-plus/utils/slicing64.h"
 #include <benchmark/benchmark.h>
 
-static inline void benchmark_forkskinny64_192_sb(ULL *slice_timing, ULL *schedule_timing,
-                                                 ULL *encryption_timing, ULL *decryption_timing,
-                                                 ULL *unslice_timing) {
+static inline void benchmark_forkskinny64_192_iteration(ULL *slice_timing, ULL *schedule_timing,
+                                                        ULL *encryption_timing, ULL *decryption_timing,
+                                                        ULL *unslice_timing) {
 	auto unsliced_test_M = M_64();
 	auto unsliced_test_TK1 = TK1_64();
 	auto unsliced_test_TK2 = TK2_64();
@@ -63,9 +63,9 @@ static inline void benchmark_forkskinny64_192_sb(ULL *slice_timing, ULL *schedul
 	}
 }
 
-static inline void benchmark_forkskinny64_128_sb(ULL *slice_timing, ULL *schedule_timing,
-                                                 ULL *encryption_timing, ULL *decryption_timing,
-                                                 ULL *unslice_timing) {
+static inline void benchmark_forkskinny64_128_iteration(ULL *slice_timing, ULL *schedule_timing,
+                                                        ULL *encryption_timing, ULL *decryption_timing,
+                                                        ULL *unslice_timing) {
 	auto unsliced_test_M = M_64();
 	auto unsliced_test_TK1 = TK1_64();
 	auto unsliced_test_TK2 = TK2_64();

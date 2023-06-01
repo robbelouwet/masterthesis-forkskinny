@@ -51,7 +51,7 @@ void benchmark_PAEF_forkskinny64_192() {
 }
 
 void benchmark_forkskinny64_128() {
-	std::cout << "\nFORKSKINNY64-128\n";
+	std::cout << "\nFORKSKINNY64-128 (s=0)\n";
 	auto iterations = 5000;
 	auto rounds_before = FORKSKINNY_ROUNDS_BEFORE;
 	auto rounds_after = FORKSKINNY_ROUNDS_AFTER;
@@ -65,7 +65,7 @@ void benchmark_forkskinny64_128() {
 	ULL slice_timings[iterations], schedule_timings[iterations], encryption_timings[iterations],
 			decryption_timings[iterations], unslice_timings[iterations];
 	for (int i = 0; i < iterations; ++i)
-		benchmark_forkskinny64_128_sb(
+		benchmark_forkskinny64_128_iteration(
 				slice_timings + i,
 				schedule_timings + i,
 				encryption_timings + i,
@@ -110,7 +110,7 @@ void benchmark_forkskinny64_128() {
 }
 
 void benchmark_forkskinny64_192() {
-	std::cout << "\nFORKSKINNY64-192\n";
+	std::cout << "\nFORKSKINNY64-192 (s=0)\n";
 	auto iterations = 5000;
 	auto rounds_before = FORKSKINNY_ROUNDS_BEFORE;
 	auto rounds_after = FORKSKINNY_ROUNDS_AFTER;
@@ -124,7 +124,7 @@ void benchmark_forkskinny64_192() {
 	ULL slice_timings[iterations], schedule_timings[iterations], encryption_timings[iterations],
 			decryption_timings[iterations], unslice_timings[iterations];
 	for (int i = 0; i < iterations; ++i)
-		benchmark_forkskinny64_192_sb(
+		benchmark_forkskinny64_192_iteration(
 				slice_timings + i,
 				schedule_timings + i,
 				encryption_timings + i,

@@ -33,7 +33,7 @@ static inline void forkskinny128_add_constant(HalfState128Sliced_t *state, uint1
 	state->cells[2].slices[1].value = XOR_SLICE(state->cells[2].slices[1].value, slice_ONE);
 	#endif
 	
-	//auto unsliced_res = unslice_accelerated_internal(*state).values[0].raw;
+	//auto unsliced_res = unslice128_accelerated_internal(*state).values[0].raw;
 	//int appel = 1;
 }
 

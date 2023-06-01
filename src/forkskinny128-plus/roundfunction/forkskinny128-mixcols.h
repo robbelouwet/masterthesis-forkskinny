@@ -14,11 +14,11 @@ static void inline assign_segmented_row(uint8_t from, uint8_t to, State128Sliced
 static inline void forkskinny128_mixcols(State128Sliced_t *state) {
 //	auto test_blocks = Blocks128_t();
 //	test_blocks.values[0].raw = 0x55557555B6988DDF;
-//	*state = slice_internal(test_blocks);
+//	*state = slice128_internal(test_blocks);
 	
 	#if AVX2_acceleration
-	xor_row(&(state->rows[1]), &(state->rows[2]), &(state->rows[1]));
-	xor_row(&(state->rows[2]), &(state->rows[0]), &(state->rows[2]));
+	xor_row128(&(state->rows[1]), &(state->rows[2]), &(state->rows[1]));
+	xor_row128(&(state->rows[2]), &(state->rows[0]), &(state->rows[2]));
 	
 	auto temp0 = XOR256(state->segments256[3][0], state->segments256[2][0]);
 	auto temp1 = XOR256(state->segments256[3][1], state->segments256[2][1]);
@@ -29,7 +29,7 @@ static inline void forkskinny128_mixcols(State128Sliced_t *state) {
 	auto temp6 = XOR256(state->segments256[3][6], state->segments256[2][6]);
 	auto temp7 = XOR256(state->segments256[3][7], state->segments256[2][7]);
 	
-	xor_row(&(state->rows[2]), &(state->rows[3]), &(state->rows[3]));
+	xor_row128(&(state->rows[2]), &(state->rows[3]), &(state->rows[3]));
 	assign_segmented_row(2, 3, state);
 	assign_segmented_row(1, 2, state);
 	assign_segmented_row(0, 1, state);
@@ -43,11 +43,11 @@ static inline void forkskinny128_mixcols(State128Sliced_t *state) {
 	state->segments256[0][6] = temp6;
 	state->segments256[0][7] = temp7;
 	#else
-	xor_row(&(state->rows[1]), &(state->rows[2]), &(state->rows[1]));
-	xor_row(&(state->rows[2]), &(state->rows[0]), &(state->rows[2]));
+	xor_row128(&(state->rows[1]), &(state->rows[2]), &(state->rows[1]));
+	xor_row128(&(state->rows[2]), &(state->rows[0]), &(state->rows[2]));
 	
 	Row128_t temp;
-	xor_row(&(state->rows[3]), &(state->rows[2]), &temp);
+	xor_row128(&(state->rows[3]), &(state->rows[2]), &temp);
 	state->rows[3] = state->rows[2];
 	state->rows[2] = state->rows[1];
 	state->rows[1] = state->rows[0];
@@ -98,7 +98,7 @@ static inline void forkskinny128_mixcols_inv(State128Sliced_t *state) {
 	state->segments256[2][6] = XOR256(state->segments256[0][6], temp6);
 	state->segments256[2][7] = XOR256(state->segments256[0][7], temp7);
 	
-	xor_row(&(state->rows[1]), &(state->rows[2]), &(state->rows[1]));
+	xor_row128(&(state->rows[1]), &(state->rows[2]), &(state->rows[1]));
 	#else
 	Row128_t temp = state->rows[3];
 	
@@ -106,9 +106,9 @@ static inline void forkskinny128_mixcols_inv(State128Sliced_t *state) {
 	state->rows[0] = state->rows[1];
 	state->rows[1] = state->rows[2];
 	
-	xor_row(&(state->rows[3]), &temp, &(state->rows[3]));
-	xor_row(&(state->rows[0]), &temp, &(state->rows[2]));
-	xor_row(&(state->rows[1]), &(state->rows[2]), &(state->rows[1]));
+	xor_row128(&(state->rows[3]), &temp, &(state->rows[3]));
+	xor_row128(&(state->rows[0]), &temp, &(state->rows[2]));
+	xor_row128(&(state->rows[1]), &(state->rows[2]), &(state->rows[1]));
 	#endif
 	
 	// F5AA F1BC 72D8 8741 || 0x 51B1 2898 54B5 23CF

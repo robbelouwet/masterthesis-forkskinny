@@ -10,7 +10,7 @@
  * @param significance LSB = 0, MSB = 63
  * @return
  */
-static inline Slice64_t slice_significance(const Blocks64_t *blocks, uint8_t significance) {
+static inline Slice64_t slice_significance64(const Blocks64_t *blocks, uint8_t significance) {
 	u64 mask = 1ULL << significance;
 	auto slice = Slice64_t();
 	
@@ -57,15 +57,15 @@ static inline Slice64_t slice_significance(const Blocks64_t *blocks, uint8_t sig
 	return slice;
 }
 
-static inline State64Sliced_t slice_internal(const Blocks64_t *blocks,
-											 const bool segment = AVX2_acceleration) {
+static inline State64Sliced_t slice_internal64(const Blocks64_t *blocks,
+                                               const bool segment = AVX2_acceleration) {
 	State64Sliced_t unsegmented = State64Sliced_t();
 	for (uint i = 0; i < 64; ++i) {
-		unsegmented.raw[i] = slice_significance(blocks, i);
+		unsegmented.raw[i] = slice_significance64(blocks, i);
 	}
 	
 	State64Sliced_t result;
-	try_segment(unsegmented.raw, &result, segment);
+	try_segment64(unsegmented.raw, &result, segment);
 	return result;
 }
 
@@ -73,10 +73,10 @@ static inline State64Sliced_t slice_internal(const Blocks64_t *blocks,
  *
  * @param slice
  * @param blocks
- * @param significance the index of the Slice64_t, what 'significance' are we talking about w.r.t. the slice_internal.
- * 					E.g. the very first slice_internal contains the *least* significant bits of 64 states
+ * @param significance the index of the Slice64_t, what 'significance' are we talking about w.r.t. the slice128_internal.
+ * 					E.g. the very first slice128_internal contains the *least* significant bits of 64 states
  */
-static inline void unslice_significance(const Slice64_t *slice, Blocks64_t *blocks, uint8_t significance) {
+static inline void unslice_significance64(const Slice64_t *slice, Blocks64_t *blocks, uint8_t significance) {
 	#if slice_size == 128
 	uint8_t chunks[2] = {0, 64};
 	
@@ -121,7 +121,7 @@ static inline void unslice_significance(const Slice64_t *slice, Blocks64_t *bloc
 	
 }
 
-static void inline try_unsegment(State64Sliced_t *state, const bool segmented, Slice64_t *slices) {
+static void inline try_unsegment64(State64Sliced_t *state, const bool segmented, Slice64_t *slices) {
 	if (segmented) {
 		#if AVX2_acceleration
 		for (int i = 0; i < 4; ++i) {
@@ -136,19 +136,19 @@ static void inline try_unsegment(State64Sliced_t *state, const bool segmented, S
 		for (int i = 0; i < 64; ++i) slices[i] = state->raw[i];
 }
 
-static inline void unslice_internal(State64Sliced_t *state, Blocks64_t *result,
-										  const bool segmented = AVX2_acceleration) {
+static inline void unslice_internal64(State64Sliced_t *state, Blocks64_t *result,
+                                      const bool segmented = AVX2_acceleration) {
 	Slice64_t slices[64];
-	try_unsegment(state, segmented, slices);
+	try_unsegment64(state, segmented, slices);
 	
 	for (int i = 0; i < 64; ++i)
-		unslice_significance(slices + i, result, i);
+		unslice_significance64(slices + i, result, i);
 }
 
-static inline Blocks64_t unslice_internal(State64Sliced_t *state,
-                                          const bool segmented = AVX2_acceleration) {
+static inline Blocks64_t unslice_internal64(State64Sliced_t *state,
+                                            const bool segmented = AVX2_acceleration) {
 	Blocks64_t result = Blocks64_t();
-	unslice_internal(state, &result, segmented);
+	unslice_internal64(state, &result, segmented);
 	return result;
 }
 

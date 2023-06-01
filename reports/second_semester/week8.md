@@ -6,7 +6,7 @@ Looked into the memory alignment for SIMD. Turns out that unaligned loads from t
 loads from the heap, so I'm leaving it as-is. SIMD loads are unaligned (but addresses are 32-byte aligned still).
 I then looked into the segment64 slicing again. Although I think this could potentially give a big speedup, I decided (a
 few hours later) not to pursue it, because it would require a lot of changes in the implementation and I don't have time
-for this. Tomorrow I want to look at a last final idea to optimize the slice_internal and unslice_internal operation, but wednesday I'm
+for this. Tomorrow I want to look at a last final idea to optimize the slice128_internal and unslice128_internal operation, but wednesday I'm
 definitely starting on PAEF and s-PAEF modes, hopefully I can implement these in a few days, maybe a week tops, so that
 I can have the last 4-3 weeks to fully focus on writing the theses.
 
@@ -37,5 +37,5 @@ need to test.
 # Sunday
 
 PAEF-forkskinny-64-192 (encryption only) implemented. PAEF-AD encryption takes less cycles than vanilla primitive
-encryption, because we slice_internal less key material. Apparently I messed up my benchmarking calculations, it appears the
+encryption, because we slice128_internal less key material. Apparently I messed up my benchmarking calculations, it appears the
 implementation is a lot slower than I thought. Gonna have to look into this, still have my idea to accelerate slicing.

@@ -6,7 +6,7 @@ Made tentative keys for this semester and compared with Arne Deprez' work.
 
 # Thursday
 
-Implemented the new slice_t and unslice_internal operation that slices and unslices 64x 64-bit states, and unslice_internal correctly. This
+Implemented the new slice_t and unslice128_internal operation that slices and unslices 64x 64-bit states, and unslice128_internal correctly. This
 works.
 
 # Friday

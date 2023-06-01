@@ -7,7 +7,7 @@
 #include "../../constants.h"
 #include "../roundfunction/forkskinny128-addconstant.h"
 
-static inline void fixslice_permute(State128Sliced_t *src, State128Sliced_t *dst, int i) {
+static inline void fixslice_permute128(State128Sliced_t *src, State128Sliced_t *dst, int i) {
 //	auto test_blocks = Blocks128_t{.values = {{.raw = {0x7766554433221100, 0xFFEEDDCCBBAA9988}}}};
 //	*src = slice128(&test_blocks);
 	#if AVX2_acceleration
@@ -28,7 +28,7 @@ static inline void fixslice_permute(State128Sliced_t *src, State128Sliced_t *dst
 		dst->cells[j] = src->cells[fixsliced_pt128[i][j]];
 	}
 	#endif
-	
+
 //	auto test_output = unslice128(dst).values[0];
 //	int appel = 1;
 }
@@ -46,29 +46,30 @@ static inline void fixslice_permute(State128Sliced_t *src, State128Sliced_t *dst
  * @return
  */
 static inline void forkskinny_128_init_tk23_fixsliced_internal(State128Sliced_t *tk1, State128Sliced_t *tk2,
-                                                               State128Sliced_t *tk3, KeySchedule128Sliced_t *out) {
+                                                               State128Sliced_t *tk3, const int amount,
+                                                               KeySchedule128Sliced_t *out) {
 	auto i = 0;
 	
 	// RTK0
 	State128Sliced_t res0;
-	xor_keys(tk2, tk3, &res0, 0);
-	xor_keys(tk1, &res0, &res0, 0);
+	xor_keys128(tk2, tk3, &res0, 0);
+	xor_keys128(tk1, &res0, &res0, 0);
 	
 	forkskinny128_add_constant(&(res0.halves[0]), i);
 	out->keys[i++] = res0.halves[0];
 	
 	// RTK N & N+1
-	for (; i < FORKSKINNY128_MAX_ROUNDS; i += 2) {
-		tk2_lfsr(tk2, true);
-		tk3_lfsr(tk3, true);
+	for (; i < amount; i += 2) {
+		tk2_lfsr128(tk2, true);
+		tk3_lfsr128(tk3, true);
 		
 		State128Sliced_t rtk_temp;
-		xor_keys(tk2, tk3, &rtk_temp, -1);
-		xor_keys(tk1, &rtk_temp, &rtk_temp, -1);
+		xor_keys128(tk2, tk3, &rtk_temp, -1);
+		xor_keys128(tk1, &rtk_temp, &rtk_temp, -1);
 		
 		State128Sliced_t temp; // 0x BB00 9900 2200 EE6C | 0x 9900 7700 EE00 448C
 		auto pt_index = (i + 1) & 0xF;
-		if (pt_index != 0) fixslice_permute(&rtk_temp, &temp, pt_index);
+		if (pt_index != 0) fixslice_permute128(&rtk_temp, &temp, pt_index);
 		else temp = rtk_temp;
 		
 		forkskinny128_add_constant(&(temp.halves[1]), i); // RTK N+1 comes before RTK N!
@@ -79,26 +80,26 @@ static inline void forkskinny_128_init_tk23_fixsliced_internal(State128Sliced_t 
 }
 
 static inline void forkskinny_128_init_tk2_fixsliced_internal(State128Sliced_t *tk1, State128Sliced_t *tk2,
-                                                              KeySchedule128Sliced_t *out) {
+                                                              const int amount, KeySchedule128Sliced_t *out) {
 	auto i = 0;
 	
 	// RTK0
 	State128Sliced_t res0;
-	xor_keys(tk1, tk2, &res0, 0);
+	xor_keys128(tk1, tk2, &res0, 0);
 	
 	forkskinny128_add_constant(&(res0.halves[0]), i);
 	out->keys[i++] = res0.halves[0];
 	
 	// RTK N & N+1
 	for (; i < FORKSKINNY128_MAX_ROUNDS; i += 2) {
-		tk2_lfsr(tk2, true);
+		tk2_lfsr128(tk2, true);
 		
 		State128Sliced_t rtk_temp;
-		xor_keys(tk1, tk2, &rtk_temp, -1);
+		xor_keys128(tk1, tk2, &rtk_temp, -1);
 		
 		State128Sliced_t temp; // 0x BB00 9900 2200 EE6C | 0x 9900 7700 EE00 448C
 		auto pt_index = (i + 1) & 0xF;
-		if (pt_index != 0) fixslice_permute(&rtk_temp, &temp, pt_index);
+		if (pt_index != 0) fixslice_permute128(&rtk_temp, &temp, pt_index);
 		else temp = rtk_temp;
 		
 		forkskinny128_add_constant(&(temp.halves[1]), i); // RTK N+1 comes before RTK N!

@@ -5,7 +5,7 @@
 #include "../roundfunction/forkskinny64-addconstant.h"
 #include "../utils/slicing64-internal.h"
 
-static inline void fixslice_permute(State64Sliced_t *src, State64Sliced_t *dst, int i) {
+static inline void fixslice_permute64(State64Sliced_t *src, State64Sliced_t *dst, int i) {
 	#if AVX2_acceleration
 	for (int j = 0; j < 16; ++j) {
 		auto cell_src = fixsliced_pt64[i][j];
@@ -40,24 +40,24 @@ static inline void forkskinny_64_init_tk23_fixsliced_internal(State64Sliced_t *t
 	
 	// RTK0
 	State64Sliced_t res0;
-	xor_keys(tk2, tk3, &res0, 0);
-	xor_keys(tk1, &res0, &res0, 0);
+	xor_keys64(tk2, tk3, &res0, 0);
+	xor_keys64(tk1, &res0, &res0, 0);
 	
 //	forkskinny64_add_constant(&(res0.halves[0]), i);
 	out->keys[i++] = res0.halves[0];
 	
 	// RTK N & N+1
 	for (; i < FORKSKINNY64_MAX_ROUNDS; i += 2) {
-		tk2_lfsr(tk2, true);
-		tk3_lfsr(tk3, true);
+		tk2_lfsr64(tk2, true);
+		tk3_lfsr64(tk3, true);
 		
 		State64Sliced_t rtk_temp;
-		xor_keys(tk2, tk3, &rtk_temp, -1);
-		xor_keys(tk1, &rtk_temp, &rtk_temp, -1);
+		xor_keys64(tk2, tk3, &rtk_temp, -1);
+		xor_keys64(tk1, &rtk_temp, &rtk_temp, -1);
 		
 		State64Sliced_t temp; // 0x BB00 9900 2200 EE6C | 0x 9900 7700 EE00 448C
 		auto pt_index = (i + 1) & 0xF;
-		if (pt_index != 0) fixslice_permute(&rtk_temp, &temp, pt_index);
+		if (pt_index != 0) fixslice_permute64(&rtk_temp, &temp, pt_index);
 		else temp = rtk_temp;
 		
 //		forkskinny64_add_constant(&(temp.halves[1]), i); // RTK N+1 comes before RTK N!
@@ -73,21 +73,21 @@ static inline void forkskinny_64_init_tk2_fixsliced_internal(State64Sliced_t *tk
 	
 	// RTK0
 	State64Sliced_t res0;
-	xor_keys(tk1, tk2, &res0, 0);
+	xor_keys64(tk1, tk2, &res0, 0);
 	
 //	forkskinny64_add_constant(&(res0.halves[0]), i);
 	out->keys[i++] = res0.halves[0];
 	
 	// RTK N & N+1
 	for (; i < FORKSKINNY64_MAX_ROUNDS; i += 2) {
-		tk2_lfsr(tk2, true);
+		tk2_lfsr64(tk2, true);
 		
 		State64Sliced_t rtk_temp;
-		xor_keys(tk1, tk2, &rtk_temp, -1);
+		xor_keys64(tk1, tk2, &rtk_temp, -1);
 		
 		State64Sliced_t temp; // 0x BB00 9900 2200 EE6C | 0x 9900 7700 EE00 448C
 		auto pt_index = (i + 1) & 0xF;
-		if (pt_index != 0) fixslice_permute(&rtk_temp, &temp, pt_index);
+		if (pt_index != 0) fixslice_permute64(&rtk_temp, &temp, pt_index);
 		else temp = rtk_temp;
 		
 //		forkskinny64_add_constant(&(temp.halves[1]), i); // RTK N+1 comes before RTK N!

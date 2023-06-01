@@ -21,11 +21,11 @@ void test() {
 	}
 
 	b = M_rand_64(36);
-	auto res = slice_internal(&b);
-	auto res1 = slice_accelerated_internal(&b);
+	auto res = slice_internal64(&b);
+	auto res1 = slice_accelerated_internal64(&b);
 	
-	auto unsliced = unslice_accelerated_internal(&res1);
-	auto unsliced2 = unslice_internal(&res1);
+	auto unsliced = unslice_accelerated_internal64(&res1);
+	auto unsliced2 = unslice_internal64(&res1);
 	
 	int appel = 1;
 

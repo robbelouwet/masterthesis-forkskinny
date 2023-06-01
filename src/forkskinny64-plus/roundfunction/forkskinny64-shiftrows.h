@@ -5,7 +5,7 @@
 
 static inline void forkskinny64_shiftrows_inv(State64Sliced_t *state){
 //	auto ct = Blocks64_t{.values = {0xfedcba9876543210}};
-//	*state = slice_accelerated_internal(&ct);
+//	*state = slice128_accelerated_internal(&ct);
 	#if AVX2_acceleration
 	for (int i = 0; i < 4; ++i) {
 		state->segments256[1][i] = _mm256_permute4x64_epi64(state->segments256[1][i], 0b10010011);
@@ -34,7 +34,7 @@ static inline void forkskinny64_shiftrows_inv(State64Sliced_t *state){
 	state->cells[0xD] = state->cells[0xE];
 	state->cells[0xE] = temp;
 	#endif
-//	auto test_res = unslice_accelerated_internal(state).values[0].raw;
+//	auto test_res = unslice128_accelerated_internal(state).values[0].raw;
 //	int appel = 1;
 }
 
@@ -42,7 +42,7 @@ static inline void forkskinny64_shiftrows(State64Sliced_t *state) {
 //	 0xFEDC BA98 7654 3210
 //	auto test_blocks = Blocks64_t();
 //	test_blocks.values[0].raw = 0xFEDCBA9876543210;
-//	*state = slice_accelerated_internal(&test_blocks);
+//	*state = slice128_accelerated_internal(&test_blocks);
 
 	#if AVX2_acceleration
 	for (int i = 0; i < 4; ++i) {
@@ -77,7 +77,7 @@ static inline void forkskinny64_shiftrows(State64Sliced_t *state) {
 	// Erik: 0x EDCF 98BA 4765 3210
 	// Us:   0x
 //	forkskinny64_shiftrows_inv(state);
-//	auto test_res = unslice_accelerated_internal(state).values[0].raw;
+//	auto test_res = unslice128_accelerated_internal(state).values[0].raw;
 //	int appel = 1;
 }
 #endif //FORKSKINNYPLUS64_FORKSKINNY_SHIFTROWS_H

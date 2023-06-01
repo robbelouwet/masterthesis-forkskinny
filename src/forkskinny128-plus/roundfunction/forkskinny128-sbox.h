@@ -53,7 +53,7 @@ static inline void forkskinny128_sbox(State128Sliced_t *state) {
 
 static inline void forkskinny128_sbox_inv(State128Sliced_t *state) {
 //	auto blocks = Blocks128_t{.values = {0xDF57DA56C44DA835, 0x6565656565656536}};
-//	*state = slice_internal(blocks);
+//	*state = slice128_internal(blocks);
 	
 	#if AVX2_acceleration
 	for (int i = 0; i < 4; ++i) {

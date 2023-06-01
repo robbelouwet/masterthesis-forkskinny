@@ -9,7 +9,7 @@
 #include "roundfunction/forkskinny128-mixcols.h"
 
 static inline void add_branch_constant128(State128Sliced_t *state) {
-	auto before = unslice128(state).values[0];
+	//auto before = unslice128(state).values[0];
 	// <editor-fold desc="branch constant">
 	// @formatter:off
 	#if AVX2_acceleration
@@ -39,8 +39,8 @@ static inline void add_branch_constant128(State128Sliced_t *state) {
 	#endif
 	// @formatter:on
 	// </editor-fold>
-	auto after = unslice128(state).values[0];
-	int appel = 1;
+//	auto after = unslice128(state).values[0];
+//	int appel = 1;
 }
 
 static inline void apply_roundkey(HalfState128Sliced_t *round_key, State128Sliced_t *state) {
@@ -48,13 +48,13 @@ static inline void apply_roundkey(HalfState128Sliced_t *round_key, State128Slice
 	#if AVX2_acceleration
 	for (int i = 0; i < 2; ++i)
 		for (int j = 0; j < 8; ++j)
-			STOREU256(
+			STORE256(
 					state->segments256[i] + j,
 					XOR256(state->segments256[i][j], round_key->segments256[i][j])
 			);
 	
 	// C2 (0x2) at cell 8
-	STOREU256(state->segments256[2] + 1, XOR256(state->segments256[2][1], mask_0));
+	STORE256(state->segments256[2] + 1, XOR256(state->segments256[2][1], mask_0));
 	
 	#else
 	for (int i = 0; i < 8; ++i) {

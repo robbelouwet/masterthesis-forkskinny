@@ -15,7 +15,7 @@
 static inline void extract_segment_tag(State64Sliced_t *state, bool last_segment, int last_block_index,
                                        u64 *result_tag) {
 	/// Calculate the AD tag of this segment64 (these 64 or less blocks)
-	/// by calculating the parity of every individual slice_internal and packing those together
+	/// by calculating the parity of every individual slice128_internal and packing those together
 	
 	for (int j = 0; j < 64; j++) {
 		u64 tag_bit;
@@ -30,7 +30,7 @@ static inline void extract_segment_tag(State64Sliced_t *state, bool last_segment
 			last_block_index -= 64;
 		}
 		#else
-		/* With non-SIMD slices, calculate the normal parity of the slice_internal */
+		/* With non-SIMD slices, calculate the normal parity of the slice128_internal */
 		tag_bit = __builtin_parity(state->raw[j].value);
 		#endif
 		

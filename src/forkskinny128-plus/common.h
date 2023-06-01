@@ -21,7 +21,7 @@
 #define s6 state->segments256[i][6]
 #define s7 state->segments256[i][7]
 
-static inline void xor_row(Row128_t *a, Row128_t *b, Row128_t *out) {
+static inline void xor_row128(Row128_t *a, Row128_t *b, Row128_t *out) {
 	#if AVX2_acceleration
 	for (int i = 0; i < 8; ++i)
 		out->segments[i] = XOR256(a->segments[i], b->segments[i]);

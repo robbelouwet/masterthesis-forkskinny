@@ -4,8 +4,8 @@
 #include <cstdint>
 #include "forkskinny128-datatypes.h"
 
-static inline void slice_significance(const Blocks128_t *blocks, Slice128_t *slice,
-                                            uint8_t significance, bool low) {
+static inline void slice128_significance(const Blocks128_t *blocks, Slice128_t *slice,
+                                         uint8_t significance, bool low) {
 	u64 mask = 1ULL << significance;
 	
 	#if slice_size == 128
@@ -77,18 +77,18 @@ static inline void slice_significance(const Blocks128_t *blocks, Slice128_t *sli
 	#endif
 }
 
-static inline void slice_internal(const Blocks128_t *blocks, State128Sliced_t *res, const bool segment = AVX2_acceleration) {
+static inline void slice128_internal(const Blocks128_t *blocks, State128Sliced_t *res, const bool segment = AVX2_acceleration) {
 	State128Sliced_t unsegmented = {};
 	for (uint i = 0; i < 128; ++i) {
-		slice_significance(blocks, &(unsegmented.raw[i]), i & 63, i < 64);
+		slice128_significance(blocks, &(unsegmented.raw[i]), i & 63, i < 64);
 	}
 	
 	try_segment128(&unsegmented, res, segment);
 }
 
-static inline State128Sliced_t slice_internal(const Blocks128_t *blocks, const bool segment = AVX2_acceleration) {
+static inline State128Sliced_t slice128_internal(const Blocks128_t *blocks, const bool segment = AVX2_acceleration) {
 	State128Sliced_t res;
-	slice_internal(blocks, &res, segment);
+	slice128_internal(blocks, &res, segment);
 	return res;
 }
 
@@ -96,10 +96,10 @@ static inline State128Sliced_t slice_internal(const Blocks128_t *blocks, const b
  *
  * @param slice
  * @param blocks
- * @param sb_index the index of the slice_t, what 'significance' are we talking about w.r.t. the slice_internal.
- * 					E.g. the very first slice_internal contains the *least* significant bits of 64 states
+ * @param sb_index the index of the slice_t, what 'significance' are we talking about w.r.t. the slice128_internal.
+ * 					E.g. the very first slice128_internal contains the *least* significant bits of 64 states
  */
-static inline void unslice_significance(const Slice128_t *slice, Blocks128_t *blocks, uint8_t sb_index, bool low) {
+static inline void unslice128_significance(const Slice128_t *slice, Blocks128_t *blocks, uint8_t sb_index, bool low) {
 	#if slice_size == 128
 	uint8_t chunks[4] = {0, 64};
 	
@@ -142,19 +142,19 @@ static inline void unslice_significance(const Slice128_t *slice, Blocks128_t *bl
 	#endif
 }
 
-static inline void unslice_internal(State128Sliced_t *state, Blocks128_t *result,
-                                    const bool segmented = AVX2_acceleration) {
+static inline void unslice128_internal(State128Sliced_t *state, Blocks128_t *result,
+                                       const bool segmented = AVX2_acceleration) {
 	State128Sliced_t unsegmented;
 	try_unsegment128(state, &unsegmented, segmented);
 	
 	for (int i = 0; i < 128; ++i)
-		unslice_significance(&(unsegmented.raw[i]), result, i & 63, i < 64);
+		unslice128_significance(&(unsegmented.raw[i]), result, i & 63, i < 64);
 }
 
-static inline Blocks128_t unslice_internal(State128Sliced_t *state,
-                                           const bool segmented = AVX2_acceleration) {
+static inline Blocks128_t unslice128_internal(State128Sliced_t *state,
+                                              const bool segmented = AVX2_acceleration) {
 	Blocks128_t result = Blocks128_t();
-	unslice_internal(state, &result, segmented);
+	unslice128_internal(state, &result, segmented);
 	return result;
 }
 

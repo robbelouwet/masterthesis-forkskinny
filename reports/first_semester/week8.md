@@ -24,7 +24,7 @@ only 2
 of them moving from stack to register. It also only needs 16 bits in space inside the register (i.e.: we could do a lot
 more in parallel). Whereas the previous
 sequential_abcde LSFR could only do 8 cells in parallel using 12 instructions while occupying all 64 bits in a register.
-Afterwards, it appeared my unslice_internal operation wasn't fully correct, so need to fix this tomorrow (shouldn't affect the
+Afterwards, it appeared my unslice128_internal operation wasn't fully correct, so need to fix this tomorrow (shouldn't affect the
 aforementioned benchmarking results).
 
 ## Thursday

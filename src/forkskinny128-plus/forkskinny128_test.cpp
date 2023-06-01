@@ -6,32 +6,27 @@
 #include "keyschedule/keyschedule128.h"
 #include "forkskinny128.h"
 
-void test_bc() {
-	auto temp = unslice128(segmented_branch_constant128);
-	std::cout << "BC:" << std::hex << temp.values[0].raw[0] << " || " << temp.values[0].raw[1];
-}
-
 void test() {
 	
 	Blocks128_t b;
 	for (int i = 0; i < slice_size; i += 4) {
-		b.values[i].raw[0] = 0xAAAAAAAAAAAAAAA0;
-		b.values[i + 1].raw[0] = 0xBBBBBBBBBBBBBBB0;
-		b.values[i + 2].raw[0] = 0xCCCCCCCCCCCCCCC0;
-		b.values[i + 3].raw[0] = 0xDDDDDDDDDDDDDDD0;
+		b.values[i].raw[0] = 0xAAAAAAAAAAAAAAAA;
+		b.values[i + 1].raw[0] = 0xBBBBBBBBBBBBBBBB;
+		b.values[i + 2].raw[0] = 0xCCCCCCCCCCCCCCCC;
+		b.values[i + 3].raw[0] = 0xDDDDDDDDDDDDDDDD;
 		// ----------------------------------------
-		b.values[i].raw[1] = 0xAAAAAAAAAAAAAAA1;
-		b.values[i + 1].raw[1] = 0xBBBBBBBBBBBBBBB1;
-		b.values[i + 2].raw[1] = 0xCCCCCCCCCCCCCCC1;
-		b.values[i + 3].raw[1] = 0xDDDDDDDDDDDDDDD1;
+		b.values[i].raw[1] = 0xAAAAAAAAAAAAAAAA;
+		b.values[i + 1].raw[1] = 0xBBBBBBBBBBBBBBBB;
+		b.values[i + 2].raw[1] = 0xCCCCCCCCCCCCCCCC;
+		b.values[i + 3].raw[1] = 0xDDDDDDDDDDDDDDDD;
 	}
 	
-	b = M_rand_128(21);
-	auto res = slice_internal(&b);
-	auto res1 = slice_accelerated_internal(&b);
+//	b = M_rand_128(21);
+	auto res = slice128_internal(&b);
+	auto res1 = slice128_accelerated_internal(&b);
 	
-	auto unsliced = unslice_internal(&res);
-	auto unsliced1 = unslice_accelerated_internal(&res1);
+	auto unsliced = unslice128_internal(&res);
+	auto unsliced1 = unslice128_accelerated_internal(&res1);
 	
 	#if slice_size <= 64
 	for (int i = 0; i < 128; ++i)
@@ -50,9 +45,9 @@ void test() {
 //
 //void test_forkskinny_128_256() {
 //	std::cout << "\nforkskinny128-256\n";
-//	auto M = slice_internal(M_128());
-//	auto TK1 = slice_internal(TK1_128());
-//	auto TK2 = slice_internal(TK2_128());
+//	auto M = slice128_internal(M_128());
+//	auto TK1 = slice128_internal(TK1_128());
+//	auto TK2 = slice128_internal(TK2_128());
 //	auto original_pt = unslice_accelerated(M);
 //
 //	auto schedule = forkskinny_128_init_tk2_internal(TK1, TK2);
@@ -171,7 +166,6 @@ void test_forkskinny_128_384(int keysize, uint64_t C0_A, uint64_t C0_B,
 
 int main() {
 //	test_forkskinny_128_256();
-	test_forkskinny_128_384(384, 0x72D8874177DC8C16, 0x266DA48EA11FD273, 0x4f318ce8a6a22f06, 0x09e2dd8ecd1c6945);
-//	test();
-//	test_bc();
+//	test_forkskinny_128_384(384, 0x72D8874177DC8C16, 0x266DA48EA11FD273, 0x4f318ce8a6a22f06, 0x09e2dd8ecd1c6945);
+	test();
 }

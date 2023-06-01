@@ -48,7 +48,7 @@ static inline void forkskinny128_shiftrows_inv(State128Sliced_t *state){
  */
 static inline void forkskinny128_shiftrows(State128Sliced_t *state) {
 //	auto test_blocks = Blocks128_t{.values = {{.raw = {0x7766554433221100, 0xffeeddccbbaa9988}}}};
-//	*state = slice_internal(test_blocks);
+//	*state = slice128_internal(test_blocks);
 	
 	#if AVX2_acceleration
 	for (int i = 0; i < 8; ++i) {
@@ -86,8 +86,8 @@ static inline void forkskinny128_shiftrows(State128Sliced_t *state) {
 //	auto test_res1 = unslice128(state).values[0].raw[1];
 
 //	forkskinny128_shiftrows_inv(state);
-//	auto decr0 = unslice_accelerated_internal(*state).values[0].raw[0];
-//	auto decr1 = unslice_accelerated_internal(*state).values[0].raw[1];
+//	auto decr0 = unslice128_accelerated_internal(*state).values[0].raw[0];
+//	auto decr1 = unslice128_accelerated_internal(*state).values[0].raw[1];
 //
 //	int appel = 1;
 }

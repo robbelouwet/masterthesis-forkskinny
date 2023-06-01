@@ -51,7 +51,7 @@ typedef union {
 } State64_t;
 
 /**
- * For every nibble, take the ith significant bit and unpack those all together.
+ * For every nibble, take the ith significant bit and unpack128 those all together.
  *
  * E.g.:
  *       v    v    v
@@ -131,7 +131,7 @@ void permute_sliced_packed_32(State64Sliced_16_t *tk) {
   auto slice2 = tk->slices[2];
   auto slice3 = tk->slices[3];
 
-  // unpack the bottom 2 rows of every slice_t in a single 32 bit word
+  // unpack128 the bottom 2 rows of every slice_t in a single 32 bit word
   // i.e.: r3⁰r4⁰ | r3¹r4¹ | r3²r4² | r3³r4³
   uint32_t packed_slices =
     ((slice0 & 0x00FF) << 24)
@@ -148,7 +148,7 @@ void permute_sliced_packed_32(State64Sliced_16_t *tk) {
     | ((packed_slices & 0x02020202) << 1)
     | ((packed_slices & 0x01010101) << 6);
 
-  // unpack results & reconstruct slices
+  // unpack128 results & reconstruct slices
   tk->slices[0] = ((packed_permuted_slices & 0xFF000000) >> 16) | ((slice0 & 0xFF00) >> 8);
   tk->slices[1] = ((packed_permuted_slices & 0x00FF0000) >> 8) | ((slice1 & 0xFF00) >> 8);
   tk->slices[2] = (packed_permuted_slices & 0x0000FF00) | ((slice2 & 0xFF00) >> 8);
@@ -163,10 +163,10 @@ void permute_sliced_packed_16(State64Sliced_16_t *tk) {
   auto slice2 = tk->slices[2];
   auto slice3 = tk->slices[3];
 
-  // unpack the bottom 2 rows of the first 2 slices in 1 16-bit variable
+  // unpack128 the bottom 2 rows of the first 2 slices in 1 16-bit variable
   uint16_t slice_0_1 = ((slice0 & 0x00FF) << 8) | (slice1 & 0x00FF);
 
-  // unpack the bottom 2 rows of the last 2 slices in 1 16-bit variable
+  // unpack128 the bottom 2 rows of the last 2 slices in 1 16-bit variable
   uint16_t slice_2_3 = ((slice2 & 0x00FF) << 8) | (slice3 & 0x00FF);
 
   // perform permutation on first 2 slices
@@ -187,7 +187,7 @@ void permute_sliced_packed_16(State64Sliced_16_t *tk) {
     | ((slice_2_3 & 0x0202) << 1)   //              0000 0010 0000 0010 | 908D AECB 908D AECB
     | ((slice_2_3 & 0x0101) << 6);  //              0000 0001 0000 0001 | 9F8D AECB 9F8D AECB
 
-  // unpack results & reconstruct slices
+  // unpack128 results & reconstruct slices
   tk->slices[0] = (permuted_slice_0_1 & 0xFF00) | ((slice0 & 0xFF00) >> 8);
   tk->slices[1] = ((permuted_slice_0_1 & 0x00FF) << 8) | ((slice1 & 0xFF00) >> 8);
   tk->slices[2] = (permuted_slice_2_3 & 0xFF00) | ((slice2 & 0xFF00) >> 8);

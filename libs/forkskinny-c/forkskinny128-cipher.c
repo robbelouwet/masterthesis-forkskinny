@@ -2,11 +2,6 @@
 #include "headers/forkskinny128-cipher.h"
 #include "headers/forkskinny-internal.h"
 
-void print_block2(uint8_t *block, unsigned int n) {
-	for (unsigned int i = 0; i < n; i++)
-		printf("%02x", block[i]);
-}
-
 #if SKINNY_64BIT
 
 STATIC_INLINE uint64_t skinny128_LFSR2(uint64_t x) {
@@ -491,14 +486,6 @@ ForkSkinny128Cells_t forkskinny_128_384_encrypt_round(
 	state.row[2] = state.row[1];
 	state.row[1] = state.row[0];
 	state.row[0] = *temp;
-	
-	if (index >= 56){
-		printf("%d: ", index);
-		print_block2((uint8_t *) &(state.lrow[0]), 8);
-		printf(", ");
-		print_block2((uint8_t *) &(state.lrow[1]), 8);
-		printf("\n");
-	}
 	
 	
 	return state;

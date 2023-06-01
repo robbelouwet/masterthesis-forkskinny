@@ -15,8 +15,8 @@ static inline void forkskinny_64_init_tk2_internal(State64Sliced_t *tk1, State64
 	
 	for (int i = 0; i < bound; ++i) {
 		State64Sliced_t res;
-		xor_keys(tk1, tk2, &res, 0);
-		//auto test_tks = unslice_accelerated_internal(res);
+		xor_keys64(tk1, tk2, &res, 0);
+		//auto test_tks = unslice128_accelerated_internal(res);
 
 //		forkskinny64_add_constant(&(res.halves[0]), i);
 		
@@ -25,11 +25,11 @@ static inline void forkskinny_64_init_tk2_internal(State64Sliced_t *tk1, State64
 		out->keys[i] = res.halves[0];
 		
 		// Permute TK's
-		permute(tk1);
-		permute(tk2);
+		permute64(tk1);
+		permute64(tk2);
 		
 		// LFSR TK2 & TK3
-		tk2_lfsr(tk2);
+		tk2_lfsr64(tk2);
 	}
 }
 
@@ -43,11 +43,11 @@ static inline void forkskinny_64_init_tk23_internal(State64Sliced_t *tk1, State6
 	
 	for (int i = 0; i < bound; ++i) {
 		State64Sliced_t res;
-		xor_keys(tk2, tk3, &res, 0);
-		xor_keys(tk1, &res, &res, 0);
+		xor_keys64(tk2, tk3, &res, 0);
+		xor_keys64(tk1, &res, &res, 0);
 		
 		// 0x FCDA B896 EE00 DDF0
-//		auto test_tks = unslice_accelerated_internal(res).values[0].raw;
+//		auto test_tks = unslice128_accelerated_internal(res).values[0].raw;
 		
 		// Keep in mind: the C2 constant relating to the 9nth cell is part of the 2nd 'half'!
 		// So we add 0x2 at the key injection step
@@ -56,18 +56,18 @@ static inline void forkskinny_64_init_tk23_internal(State64Sliced_t *tk1, State6
 		out->keys[i] = res.halves[0];
 		
 		// 0x FCDA B896 EE00 FDE0
-//		auto test_tks2 = unslice_accelerated_internal(res).values[0].raw;
+//		auto test_tks2 = unslice128_accelerated_internal(res).values[0].raw;
 		
-		permute(tk1);
-		permute(tk2);
-		permute(tk3);
+		permute64(tk1);
+		permute64(tk2);
+		permute64(tk3);
 		
-		tk2_lfsr(tk2);
-		tk3_lfsr(tk3);
+		tk2_lfsr64(tk2);
+		tk3_lfsr64(tk3);
 
-//		auto test_tk1 = unslice_accelerated_internal(*tk1).values[0].raw; // 0x 2200 11F1 0334 0004
-//		auto test_tk2 = unslice_accelerated_internal(*tk2).values[0].raw; // 0x 6600 55F2 0FF1 0001
-//		auto test_tk3 = unslice_accelerated_internal(*tk3).values[0].raw; // 0x AA00 99F3 055E 000E
+//		auto test_tk1 = unslice128_accelerated_internal(*tk1).values[0].raw; // 0x 2200 11F1 0334 0004
+//		auto test_tk2 = unslice128_accelerated_internal(*tk2).values[0].raw; // 0x 6600 55F2 0FF1 0001
+//		auto test_tk3 = unslice128_accelerated_internal(*tk3).values[0].raw; // 0x AA00 99F3 055E 000E
 //
 //		int appel = 1;
 	}

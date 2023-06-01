@@ -7,8 +7,8 @@
 
 // @formatter:off
 // -- CONFIG --
-#define slice_size 8 // 8, 32, 64, 128, 256 or 512
-#define AVX2_support false
+#define slice_size 64 // 8, 32, 64, 128, 256 or 512
+#define AVX2_support true
 #define IMPROVED_KEYSCHEDULE false
 #define FAST_SLICING true
 // ------------
@@ -23,8 +23,11 @@
 #define AVX2_acceleration (slice_size == 64 && AVX2_support)
 #define u64 uint64_t
 
-#define LOADU256(src) _mm256_load_si256((__m256i *)(src))
-#define STOREU256(dest,src) _mm256_store_si256((__m256i *)(dest),src)
+#define LOAD256(src) _mm256_load_si256((__m256i *)(src))
+#define STORE256(dest,src) _mm256_store_si256((__m256i *)(dest),src)
+
+#define LOAD128(src) _mm_load_si128((__m128i *)(src))
+#define STORE128(dest,src) _mm_store_si128((__m128i *)(dest),src)
 
 #define ROL64(v, i) ((v << i) | (v >> (64 - i)))
 #define ROR64(v, i) ROL64(v, (64 - i))
@@ -40,6 +43,8 @@
 #define OR128 _mm_or_si128
 #define ONE128 _mm_set1_epi64x(-1)
 #define AND128 _mm_and_si128
+#define ROR128(v, i) (_mm_or_si128(_mm_srli_epi64(v, i), _mm_slli_epi64(v, (64 - i))))
+#define ROL128(v, i) (_mm_or_si128(_mm_slli_epi64(v, i), _mm_srli_epi64(v, (64 - i))))
 
 #define XOR512 _mm512_xor_si512
 #define OR512 _mm512_or_si512
@@ -109,8 +114,8 @@ auto mask_3 = _mm256_set_epi64x(-1ULL, 0, 0, 0);
 	auto slice_ONE = _mm_set1_epi64x(-1);
 	auto slice_ZER = _mm_setzero_si128();
 	#define BIT(i) mm_rotr_si128(_mm_set_epi64x(0, 1), 128 - i)
-	#define ROR_LANES(v, i) (_mm_or_si128(_mm_srli_epi64(v, i), _mm_slli_epi64(v, (64 - i))))
-	#define ROL_LANES(v, i) (_mm_or_si128(_mm_slli_epi64(v, i), _mm_srli_epi64(v, (64 - i))))
+	#define ROR_LANES ROR128
+	#define ROL_LANES ROL128
 	#define XOR_SLICE _mm_xor_si128
 	#define OR_SLICE _mm_or_si128
 	#define AND_SLICE _mm_and_si128
@@ -146,7 +151,7 @@ auto mask_3 = _mm256_set_epi64x(-1ULL, 0, 0, 0);
 	#error "Please specify a valid configuration"
 #endif
 // @formatter:on
-// mask the end result to get correct result for small slice_internal on larger-register platform
+// mask the end result to get correct result for small slice128_internal on larger-register platform
 #define ROL(v, i, regwidth) ROR(v, (regwidth - i))
 
 #if slice_size == 128

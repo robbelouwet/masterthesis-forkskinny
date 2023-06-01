@@ -46,13 +46,13 @@ static inline void forkskinny64_sbox_inv(State64Sliced_t *state) {
 	
 	// INPUT:   0x F7E4 D583 B2A1 096C
 	// OUTPUT:  0x FEDC BA98 7654 3210
-//	auto test_res = unslice_accelerated_internal(*state).values[0].raw;
+//	auto test_res = unslice128_accelerated_internal(*state).values[0].raw;
 //	int banaan = 1;
 }
 
 static inline void forkskinny64_sbox(State64Sliced_t *state) {
 //	auto blocks = Blocks64_t{.values = {0xFEDCBA9876543210}};
-//	*state = slice_accelerated_internal(&blocks);
+//	*state = slice128_accelerated_internal(&blocks);
 //	int appel = 1;
 	
 	#if AVX2_acceleration
@@ -83,7 +83,7 @@ static inline void forkskinny64_sbox(State64Sliced_t *state) {
 	// INPUT:   0x FEDC BA98 7654 3210
 	// OUTPUT:  0x F7E4 D583 B2A1 096C
 //	forkskinny64_sbox_inv(state);
-//	auto test_res = unslice_accelerated_internal(state).values[0].raw;
+//	auto test_res = unslice128_accelerated_internal(state).values[0].raw;
 //	int banaan = 1;
 }
 
