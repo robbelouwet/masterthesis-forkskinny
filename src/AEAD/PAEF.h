@@ -84,7 +84,7 @@ static inline void paef_forkskinny64_192_encrypt_section(
 	/// Encrypt
 	auto schedule = KeySchedule64Sliced_t();
 	auto t_encrypt_before = _rdtsc();
-	forkskinny64_precompute_key_schedule(sliced_tks + 0, sliced_tks + 1, sliced_tks + 2, &schedule);
+	forkskinny64_precompute_key_schedule(sliced_tks + 0, sliced_tks + 1, sliced_tks + 2, mode, &schedule);
 	forkskinny64_encrypt(&schedule, &state, mode, &(res->C0), &(res->C1));
 	*t_encrypt = _rdtsc() - t_encrypt_before;
 }

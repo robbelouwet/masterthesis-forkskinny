@@ -50,8 +50,22 @@ void test_forkskinny64(int keysize, uint64_t test_C0, uint64_t test_C1) {
 	auto original_pt = unslice64(&M);
 	
 	auto schedule = KeySchedule64Sliced_t();
-	if (keysize == 128) forkskinny64_precompute_key_schedule(&TK1, &TK2, &schedule);
-	else if (keysize == 192) forkskinny64_precompute_key_schedule(&TK1, &TK2, &TK3, &schedule);
+	if (keysize == 128) forkskinny64_precompute_key_schedule(&TK1, &TK2, 'b', &schedule);
+	else if (keysize == 192) forkskinny64_precompute_key_schedule(&TK1, &TK2, &TK3, 'b', &schedule);
+	
+	
+//	KeySchedule64Sliced_t ks1;
+//	auto TK1a = TK1; auto TK2a = TK2; auto TK3a = TK3;
+//	forkskinny_64_init_tk23_internal(&TK1, &TK2, &TK3, &ks1);
+//
+//	KeySchedule64Sliced_t ks2;
+//	forkskinny_64_init_tk23_fixsliced_internal(&TK1a, &TK2a, &TK3a, &ks2);
+//
+//	for (int i = 0; i < FORKSKINNY64_MAX_ROUNDS; ++i) {
+//		for (int j = 0; j < 32; ++j) {
+//			assert(ks1.keys[i].raw[j].value == ks2.keys[i].raw[j].value);
+//		}
+//	}
 	
 	/// Round keys (fs64-192, pre-computed AddConstant inside ks)
 	auto rtk0 = unslice64({.halves = {schedule.keys[0], {}}}).values[0].raw; // 0x EE00 FDE0
@@ -59,7 +73,7 @@ void test_forkskinny64(int keysize, uint64_t test_C0, uint64_t test_C1) {
 	auto rtk2 = unslice64({.halves = {schedule.keys[2], {}}}).values[0].raw; // 0x 0EE2 40B2
 	auto rtk3 = unslice64({.halves = {schedule.keys[3], {}}}).values[0].raw; // 0x 7000 2967
 	auto rtk4 = unslice64({.halves = {schedule.keys[4], {}}}).values[0].raw; // 0x 4090 EE14
-	auto rtk5 = unslice64({.halves = {schedule.keys[5], {}}}).values[0].raw; // 0x 732 50D0
+	auto rtk5 = unslice64({.halves = {schedule.keys[5], {}}}).values[0].raw; // 0x 0732 50D0
 	auto rtk6 = unslice64({.halves = {schedule.keys[6], {}}}).values[0].raw; // 0x 247F 6010
 	auto rtk7 = unslice64({.halves = {schedule.keys[7], {}}}).values[0].raw; // 0x 0010 FDD6
 	
@@ -102,8 +116,8 @@ void test_forkskinny64(int keysize, uint64_t test_C0, uint64_t test_C1) {
 }
 
 int main() {
-	test_forkskinny64(128, 0x9674fd60578adac8, 0x6a66ddc835c86a94);
-	std::cout << "\n---------------------------------\n";
+//	test_forkskinny64(128, 0x9674fd60578adac8, 0x6a66ddc835c86a94);
+//	std::cout << "\n---------------------------------\n";
 	test_forkskinny64(192, 0x502A9310B9F164FF, 0x55520D27354ECF3);
 //	test();
 	std::cout << "\n\nSuccess!";

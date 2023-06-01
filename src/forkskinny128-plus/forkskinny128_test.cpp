@@ -1,13 +1,15 @@
 #include <cassert>
 #include <iostream>
 #include "utils/forkskinny128-datatypes.h"
-#include "utils/slicing128-accelerated.h"
-#include "utils/slicing128-internal.h"
-#include "../forkskinny64-plus/utils/slicing64-internal.h"
 #include "../test_vectors.h"
 #include "utils/slicing128.h"
 #include "keyschedule/keyschedule128.h"
 #include "forkskinny128.h"
+
+void test_bc() {
+	auto temp = unslice128(segmented_branch_constant128);
+	std::cout << "BC:" << std::hex << temp.values[0].raw[0] << " || " << temp.values[0].raw[1];
+}
 
 void test() {
 	
@@ -156,12 +158,13 @@ void test_forkskinny_128_384(int keysize, uint64_t C0_A, uint64_t C0_B,
 	
 	// test C1 -> (C0, M)
 	for (int i = 0; i < slice_size; ++i) {
+		assert(result_C0.values[i].raw[0] == C0_A);
+		assert(result_C0.values[i].raw[1] == C0_B);
+		
 		assert(result_M.values[i].raw[0] == original_pt.values[i].raw[0]);
 		assert(result_M.values[i].raw[1] == original_pt.values[i].raw[1]);
 		assert(result_C1.values[i].raw[0] == C1_A);
 		assert(result_C1.values[i].raw[1] == C1_B);
-		assert(result_C0.values[i].raw[0] == C0_A);
-		assert(result_C0.values[i].raw[1] == C0_B);
 	}
 }
 
@@ -170,4 +173,5 @@ int main() {
 //	test_forkskinny_128_256();
 	test_forkskinny_128_384(384, 0x72D8874177DC8C16, 0x266DA48EA11FD273, 0x4f318ce8a6a22f06, 0x09e2dd8ecd1c6945);
 //	test();
+//	test_bc();
 }

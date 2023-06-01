@@ -87,6 +87,41 @@ State128Sliced_t const branch_constant128 = {
 };
 //</editor-fold>
 
+State128Sliced_t const segmented_branch_constant128 = {.raw = {
+		slice_ONE, slice_ZER, slice_ZER, slice_ZER,
+		slice_ZER, slice_ONE, slice_ZER, slice_ZER,
+		slice_ZER, slice_ZER, slice_ONE, slice_ZER,
+		slice_ZER, slice_ZER, slice_ZER, slice_ONE,
+		slice_ZER, slice_ZER, slice_ZER, slice_ZER,
+		slice_ZER, slice_ZER, slice_ZER, slice_ZER,
+		slice_ZER, slice_ZER, slice_ZER, slice_ZER,
+		slice_ZER, slice_ZER, slice_ZER, slice_ZER,
+		slice_ZER, slice_ZER, slice_ONE, slice_ZER,
+		slice_ZER, slice_ZER, slice_ZER, slice_ONE,
+		slice_ZER, slice_ZER, slice_ZER, slice_ZER,
+		slice_ZER, slice_ZER, slice_ZER, slice_ZER,
+		slice_ONE, slice_ZER, slice_ZER, slice_ZER,
+		slice_ZER, slice_ONE, slice_ZER, slice_ZER,
+		slice_ZER, slice_ZER, slice_ONE, slice_ZER,
+		slice_ZER, slice_ZER, slice_ZER, slice_ONE,
+		slice_ONE, slice_ZER, slice_ZER, slice_ZER,
+		slice_ZER, slice_ONE, slice_ZER, slice_ZER,
+		slice_ONE, slice_ZER, slice_ONE, slice_ZER,
+		slice_ZER, slice_ONE, slice_ZER, slice_ONE,
+		slice_ZER, slice_ZER, slice_ONE, slice_ZER,
+		slice_ZER, slice_ZER, slice_ZER, slice_ONE,
+		slice_ZER, slice_ZER, slice_ZER, slice_ZER,
+		slice_ZER, slice_ZER, slice_ZER, slice_ZER,
+		slice_ONE, slice_ZER, slice_ZER, slice_ZER,
+		slice_ZER, slice_ONE, slice_ZER, slice_ZER,
+		slice_ZER, slice_ZER, slice_ONE, slice_ZER,
+		slice_ZER, slice_ZER, slice_ZER, slice_ONE,
+		slice_ONE, slice_ZER, slice_ZER, slice_ZER,
+		slice_ZER, slice_ONE, slice_ZER, slice_ZER,
+		slice_ONE, slice_ZER, slice_ONE, slice_ZER,
+		slice_ZER, slice_ONE, slice_ZER, slice_ONE,}
+};
+
 //<editor-fold desc="88 pre-computed forkskinny sliced round constants"
 // the first 88 states of the addconstant lfsr containing {rc⁰, rc¹, ..., rc⁶} each
 // WITHOUT 0x2 for row 1 cell 3

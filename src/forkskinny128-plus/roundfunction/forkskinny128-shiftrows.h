@@ -82,13 +82,13 @@ static inline void forkskinny128_shiftrows(State128Sliced_t *state) {
 	
 	// 0x 5560 799D A69D DDDA
 	// 0x 6565 6565 6534 6565
-	auto test_res0 = unslice128(state).values[0].raw[0];
-	auto test_res1 = unslice128(state).values[0].raw[1];
+//	auto test_res0 = unslice128(state).values[0].raw[0];
+//	auto test_res1 = unslice128(state).values[0].raw[1];
 
 //	forkskinny128_shiftrows_inv(state);
 //	auto decr0 = unslice_accelerated_internal(*state).values[0].raw[0];
 //	auto decr1 = unslice_accelerated_internal(*state).values[0].raw[1];
 //
-	int appel = 1;
+//	int appel = 1;
 }
 #endif //FORKSKINNYPLUS128_FORKSKINNY_SHIFTROWS_H

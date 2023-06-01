@@ -4,42 +4,7 @@
 #include "forkskinny128-datatypes.h"
 #include "../../forkskinny64-plus/utils/forkskinny64-datatypes.h"
 #include "../../forkskinny64-plus/utils/slicing64.h"
-
-static inline void try_segment128(State128Sliced_t *in, State128Sliced_t *result, const bool segment) {
-	if (segment) {
-		#if AVX2_acceleration
-		for (int i = 0; i < 4; ++i) {
-			for (int j = 0; j < 8; ++j) {
-				result->segments256[i][j] = _mm256_set_epi64x(
-						in->raw[(i << 5) + j + 24].value,
-						in->raw[(i << 5) + j + 16].value,
-						in->raw[(i << 5) + j + 8].value,
-						in->raw[(i << 5) + j].value
-				);
-			}
-		}
-		#endif
-	} else
-		for (int i = 0; i < 128; i++)
-			result->raw[i].value = in->raw[i].value;
-}
-
-static inline void try_unsegment128(State128Sliced_t *in, State128Sliced_t *out,
-                                    const bool segmented = AVX2_acceleration) {
-	if (segmented) {
-		#if AVX2_acceleration
-		for (int i = 0; i < 4; ++i) {
-			for (int j = 0; j < 8; ++j) {
-				for (int k = 0; k < 4; ++k) {
-					out->raw[(i * 32) + (k * 8) + j].value = in->segments256[i][j][k];
-				}
-			}
-		}
-		#endif
-	} else
-		for (int i = 0; i < 128; ++i)
-			out->raw[i].value = in->raw[i].value;
-}
+#include "../common.h"
 
 static inline void unpack(Blocks128_t *state, Block64_t *out) {
 	for (int i = 0; i < slice_size; i++) {

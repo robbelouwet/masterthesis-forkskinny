@@ -31,34 +31,34 @@ static inline void benchmark_forkskinny64_192_sb(ULL *slice_timing, ULL *schedul
 	// --- KEY SCHEDULE ---
 	KeySchedule64Sliced_t schedule;
 	auto schedule_before = _rdtsc();
-	forkskinny64_precompute_key_schedule(&test_TK1, &test_TK2, &test_TK3, &schedule);
+	forkskinny64_precompute_key_schedule(&test_TK1, &test_TK2, &test_TK3, '0', &schedule);
 	*schedule_timing = _rdtsc() - schedule_before;
 	
 	// --- ENCRYPTION ---
-	State64Sliced_t C0, C1;
+	State64Sliced_t C0;
 	auto encryption_before = _rdtsc();
-	forkskinny64_encrypt(&schedule, &test_M, '1', &C0, &C1);
+	forkskinny64_encrypt(&schedule, &test_M, '0', &C0, nullptr);
 	*encryption_timing = _rdtsc() - encryption_before;
-	SlicedCiphertext64_t wrapped_c1 = {.C1 = C1};
+	SlicedCiphertext64_t wrapped_c1 = {.C0 = C0};
 	
 	// --- DECRYPTION ---
 	SlicedCiphertext64_t recovered_pt;
 	auto decryption_before = _rdtsc();
-	forkskinny64_decrypt(&schedule, &wrapped_c1, &recovered_pt, '1', 'i');
+	forkskinny64_decrypt(&schedule, &wrapped_c1, &recovered_pt, '0', 'i');
 	*decryption_timing = _rdtsc() - decryption_before;
 	auto unsliced_recovered_pt = unslice64(&(recovered_pt.M));
 	
 	// --- UNSLICING ---
 	Blocks64_t unsliced_C0, unsliced_C1;
 	auto unslicing_before = _rdtsc();
-	//unslice64(&C0, &unsliced_C0);
-	unslice64(&C1, &unsliced_C1);
+	unslice64(&C0, &unsliced_C0);
+//	unslice64(&C1, &unsliced_C1);
 	*unslice_timing = _rdtsc() - unslicing_before;
 	
 	// Prevent dead-code elimination caused by optimizations!
 	for (int i = 0; i < slice_size; ++i) {
-		//assert(unsliced_C0.values[i].raw == 0x502A9310B9F164FF);
-		assert(unsliced_C1.values[i].raw == 0x55520D27354ECF3);
+		assert(unsliced_C0.values[i].raw == 0x502A9310B9F164FF);
+//		assert(unsliced_C1.values[i].raw == 0x55520D27354ECF3);
 		assert(unsliced_recovered_pt.values[i].raw == unsliced_test_M.values[i].raw);
 	}
 }
@@ -81,34 +81,34 @@ static inline void benchmark_forkskinny64_128_sb(ULL *slice_timing, ULL *schedul
 	// --- KEY SCHEDULE ---
 	KeySchedule64Sliced_t schedule;
 	auto schedule_before = _rdtsc();
-	forkskinny64_precompute_key_schedule(&test_TK1, &test_TK2, &schedule);
+	forkskinny64_precompute_key_schedule(&test_TK1, &test_TK2, '0', &schedule);
 	*schedule_timing = _rdtsc() - schedule_before;
 	
 	// --- ENCRYPTION ---
-	State64Sliced_t C0, C1;
+	State64Sliced_t C0;
 	auto encryption_before = _rdtsc();
-	forkskinny64_encrypt(&schedule, &test_M, '1', &C0, &C1);
+	forkskinny64_encrypt(&schedule, &test_M, '0', &C0, nullptr);
 	*encryption_timing = _rdtsc() - encryption_before;
-	SlicedCiphertext64_t wrapped_c1 = {.C1 = C1};
+	SlicedCiphertext64_t wrapped_c1 = {.C0 = C0};
 	
 	// --- DECRYPTION ---
 	SlicedCiphertext64_t recovered_pt;
 	auto decryption_before = _rdtsc();
-	forkskinny64_decrypt(&schedule, &wrapped_c1, &recovered_pt, '1', 'i');
+	forkskinny64_decrypt(&schedule, &wrapped_c1, &recovered_pt, '0', 'i');
 	*decryption_timing = _rdtsc() - decryption_before;
 	auto unsliced_recovered_pt = unslice64(&(recovered_pt.M));
 	
 	// --- UNSLICING ---
 	Blocks64_t unsliced_C0, unsliced_C1;
 	auto unslicing_before = _rdtsc();
-	//unslice64(&C0, &unsliced_C0);
-	unslice64(&C1, &unsliced_C1);
+	unslice64(&C0, &unsliced_C0);
+//	unslice64(&C1, &unsliced_C1);
 	*unslice_timing = _rdtsc() - unslicing_before;
 	
 	// Prevent dead-code elimination caused by optimizations!
 	for (int i = 0; i < slice_size; ++i) {
-		//assert(unsliced_C0.values[i].raw == 0x9674fd60578adac8);
-		assert(unsliced_C1.values[i].raw == 0x6a66ddc835c86a94);
+		assert(unsliced_C0.values[i].raw == 0x9674fd60578adac8);
+//		assert(unsliced_C1.values[i].raw == 0x6a66ddc835c86a94);
 		assert(unsliced_recovered_pt.values[i].raw == unsliced_test_M.values[i].raw);
 	}
 }

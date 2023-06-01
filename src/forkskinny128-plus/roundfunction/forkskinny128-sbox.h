@@ -47,8 +47,8 @@ static inline void forkskinny128_sbox(State128Sliced_t *state) {
 	}
 	#endif
 	// 0x 079C FF4A C5B1 87AD || 0x 6565 6565 6565 6536
-	auto test_output = unslice128(state).values[0];
-	int appel = 1;
+//	auto test_output = unslice128(state).values[0];
+//	int appel = 1;
 }
 
 static inline void forkskinny128_sbox_inv(State128Sliced_t *state) {
@@ -86,8 +86,8 @@ static inline void forkskinny128_sbox_inv(State128Sliced_t *state) {
 	#endif
 	
 	// 0x C33D 7F3A 10E7 5E5A || 0x 698B 1AD8 1DF4 5CED
-	auto test_res = unslice128(state).values[0];
-	int banaan = 1;
+//	auto test_res = unslice128(state).values[0];
+//	int banaan = 1;
 }
 
 #endif //FORKSKINNYPLUS128_FORKSKINNY_SBOX_H

@@ -1,101 +1,71 @@
-
 #include <iostream>
 #include <x86intrin.h>
 #include "../forkskinny128-plus/utils/forkskinny128-datatypes.h"
 #include "../forkskinny128-plus/keyschedule/fixsliced-keyschedule128.h"
 #include "../forkskinny128-plus/forkskinny128.h"
 #include "../test_vectors.h"
+#include "forkskinny128-benchmark-iteration.h"
 #include <benchmark/benchmark.h>
 
 void benchmark_forkskinny128_384() {
-	#define ITERATIONS 100
-	#define ROUNDS_BEFORE FORKSKINNY_128_384_ROUNDS_BEFORE
-	#define ROUNDS_AFTER FORKSKINNY_128_384_ROUNDS_AFTER
-
+	std::cout << "\nFORKSKINNY64-192\n";
+	auto iterations = 5000;
+	auto rounds_before = FORKSKINNY_128_384_ROUNDS_BEFORE;
+	auto rounds_after = FORKSKINNY_128_384_ROUNDS_AFTER;
+	auto rounds = rounds_before + rounds_after;
+	
 	std::cout << slice_size << " blocks in parallel\n";
-	std::cout << (ROUNDS_BEFORE + 2 * ROUNDS_AFTER) << " rounds per primitive call\n--------\n";
-
-	Blocks128_t unsliced_test_M[ITERATIONS];
-	Blocks128_t unsliced_test_TK1[ITERATIONS];
-	Blocks128_t unsliced_test_TK2[ITERATIONS];
-	Blocks128_t unsliced_test_TK3[ITERATIONS];
-
-	State128Sliced_t test_M[ITERATIONS];
-	State128Sliced_t test_TK1[ITERATIONS];
-	State128Sliced_t test_TK2[ITERATIONS];
-	State128Sliced_t test_TK3[ITERATIONS];
-
-	// Generate test vectors
-	for (int i = 0; i < ITERATIONS; ++i) {
-		unsliced_test_M[i] = M_128();
-		unsliced_test_TK1[i] = TK1_128();
-		unsliced_test_TK2[i] = TK2_128();
-		unsliced_test_TK3[i] = TK3_128();
-		
-//		assert((uintptr_t) &(unsliced_test_M[i]) % 32 == 0);
-	}
-
-	auto before0 = _rdtsc();
-	for (int i = 0; i < ITERATIONS; ++i) {
-		test_M[i] = slice(unsliced_test_M[i]);
-		test_TK1[i] = slice(unsliced_test_TK1[i]);
-		test_TK2[i] = slice(unsliced_test_TK2[i]);
-		test_TK3[i] = slice(unsliced_test_TK3[i]);
-	}
-	auto after0 = _rdtsc();
-//
-	auto slicing_per_primitive = (after0 - before0) / (ITERATIONS * slice_size);
-	std::cout << slicing_per_primitive << " spent on slicing per single PRIMITIVE call\n";
-
-	auto before = _rdtsc();
-	for (int i = 0; i < ITERATIONS; ++i) {
-		auto schedule = forkskinny_128_fixsliced_init_tk23(test_TK1[i], test_TK2[i], test_TK3[i]);
-
-		auto pt_block = test_M[i];
-
-		auto ct = forkskinny128_encrypt(&schedule, &pt_block, 'b', ROUNDS_BEFORE,
-		                                ROUNDS_AFTER);
-
-		auto volatile res = unslice_accelerated(ct.M);
-	}
-	auto after = _rdtsc();
-
-	auto total = (after - before) + (after0 - before0);
-	auto cycles_per_primitive = total / (ITERATIONS * slice_size);
-	auto cycles_per_round = cycles_per_primitive / (ROUNDS_BEFORE + 2 * ROUNDS_AFTER);
-	auto cycles_per_byte = cycles_per_primitive / 16;
-
-	std::cout << cycles_per_primitive + slicing_per_primitive << " total cycles per single PRIMITIVE call (slicing included)\n" ;
-	std::cout << cycles_per_byte << " cycles per byte\n";
-	std::cout << cycles_per_round << " cycles per round";
+	std::cout << rounds << " rounds per primitive call\n--------\n";
+	
+	ULL slice_timings[iterations], schedule_timings[iterations], encryption_timings[iterations],
+			decryption_timings[iterations], unslice_timings[iterations];
+	
+	for (int i = 0; i < iterations; ++i)
+		benchmark_forkskinny128_384_sb(
+				slice_timings + i,
+				schedule_timings + i,
+				encryption_timings + i,
+				decryption_timings + i,
+				unslice_timings + i
+		);
+	
+	// sort the timings
+	qsort(slice_timings, iterations, sizeof(ULL), compare);
+	qsort(schedule_timings, iterations, sizeof(ULL), compare);
+	qsort(encryption_timings, iterations, sizeof(ULL), compare);
+	qsort(decryption_timings, iterations, sizeof(ULL), compare);
+	qsort(unslice_timings, iterations, sizeof(ULL), compare);
+	
+	// the encryption samples use the same keys and plaintext and so are deterministic. Any noise that slows it down
+	// comes from side channels, so we can just assume the fastest one
+	double cycles_slicing_per_pack = slice_timings[0];
+	double cycles_schedule_per_pack = schedule_timings[0];
+	double cycles_encryption_per_pack = encryption_timings[0];
+	double cycles_decryption_per_pack = decryption_timings[0];
+	double cycles_unslicing_per_pack = unslice_timings[0];
+	
+	double total_per_block =
+			(cycles_unslicing_per_pack + cycles_slicing_per_pack + cycles_encryption_per_pack +
+			 cycles_schedule_per_pack) / slice_size;
+	double cycles_per_round = total_per_block / rounds;
+	double cycles_per_byte = total_per_block / 16;
+	
+	double slicing_per_primitive = (cycles_unslicing_per_pack + cycles_slicing_per_pack) / slice_size;
+	double encryption_per_primitive = cycles_encryption_per_pack / slice_size;
+	double decryption_per_primitive = cycles_decryption_per_pack / slice_size;
+	double schedule_per_primitive = cycles_schedule_per_pack / slice_size;
+	std::cout << slicing_per_primitive << " spent on slicing per single block\n";
+	std::cout << encryption_per_primitive
+	          << " cycles on encryption alone per single block (slicing excluded)\n";
+	std::cout << decryption_per_primitive
+	          << " cycles on decryption alone per single block (slicing excluded)\n";
+	std::cout << schedule_per_primitive << " cycles spent on key schedule alone PER PRIMITIVE\n";
+	std::cout << "-->" << cycles_per_byte << " cycles per byte (encryption)\n";
+	std::cout << (cycles_per_byte / rounds) * 36 << " cycles per byte per 36 rounds (encryption)\n";
+	std::cout << cycles_per_round << " cycles per round (encryption)";
 }
 
 int main(){
 	benchmark_forkskinny128_384();
 }
 
-//SlicedCiphertext128_t benchmark_fs128_encryption() {
-//	#define ROUNDS_BEFORE FORKSKINNY_128_384_ROUNDS_BEFORE
-//	#define ROUNDS_AFTER FORKSKINNY_128_384_ROUNDS_AFTER
-//	auto m = slice_internal(M_128());
-//	auto tk1 = slice_internal(TK1_128());
-//	auto tk2 = slice_internal(TK2_128());
-//	auto tk3 = slice_internal(TK3_128());
-//
-//	auto schedule = forkskinny_128_fixsliced_init_tk23(tk1, tk2, tk3);
-//	auto ct = forkskinny128_encrypt(&schedule, &m, 'b', ROUNDS_BEFORE, ROUNDS_AFTER);
-//
-//	return ct;
-//}
-//
-//void run_benchmark_fs128(benchmark::State &state) {
-//	for (auto _: state) {
-//		auto ct = benchmark_fs128_encryption();
-//		auto volatile res = unslice_accelerated_internal(ct.M);
-//	}
-//}
-//
-//// 75589 - 8945
-//BENCHMARK(run_benchmark_fs128);
-//
-//BENCHMARK_MAIN();

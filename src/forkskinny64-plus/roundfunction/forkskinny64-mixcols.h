@@ -3,6 +3,7 @@
 
 #include "../utils/forkskinny64-datatypes.h"
 #include "../common.h"
+#include "../utils/slicing64.h"
 
 #if AVX2_acceleration
 static void inline assign_segmented_row(uint8_t from, uint8_t to, State64Sliced_t *state){
@@ -50,7 +51,7 @@ static inline void forkskinny64_mixcols_inv(State64Sliced_t *state) {
 	xor_row(&(state->rows[1]), &(state->rows[2]), &(state->rows[1]));
 	#endif
 
-//	auto test_res = unslice_accelerated_internal(*state).values[0].raw;
+//	auto test_res = unslice64(*state).values[0].raw;
 //	int appel = 1;
 }
 

@@ -90,30 +90,30 @@ static inline void apply_roundkey(HalfState128Sliced_t *round_key, State128Slice
 static inline void forkskinny128_encrypt_round(KeySchedule128Sliced_t *schedule, State128Sliced_t *state,
                                                uint16_t iteration) {
 	// i: 0, rtk: 0x 9AC9 9F33 632C 5A77 (+ 0x02 @ injection step)
-	auto roundkey = unslice128({.halves= {schedule->keys[iteration], {}}}).values[0].raw[0];
+//	auto roundkey = unslice128({.halves= {schedule->keys[iteration], {}}}).values[0].raw[0];
 	
-	auto test_sbox_before = unslice128(*state).values[0].raw[0]; // 0x EC4A FF51 7369 C667 | 0x 80
+//	auto test_sbox_before = unslice128(*state).values[0].raw[0]; // 0x EC4A FF51 7369 C667 | 0x 80
 //	auto before = _rdtsc();
 	forkskinny128_sbox(state);
 //	auto after = _rdtsc();
 //	std::cout << "fs128 sbox: " << after - before << "\n";
-	auto test_state0 = unslice128(*state).values[0].raw[0]; // 0x 079C FF4A C5B1 87AD | 0x 6565 6565 6565 6536
-	auto test_state1 = unslice128(*state).values[0].raw[1];
+//	auto test_state0 = unslice128(*state).values[0].raw[0]; // 0x 079C FF4A C5B1 87AD | 0x 6565 6565 6565 6536
+//	auto test_state1 = unslice128(*state).values[0].raw[1];
 	
 	/* round constant is added during pre computation of key schedule and added to the roundkey */
 //	auto before2 = _rdtsc();
 	apply_roundkey(&(schedule->keys[iteration]), state);
 //	auto after2 = _rdtsc();
 //	std::cout << "fs128 key injection: " <<  after2 - before2 << "\n";
-	test_state0 = unslice128(*state).values[0].raw[0]; // 0x 9D55 6079 A69D DDDA | 0x 6565 6565 6565 6534
-	test_state1 = unslice128(*state).values[0].raw[1];
+//	test_state0 = unslice128(*state).values[0].raw[0]; // 0x 9D55 6079 A69D DDDA | 0x 6565 6565 6565 6534
+//	test_state1 = unslice128(*state).values[0].raw[1];
 
 //	auto before3 = _rdtsc();
 	forkskinny128_shiftrows(state);
 //	auto after3 = _rdtsc();
 //	std::cout << "fs128 ShiftRows: " <<  after3 - before3 << "\n";
-	test_state0 = unslice128(*state).values[0].raw[0]; // 0x 5560 799D A69D DDDA | 0x 6565 6565 6534 6565
-	test_state1 = unslice128(*state).values[0].raw[1];
+//	test_state0 = unslice128(*state).values[0].raw[0]; // 0x 5560 799D A69D DDDA | 0x 6565 6565 6534 6565
+//	test_state1 = unslice128(*state).values[0].raw[1];
 
 //	auto before4 = _rdtsc();
 	forkskinny128_mixcols(state);
@@ -121,10 +121,10 @@ static inline void forkskinny128_encrypt_round(KeySchedule128Sliced_t *schedule,
 //	std::cout << "fs128 MixCols: " <<  after4 - before4 << "\n";
 
 //	exit(0);
-	test_state0 = unslice128(*state).values[0].raw[0]; // 0x A69D DDDA A6CC DDDA | 0x C3A9 B8BF 3054 1CF8
-	test_state1 = unslice128(*state).values[0].raw[1];
+//	test_state0 = unslice128(*state).values[0].raw[0]; // 0x A69D DDDA A6CC DDDA | 0x C3A9 B8BF 3054 1CF8
+//	test_state1 = unslice128(*state).values[0].raw[1];
 	
-	int appel = 1;
+//	int appel = 1;
 }
 
 static inline void forkskinny128_encrypt(KeySchedule128Sliced_t *schedule, State128Sliced_t *state,
@@ -136,9 +136,9 @@ static inline void forkskinny128_encrypt(KeySchedule128Sliced_t *schedule, State
 	int i = 0;
 	for (; i < r_init; i++) {
 		forkskinny128_encrypt_round(schedule, state, i);
-		auto test0 = unslice128(state).values[0].raw[0];
-		auto test1 = unslice128(state).values[0].raw[1];
-		int appel = 1;
+//		auto test0 = unslice128(state).values[0].raw[0];
+//		auto test1 = unslice128(state).values[0].raw[1];
+//		int appel = 1;
 	}
 
 //	auto test1_0 = unslice128(*state).values[0].raw[0];
@@ -149,9 +149,9 @@ static inline void forkskinny128_encrypt(KeySchedule128Sliced_t *schedule, State
 		*C0 = *state;
 		for (int c0_i = i; c0_i < r_init + r_after; c0_i++) {
 			forkskinny128_encrypt_round(schedule, C0, c0_i);
-			auto test2a = unslice128(C0).values[0].raw[0];
-			auto test2b = unslice128(C0).values[0].raw[1];
-			int appel = 1;
+//			auto test2a = unslice128(C0).values[0].raw[0];
+//			auto test2b = unslice128(C0).values[0].raw[1];
+//			int appel = 1;
 		}
 	}
 
@@ -170,9 +170,9 @@ static inline void forkskinny128_encrypt(KeySchedule128Sliced_t *schedule, State
 //		test3_bc1 = unslice128(C1).values[0].raw[1];
 		for (int c1_i = r_init + r_after; c1_i < (r_init + 2 * r_after); c1_i++) {
 			forkskinny128_encrypt_round(schedule, C1, c1_i);
-			auto test3a = unslice128(C1).values[0].raw[0];
-			auto test3b = unslice128(C1).values[0].raw[1];
-			int appel = 1;
+//			auto test3a = unslice128(C1).values[0].raw[0];
+//			auto test3b = unslice128(C1).values[0].raw[1];
+//			int appel = 1;
 		}
 	}
 
@@ -183,43 +183,43 @@ static inline void forkskinny128_encrypt(KeySchedule128Sliced_t *schedule, State
 static inline void forkskinny128_decrypt_round(KeySchedule128Sliced_t *schedule, State128Sliced_t *state,
                                                uint16_t iteration) {
 	// 0x 3A45 57FB 4777 DA1D
-	auto roundkey = unslice128({.halves= {schedule->keys[iteration], {}}}).values[0];
+//	auto roundkey = unslice128({.halves= {schedule->keys[iteration], {}}}).values[0];
 
 //	auto ct = Blocks128_t{.values = {0x9A9BFD8982C66E7C}};
 //	*state = slice_t(ct);
 	
-	auto test_sbox_before = unslice128(*state).values[0];
+//	auto test_sbox_before = unslice128(*state).values[0];
 	// --- 0x 72D8 8741 77DC 8C16 || 0x 266D A48E A11F D273 ---
 	forkskinny128_mixcols_inv(state);
-	auto test_state = unslice128(*state).values[0];
+//	auto test_state = unslice128(*state).values[0];
 	
 	// --- 0x F5AA F1BC 72D8 8741 || 0x 51B1 2898 54B5 23CF ---
 	forkskinny128_shiftrows_inv(state);
-	test_state = unslice128(*state).values[0];
+//	test_state = unslice128(*state).values[0];
 	
 	// --- BCF5 AAF1 72D8 8741 || 0x B128 9851 23CF 54B5
 	apply_roundkey(&(schedule->keys[iteration]), state);
-	test_state = unslice128(*state).values[0];
+//	test_state = unslice128(*state).values[0];
 	
 	// 0x 86B0 FD0A 35AF 5D5C || 0x B128 9851 23CF 54B7
 	forkskinny128_sbox_inv(state);
-	test_state = unslice128(*state).values[0];
+//	test_state = unslice128(*state).values[0];
 	
 	// 0x C33D 7F3A 10E7 5E5A || 0x 698B 1AD8 1DF4 5CED
-	int appel = 1;
+//	int appel = 1;
 }
 
 static inline void forkskinny128_decrypt_C0(KeySchedule128Sliced_t *schedule,
                                             State128Sliced_t *state, unsigned char mode,
                                             SlicedCiphertext128_t *result, uint8_t r_init, uint8_t r_after) {
-	auto initial_state = unslice128(state).values[0];
+//	auto initial_state = unslice128(state).values[0];
 	
 	// decrypt C0 branch
 	int c0_i = r_init + r_after - 1;
 	for (; c0_i > r_init - 1; --c0_i) {
 		forkskinny128_decrypt_round(schedule, state, c0_i);
-		auto test = unslice128(state).values[0];
-		int appel = 1;
+//		auto test = unslice128(state).values[0];
+//		int appel = 1;
 	}
 	
 	// Further decrypt to M
@@ -227,31 +227,26 @@ static inline void forkskinny128_decrypt_C0(KeySchedule128Sliced_t *schedule,
 		result->M = *state;
 		for (int i = c0_i; i >= 0; --i) {
 			forkskinny128_decrypt_round(schedule, &(result->M), i);
-			auto test = unslice128(result->M).values[0];
-			int appel = 1;
+//			auto test = unslice128(result->M).values[0];
+//			int appel = 1;
 		}
 	}
 	
 	// Re-encrypt to C1
 	if (mode == 'o' || mode == 'b') {
 		result->C1 = *state;
-		auto before = unslice128(&(result->C1));
+//		auto before = unslice128(&(result->C1));
 		add_branch_constant128(&(result->C1));
-		auto after = unslice128(&(result->C1));
+//		auto after = unslice128(&(result->C1));
 		for (int i = r_init + r_after; i < (r_init + 2 * r_after); ++i) {
 			forkskinny128_encrypt_round(schedule, &(result->C1), i);
-			auto test = unslice128(result->C1).values[0];
-			int appel = 1;
-			std::cout << i << ": ";
-			print_block(test.bytes, 8);
-			std::cout << ", ";
-			print_block(&(test.bytes[8]), 8);
-			std::cout << std::endl;
+//			auto test = unslice128(result->C1).values[0];
+//			int appel = 1;
 		}
 	}
 	
-	auto testsss = unslice128(result->M).values[0];
-	int appel = 1;
+//	auto testsss = unslice128(result->M).values[0];
+//	int appel = 1;
 }
 
 static inline void forkskinny128_decrypt_C1(KeySchedule128Sliced_t *schedule,
