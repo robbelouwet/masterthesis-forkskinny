@@ -76,7 +76,7 @@ static inline void forkskinny_128_init_tk23_internal(State128Sliced_t *tk1, Stat
 static inline void forkskinny128_precompute_key_schedule(State128Sliced_t *tk1, State128Sliced_t *tk2, const int amount,
                                                          KeySchedule128Sliced_t *out) {
 	#if IMPROVED_KEYSCHEDULE
-	forkskinny_128_init_tk2_fixsliced_internal(tk1, tk2, out);
+	forkskinny_128_init_tk2_fixsliced_internal(tk1, tk2, amount, out);
 	#else
 	forkskinny_128_init_tk2_internal(tk1, tk2, amount, out);
 	#endif
@@ -86,7 +86,7 @@ static inline void forkskinny128_precompute_key_schedule(State128Sliced_t *tk1, 
                                                          State128Sliced_t *tk3, const int amount,
                                                          KeySchedule128Sliced_t *out) {
 	#if IMPROVED_KEYSCHEDULE
-	forkskinny_128_init_tk23_fixsliced_internal(tk1, tk2, tk3, out);
+	forkskinny_128_init_tk23_fixsliced_internal(tk1, tk2, tk3, amount, out);
 	#else
 	forkskinny_128_init_tk23_internal(tk1, tk2, tk3, amount, out);
 	#endif

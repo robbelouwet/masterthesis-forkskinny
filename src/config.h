@@ -8,8 +8,8 @@
 // @formatter:off
 // -- CONFIG --
 #define slice_size 64 // 8, 32, 64, 128, 256 or 512
-#define AVX2_support true
-#define IMPROVED_KEYSCHEDULE false
+#define AVX2_support false
+#define IMPROVED_KEYSCHEDULE true
 #define FAST_SLICING true
 // ------------
 
@@ -26,8 +26,8 @@
 #define LOAD256(src) _mm256_load_si256((__m256i *)(src))
 #define STORE256(dest,src) _mm256_store_si256((__m256i *)(dest),src)
 
-#define LOAD128(src) _mm_load_si128((__m128i *)(src))
-#define STORE128(dest,src) _mm_store_si128((__m128i *)(dest),src)
+#define LOAD128(src) _mm_loadu_si128((__m128i *)(src))
+#define STORE128(dest,src) _mm_storeu_si128((__m128i *)(dest),src)
 
 #define ROL64(v, i) ((v << i) | (v >> (64 - i)))
 #define ROR64(v, i) ROL64(v, (64 - i))

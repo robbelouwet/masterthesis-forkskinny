@@ -91,7 +91,7 @@ static inline void forkskinny_128_init_tk2_fixsliced_internal(State128Sliced_t *
 	out->keys[i++] = res0.halves[0];
 	
 	// RTK N & N+1
-	for (; i < FORKSKINNY128_MAX_ROUNDS; i += 2) {
+	for (; i < amount; i += 2) {
 		tk2_lfsr128(tk2, true);
 		
 		State128Sliced_t rtk_temp;

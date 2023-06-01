@@ -23,7 +23,8 @@ static inline void benchmark_forkskinny128_384_iteration(ULL *slice_timing, ULL 
 	slice128(&unsliced_test_TK1, &test_TK1);
 	slice128(&unsliced_test_TK2, &test_TK2);
 	slice128(&unsliced_test_TK3, &test_TK3);
-	*slice_timing = _rdtsc() - before_slicing;
+	auto volatile after_slicing = _rdtsc();
+	*slice_timing = after_slicing - before_slicing;
 	
 	// --- KEY SCHEDULE ---
 	KeySchedule128Sliced_t schedule;
@@ -31,14 +32,16 @@ static inline void benchmark_forkskinny128_384_iteration(ULL *slice_timing, ULL 
 	forkskinny128_precompute_key_schedule(&test_TK1, &test_TK2, &test_TK3,
 	                                      FORKSKINNY_128_384_ROUNDS_BEFORE + FORKSKINNY_128_384_ROUNDS_AFTER,
 	                                      &schedule);
-	*schedule_timing = _rdtsc() - schedule_before;
+	auto volatile schedule_after = _rdtsc();
+	*schedule_timing = schedule_after - schedule_before;
 	
 	// --- ENCRYPTION ---
 	State128Sliced_t C0, C1;
 	auto volatile encryption_before = _rdtsc();
 	forkskinny128_encrypt(&schedule, &test_M, &C0, nullptr, '0',
 	                      FORKSKINNY_128_384_ROUNDS_BEFORE, FORKSKINNY_128_384_ROUNDS_AFTER);
-	*encryption_timing = _rdtsc() - encryption_before;
+	auto volatile encryption_after = _rdtsc();
+	*encryption_timing = encryption_after - encryption_before;
 	SlicedCiphertext128_t wrapped_c0 = {.C0 = C0};
 	
 	// --- DECRYPTION ---
@@ -46,7 +49,8 @@ static inline void benchmark_forkskinny128_384_iteration(ULL *slice_timing, ULL 
 	auto volatile decryption_before = _rdtsc();
 	forkskinny128_decrypt(&schedule, &wrapped_c0, &recovered_pt, '0', 'i',
 	                      FORKSKINNY_128_384_ROUNDS_BEFORE, FORKSKINNY_128_384_ROUNDS_AFTER);
-	*decryption_timing = _rdtsc() - decryption_before;
+	auto volatile decryption_after = _rdtsc();
+	*decryption_timing = decryption_after - decryption_before;
 	auto unsliced_recovered_pt = unslice128(&(recovered_pt.M));
 	
 	// --- UNSLICING ---
@@ -54,7 +58,8 @@ static inline void benchmark_forkskinny128_384_iteration(ULL *slice_timing, ULL 
 	auto volatile unslicing_before = _rdtsc();
 	unslice128(&C0, &unsliced_C0);
 //	unslice128(&C1, &unsliced_C1);
-	*unslice_timing = _rdtsc() - unslicing_before;
+	auto volatile unslicing_after = _rdtsc();
+	*unslice_timing = unslicing_after - unslicing_before;
 	
 	// Prevent dead-code elimination caused by optimizations!
 	for (int i = 0; i < slice_size; ++i) {
@@ -75,12 +80,13 @@ static inline void benchmark_forkskinny128_256_iteration(ULL *slice_timing, ULL 
 	auto unsliced_test_TK2 = TK2_128();
 	
 	// --- SLICING ---
-	State128Sliced_t test_M, test_TK1, test_TK2, test_TK3;
+	State128Sliced_t test_M, test_TK1, test_TK2;
 	auto volatile before_slicing = _rdtsc();
 	slice128(&unsliced_test_M, &test_M);
 	slice128(&unsliced_test_TK1, &test_TK1);
 	slice128(&unsliced_test_TK2, &test_TK2);
-	*slice_timing = _rdtsc() - before_slicing;
+	auto volatile after_slicing = _rdtsc();
+	*slice_timing = after_slicing - before_slicing;
 	
 	// --- KEY SCHEDULE ---
 	KeySchedule128Sliced_t schedule;
@@ -88,14 +94,16 @@ static inline void benchmark_forkskinny128_256_iteration(ULL *slice_timing, ULL 
 	forkskinny128_precompute_key_schedule(&test_TK1, &test_TK2,
 	                                      FORKSKINNY_128_256_ROUNDS_BEFORE + FORKSKINNY_128_256_ROUNDS_AFTER,
 	                                      &schedule);
-	*schedule_timing = _rdtsc() - schedule_before;
+	auto volatile schedule_after = _rdtsc();
+	*schedule_timing = schedule_after - schedule_before;
 	
 	// --- ENCRYPTION ---
 	State128Sliced_t C0, C1;
 	auto volatile encryption_before = _rdtsc();
 	forkskinny128_encrypt(&schedule, &test_M, &C0, nullptr, '0',
 	                      FORKSKINNY_128_256_ROUNDS_BEFORE, FORKSKINNY_128_256_ROUNDS_AFTER);
-	*encryption_timing = _rdtsc() - encryption_before;
+	auto volatile encryption_after = _rdtsc();
+	*encryption_timing = encryption_after - encryption_before;
 	SlicedCiphertext128_t wrapped_c0 = {.C0 = C0};
 	
 	// --- DECRYPTION ---
@@ -103,7 +111,8 @@ static inline void benchmark_forkskinny128_256_iteration(ULL *slice_timing, ULL 
 	auto volatile decryption_before = _rdtsc();
 	forkskinny128_decrypt(&schedule, &wrapped_c0, &recovered_pt, '0', 'i',
 	                      FORKSKINNY_128_256_ROUNDS_BEFORE, FORKSKINNY_128_256_ROUNDS_AFTER);
-	*decryption_timing = _rdtsc() - decryption_before;
+	auto volatile decryption_after = _rdtsc();
+	*decryption_timing = decryption_after - decryption_before;
 	auto unsliced_recovered_pt = unslice128(&(recovered_pt.M));
 	
 	// --- UNSLICING ---
@@ -111,7 +120,8 @@ static inline void benchmark_forkskinny128_256_iteration(ULL *slice_timing, ULL 
 	auto volatile unslicing_before = _rdtsc();
 	unslice128(&C0, &unsliced_C0);
 //	unslice128(&C1, &unsliced_C1);
-	*unslice_timing = _rdtsc() - unslicing_before;
+	auto volatile unslicing_after = _rdtsc();
+	*unslice_timing = unslicing_after - unslicing_before;
 	
 	// Prevent dead-code elimination caused by optimizations!
 	for (int i = 0; i < slice_size; ++i) {

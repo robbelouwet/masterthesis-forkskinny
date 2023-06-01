@@ -12,13 +12,16 @@ static inline void unpack128(Blocks128_t *state, Block64_t *out) {
 		out[slice_size + i].raw = state->values[i].raw[1];
 	}
 }
+
 #if AVX2_acceleration
+
 #include "immintrin.h"
+
 static inline void double_slice128_accelerated_internal(Blocks128_t *state, State128Sliced_t *out) {
 	Slice128_t slices[128];
 	Block128_t b_blocks[128];
 	
-	for (int i = 64; i < 128; i++){
+	for (int i = 64; i < 128; i++) {
 		b_blocks[i].lane = ROL128(state->values[i & 63].lane, (i & 63));
 		int appel = 1;
 	}
@@ -34,8 +37,8 @@ static inline void double_slice128_accelerated_internal(Blocks128_t *state, Stat
 			STORE128(&pack,
 			         OR128(
 					         pack,
-					         AND128(b_blocks[ind + j].lane,
-					                _mm_set1_epi64x(bit_masks[j]))
+					         AND128(LOAD128(b_blocks + ind + j),
+					                LOAD128(double_bit_masks + j))
 			         )
 			);
 		
@@ -50,6 +53,7 @@ static inline void double_slice128_accelerated_internal(Blocks128_t *state, Stat
 	
 	try_segment128((State128Sliced_t *) &slices, out, true);
 }
+
 #endif
 
 

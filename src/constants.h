@@ -5,6 +5,7 @@
 #include "forkskinny64-plus/utils/forkskinny64-datatypes.h"
 #include "forkskinny128-plus/utils/forkskinny128-datatypes.h"
 
+// @formatter:off
 #if AVX2_acceleration
 // Nibble-swapped forkskinny64
 #define NS256(x) _mm256_set_epi64x(0, 0, x, 0)
@@ -217,187 +218,100 @@ slice_t forkskinny_unsegmented_round_constants[88][7] = {
 };
 //</editor-fold>
 
+// @formatter:off
 #if AVX2_acceleration
 //<editor-fold desc="88 pre-computed forkskinny segmented sliced round constants"
 // the first 88 states of the addconstant lfsr containing {rc⁰, rc¹, ..., rc⁶} each
 // every rc slice128_internal is now aligned to the 2nd cell within a segment64-row
 __m256i const forkskinny64_round_constants[88][7] = {
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 1
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 3
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 7
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 15
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 31
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 63
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 126
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 125
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 123
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 119
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 111
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 95
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 62
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 124
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 121
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 115
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 103
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE),}, // 79
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 30
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 61
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 122
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 117
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 107
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 87
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER),}, // 46
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 92
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 56
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 112
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 97
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE),}, // 67
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 6
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 13
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 27
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 55
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 110
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 93
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 58
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 116
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 105
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 83
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER),}, // 38
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE),}, // 76
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 24
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 49
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 98
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE),}, // 69
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 10
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 21
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER),}, // 43
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 86
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER),}, // 44
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 88
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 48
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 96
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE),}, // 65
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 2
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 5
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 11
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 23
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER),}, // 47
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 94
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 60
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 120
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 113
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 99
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE),}, // 71
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 14
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 29
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 59
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 118
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 109
-		{NS256(slice_ONE), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 91
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 54
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 108
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 89
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 50
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 100
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE),}, // 73
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 18
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER),}, // 37
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE),}, // 74
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 20
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER),}, // 41
-		{NS256(slice_ZER), XOR256(NS256(slice_ONE),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 82
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER),}, // 36
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE),}, // 72
-		{NS256(slice_ZER), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 16
-		{NS256(slice_ONE), XOR256(NS256(slice_ZER),
-		                          NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER),}, // 33
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 1
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 3
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 7
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 15
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 31
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 63
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 126
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 125
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 123
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 119
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 111
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 95
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 62
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 124
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 121
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 115
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 103
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE),}, // 79
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 30
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 61
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 122
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 117
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 107
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 87
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER),}, // 46
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 92
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 56
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 112
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 97
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE),}, // 67
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 6
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 13
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 27
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 55
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 110
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 93
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 58
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 116
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 105
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 83
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER),}, // 38
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE),}, // 76
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 24
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 49
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 98
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE),}, // 69
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 10
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 21
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER),}, // 43
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 86
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER),}, // 44
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 88
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 48
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 96
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE),}, // 65
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 2
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 5
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 11
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 23
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER),}, // 47
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 94
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 60
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 120
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 113
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 99
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE),}, // 71
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER),}, // 14
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 29
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 59
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ONE),}, // 118
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 109
+		{NS256(slice_ONE), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 91
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 54
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 108
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 89
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE), NS256(slice_ZER),}, // 50
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ONE),}, // 100
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE),}, // 73
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 18
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER),}, // 37
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE),}, // 74
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 20
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER),}, // 41
+		{NS256(slice_ZER), XOR256(NS256(slice_ONE),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ONE),}, // 82
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER),}, // 36
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE),}, // 72
+		{NS256(slice_ZER), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER), NS256(slice_ZER),}, // 16
+		{NS256(slice_ONE), XOR256(NS256(slice_ZER),NTWO), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ZER), NS256(slice_ONE), NS256(slice_ZER),}, // 33
 };
 //</editor-fold>
 
@@ -405,182 +319,94 @@ __m256i const forkskinny64_round_constants[88][7] = {
 // the first 88 states of the addconstant lfsr containing {rc⁰, rc¹, ..., rc⁶} each
 // every rc slice128_internal is now aligned to the 2nd cell within a segment64-row
 __m256i const forkskinny128_round_constants[88][7] = {
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 1
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 3
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 7
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 15
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 31
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 63
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 126
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 125
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 123
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 119
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 111
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 95
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 62
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 124
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 121
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 115
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 103
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE),}, // 79
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 30
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 61
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 122
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 117
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 107
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 87
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER),}, // 46
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 92
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 56
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 112
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 97
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE),}, // 67
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 6
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 13
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 27
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 55
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 110
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 93
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 58
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 116
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 105
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 83
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER),}, // 38
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE),}, // 76
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 24
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 49
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 98
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE),}, // 69
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 10
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 21
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER),}, // 43
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 86
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER),}, // 44
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 88
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 48
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 96
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE),}, // 65
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 2
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 5
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 11
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 23
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER),}, // 47
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 94
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 60
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 120
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 113
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 99
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE),}, // 71
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 14
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 29
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 59
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 118
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 109
-		{S256(slice_ONE), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 91
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 54
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 108
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 89
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 50
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 100
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE),}, // 73
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 18
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER),}, // 37
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE),}, // 74
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 20
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER),}, // 41
-		{S256(slice_ZER), XOR256(S256(slice_ONE),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 82
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER),}, // 36
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE),}, // 72
-		{S256(slice_ZER), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 16
-		{S256(slice_ONE), XOR256(S256(slice_ZER),
-		                         TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER),}, // 33
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 1
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 3
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 7
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 15
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 31
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 63
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 126
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 125
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 123
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 119
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 111
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 95
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 62
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 124
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 121
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 115
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 103
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE),}, // 79
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 30
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 61
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 122
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 117
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 107
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 87
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER),}, // 46
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 92
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 56
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 112
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 97
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE),}, // 67
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 6
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 13
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 27
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 55
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 110
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 93
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 58
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 116
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 105
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 83
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER),}, // 38
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE),}, // 76
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 24
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 49
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 98
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE),}, // 69
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 10
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 21
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER),}, // 43
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 86
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER),}, // 44
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 88
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 48
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 96
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE),}, // 65
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 2
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 5
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 11
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 23
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER),}, // 47
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 94
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 60
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 120
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 113
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 99
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE),}, // 71
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER),}, // 14
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 29
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 59
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ONE),}, // 118
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 109
+		{S256(slice_ONE), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 91
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 54
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 108
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 89
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE), S256(slice_ZER),}, // 50
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ONE),}, // 100
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE),}, // 73
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 18
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER),}, // 37
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE),}, // 74
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 20
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER),}, // 41
+		{S256(slice_ZER), XOR256(S256(slice_ONE),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ONE),}, // 82
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER),}, // 36
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE),}, // 72
+		{S256(slice_ZER), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER), S256(slice_ZER),}, // 16
+		{S256(slice_ONE), XOR256(S256(slice_ZER),TWO), S256(slice_ZER), S256(slice_ZER), S256(slice_ZER), S256(slice_ONE), S256(slice_ZER),}, // 33
 };
 //</editor-fold>
 #endif
@@ -651,6 +477,76 @@ uint64_t const bit_masks[64] = {
 		0x4000000000000000,
 		0x8000000000000000,
 };
+
+#if AVX2_acceleration
+__m128i const double_bit_masks[64] = {
+		_mm_set1_epi64x(0x1),
+		_mm_set1_epi64x(0x2),
+		_mm_set1_epi64x(0x4),
+		_mm_set1_epi64x(0x8),
+		_mm_set1_epi64x(0x10),
+		_mm_set1_epi64x(0x20),
+		_mm_set1_epi64x(0x40),
+		_mm_set1_epi64x(0x80),
+		_mm_set1_epi64x(0x100),
+		_mm_set1_epi64x(0x200),
+		_mm_set1_epi64x(0x400),
+		_mm_set1_epi64x(0x800),
+		_mm_set1_epi64x(0x1000),
+		_mm_set1_epi64x(0x2000),
+		_mm_set1_epi64x(0x4000),
+		_mm_set1_epi64x(0x8000),
+		_mm_set1_epi64x(0x10000),
+		_mm_set1_epi64x(0x20000),
+		_mm_set1_epi64x(0x40000),
+		_mm_set1_epi64x(0x80000),
+		_mm_set1_epi64x(0x100000),
+		_mm_set1_epi64x(0x200000),
+		_mm_set1_epi64x(0x400000),
+		_mm_set1_epi64x(0x800000),
+		_mm_set1_epi64x(0x1000000),
+		_mm_set1_epi64x(0x2000000),
+		_mm_set1_epi64x(0x4000000),
+		_mm_set1_epi64x(0x8000000),
+		_mm_set1_epi64x(0x10000000),
+		_mm_set1_epi64x(0x20000000),
+		_mm_set1_epi64x(0x40000000),
+		_mm_set1_epi64x(0x80000000),
+		_mm_set1_epi64x(0x100000000),
+		_mm_set1_epi64x(0x200000000),
+		_mm_set1_epi64x(0x400000000),
+		_mm_set1_epi64x(0x800000000),
+		_mm_set1_epi64x(0x1000000000),
+		_mm_set1_epi64x(0x2000000000),
+		_mm_set1_epi64x(0x4000000000),
+		_mm_set1_epi64x(0x8000000000),
+		_mm_set1_epi64x(0x10000000000),
+		_mm_set1_epi64x(0x20000000000),
+		_mm_set1_epi64x(0x40000000000),
+		_mm_set1_epi64x(0x80000000000),
+		_mm_set1_epi64x(0x100000000000),
+		_mm_set1_epi64x(0x200000000000),
+		_mm_set1_epi64x(0x400000000000),
+		_mm_set1_epi64x(0x800000000000),
+		_mm_set1_epi64x(0x1000000000000),
+		_mm_set1_epi64x(0x2000000000000),
+		_mm_set1_epi64x(0x4000000000000),
+		_mm_set1_epi64x(0x8000000000000),
+		_mm_set1_epi64x(0x10000000000000),
+		_mm_set1_epi64x(0x20000000000000),
+		_mm_set1_epi64x(0x40000000000000),
+		_mm_set1_epi64x(0x80000000000000),
+		_mm_set1_epi64x(0x100000000000000),
+		_mm_set1_epi64x(0x200000000000000),
+		_mm_set1_epi64x(0x400000000000000),
+		_mm_set1_epi64x(0x800000000000000),
+		_mm_set1_epi64x(0x1000000000000000),
+		_mm_set1_epi64x(0x2000000000000000),
+		_mm_set1_epi64x(0x4000000000000000),
+		_mm_set1_epi64x(0x8000000000000000),
+};
+#endif
+
 // leave empty arrays to make it easier to retrieve lanes by index
 uint8_t const fixsliced_pt64[16][16] = {
 		{},
