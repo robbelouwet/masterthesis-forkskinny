@@ -20,8 +20,8 @@ void test() {
 		b.values[i + 2].raw[1] = 0xCCCCCCCCCCCCCCCC;
 		b.values[i + 3].raw[1] = 0xDDDDDDDDDDDDDDDD;
 	}
-	
-//	b = M_rand_128(21);
+
+	b = M_rand_128(21);
 	auto res = slice128_internal(&b);
 	auto res1 = slice128_accelerated_internal(&b);
 	
@@ -104,7 +104,7 @@ void test_forkskinny_128_384(int keysize, uint64_t C0_A, uint64_t C0_B,
 	auto uTK3 = TK3_128();
 	auto TK3 = slice128(&uTK3);
 	auto original_pt = unslice128(&M);
-	
+
 //	KeySchedule128Sliced_t ks_improved;
 //	auto TK1a = TK1; auto TK2a = TK2; auto TK3a = TK3;
 //	forkskinny_128_init_tk23_fixsliced_internal(&TK1, &TK2, &TK3, &ks_improved);
@@ -120,8 +120,13 @@ void test_forkskinny_128_384(int keysize, uint64_t C0_A, uint64_t C0_B,
 	
 	/// Key schedule
 	auto schedule = KeySchedule128Sliced_t();
-	if (keysize == 256) forkskinny128_precompute_key_schedule(&TK1, &TK2, &schedule);
-	else if (keysize == 384) forkskinny128_precompute_key_schedule(&TK1, &TK2, &TK3, &schedule);
+	if (keysize == 256)
+		forkskinny128_precompute_key_schedule(&TK1, &TK2,
+		                                      FORKSKINNY_128_384_ROUNDS_BEFORE +
+		                                      FORKSKINNY_128_384_ROUNDS_AFTER, &schedule);
+	else if (keysize == 384)
+		forkskinny128_precompute_key_schedule(&TK1, &TK2, &TK3, FORKSKINNY_128_384_ROUNDS_BEFORE +
+		                                                        FORKSKINNY_128_384_ROUNDS_AFTER, &schedule);
 	
 	// @formatter:off
 	/// Round keys (fs128-384, AddConstant inside ks)

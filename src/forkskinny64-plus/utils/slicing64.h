@@ -10,7 +10,7 @@ static inline void slice64(Blocks64_t *blocks, State64Sliced_t *result,
 	#if FAST_SLICING
 	slice_accelerated_internal64(blocks, result, segment);
 	#else
-	*result = slice_internal(blocks, segment);
+	*result = slice_internal64(blocks, segment);
 	#endif
 }
 
@@ -19,7 +19,7 @@ static inline State64Sliced_t slice64(Blocks64_t *blocks,
 	#if FAST_SLICING
 	return slice_accelerated_internal64(blocks, segment);
 	#else
-	return slice_internal(blocks, segment);
+	return slice_internal64(blocks, segment);
 	#endif
 }
 
@@ -28,7 +28,7 @@ static inline void unslice64(State64Sliced_t *state, Blocks64_t *result,
 	#if FAST_SLICING
 	unslice_accelerated_internal64(state, result, segmented);
 	#else
-	*result = unslice_internal(state, segmented);
+	*result = unslice_internal64(state, segmented);
 	#endif
 }
 
@@ -37,7 +37,7 @@ static inline Blocks64_t unslice64(State64Sliced_t *state,
 	#if FAST_SLICING
 	return unslice_accelerated_internal64(state, segmented);
 	#else
-	return unslice_internal(state, segmented);
+	return unslice_internal64(state, segmented);
 	#endif
 }
 
@@ -46,7 +46,7 @@ static inline Blocks64_t unslice64(State64Sliced_t state,
 	#if FAST_SLICING
 	return unslice_accelerated_internal64(&state, segmented);
 	#else
-	return unslice_internal(&state, segmented);
+	return unslice_internal64(&state, segmented);
 	#endif
 }
 

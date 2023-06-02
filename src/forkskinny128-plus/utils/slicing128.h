@@ -10,7 +10,7 @@ static inline void slice128(Blocks128_t *blocks, State128Sliced_t *result,
 	#if FAST_SLICING
 	slice128_accelerated_internal(blocks, result, segment);
 	#else
-	slice_internal(blocks, result, segment);
+	slice128_internal(blocks, result, segment);
 	#endif
 }
 
@@ -20,7 +20,7 @@ static inline State128Sliced_t slice128(Blocks128_t *blocks,
 	#if FAST_SLICING
 	return slice128_accelerated_internal(blocks, segment);
 	#else
-	return slice_internal(blocks, segment);
+	return slice128_internal(blocks, segment);
 	#endif
 }
 
@@ -29,7 +29,7 @@ static inline void unslice128(State128Sliced_t *state, Blocks128_t *result,
 	#if FAST_SLICING
 	unslice128_accelerated_internal(state, result, segmented);
 	#else
-	unslice_internal(state, result, segmented);
+	unslice128_internal(state, result, segmented);
 	#endif
 }
 
@@ -38,7 +38,7 @@ static inline Blocks128_t unslice128(State128Sliced_t *state,
 	#if FAST_SLICING
 	return unslice128_accelerated_internal(state, segmented);
 	#else
-	return unslice_internal(state, segmented);
+	return unslice128_internal(state, segmented);
 	#endif
 }
 
@@ -47,7 +47,7 @@ static inline Blocks128_t unslice128(State128Sliced_t state,
 	#if FAST_SLICING
 	return unslice128_accelerated_internal(&state, segmented);
 	#else
-	return unslice_internal(&state, segmented);
+	return unslice128_internal(&state, segmented);
 	#endif
 }
 
