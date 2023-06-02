@@ -49,7 +49,7 @@ static inline void benchmark_forkskinny64_192_iteration(ULL *slice_timing, ULL *
 	auto unsliced_recovered_pt = unslice64(&(recovered_pt.M));
 	
 	// --- UNSLICING ---
-	Blocks64_t unsliced_C0, unsliced_C1;
+	Blocks64_t unsliced_C0 = {}, unsliced_C1 = {};
 	auto unslicing_before = _rdtsc();
 	unslice64(&C0, &unsliced_C0);
 //	unslice64(&C1, &unsliced_C1);
@@ -99,7 +99,7 @@ static inline void benchmark_forkskinny64_128_iteration(ULL *slice_timing, ULL *
 	auto unsliced_recovered_pt = unslice64(&(recovered_pt.M));
 	
 	// --- UNSLICING ---
-	Blocks64_t unsliced_C0, unsliced_C1;
+	Blocks64_t unsliced_C0 = {}, unsliced_C1 = {};
 	auto unslicing_before = _rdtsc();
 	unslice64(&C0, &unsliced_C0);
 //	unslice64(&C1, &unsliced_C1);
@@ -113,8 +113,8 @@ static inline void benchmark_forkskinny64_128_iteration(ULL *slice_timing, ULL *
 	}
 }
 
-void PAEF_forkskinny64_192(double *timing_AD_slice, double *timing_AD_encrypt,
-                           double *timing_M_slice, double *timing_M_encrypt, u64 *tag) {
+void PAEF_forkskinny64_192(ULL *timing_AD_slice, ULL *timing_AD_encrypt,
+                           ULL *timing_M_slice, ULL *timing_M_encrypt, u64 *tag) {
 	/// Nonce N
 	int nonce_bit_length = 96;
 	Block64_t nonce[3] = {{.raw = 0xFEDCBA9876543210},

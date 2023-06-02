@@ -51,7 +51,7 @@ static inline void extract_segment_tag(State64Sliced_t *state, bool last_segment
  */
 static inline void paef_forkskinny64_192_encrypt_section(
 		Blocks64_t *ma, Block64_t *nonce_blocks, uint8_t nonce_bit_size, u64 *ctr, int last, char mode,
-		bool isAD, SlicedCiphertext64_t *res, double *t_slice, double *t_encrypt) {
+		bool isAD, SlicedCiphertext64_t *res, ULL *t_slice, ULL *t_encrypt) {
 	
 	/// Construct sliced Tweakeys from nonce, bit flags and block ctr
 	/* TK3 is the only one containing different counter values for each block */
@@ -106,7 +106,7 @@ static inline void paef_forkskinny64_192_encrypt_section(
  */
 static inline void paef_forkskinny64_192_encrypt_AD(
 		Blocks64_t *pt, u64 amount_segments, Block64_t *nonce_blocks, u64 nonce_bit_length,
-		SlicedCiphertext64_t *result_ct, u64 *result_tag, double *t_slice, double *t_encrypt) {
+		SlicedCiphertext64_t *result_ct, u64 *result_tag, ULL *t_slice, ULL *t_encrypt) {
 	
 	u64 ctr = 1;
 	bool last = slice_size - 1; // since we just encrypt 1 full sliced state, provide default last index
@@ -132,7 +132,7 @@ static inline void paef_forkskinny64_192_encrypt_AD(
 
 static inline void paef_forkskinny64_192_encrypt_M(
 		Blocks64_t *pt, u64 amount_segments, Block64_t *nonce_blocks, u64 nonce_bit_length,
-		SlicedCiphertext64_t *result_ct, u64 *result_tag, double *t_slice, double *t_encrypt) {
+		SlicedCiphertext64_t *result_ct, u64 *result_tag, ULL *t_slice, ULL *t_encrypt) {
 	
 	u64 ctr = 1;
 	bool last = slice_size - 1; // since we just encrypt 1 full sliced state, provide default last index

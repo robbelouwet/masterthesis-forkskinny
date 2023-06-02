@@ -40,8 +40,7 @@ static inline void try_segment128(State128Sliced_t *in, State128Sliced_t *result
 			result->raw[i].value = in->raw[i].value;
 }
 
-static inline void try_unsegment128(State128Sliced_t *in, State128Sliced_t *out,
-                                    const bool segmented = SEGMENTATION) {
+static inline void try_unsegment128(State128Sliced_t *in, State128Sliced_t *out, const bool segmented) {
 	if (segmented) {
 		#if SEGMENTATION
 		for (int i = 0; i < 4; ++i) {

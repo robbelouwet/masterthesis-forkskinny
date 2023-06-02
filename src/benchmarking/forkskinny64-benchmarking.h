@@ -10,17 +10,14 @@
 
 static inline void benchmark_PAEF_forkskinny64_192() {
 	auto bytes = slice_size * 8;
-	std::cout << "PAEF - forkskinny64-192, " << std::dec << bytes <<" bytes AD + " << bytes << " bytes M" << std::endl;
+	std::cout << "PAEF - forkskinny64-192, " << std::dec << bytes << " bytes AD + " << bytes << " bytes M" << std::endl;
 	std::cout << slice_size << " blocks in parallel" << std::endl;
 	auto iterations = 5000;
 	
 	u64 tag;
 	
-	auto m_slice_timings = new double[iterations];
-	auto ad_slice_timings = new double[iterations];
-	auto m_encrypt_timings = new double[iterations];
-	auto ad_encrypt_timings = new double[iterations];
-	
+	ULL m_slice_timings[iterations], ad_slice_timings[iterations], m_encrypt_timings[iterations],
+			ad_encrypt_timings[iterations];
 	for (int i = 0; i < iterations; ++i) {
 		PAEF_forkskinny64_192(
 				ad_slice_timings + i,
@@ -31,10 +28,10 @@ static inline void benchmark_PAEF_forkskinny64_192() {
 	}
 	
 	// sort the timings
-	qsort(m_slice_timings, iterations, sizeof(double), compare);
-	qsort(m_encrypt_timings, iterations, sizeof(double), compare);
-	qsort(ad_slice_timings, iterations, sizeof(double), compare);
-	qsort(ad_encrypt_timings, iterations, sizeof(double), compare);
+	qsort(m_slice_timings, iterations, sizeof(ULL), compare);
+	qsort(m_encrypt_timings, iterations, sizeof(ULL), compare);
+	qsort(ad_slice_timings, iterations, sizeof(ULL), compare);
+	qsort(ad_encrypt_timings, iterations, sizeof(ULL), compare);
 	
 	// the encryption samples use the same keys and plaintext and so are deterministic. Any noise that slows it down
 	// comes from side channels, so we can just assume the fastest one
@@ -99,7 +96,7 @@ static inline void benchmark_forkskinny64_128() {
 	double encryption_per_primitive = cycles_encryption_per_pack / slice_size;
 	double decryption_per_primitive = cycles_decryption_per_pack / slice_size;
 	double schedule_per_primitive = cycles_schedule_per_pack / slice_size;
-	std::cout << slicing_per_primitive << " spent on slicing per single block (" << slicing_label <<")\n";
+	std::cout << slicing_per_primitive << " spent on slicing per single block (" << slicing_label << ")\n";
 	std::cout << encryption_per_primitive
 	          << " cycles on encryption alone per single block (slicing excluded)\n";
 	std::cout << decryption_per_primitive
