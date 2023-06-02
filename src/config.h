@@ -10,7 +10,7 @@
 #define slice_size 64 // 8, 32, 64, 128, 256 or 512
 #define ENABLE_SEGMENTATION false
 #define IMPROVED_KEYSCHEDULE true
-#define FAST_SLICING false
+#define FAST_SLICING true
 // ------------
 
 /* Define SKINNY_64BIT to 1 if the CPU is natively 64-bit */

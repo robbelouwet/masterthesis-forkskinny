@@ -25,12 +25,11 @@ static inline State128Sliced_t slice128(Blocks128_t *blocks,
 }
 
 static inline void unslice128(State128Sliced_t *state, Blocks128_t *result,
-                              const bool segmented = SEGMENTATION, const bool iets = false) {
-//	auto test_output = unslice128_accelerated_internal(state, segmented).values[0];
+                              const bool segmented = SEGMENTATION) {
 	#if FAST_SLICING
 	unslice128_accelerated_internal(state, result, segmented);
 	#else
-	unslice128_internal(state, result, segmented, iets);
+	unslice128_internal(state, result, segmented);
 	#endif
 }
 

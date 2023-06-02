@@ -56,7 +56,7 @@ static inline void benchmark_forkskinny128_384_iteration(ULL *slice_timing, ULL 
 	// --- UNSLICING ---
 	Blocks128_t unsliced_C0 = {}, unsliced_C1 = {};
 	auto volatile unslicing_before = _rdtsc();
-	unslice128(&C0, &unsliced_C0, false, true);
+	unslice128(&C0, &unsliced_C0);
 //	unslice128(&C1, &unsliced_C1);
 	auto volatile unslicing_after = _rdtsc();
 	*unslice_timing = unslicing_after - unslicing_before;

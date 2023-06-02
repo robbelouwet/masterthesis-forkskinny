@@ -143,16 +143,12 @@ static inline void unslice128_significance(const Slice128_t *slice, Blocks128_t 
 }
 
 static inline void unslice128_internal(State128Sliced_t *state, Blocks128_t *result,
-                                       const bool segmented = SEGMENTATION, const bool iets = false) {
+                                       const bool segmented = SEGMENTATION) {
 	State128Sliced_t unsegmented;
 	try_unsegment128(state, &unsegmented, segmented);
 	
-	for (int i = 0; i < 128; ++i){
+	for (int i = 0; i < 128; ++i)
 		unslice128_significance(&(unsegmented.raw[i]), result, i & 63, i < 64);
-		int appel = 1;
-	}
-	
-	int appel = 1;
 }
 
 static inline Blocks128_t unslice128_internal(State128Sliced_t *state,
