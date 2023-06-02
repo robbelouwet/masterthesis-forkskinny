@@ -5,7 +5,7 @@
 #include "../common64.h"
 #include "../utils/slicing64.h"
 
-#if AVX2_acceleration
+#if SEGMENTATION
 static void inline assign_segmented_row(uint8_t from, uint8_t to, State64Sliced_t *state){
 	for (int i = 0; i < 4; ++i)
 		state->segments256[to][i] = state->segments256[from][i];
@@ -17,7 +17,7 @@ static inline void forkskinny64_mixcols_inv(State64Sliced_t *state) {
 //	*state = Slice64_t(ct);
 	
 	
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	auto temp0 = state->segments256[3][0];
 	auto temp1 = state->segments256[3][1];
 	auto temp2 = state->segments256[3][2];
@@ -60,7 +60,7 @@ static inline void forkskinny64_mixcols(State64Sliced_t *state) {
 //	test_blocks.values[0].raw = 0xFEDCBA9876543210;
 //	*state = slice128_accelerated_internal(&test_blocks);
 	
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	xor_segmented_row64(1, 2, 1, state);
 	xor_segmented_row64(2, 0, 2, state);
 	

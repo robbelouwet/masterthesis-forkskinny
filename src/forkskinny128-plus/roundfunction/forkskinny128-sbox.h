@@ -16,7 +16,7 @@
 #define in7 cell.slices[7].value
 
 static inline void forkskinny128_sbox(State128Sliced_t *state) {
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	for (int i = 0; i < 4; ++i) {
 		auto r6 = XOR256( s4 , XOR256( OR256( s7 , s6 ), ONE256 ) );
 		auto r5 = XOR256( s0 , XOR256( OR256( s2 , s3 ), ONE256 ) );
@@ -55,7 +55,7 @@ static inline void forkskinny128_sbox_inv(State128Sliced_t *state) {
 //	auto blocks = Blocks128_t{.values = {0xDF57DA56C44DA835, 0x6565656565656536}};
 //	*state = slice128_internal(blocks);
 	
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	for (int i = 0; i < 4; ++i) {
 		auto r2 = XOR256(s0, XOR256(OR256(s1, s3), ONE256));
 		auto r7 = XOR256(s1, XOR256(OR256(s7, s2), ONE256));

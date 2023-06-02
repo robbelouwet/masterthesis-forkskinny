@@ -11,7 +11,7 @@
 static inline void add_branch_constant64(State64Sliced_t *state) {
 	// <editor-fold desc="branch constant">
 	// @formatter:off
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	for (int i = 0; i < 4; ++i) {
 		state->segments256[i][0] = XOR256(state->segments256[i][0], segmented_branch_constant64.segments256[i][0]);
 		state->segments256[i][1] = XOR256(state->segments256[i][1], segmented_branch_constant64.segments256[i][1]);
@@ -30,13 +30,13 @@ static inline void add_branch_constant64(State64Sliced_t *state) {
 	// </editor-fold>
 }
 
-#if AVX2_acceleration
+#if SEGMENTATION
 auto c2 = _mm256_set_epi64x(0, 0, -1ULL, 0);
 #endif
 
 static inline void apply_roundkey(HalfState64Sliced_t *round_key, State64Sliced_t *state) {
 	// <editor-fold desc="xor first 8 least significant cells">
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	for (int i = 0; i < 2; ++i)
 		for (int j = 0; j < 4; ++j)
 			STORE256(

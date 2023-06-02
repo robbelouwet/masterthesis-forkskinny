@@ -25,7 +25,7 @@ typedef union {
 } Slice128_t;
 
 typedef union {
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	__m128i lane;
 	#endif
 	
@@ -39,20 +39,20 @@ typedef union {
 
 typedef union {
 	Slice128_t slices[8];
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	__m256i avx2_simd_cells[2];
 	#endif
 } Cell128_t;
 
 typedef union {
 	Cell128_t cols[4];
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	__m256i segments[8];
 	#endif
 } Row128_t;
 
 typedef union {
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	__m256i segments256[2][8];
 	#endif
 	
@@ -63,7 +63,7 @@ typedef union {
 
 typedef union {
 	/* Used when segmentation is enabled */
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	__m256i segments256[4][8];
 	#endif
 	

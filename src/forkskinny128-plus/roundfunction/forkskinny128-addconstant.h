@@ -6,7 +6,7 @@
 #include "../../constants.h"
 
 static inline void forkskinny128_add_constant(HalfState128Sliced_t *state, uint16_t iteration) {
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	// C0 (at row 0, cell 0)
 	state->segments256[0][0] = XOR256(state->segments256[0][0], forkskinny128_round_constants[iteration][0]);
 	state->segments256[0][1] = XOR256(state->segments256[0][1], forkskinny128_round_constants[iteration][1]);

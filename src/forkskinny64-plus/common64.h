@@ -2,7 +2,7 @@
 #define FORKSKINNYPLUS_COMMON64_H
 
 #include "utils/forkskinny64-datatypes.h"
-#if AVX2_acceleration
+#if SEGMENTATION
 static void inline xor_segmented_row64(uint8_t a, uint8_t b, uint8_t out_i, State64Sliced_t *state) {
 	for (int i = 0; i < 4; ++i)
 		state->segments256[out_i][i] = XOR256(state->segments256[a][i], state->segments256[b][i]);
@@ -10,7 +10,7 @@ static void inline xor_segmented_row64(uint8_t a, uint8_t b, uint8_t out_i, Stat
 #endif
 
 static inline void xor_row64(Row64_t *a, Row64_t *b, Row64_t *out) {
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	for (int i = 0; i < 4; ++i)
 		out->segments[i] = XOR256(a->segments[i], b->segments[i]);
 	#else

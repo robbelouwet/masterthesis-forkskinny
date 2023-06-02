@@ -6,7 +6,7 @@
 static inline void forkskinny64_shiftrows_inv(State64Sliced_t *state){
 //	auto ct = Blocks64_t{.values = {0xfedcba9876543210}};
 //	*state = slice128_accelerated_internal(&ct);
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	for (int i = 0; i < 4; ++i) {
 		state->segments256[1][i] = _mm256_permute4x64_epi64(state->segments256[1][i], 0b10010011);
 		state->segments256[2][i] = _mm256_permute4x64_epi64(state->segments256[2][i], 0b01001110);
@@ -44,7 +44,7 @@ static inline void forkskinny64_shiftrows(State64Sliced_t *state) {
 //	test_blocks.values[0].raw = 0xFEDCBA9876543210;
 //	*state = slice128_accelerated_internal(&test_blocks);
 
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	for (int i = 0; i < 4; ++i) {
 		state->segments256[1][i] = _mm256_permute4x64_epi64(state->segments256[1][i], 0b00111001);
 		state->segments256[2][i] = _mm256_permute4x64_epi64(state->segments256[2][i], 0b01001110);

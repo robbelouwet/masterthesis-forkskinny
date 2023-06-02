@@ -10,7 +10,7 @@
 static inline void fixslice_permute128(State128Sliced_t *src, State128Sliced_t *dst, int i) {
 //	auto test_blocks = Blocks128_t{.values = {{.raw = {0x7766554433221100, 0xFFEEDDCCBBAA9988}}}};
 //	*src = slice128(&test_blocks);
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	for (int j = 0; j < 16; ++j) {
 		auto cell_src = fixsliced_pt128[i][j];
 		

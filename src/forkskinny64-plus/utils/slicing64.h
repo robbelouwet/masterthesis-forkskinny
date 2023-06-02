@@ -6,7 +6,7 @@
 #include "slicing64-internal.h"
 
 static inline void slice64(Blocks64_t *blocks, State64Sliced_t *result,
-                           const bool segment = AVX2_acceleration) {
+                           const bool segment = SEGMENTATION) {
 	#if FAST_SLICING
 	slice_accelerated_internal64(blocks, result, segment);
 	#else
@@ -15,7 +15,7 @@ static inline void slice64(Blocks64_t *blocks, State64Sliced_t *result,
 }
 
 static inline State64Sliced_t slice64(Blocks64_t *blocks,
-                                      const bool segment = AVX2_acceleration) {
+                                      const bool segment = SEGMENTATION) {
 	#if FAST_SLICING
 	return slice_accelerated_internal64(blocks, segment);
 	#else
@@ -24,7 +24,7 @@ static inline State64Sliced_t slice64(Blocks64_t *blocks,
 }
 
 static inline void unslice64(State64Sliced_t *state, Blocks64_t *result,
-                             const bool segmented = AVX2_acceleration) {
+                             const bool segmented = SEGMENTATION) {
 	#if FAST_SLICING
 	unslice_accelerated_internal64(state, result, segmented);
 	#else
@@ -33,7 +33,7 @@ static inline void unslice64(State64Sliced_t *state, Blocks64_t *result,
 }
 
 static inline Blocks64_t unslice64(State64Sliced_t *state,
-                                   const bool segmented = AVX2_acceleration) {
+                                   const bool segmented = SEGMENTATION) {
 	#if FAST_SLICING
 	return unslice_accelerated_internal64(state, segmented);
 	#else
@@ -42,7 +42,7 @@ static inline Blocks64_t unslice64(State64Sliced_t *state,
 }
 
 static inline Blocks64_t unslice64(State64Sliced_t state,
-                                   const bool segmented = AVX2_acceleration) {
+                                   const bool segmented = SEGMENTATION) {
 	#if FAST_SLICING
 	return unslice_accelerated_internal64(&state, segmented);
 	#else
@@ -85,7 +85,7 @@ static inline void expand64(u64 in, State64Sliced_t *out){
 		#endif
 	}
 	
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	try_segment64(slices, out, true);
 	#else
 	for (int i = 0; i < 64; ++i) out->raw[i].value = slices[i].value;

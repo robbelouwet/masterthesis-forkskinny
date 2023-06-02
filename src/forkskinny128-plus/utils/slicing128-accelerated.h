@@ -13,7 +13,7 @@ static inline void unpack128(Blocks128_t *state, Block64_t *out) {
 	}
 }
 
-#if AVX2_acceleration
+#if SEGMENTATION
 
 #include "immintrin.h"
 
@@ -58,8 +58,8 @@ static inline void double_slice128_accelerated_internal(Blocks128_t *state, Stat
 
 
 static inline void slice128_accelerated_internal(Blocks128_t *state, State128Sliced_t *out,
-                                                 const bool segment = AVX2_acceleration) {
-	#if AVX2_acceleration
+                                                 const bool segment = SEGMENTATION) {
+	#if SEGMENTATION
 	double_slice128_accelerated_internal(state, out);
 	return;
 	#endif
@@ -85,14 +85,14 @@ static inline void slice128_accelerated_internal(Blocks128_t *state, State128Sli
 }
 
 static inline State128Sliced_t slice128_accelerated_internal(Blocks128_t *state,
-                                                             const bool segment = AVX2_acceleration) {
+                                                             const bool segment = SEGMENTATION) {
 	State128Sliced_t res;
 	slice128_accelerated_internal(state, &res, segment);
 	return res;
 }
 
 static inline void unslice128_accelerated_internal(State128Sliced_t *state, Blocks128_t *out,
-                                                   const bool segmented = AVX2_acceleration) {
+                                                   const bool segmented = SEGMENTATION) {
 	/// Unsegment
 	State128Sliced_t unsegmented;
 	try_unsegment128(state, &unsegmented, segmented);
@@ -112,7 +112,7 @@ static inline void unslice128_accelerated_internal(State128Sliced_t *state, Bloc
 }
 
 static inline Blocks128_t unslice128_accelerated_internal(State128Sliced_t *state,
-                                                          const bool segmented = AVX2_acceleration) {
+                                                          const bool segmented = SEGMENTATION) {
 	Blocks128_t res;
 	unslice128_accelerated_internal(state, &res, segmented);
 	return res;

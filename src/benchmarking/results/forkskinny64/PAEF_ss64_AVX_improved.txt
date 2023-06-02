@@ -1,6 +1,0 @@
-PAEF - forkskinny64-192, 512 bytes AD + 512 bytes M
-64 blocks in parallel
-14.334 cpb for M (5.53711 cpb for slicing, 8.79688 cpb for encryption)
-13.5156 cpb for AD (5.47266 cpb for slicing, 8.04297 cpb for encryption)
-Tag: 6bca4c0338eced79
-++++++++

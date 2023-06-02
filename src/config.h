@@ -7,9 +7,9 @@
 
 // @formatter:off
 // -- CONFIG --
-#define slice_size 64 // 8, 32, 64, 128, 256 or 512
-#define AVX2_support true
-#define IMPROVED_KEYSCHEDULE false
+#define slice_size 512 // 8, 32, 64, 128, 256 or 512
+#define ENABLE_SEGMENTATION true
+#define IMPROVED_KEYSCHEDULE true
 #define FAST_SLICING true
 // ------------
 
@@ -20,7 +20,7 @@
 #define SKINNY_64BIT false
 #endif
 
-#define AVX2_acceleration (slice_size == 64 && AVX2_support)
+#define SEGMENTATION (slice_size == 64 && ENABLE_SEGMENTATION)
 #define u64 uint64_t
 
 #define LOAD256(src) _mm256_load_si256((__m256i *)(src))
@@ -51,7 +51,7 @@
 #define ONE512 _mm512_set1_epi64x(-1)
 #define AND512 _mm512_and_si512
 
-#if AVX2_support
+#if ENABLE_SEGMENTATION
 auto mask_0 = _mm256_set_epi64x(0, 0, 0, -1ULL);
 auto mask_1 = _mm256_set_epi64x(0, 0, -1ULL, 0);
 auto mask_2 = _mm256_set_epi64x(0, -1ULL, 0, 0);

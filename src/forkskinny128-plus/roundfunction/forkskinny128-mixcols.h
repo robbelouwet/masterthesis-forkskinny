@@ -4,7 +4,7 @@
 #include "../utils/forkskinny128-datatypes.h"
 #include "../common128.h"
 
-#if AVX2_acceleration
+#if SEGMENTATION
 static void inline assign_segmented_row(uint8_t from, uint8_t to, State128Sliced_t *state){
 	for (int i = 0; i < 8; ++i)
 		state->segments256[to][i] = state->segments256[from][i];
@@ -16,7 +16,7 @@ static inline void forkskinny128_mixcols(State128Sliced_t *state) {
 //	test_blocks.values[0].raw = 0x55557555B6988DDF;
 //	*state = slice128_internal(test_blocks);
 	
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	xor_row128(&(state->rows[1]), &(state->rows[2]), &(state->rows[1]));
 	xor_row128(&(state->rows[2]), &(state->rows[0]), &(state->rows[2]));
 	
@@ -66,7 +66,7 @@ static inline void forkskinny128_mixcols_inv(State128Sliced_t *state) {
 //	auto test_res_before = unslice128(*state).values[0];
 	
 	
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	auto temp0 = state->segments256[3][0];
 	auto temp1 = state->segments256[3][1];
 	auto temp2 = state->segments256[3][2];

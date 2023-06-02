@@ -1,24 +1,65 @@
-FORKSKINNY64-192
+Compiled with AVX2 support: true
+Compiled with AVX512 support: true
+
+
+FORKSKINNY64-128 (s=0)
 512 blocks in parallel
 40 rounds per primitive call
 --------
-149.299 spent on slicing per single PRIMITIVE call
-25.5098 cycles on encryption alone per single PRIMITIVE call (slicing excluded)
-26.9121 cycles on decryption alone per single PRIMITIVE call (slicing excluded)
-53.834 cycles spent on key schedule alone PER PRIMITIVE
--->28.5803 cycles per byte (encryption)
-25.7223 cycles per byte per 36 rounds (encryption)
-5.71606 cycles per round (encryption)
+113.52 spent on slicing per single block (Fast slicing)
+25.3789 cycles on encryption alone per single block (slicing excluded)
+26.584 cycles on decryption alone per single block (slicing excluded)
+35.5801 cycles spent on key schedule alone PER PRIMITIVE (Improved KS)
+-->21.8098 cycles per byte (without decryption)
+19.6288 cycles per byte per 36 rounds
+4.36196 cycles per round
 ++++++++++++++++++++++++++++++++++++++++++++++++
-FORKSKINNY64-128
+
+FORKSKINNY64-192 (s=0)
 512 blocks in parallel
 40 rounds per primitive call
 --------
-113.549 spent on slicing per single PRIMITIVE call
-25.5566 cycles on encryption alone per single PRIMITIVE call (slicing excluded)
-27.1309 cycles on decryption alone per single PRIMITIVE call (slicing excluded)
-35.9492 cycles spent on key schedule alone PER PRIMITIVE
--->21.8818 cycles per byte
-19.6937 cycles per byte per 36 rounds
-4.37637 cycles per round
+152.551 spent on slicing per single block (Fast slicing)
+26.4551 cycles on encryption alone per single block (slicing excluded)
+27.0117 cycles on decryption alone per single block (slicing excluded)
+43.4512 cycles spent on key schedule alone PER PRIMITIVE (Improved KS)
+-->27.8071 cycles per byte (without decryption)
+25.0264 cycles per byte per 36 rounds (encryption)
+5.56143 cycles per round (encryption)
 ++++++++++++++++++++++++++++++++++++++++++++++++
+PAEF - forkskinny64-192, 4096 bytes AD + 4096 bytes M
+512 blocks in parallel
+19.7227 cpb for M (9.18262 cpb for slicing, 10.54 cpb for encryption)
+17.8723 cpb for AD (9.17944 cpb for slicing, 8.69287 cpb for encryption)
+Tag: b768520bb81f52e1
+++++++++
+
+++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+FORKSKINNY128-256 (s=0)
+512 blocks in parallel
+48 rounds per primitive call
+--------
+236.822 spent on slicing per single block
+73.8398 cycles on encryption alone per single block (slicing excluded)
+76.5566 cycles on decryption alone per single block (slicing excluded)
+56.5957 cycles spent on key schedule alone PER PRIMITIVE
+-->22.9536 cycles per byte (without decryption)
+17.2152 cycles per byte per 36 rounds (encryption)
+7.6512 cycles per round (encryption)
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+FORKSKINNY128-384 (s=0)
+512 blocks in parallel
+56 rounds per primitive call
+--------
+303.959 spent on slicing per single block
+85.666 cycles on encryption alone per single block (slicing excluded)
+86.6406 cycles on decryption alone per single block (slicing excluded)
+62.541 cycles spent on key schedule alone PER PRIMITIVE
+-->28.2604 cycles per byte (without decryption)
+18.1674 cycles per byte per 36 rounds (encryption)
+8.07439 cycles per round (encryption)

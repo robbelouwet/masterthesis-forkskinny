@@ -6,7 +6,7 @@
 #include "slicing128-internal.h"
 
 static inline void slice128(Blocks128_t *blocks, State128Sliced_t *result,
-                            const bool segment = AVX2_acceleration) {
+                            const bool segment = SEGMENTATION) {
 	#if FAST_SLICING
 	slice128_accelerated_internal(blocks, result, segment);
 	#else
@@ -15,7 +15,7 @@ static inline void slice128(Blocks128_t *blocks, State128Sliced_t *result,
 }
 
 static inline State128Sliced_t slice128(Blocks128_t *blocks,
-                                        const bool segment = AVX2_acceleration) {
+                                        const bool segment = SEGMENTATION) {
 
 	#if FAST_SLICING
 	return slice128_accelerated_internal(blocks, segment);
@@ -25,7 +25,7 @@ static inline State128Sliced_t slice128(Blocks128_t *blocks,
 }
 
 static inline void unslice128(State128Sliced_t *state, Blocks128_t *result,
-                              const bool segmented = AVX2_acceleration) {
+                              const bool segmented = SEGMENTATION) {
 	#if FAST_SLICING
 	unslice128_accelerated_internal(state, result, segmented);
 	#else
@@ -34,7 +34,7 @@ static inline void unslice128(State128Sliced_t *state, Blocks128_t *result,
 }
 
 static inline Blocks128_t unslice128(State128Sliced_t *state,
-                                     const bool segmented = AVX2_acceleration) {
+                                     const bool segmented = SEGMENTATION) {
 	#if FAST_SLICING
 	return unslice128_accelerated_internal(state, segmented);
 	#else
@@ -43,7 +43,7 @@ static inline Blocks128_t unslice128(State128Sliced_t *state,
 }
 
 static inline Blocks128_t unslice128(State128Sliced_t state,
-                                     const bool segmented = AVX2_acceleration) {
+                                     const bool segmented = SEGMENTATION) {
 	#if FAST_SLICING
 	return unslice128_accelerated_internal(&state, segmented);
 	#else

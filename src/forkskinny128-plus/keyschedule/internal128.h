@@ -7,7 +7,7 @@
 
 static inline void tk2_lfsr128(State128Sliced_t *state, const bool full_state = false) {
 	auto bound = full_state ? 4 : 2;
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	for (int i = 0; i < bound; ++i) {
 		auto temp = s7;
 		s7 = s6;
@@ -36,7 +36,7 @@ static inline void tk2_lfsr128(State128Sliced_t *state, const bool full_state = 
 
 static inline void tk3_lfsr128(State128Sliced_t *state, const bool full_state = false) {
 	auto bound = full_state ? 4 : 2;
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	for (int i = 0; i < bound; ++i) {
 		auto temp = s0;
 		s0 = s1;
@@ -69,7 +69,7 @@ static inline void permute128(State128Sliced_t *state) {
 //	test_blocks.values[0].raw[1] = 0xFFEEDDCCBBAA9988;
 //	*state = slice128(&test_blocks);
 	
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	for (int i = 0; i < 8; ++i) {
 		auto row2 = LOAD256(state->segments256[2] + i);
 		auto row3 = LOAD256(state->segments256[3] + i);

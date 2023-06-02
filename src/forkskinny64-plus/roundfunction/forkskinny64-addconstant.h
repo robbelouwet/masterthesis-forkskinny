@@ -5,11 +5,11 @@
 #include "../utils/forkskinny64-datatypes.h"
 #include "../../constants.h"
 
-#if AVX2_acceleration
+#if SEGMENTATION
 //auto NTWO = _mm256_set_epi64x(-1ULL, 0, 0,0);
 #endif
 static inline void forkskinny64_add_constant(HalfState64Sliced_t *state, uint16_t iteration) {
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	// @formatter:off
 	// C0 (with packed 0x2) (at row 0, cell 1)
 	

@@ -4,7 +4,7 @@
 #include "utils/forkskinny128-datatypes.h"
 
 static inline void xor_row128(Row128_t *a, Row128_t *b, Row128_t *out) {
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	for (int i = 0; i < 8; ++i)
 		out->segments[i] = XOR256(a->segments[i], b->segments[i]);
 	#else
@@ -23,7 +23,7 @@ static inline void xor_row128(Row128_t *a, Row128_t *b, Row128_t *out) {
 
 static inline void try_segment128(State128Sliced_t *in, State128Sliced_t *result, const bool segment) {
 	if (segment) {
-		#if AVX2_acceleration
+		#if SEGMENTATION
 		for (int i = 0; i < 4; ++i) {
 			for (int j = 0; j < 8; ++j) {
 				result->segments256[i][j] = _mm256_set_epi64x(
@@ -41,9 +41,9 @@ static inline void try_segment128(State128Sliced_t *in, State128Sliced_t *result
 }
 
 static inline void try_unsegment128(State128Sliced_t *in, State128Sliced_t *out,
-                                    const bool segmented = AVX2_acceleration) {
+                                    const bool segmented = SEGMENTATION) {
 	if (segmented) {
-		#if AVX2_acceleration
+		#if SEGMENTATION
 		for (int i = 0; i < 4; ++i) {
 			for (int j = 0; j < 8; ++j) {
 				for (int k = 0; k < 4; ++k) {

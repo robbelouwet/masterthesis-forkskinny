@@ -6,7 +6,7 @@
 #include "forkskinny128-plus/utils/forkskinny128-datatypes.h"
 
 // @formatter:off
-#if AVX2_acceleration
+#if SEGMENTATION
 // Nibble-swapped forkskinny64
 #define NS256(x) _mm256_set_epi64x(0, 0, x, 0)
 auto NTWO = _mm256_set_epi64x(-1ULL, 0, 0, 0);
@@ -219,7 +219,7 @@ slice_t forkskinny_unsegmented_round_constants[88][7] = {
 //</editor-fold>
 
 // @formatter:off
-#if AVX2_acceleration
+#if SEGMENTATION
 //<editor-fold desc="88 pre-computed forkskinny segmented sliced round constants"
 // the first 88 states of the addconstant lfsr containing {rc⁰, rc¹, ..., rc⁶} each
 // every rc slice128_internal is now aligned to the 2nd cell within a segment64-row
@@ -478,7 +478,7 @@ uint64_t const bit_masks[64] = {
 		0x8000000000000000,
 };
 
-#if AVX2_acceleration
+#if SEGMENTATION
 __m128i const double_bit_masks[64] = {
 		_mm_set1_epi64x(0x1),
 		_mm_set1_epi64x(0x2),

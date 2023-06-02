@@ -43,13 +43,13 @@ typedef union {
 
 typedef union {
 	Cell64_t cols[4];
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	__m256i segments[4];
 	#endif
 } Row64_t;
 
 typedef union {
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	__m256i segments256[2][4];
 	#endif
 	
@@ -66,7 +66,7 @@ typedef union {
 	// ----- Used for segmented cipher state:
 //	uint64_t raw_segments[64];
 //	__m512i segments512[2][4];
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	__m256i segments256[4][4];
 	#endif
 	

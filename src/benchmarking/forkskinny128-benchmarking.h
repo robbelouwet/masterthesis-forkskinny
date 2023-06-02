@@ -14,7 +14,7 @@ static inline void benchmark_forkskinny128_256() {
 	auto rounds_after = FORKSKINNY_128_256_ROUNDS_AFTER;
 	auto rounds = rounds_before + rounds_after;
 	
-	std::cout << slice_size << " blocks in parallel\n";
+	std::cout << std::dec << slice_size << " blocks in parallel\n";
 	std::cout << rounds << " rounds per primitive call\n--------\n";
 	
 	ULL slice_timings[iterations], schedule_timings[iterations], encryption_timings[iterations],
@@ -60,7 +60,7 @@ static inline void benchmark_forkskinny128_256() {
 	std::cout << decryption_per_primitive
 	          << " cycles on decryption alone per single block (slicing excluded)\n";
 	std::cout << schedule_per_primitive << " cycles spent on key schedule alone PER PRIMITIVE\n";
-	std::cout << "-->" << cycles_per_byte << " cycles per byte (encryption)\n";
+	std::cout << "-->" << cycles_per_byte << " cycles per byte (without decryption)\n";
 	std::cout << (cycles_per_byte / rounds) * 36 << " cycles per byte per 36 rounds (encryption)\n";
 	std::cout << cycles_per_round << " cycles per round (encryption)";
 }
@@ -72,7 +72,7 @@ static inline void benchmark_forkskinny128_384() {
 	auto rounds_after = FORKSKINNY_128_384_ROUNDS_AFTER;
 	auto rounds = rounds_before + rounds_after;
 	
-	std::cout << slice_size << " blocks in parallel\n";
+	std::cout << std::dec << slice_size << " blocks in parallel\n";
 	std::cout << rounds << " rounds per primitive call\n--------\n";
 	
 	ULL slice_timings[iterations], schedule_timings[iterations], encryption_timings[iterations],
@@ -118,7 +118,7 @@ static inline void benchmark_forkskinny128_384() {
 	std::cout << decryption_per_primitive
 	          << " cycles on decryption alone per single block (slicing excluded)\n";
 	std::cout << schedule_per_primitive << " cycles spent on key schedule alone PER PRIMITIVE\n";
-	std::cout << "-->" << cycles_per_byte << " cycles per byte (encryption)\n";
+	std::cout << "-->" << cycles_per_byte << " cycles per byte (without decryption)\n";
 	std::cout << (cycles_per_byte / rounds) * 36 << " cycles per byte per 36 rounds (encryption)\n";
 	std::cout << cycles_per_round << " cycles per round (encryption)";
 }

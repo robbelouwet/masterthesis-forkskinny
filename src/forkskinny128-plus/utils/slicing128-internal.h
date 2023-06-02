@@ -77,7 +77,7 @@ static inline void slice128_significance(const Blocks128_t *blocks, Slice128_t *
 	#endif
 }
 
-static inline void slice128_internal(const Blocks128_t *blocks, State128Sliced_t *res, const bool segment = AVX2_acceleration) {
+static inline void slice128_internal(const Blocks128_t *blocks, State128Sliced_t *res, const bool segment = SEGMENTATION) {
 	State128Sliced_t unsegmented = {};
 	for (uint i = 0; i < 128; ++i) {
 		slice128_significance(blocks, &(unsegmented.raw[i]), i & 63, i < 64);
@@ -86,7 +86,7 @@ static inline void slice128_internal(const Blocks128_t *blocks, State128Sliced_t
 	try_segment128(&unsegmented, res, segment);
 }
 
-static inline State128Sliced_t slice128_internal(const Blocks128_t *blocks, const bool segment = AVX2_acceleration) {
+static inline State128Sliced_t slice128_internal(const Blocks128_t *blocks, const bool segment = SEGMENTATION) {
 	State128Sliced_t res;
 	slice128_internal(blocks, &res, segment);
 	return res;
@@ -143,7 +143,7 @@ static inline void unslice128_significance(const Slice128_t *slice, Blocks128_t 
 }
 
 static inline void unslice128_internal(State128Sliced_t *state, Blocks128_t *result,
-                                       const bool segmented = AVX2_acceleration) {
+                                       const bool segmented = SEGMENTATION) {
 	State128Sliced_t unsegmented;
 	try_unsegment128(state, &unsegmented, segmented);
 	
@@ -152,7 +152,7 @@ static inline void unslice128_internal(State128Sliced_t *state, Blocks128_t *res
 }
 
 static inline Blocks128_t unslice128_internal(State128Sliced_t *state,
-                                              const bool segmented = AVX2_acceleration) {
+                                              const bool segmented = SEGMENTATION) {
 	Blocks128_t result = Blocks128_t();
 	unslice128_internal(state, &result, segmented);
 	return result;

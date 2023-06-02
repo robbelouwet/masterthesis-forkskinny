@@ -13,7 +13,7 @@
 
 static inline void tk2_lfsr64(State64Sliced_t *state, const bool full_state = false) {
 	int bound = full_state ? 4 : 2;
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	for (int i = 0; i < bound; ++i) {
 		auto temp = state->segments256[i][3];
 		state->segments256[i][3] = state->segments256[i][2];
@@ -34,7 +34,7 @@ static inline void tk2_lfsr64(State64Sliced_t *state, const bool full_state = fa
 
 static inline void tk3_lfsr64(State64Sliced_t *state, const bool full_state = false) {
 	int bound = full_state ? 4 : 2;
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	for (int i = 0; i < bound; ++i) {
 		auto temp = state->segments256[i][0];
 		state->segments256[i][0] = state->segments256[i][1];
@@ -61,7 +61,7 @@ static inline void permute64(State64Sliced_t *state) {
 //	test_blocks.values[0].raw = 0xFEDCBA9876543210;
 //	*state = slice64(&test_blocks);
 	
-	#if AVX2_acceleration
+	#if SEGMENTATION
 	for (int i = 0; i < 4; ++i) {
 		auto row2 = LOAD256(state->segments256[2] + i);
 		auto row3 = LOAD256(state->segments256[3] + i);
