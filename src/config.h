@@ -7,9 +7,9 @@
 
 // @formatter:off
 // -- CONFIG --
-#define slice_size 64 // 8, 32, 64, 128, 256 or 512
-#define ENABLE_SEGMENTATION false
-#define IMPROVED_KEYSCHEDULE true
+#define slice_size 512 // 8, 32, 64, 128, 256 or 512
+#define ENABLE_SEGMENTATION true
+#define IMPROVED_KEYSCHEDULE false
 #define FAST_SLICING true
 // ------------
 

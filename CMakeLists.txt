@@ -14,7 +14,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -funroll-all-loops -fopt-info-vec-op
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx2 -mavx -msse -msse2 -msse3 -mfpmath=sse")
 
 # Enable the AVX512 vector extensions (for auto-vectorization)
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx512f -mavx512dq")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx512f -mavx512dq")
 
 add_executable(demo
         libs/forkskinny-c/demo.c
@@ -41,6 +41,6 @@ target_link_libraries(forkskinny-benchmark benchmark pthread)
 ## Link with Google Benchmark
 #target_link_libraries(forkskinny128-384-benchmarking benchmark pthread)
 
-#add_executable(forkskinny64-192-benchmarking
-#        src/benchmarking/forkskinny64-benchmarking.h)
-#target_link_libraries(forkskinny64-192-benchmarking benchmark pthread)
+#add_executable(improved_ks-192-benchmarking
+#        src/benchmarking/improved_ks-benchmarking.h)
+#target_link_libraries(improved_ks-192-benchmarking benchmark pthread)

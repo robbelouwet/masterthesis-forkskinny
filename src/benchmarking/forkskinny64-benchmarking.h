@@ -10,7 +10,7 @@
 
 static inline void benchmark_PAEF_forkskinny64_192() {
 	auto bytes = slice_size * 8;
-	std::cout << "PAEF - forkskinny64-192, " << std::dec << bytes << " bytes AD + " << bytes << " bytes M" << std::endl;
+	std::cout << "PAEF - improved_ks-192, " << std::dec << bytes << " bytes AD + " << bytes << " bytes M" << std::endl;
 	std::cout << slice_size << " blocks in parallel" << std::endl;
 	auto iterations = 5000;
 	

@@ -146,7 +146,7 @@ static inline void slice_accelerated_internal64(Blocks64_t *blocks,
 		b_blocks[i].raw = ROL64(blocks->values[i & range_mask].raw, (i & 63));
 	
 	
-	/* Iterate over every 'significance' level the pt blocks have, which are 64 for forkskinny64 */
+	/* Iterate over every 'significance' level the pt blocks have, which are 64 for improved_ks */
 	/* When iterating, rotate 1 block from the back towards the front on every iteration,
 	 * aligning the next significance every time */
 	for (int i = 0; i < 64; i++) {

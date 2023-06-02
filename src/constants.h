@@ -7,7 +7,7 @@
 
 // @formatter:off
 #if SEGMENTATION
-// Nibble-swapped forkskinny64
+// Nibble-swapped improved_ks
 #define NS256(x) _mm256_set_epi64x(0, 0, x, 0)
 auto NTWO = _mm256_set_epi64x(-1ULL, 0, 0, 0);
 
@@ -16,7 +16,7 @@ auto NTWO = _mm256_set_epi64x(-1ULL, 0, 0, 0);
 auto TWO = _mm256_set_epi64x(0, -1ULL, 0, 0);
 #endif
 
-//<editor-fold desc="forkskinny64 sliced branch constant"
+//<editor-fold desc="improved_ks sliced branch constant"
 // When comparing to the bc in the paper, the cells inside consecutive pairs of cells are swapped with each other to account
 // for a swapped order of significance of 2 nibbles within a single byte of plaintext.
 // See the README or publication for more info on memory layout
@@ -41,7 +41,7 @@ slice_t const branch_constant64[64] = {
 };
 //</editor-fold>
 
-//<editor-fold desc="forkskinny64 segmented branch constant">
+//<editor-fold desc="improved_ks segmented branch constant">
 State64Sliced_t const segmented_branch_constant64 = {.raw = {
 		slice_ZER, slice_ONE, slice_ONE, slice_ZER,
 		slice_ONE, slice_ZER, slice_ZER, slice_ZER,
@@ -63,7 +63,7 @@ State64Sliced_t const segmented_branch_constant64 = {.raw = {
 //</editor-fold>
 
 //<editor-fold desc="forkskinny128 sliced branch constant"
-// the branch constant in forkskinny128 doesn't have 'swapped nibbles' within a byte like forkskinny64 has,
+// the branch constant in forkskinny128 doesn't have 'swapped nibbles' within a byte like improved_ks has,
 // because cells are already 8-bit and are definable datatypes with a specified order of significance.
 // So we don't need to account for this and so, the order of branch constant cells is the same as in the paper
 State128Sliced_t const branch_constant128 = {
