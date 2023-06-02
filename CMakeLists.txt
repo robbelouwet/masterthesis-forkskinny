@@ -11,10 +11,10 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -funroll-all-loops -fopt-info-vec-optimized=build.log -floop-parallelize-all")
 
 # Enable the AVX2 & SSE vector extensions (needed for segmentation + will be used for auto-vectorization)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx2 -mavx -msse -msse2 -msse3 -mfpmath=sse")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx2 -mavx -msse -msse2 -msse3 -mfpmath=sse")
 
 # Enable the AVX512 vector extensions (for auto-vectorization)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx512f -mavx512dq")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx512f -mavx512dq")
 
 add_executable(demo
         libs/forkskinny-c/demo.c
