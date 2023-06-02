@@ -5,10 +5,10 @@
 #include <cstring>
 #include "../utils/forkskinny64-datatypes.h"
 #include "../roundfunction/forkskinny64-addconstant.h"
-#include "../common.h"
+#include "../common64.h"
 #include "../utils/slicing64-accelerated-internal.h"
 #include "../utils/slicing64-internal.h"
-#include "../common.h"
+#include "../common64.h"
 #include "../utils/slicing64.h"
 
 static inline void tk2_lfsr64(State64Sliced_t *state, const bool full_state = false) {

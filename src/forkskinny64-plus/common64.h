@@ -1,5 +1,5 @@
-#ifndef FORKSKINNYPLUS_COMMON_H
-#define FORKSKINNYPLUS_COMMON_H
+#ifndef FORKSKINNYPLUS_COMMON64_H
+#define FORKSKINNYPLUS_COMMON64_H
 
 #include "utils/forkskinny64-datatypes.h"
 #if AVX2_acceleration
@@ -23,4 +23,4 @@ static inline void xor_row64(Row64_t *a, Row64_t *b, Row64_t *out) {
 	#endif
 }
 
-#endif //FORKSKINNYPLUS_COMMON_H
+#endif //FORKSKINNYPLUS_COMMON64_H

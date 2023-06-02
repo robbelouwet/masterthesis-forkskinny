@@ -1,22 +1,8 @@
 #ifndef FORKSKINNYPLUS64_FORKSKINNY_SBOX_H
 #define FORKSKINNYPLUS64_FORKSKINNY_SBOX_H
 
+#include "../../constants.h"
 #include "../utils/forkskinny64-datatypes.h"
-
-#define x0 cell.slices[0].value
-#define x1 cell.slices[1].value
-#define x2 cell.slices[2].value
-#define x3 cell.slices[3].value
-
-#define y0 state->cells[i].slices[0].value
-#define y1 state->cells[i].slices[1].value
-#define y2 state->cells[i].slices[2].value
-#define y3 state->cells[i].slices[3].value
-
-#define s0 state->segments256[i][0]
-#define s1 state->segments256[i][1]
-#define s2 state->segments256[i][2]
-#define s3 state->segments256[i][3]
 
 static inline void forkskinny64_sbox_inv(State64Sliced_t *state) {
 //	auto blocks = Blocks64_t{.values = {0xF7E4D583B2A1096C}};
@@ -35,12 +21,14 @@ static inline void forkskinny64_sbox_inv(State64Sliced_t *state) {
 	}
 	#else
 	for (int i = 0; i < 16; ++i) {
-		auto cell = state->cells[i];
-
-		y1 = XOR_SLICE(x0, XOR_SLICE(OR_SLICE(x3, x2), slice_ONE));
-		y2 = XOR_SLICE(x1, XOR_SLICE(OR_SLICE(y1, x3), slice_ONE));
-		y3 = XOR_SLICE(x2, XOR_SLICE(OR_SLICE(y2, y1), slice_ONE));
-		y0 = XOR_SLICE(x3, XOR_SLICE(OR_SLICE(y3, y2), slice_ONE));
+		auto r1 = XOR_SLICE(x0, XOR_SLICE(OR_SLICE(x3, x2), slice_ONE));
+		auto r2 = XOR_SLICE(x1, XOR_SLICE(OR_SLICE(r1, x3), slice_ONE));
+		auto r3 = XOR_SLICE(x2, XOR_SLICE(OR_SLICE(r2, r1), slice_ONE));
+		auto r0 = XOR_SLICE(x3, XOR_SLICE(OR_SLICE(r3, r2), slice_ONE));
+		
+		// @formatter:off
+		x0 = r0; x1 = r1; x2 = r2; x3 = r3;
+		// @formatter:on
 	}
 	#endif
 	
@@ -69,13 +57,15 @@ static inline void forkskinny64_sbox(State64Sliced_t *state) {
 	}
 	#else
 	for (int i = 0; i < 16; ++i) {
-		auto cell = state->cells[i];
+		// @formatter:off
+		auto r3 = XOR_SLICE( x0 , XOR_SLICE( OR_SLICE(x3 , x2 ) , slice_ONE ));
+		auto r2 = XOR_SLICE( x3 , XOR_SLICE( OR_SLICE(x2 , x1 ) , slice_ONE ));
+		auto r1 = XOR_SLICE( x2 , XOR_SLICE( OR_SLICE(x1 , r3 ) , slice_ONE ));
+		auto r0 = XOR_SLICE( x1 , XOR_SLICE( OR_SLICE(r3 , r2 ) , slice_ONE ));
+		// @formatter:on
 		
 		// @formatter:off
-		y3 = XOR_SLICE( x0 , XOR_SLICE( OR_SLICE(x3 , x2 ) , slice_ONE ));
-		y2 = XOR_SLICE( x3 , XOR_SLICE( OR_SLICE(x2 , x1 ) , slice_ONE ));
-		y1 = XOR_SLICE( x2 , XOR_SLICE( OR_SLICE(x1 , y3 ) , slice_ONE ));
-		y0 = XOR_SLICE( x1 , XOR_SLICE( OR_SLICE(y3 , y2 ) , slice_ONE ));
+		x0 = r0; x1 = r1; x2 = r2; x3 = r3;
 		// @formatter:on
 	}
 	#endif

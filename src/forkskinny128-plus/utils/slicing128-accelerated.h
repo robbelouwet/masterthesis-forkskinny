@@ -4,7 +4,7 @@
 #include "forkskinny128-datatypes.h"
 #include "../../forkskinny64-plus/utils/forkskinny64-datatypes.h"
 #include "../../forkskinny64-plus/utils/slicing64.h"
-#include "../common.h"
+#include "../common128.h"
 
 static inline void unpack128(Blocks128_t *state, Block64_t *out) {
 	for (int i = 0; i < slice_size; i++) {

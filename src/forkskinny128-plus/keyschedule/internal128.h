@@ -3,7 +3,7 @@
 
 //#include <immintrin.h>
 #include "../utils/forkskinny128-datatypes.h"
-#include "../common.h"
+#include "../common128.h"
 
 static inline void tk2_lfsr128(State128Sliced_t *state, const bool full_state = false) {
 	auto bound = full_state ? 4 : 2;

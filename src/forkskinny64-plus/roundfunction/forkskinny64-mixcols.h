@@ -2,7 +2,7 @@
 #define FORKSKINNYPLUS64_FORKSKINNY_MIXCOLS_H
 
 #include "../utils/forkskinny64-datatypes.h"
-#include "../common.h"
+#include "../common64.h"
 #include "../utils/slicing64.h"
 
 #if AVX2_acceleration

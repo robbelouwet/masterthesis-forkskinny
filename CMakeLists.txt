@@ -27,12 +27,15 @@ add_executable(forkskinny128-plus-test
         src/forkskinny128-plus/forkskinny128_test.cpp
         )
 
-add_executable(forkskinny128-384-benchmarking
-        src/benchmarking/forkskinny128-benchmarking.cpp)
+add_executable(forkskinny-benchmark src/benchmark.cpp)
+target_link_libraries(forkskinny-benchmark benchmark pthread)
 
-# Link with Google Benchmark
-target_link_libraries(forkskinny128-384-benchmarking benchmark pthread)
+#add_executable(forkskinny128-384-benchmarking
+#        src/benchmarking/forkskinny128-benchmarking.h)
+#
+## Link with Google Benchmark
+#target_link_libraries(forkskinny128-384-benchmarking benchmark pthread)
 
-add_executable(forkskinny64-192-benchmarking
-        src/benchmarking/forkskinny64-benchmarking.cpp)
-target_link_libraries(forkskinny64-192-benchmarking benchmark pthread)
+#add_executable(forkskinny64-192-benchmarking
+#        src/benchmarking/forkskinny64-benchmarking.h)
+#target_link_libraries(forkskinny64-192-benchmarking benchmark pthread)

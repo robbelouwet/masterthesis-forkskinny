@@ -2,7 +2,7 @@
 #define FORKSKINNYPLUS128_FORKSKINNY_MIXCOLS_H
 
 #include "../utils/forkskinny128-datatypes.h"
-#include "../common.h"
+#include "../common128.h"
 
 #if AVX2_acceleration
 static void inline assign_segmented_row(uint8_t from, uint8_t to, State128Sliced_t *state){

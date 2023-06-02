@@ -50,26 +50,38 @@ static inline Blocks64_t unslice64(State64Sliced_t state,
 	#endif
 }
 
+static inline u64 expand64_64bit(u64 bit){
+	u64 result = 0;
+	
+	result |= bit | (bit << 1);
+	result |= result | (result << 2);
+	result |= result | (result << 4);
+	result |= result | (result << 8);
+	result |= result | (result << 16);
+	result |= result | (result << 32);
+	
+	return result;
+}
+
 /**
  * This method expands a number into a SlicedCipherState.
  * In other words, if bit n == 1, slice64 n becomes 0xFFFFFFFFFFFFFFFF, same for bit n == 0
  * @param value
  * @param out
  */
-static inline void expand64(ULL in, State64Sliced_t *out){
+static inline void expand64(u64 in, State64Sliced_t *out){
 	Slice64_t slices[64];
-	for (ULL i = 0; i < 64; ++i) {
+	for (u64 i = 0; i < 64; ++i) {
 		// trick to make it constant time:
-		auto res = (((0x1ULL << i) & in) >> i);
+		auto expanded = expand64_64bit(in);
 		#if slice_size == 512
-		slices[i].value = _mm512_set1_epi64((ULL) (((int) 0) - res));
+		slices[i].value = _mm512_set1_epi64(expanded);
 		#elif slice_size == 256
-		slices[i].value = _mm256_set1_epi64x((ULL) (((int) 0) - res));
+		slices[i].value = _mm256_set1_epi64x(expanded);
 		#elif slice_size == 128
-		slices[i].value = _mm_set1_epi64x((ULL) (((int) 0) - res));
+		slices[i].value = _mm_set1_epi64x(expanded);
 		#else
-		auto val = (((int) 0) - res);
-		slices[i].value = val;
+		slices[i].value = expanded;
 		#endif
 	}
 	
